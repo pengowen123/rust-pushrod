@@ -1,4 +1,4 @@
-# rust-pinrod
+# rust-pushrod
 
 GEM-like Widget Library for Rust Piston library.
 
