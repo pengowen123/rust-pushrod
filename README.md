@@ -29,14 +29,29 @@ obsessing over the interface.
        - Video
        - Audio
        - Sprite
+   - Layout Managers
+       - Relative Layout
+       - Grid Layout
+       - Auto Layout
+       - Wrap Layout
 3. Themable Library
    - ONLY ONCE ALL WIDGETS ARE DESIGNED do we do themes.
    - Themes will be handled by the base widget
 
-### 1. Event Library
+## 1. Event Library
 
-### 2. Widget Library
+## 2. Widget Library
 
-### 3. Themable Library
+### Base Widget
+
+### Uniform Font System
+
+### Standard Widgets
+
+### Extended Widgets
+
+### Layout Managers
+
+## 3. Themable Library
 
 
