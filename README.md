@@ -17,18 +17,29 @@ obsessing over the interface.
 2. Widget Library
    - Base widget (PObject)
        - Base components: size, border size, border color, fill color
+       - Events for:
+           - Mouse Movement
+           - Mouse Enter/Exit
+           - Button click (with modifiers)
+       - Storage objects for parent/child relationship
+           - Z-Order
    - Uniform font renderer use
    - Standard widgets
        - Text
        - Button
-       - Scrollable Window/Viewport
+       - Widget Contaioner
+       - Scroll bar
+       - Progress bar
        - Shape/Poly
    - Extended widget set
        - TextEdit
        - Rendered text
+       - Tab view
+       - Split Pane (Horizontal/Vertical)
        - Video
        - Audio
        - Sprite
+       - Drag-and-drop buffer
    - Layout Managers
        - Relative Layout
        - Grid Layout
