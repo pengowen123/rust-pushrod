@@ -1,0 +1,7 @@
+[package]
+name = "rust-pushrod"
+version = "0.0.1"
+authors = ["Ken Suenobu <ksuenobu@fastmail.com>"]
+edition = "2018"
+
+[dependencies]
