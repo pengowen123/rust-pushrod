@@ -9,4 +9,34 @@ obsessing over the interface.
 
 ## Timeline/Plans
 
-TBD (trollface)
+1. Event Library
+   - Callbacks for:
+       - Mouse movement
+       - Button clicks (with modifiers)
+       - Keyboard
+2. Widget Library
+   - Base widget (PObject)
+       - Base components: size, border size, border color, fill color
+   - Uniform font renderer use
+   - Standard widgets
+       - Text
+       - Button
+       - Scrollable Window/Viewport
+       - Shape/Poly
+   - Extended widget set
+       - TextEdit
+       - Rendered text
+       - Video
+       - Audio
+       - Sprite
+3. Themable Library
+   - ONLY ONCE ALL WIDGETS ARE DESIGNED do we do themes.
+   - Themes will be handled by the base widget
+
+### 1. Event Library
+
+### 2. Widget Library
+
+### 3. Themable Library
+
+
