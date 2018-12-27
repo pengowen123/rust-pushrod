@@ -17,11 +17,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::point::Point;
+use crate::size::Size;
+
 pub struct Rect {
-  pub x: u32,
-  pub y: u32,
-  pub width: u32,
-  pub height: u32,
+  pub origin: Point,
+  pub size: Size,
 }
 
 impl Rect {

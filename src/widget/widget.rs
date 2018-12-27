@@ -16,12 +16,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use super::point;
+use crate::rect::Rect;
+use crate::widget::border::Border;
 
 pub struct Widget {
-  pub origin: Point,
-  pub width: u32,
-  pub height: u32,
+  pub rect: Rect,
+  pub border: Border,
 }
 
 impl Widget {

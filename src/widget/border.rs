@@ -1,4 +1,8 @@
-// Widget module
+// Border Dimensions
+//
+// Scale factor is not taken into account here, as the widget
+// does not need to be aware of the screen scale.  That should
+// be up to the hardware to take care of that.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,5 +16,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod widget;
-pub mod border;
+pub struct Border {
+  pub width: u16,
+  pub color: u64,
+  pub alpha: u8,
+}
+
+impl Border {
+}
