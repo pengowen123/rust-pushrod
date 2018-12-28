@@ -1,4 +1,8 @@
-// Event module
+// Mouse Events
+//
+// Scale factor is not taken into account here, as the widget
+// does not need to be aware of the screen scale.  That should
+// be up to the hardware to take care of that.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,5 +16,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod event;
-pub mod mouse;
+use crate::point::Point;
+
+pub struct MouseEvent {
+  pub point: Point,
+  pub modifier: u8,
+}
+
+pub struct MouseMoveEvent {
+  pub point: MouseEvent,
+}
