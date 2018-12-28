@@ -9,6 +9,6 @@ A origin point only contains the X and Y coordinates.
 
 ### MouseMoveEvent
 
-This event is triggered when a mouse moves.  This is triggered only when the mouse
-moves.
+This event is triggered when a mouse moves.  Only contains an origin point.  If any button modifiers
+are handled, those are triggered by click/up/down events, and must be tracked by the application.
 
