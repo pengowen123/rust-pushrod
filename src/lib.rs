@@ -14,10 +14,4 @@
 
 pub mod core;
 
-pub mod rect;
-pub mod point;
-pub mod size;
-
-pub mod widget;
-
 pub mod event;
