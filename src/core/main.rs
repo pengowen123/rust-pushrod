@@ -39,13 +39,25 @@ struct Pushrod {
 // Pushrod should be able to run multiple instances of self.run() in a threaded
 // loop.
 impl Pushrod {
-    fn new(config: Config) -> Self {
+    pub fn new(config: Config) -> Self {
         Self {
             config,
         }
     }
 
-    fn run(&self) {
+    fn handle_draw_loop(&self) {
+
+    }
+
+    fn handle_mouse_event(&self) {
+
+    }
+
+    fn handle_window_event(&self) {
+
+    }
+
+    pub fn run(&self) {
         let opengl = OpenGL::V3_2;
 
         let mut window: PistonWindow = WindowSettings::new(
@@ -67,7 +79,7 @@ impl Pushrod {
         while let Some(event) = window.next() {
             if let Some(args) = event.render_args() {
                 // Draw loop
-//                self.handle_draw_loop(&gl);
+                self.handle_draw_loop();
             }
         }
     }
