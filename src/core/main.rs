@@ -12,3 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use piston_window::*;
+
+struct Config {
+    window_width: u32,
+    window_height: u32,
+    window_fps: u16,
+}
+
+impl Config {
+    fn default() -> Self {
+        Self {
+            window_width: 1024,
+            window_height: 768,
+            window_fps: 60,
+        }
+    }
+}
+
+struct Pushrod {
+    config: Config,
+}
+
+impl Pushrod {
+    fn new(config: Config) -> Self {
+        Self {
+            config,
+        }
+    }
+}
