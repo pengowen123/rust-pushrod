@@ -35,6 +35,9 @@ struct Pushrod {
     config: Config,
 }
 
+// Once threads are supported, and objects can be opened as separate windows,
+// Pushrod should be able to run multiple instances of self.run() in a threaded
+// loop.
 impl Pushrod {
     fn new(config: Config) -> Self {
         Self {
