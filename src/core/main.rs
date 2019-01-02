@@ -19,6 +19,7 @@ struct Config {
     window_width: u32,
     window_height: u32,
     window_fps: u64,
+    window_opengl: OpenGL,
 }
 
 impl Config {
@@ -27,6 +28,7 @@ impl Config {
             window_width: 1024,
             window_height: 768,
             window_fps: 60,
+            window_opengl: OpenGL::V3_2,
         }
     }
 }
@@ -54,13 +56,11 @@ impl Pushrod {
     }
 
     pub fn run(&self) {
-        let opengl = OpenGL::V3_2;
-
         let mut window: PistonWindow = WindowSettings::new(
             "Pushrod Window",
             [self.config.window_width, self.config.window_height]
         )
-            .opengl(opengl)
+            .opengl(self.config.window_opengl)
 //            .samples(4)
 //            .exit_on_esc(true)
 //            .fullscreen(true)
@@ -70,7 +70,7 @@ impl Pushrod {
         window.set_max_fps(self.config.window_fps);
         window.set_ups(self.config.window_fps);
 
-        let mut gl: GlGraphics = GlGraphics::new(opengl);
+        let mut gl: GlGraphics = GlGraphics::new(self.config.window_opengl);
 
         while let Some(event) = window.next() {
             if let Some([x, y]) = event.mouse_relative_args() {
