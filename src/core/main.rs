@@ -45,10 +45,6 @@ impl Pushrod {
         }
     }
 
-    fn handle_draw_loop(&self) {
-
-    }
-
     fn handle_mouse_event(&self) {
 
     }
@@ -74,12 +70,17 @@ impl Pushrod {
         window.set_max_fps(self.config.window_fps);
         window.set_ups(self.config.window_fps);
 
-        let mut gl = GlGraphics::new(opengl);
+        let mut gl: GlGraphics = GlGraphics::new(opengl);
 
         while let Some(event) = window.next() {
+            if let Some([x, y]) = event.mouse_relative_args() {
+                println!("X: {} Y: {}", x, y);
+            }
+
             if let Some(args) = event.render_args() {
-                // Draw loop
-                self.handle_draw_loop();
+                gl.draw(args.viewport(), |_context, graphics| {
+                    clear([1.0; 4], graphics);
+                });
             }
         }
     }
