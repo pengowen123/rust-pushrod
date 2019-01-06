@@ -15,7 +15,7 @@
 use piston_window::*;
 use opengl_graphics::GlGraphics;
 
-struct Config {
+pub struct Config {
     window_width: u32,
     window_height: u32,
     window_fps: u64,
@@ -23,7 +23,7 @@ struct Config {
 }
 
 impl Config {
-    fn default() -> Self {
+    pub fn default() -> Self {
         Self {
             window_width: 1024,
             window_height: 768,
@@ -33,7 +33,7 @@ impl Config {
     }
 }
 
-struct Pushrod {
+pub struct Pushrod {
     config: Config,
 }
 
@@ -61,9 +61,6 @@ impl Pushrod {
             [self.config.window_width, self.config.window_height]
         )
             .opengl(self.config.window_opengl)
-//            .samples(4)
-//            .exit_on_esc(true)
-//            .fullscreen(true)
             .build()
             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
 
@@ -73,8 +70,23 @@ impl Pushrod {
         let mut gl: GlGraphics = GlGraphics::new(self.config.window_opengl);
 
         while let Some(event) = window.next() {
-            if let Some([x, y]) = event.mouse_relative_args() {
-                println!("X: {} Y: {}", x, y);
+            if let Some([x, y]) = event.mouse_cursor_args() {
+                let mut true_x = x;
+                let mut true_y = y;
+
+                if true_x > self.config.window_width as f64 {
+                    true_x = self.config.window_width as f64;
+                } else if true_x < 0.0 {
+                    true_x = 0.0;
+                }
+
+                if true_y > self.config.window_height as f64 {
+                    true_y = self.config.window_height as f64;
+                } else if true_y < 0.0 {
+                    true_y = 0.0;
+                }
+
+                println!("X: {} Y: {}", true_x as u32, true_y as u32);
             }
 
             if let Some(args) = event.render_args() {
