@@ -15,6 +15,8 @@
 use piston_window::*;
 use opengl_graphics::GlGraphics;
 
+use std::cell::RefCell;
+
 pub struct Config {
     window_width: u32,
     window_height: u32,
@@ -33,8 +35,40 @@ impl Config {
     }
 }
 
+struct WindowList {
+    windows: Vec<PistonWindow>,
+    window_position: usize,
+}
+
+impl WindowList {
+    pub fn new() -> WindowList {
+        WindowList {
+            windows: Vec::new(),
+            window_position: 0,
+        }
+    }
+
+    pub fn push(&mut self, window: PistonWindow) {
+        self.windows.push(window);
+    }
+
+    pub fn next_window(&mut self) -> Option<Event> {
+        let mut cur_window_position = self.window_position;
+
+        cur_window_position += 1;
+
+        if cur_window_position > self.windows.len() + 1 {
+            cur_window_position = 0;
+        }
+
+        self.window_position = cur_window_position;
+        self.windows[cur_window_position].next()
+    }
+}
+
 pub struct Pushrod {
     config: Config,
+    windows: RefCell<WindowList>,
 }
 
 // Once threads are supported, and objects can be opened as separate windows,
@@ -44,7 +78,12 @@ impl Pushrod {
     pub fn new(config: Config) -> Self {
         Self {
             config,
+            windows: RefCell::new(WindowList::new()),
         }
+    }
+
+    pub fn add_window(&self, window: PistonWindow) {
+        self.windows.borrow_mut().push(window);
     }
 
     fn handle_mouse_event(&self) {
