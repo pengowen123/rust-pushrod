@@ -49,6 +49,17 @@ obsessing over the interface.
    - ONLY ONCE ALL WIDGETS ARE DESIGNED do we do themes.
    - Themes will be handled by the base widget
 
+## Runnable Tests
+
+To run the all-inclusive window event test, use:
+
+```
+cargo run --bin window_test
+```
+
+This will only test window-related events with mouse interaction: mouse enter, mouse exit, mouse click, mouse
+pointer move, and mouse scroll.
+
 ## 1. Event Library
 
 ## 2. Widget Library
