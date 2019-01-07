@@ -75,7 +75,10 @@ impl Pushrod {
 
         while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
             if let Some([x, y]) = event.mouse_cursor_args() {
-                self.internal_handle_mouse_event(Point { x: x as i32, y: y as i32});
+                self.internal_handle_mouse_event(Point {
+                    x: x as i32,
+                    y: y as i32
+                });
             }
 
             if let Some(args) = event.render_args() {
