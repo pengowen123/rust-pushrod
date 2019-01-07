@@ -17,5 +17,7 @@ pub struct Point {
   pub y: i32,
 }
 
-impl Point {
+pub struct Size {
+  pub w: i32,
+  pub h: i32,
 }

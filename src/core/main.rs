@@ -14,7 +14,7 @@
 
 use piston_window::*;
 use opengl_graphics::GlGraphics;
-use crate::core::point::Point;
+use crate::core::point::{Point, Size};
 
 use std::cell::RefCell;
 
@@ -74,6 +74,14 @@ impl Pushrod {
         println!("Handle window event");
     }
 
+    fn internal_handle_window_focus(&self, focus: bool) {
+        println!("Window focus: {}", focus);
+    }
+
+    fn internal_handle_window_resize(&self, size: Size) {
+        println!("W={} H={}", size.w, size.h);
+    }
+
     fn internal_post_event(&self) {
         println!("Handle posting of event to bus here");
     }
@@ -87,11 +95,11 @@ impl Pushrod {
             }
 
             if let Some(flag) = event.focus_args() {
-                println!("Window focus flag: {}", flag);
+                self.internal_handle_window_focus(flag);
             }
 
             if let Some([width, height]) = event.resize_args() {
-                println!("Window resize: w={} h={}", width as i32, height as i32);
+                self.internal_handle_window_resize(Size { w: width as i32, h: height as i32 });
             }
 
             if let Some(args) = event.render_args() {
