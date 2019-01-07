@@ -33,7 +33,9 @@ fn main() {
     window.set_max_fps(60);
     window.set_ups(60);
 
+    // Adds a window to the stack of watched events
     prod.add_window(window);
 
+    // Runs the main event loop
     prod.run();
 }

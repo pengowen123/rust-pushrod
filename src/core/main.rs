@@ -65,12 +65,16 @@ impl Pushrod {
         self.windows.borrow_mut().push(window);
     }
 
-    fn handle_mouse_event(&self, x: i32, y: i32) {
+    fn internal_handle_mouse_event(&self, x: i32, y: i32) {
         println!("X: {} Y: {}", x, y);
     }
 
-    fn handle_window_event(&self) {
+    fn internal_handle_window_event(&self) {
+        println!("Handle window event");
+    }
 
+    fn internal_post_event(&self) {
+        println!("Handle posting of event to bus here");
     }
 
     pub fn run(&self) {
@@ -78,7 +82,7 @@ impl Pushrod {
 
         while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
             if let Some([x, y]) = event.mouse_cursor_args() {
-                self.handle_mouse_event(x as i32, y as i32);
+                self.internal_handle_mouse_event(x as i32, y as i32);
             }
 
             if let Some(args) = event.render_args() {
