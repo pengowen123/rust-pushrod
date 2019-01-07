@@ -34,7 +34,7 @@ impl WindowList {
         self.windows.push(window);
     }
 
-    pub fn next_window(&mut self) -> Option<Event> {
+    pub fn next_window(&mut self) -> (Option<Event>, &PistonWindow) {
         let mut cur_window_position = self.window_position;
 
         cur_window_position += 1;
@@ -44,7 +44,7 @@ impl WindowList {
         }
 
         self.window_position = cur_window_position;
-        self.windows[self.window_position].next()
+        (self.windows[self.window_position].next(), &self.windows[self.window_position])
     }
 }
 
@@ -65,8 +65,8 @@ impl Pushrod {
         self.windows.borrow_mut().push(window);
     }
 
-    fn handle_mouse_event(&self) {
-
+    fn handle_mouse_event(&self, x: i32, y: i32) {
+        println!("X: {} Y: {}", x, y);
     }
 
     fn handle_window_event(&self) {
@@ -76,25 +76,10 @@ impl Pushrod {
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
-        while let Some(event) = self.windows.borrow_mut().next_window() {
-//            if let Some([x, y]) = event.mouse_cursor_args() {
-//                let mut true_x = x;
-//                let mut true_y = y;
-//
-//                if true_x > self.config.window_width as f64 {
-//                    true_x = self.config.window_width as f64;
-//                } else if true_x < 0.0 {
-//                    true_x = 0.0;
-//                }
-//
-//                if true_y > self.config.window_height as f64 {
-//                    true_y = self.config.window_height as f64;
-//                } else if true_y < 0.0 {
-//                    true_y = 0.0;
-//                }
-//
-//                println!("X: {} Y: {}", true_x as u32, true_y as u32);
-//            }
+        while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
+            if let Some([x, y]) = event.mouse_cursor_args() {
+                self.handle_mouse_event(x as i32, y as i32);
+            }
 
             if let Some(args) = event.render_args() {
                 gl.draw(args.viewport(), |_context, graphics| {
