@@ -13,12 +13,27 @@
 // limitations under the License.
 
 use pushrod::core::main::*;
-
+use piston_window::*;
 
 fn main() {
+    let opengl = OpenGL::V3_2;
+
     println!("Starting Test.");
 
-    let prod: Pushrod = Pushrod::new(Config::default());
+    let prod: Pushrod = Pushrod::new(opengl);
+
+    let mut window: PistonWindow = WindowSettings::new(
+        "Pushrod Window",
+        [640, 480]
+    )
+        .opengl(opengl)
+        .build()
+        .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
+
+    window.set_max_fps(60);
+    window.set_ups(60);
+
+    prod.add_window(window);
 
     prod.run();
 }

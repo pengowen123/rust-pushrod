@@ -17,24 +17,6 @@ use opengl_graphics::GlGraphics;
 
 use std::cell::RefCell;
 
-pub struct Config {
-    window_width: u32,
-    window_height: u32,
-    window_fps: u64,
-    window_opengl: OpenGL,
-}
-
-impl Config {
-    pub fn default() -> Self {
-        Self {
-            window_width: 1024,
-            window_height: 768,
-            window_fps: 60,
-            window_opengl: OpenGL::V3_2,
-        }
-    }
-}
-
 struct WindowList {
     windows: Vec<PistonWindow>,
     window_position: usize,
@@ -57,24 +39,24 @@ impl WindowList {
 
         cur_window_position += 1;
 
-        if cur_window_position > self.windows.len() + 1 {
+        if cur_window_position > self.windows.len() - 1 {
             cur_window_position = 0;
         }
 
         self.window_position = cur_window_position;
-        self.windows[cur_window_position].next()
+        self.windows[self.window_position].next()
     }
 }
 
 pub struct Pushrod {
-    config: Config,
+    window_opengl: OpenGL,
     windows: RefCell<WindowList>,
 }
 
 impl Pushrod {
-    pub fn new(config: Config) -> Self {
+    pub fn new(config: OpenGL) -> Self {
         Self {
-            config,
+            window_opengl: config,
             windows: RefCell::new(WindowList::new()),
         }
     }
@@ -92,38 +74,27 @@ impl Pushrod {
     }
 
     pub fn run(&self) {
-        let mut window: PistonWindow = WindowSettings::new(
-            "Pushrod Window",
-            [self.config.window_width, self.config.window_height]
-        )
-            .opengl(self.config.window_opengl)
-            .build()
-            .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
+        let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
-        window.set_max_fps(self.config.window_fps);
-        window.set_ups(self.config.window_fps);
-
-        let mut gl: GlGraphics = GlGraphics::new(self.config.window_opengl);
-
-        while let Some(event) = window.next() {
-            if let Some([x, y]) = event.mouse_cursor_args() {
-                let mut true_x = x;
-                let mut true_y = y;
-
-                if true_x > self.config.window_width as f64 {
-                    true_x = self.config.window_width as f64;
-                } else if true_x < 0.0 {
-                    true_x = 0.0;
-                }
-
-                if true_y > self.config.window_height as f64 {
-                    true_y = self.config.window_height as f64;
-                } else if true_y < 0.0 {
-                    true_y = 0.0;
-                }
-
-                println!("X: {} Y: {}", true_x as u32, true_y as u32);
-            }
+        while let Some(event) = self.windows.borrow_mut().next_window() {
+//            if let Some([x, y]) = event.mouse_cursor_args() {
+//                let mut true_x = x;
+//                let mut true_y = y;
+//
+//                if true_x > self.config.window_width as f64 {
+//                    true_x = self.config.window_width as f64;
+//                } else if true_x < 0.0 {
+//                    true_x = 0.0;
+//                }
+//
+//                if true_y > self.config.window_height as f64 {
+//                    true_y = self.config.window_height as f64;
+//                } else if true_y < 0.0 {
+//                    true_y = 0.0;
+//                }
+//
+//                println!("X: {} Y: {}", true_x as u32, true_y as u32);
+//            }
 
             if let Some(args) = event.render_args() {
                 gl.draw(args.viewport(), |_context, graphics| {

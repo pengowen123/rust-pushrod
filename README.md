@@ -7,6 +7,17 @@ are ideas of other GUI libraries - Qt, Atari, Amiga, Tk, and others.  It draws
 inspiration from other libraries, letting you concentrate on code rather than
 obsessing over the interface.
 
+## Reason for Pushrod
+
+The reason I created this library instead of extending another library was that
+I wanted to keep these specific design ideas in mind:
+
+- Maintainable with little effort
+- Easily extensible
+- Easy to use and understand
+
+These design ideas are critical.  Keep it simple.  Keep it stupid simple.
+
 ## Timeline/Plans
 
 1. Event Library
