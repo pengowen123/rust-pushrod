@@ -66,6 +66,14 @@ impl Pushrod {
         self.windows.borrow_mut().push(window);
     }
 
+    // By handling events internally, we bypass the risk of the user having to interpret each
+    // event, and having to figure out how to dispatch those events to any widgets that might be
+    // in the display area.  Events will eventually be dispatched using a "dispatch all" method,
+    // which will be done at the end of the event loop.  Any draw routines will be done within
+    // the render_args() area, and a separate event will be sent out for that, as drawing
+    // should be done at the end of all event processing, within the rendering loop, not the
+    // updating loop (UPS vs. FPS)
+
     fn internal_handle_mouse_event(&self, point: Point) {
         println!("X={} Y={}", point.x, point.y);
     }
@@ -74,6 +82,8 @@ impl Pushrod {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
         while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
+            // UPS loop handling
+
             if let Some([x, y]) = event.mouse_cursor_args() {
                 self.internal_handle_mouse_event(Point {
                     x: x as i32,
@@ -81,10 +91,18 @@ impl Pushrod {
                 });
             }
 
+            // Dispatch events here in the bus
+
+            // FPS loop handling
+
             if let Some(args) = event.render_args() {
                 gl.draw(args.viewport(), |_context, graphics| {
                     clear([1.0; 4], graphics);
                 });
+
+                // Reset GL drawing state
+
+                // Dispatch GL drawing to event loop
             }
         }
     }
