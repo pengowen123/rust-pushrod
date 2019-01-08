@@ -15,6 +15,7 @@
 use piston_window::*;
 use opengl_graphics::GlGraphics;
 use crate::core::point::Point;
+use crate::event::event::EventListener;
 
 use std::cell::RefCell;
 
@@ -64,6 +65,10 @@ impl Pushrod {
 
     pub fn add_window(&self, window: PistonWindow) {
         self.windows.borrow_mut().push(window);
+    }
+
+    pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
+        println!("Handle event listening addition to vector list here.");
     }
 
     // By handling events internally, we bypass the risk of the user having to interpret each
