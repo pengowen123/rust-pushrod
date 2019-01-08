@@ -107,11 +107,9 @@ impl Pushrod {
 
             // Dispatch events here in the bus
             for event in &event_list {
-                let mut vector_list = self.event_listeners.borrow_mut();
-
-                for listener in &vector_list {
+                for listener in &self.event_listeners.borrow_mut() {
                     if listener.event_mask() & event.match_mask() == event.match_mask() {
-                        println!("Event mask: {}", event.match_mask());
+                        listener.handle_event(event);
                     }
                 }
             }
