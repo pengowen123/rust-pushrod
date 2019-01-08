@@ -19,3 +19,10 @@
 pub type EventMask = u64;
 
 pub const EVENT_MOUSE_MOVEMENT: EventMask = 0x00000001;
+
+pub trait EventListener {
+    fn new() -> Self;
+    fn event_mask(&self) -> EventMask;
+//    fn handle_event(&self, event: Event);
+    fn handle_event(&self);
+}
