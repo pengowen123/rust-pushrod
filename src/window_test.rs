@@ -18,17 +18,19 @@ use piston_window::*;
 
 struct TestMouseListener { }
 
-impl EventListener for TestMouseListener {
-    fn new() -> TestMouseListener {
-        TestMouseListener { }
+impl TestMouseListener {
+    fn new() -> Self {
+        Self { }
     }
+}
 
+impl EventListener for TestMouseListener {
     fn event_mask(&self) -> EventMask {
         EVENT_MOUSE_MOVEMENT
     }
 
     fn handle_event(&self) {
-        println(!"Got a mouse movement event!");
+        println!("Got a mouse movement event!");
     }
 }
 
@@ -52,7 +54,7 @@ fn main() {
 
     // Adds a window to the stack of watched events
     prod.add_window(window);
-    prod.add_event_listener_for_window(TestMouseListener::new());
+    prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
 
     // Runs the main event loop
     prod.run();

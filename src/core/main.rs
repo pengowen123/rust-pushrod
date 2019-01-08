@@ -15,7 +15,7 @@
 use piston_window::*;
 use opengl_graphics::GlGraphics;
 use crate::core::point::Point;
-use crate::event::event::EventListener;
+use crate::event::event::*;
 
 use std::cell::RefCell;
 
@@ -53,6 +53,7 @@ impl WindowList {
 pub struct Pushrod {
     window_opengl: OpenGL,
     windows: RefCell<WindowList>,
+    event_listeners: RefCell<Vec<Box<EventListener>>>,
 }
 
 impl Pushrod {
@@ -60,6 +61,7 @@ impl Pushrod {
         Self {
             window_opengl: config,
             windows: RefCell::new(WindowList::new()),
+            event_listeners: RefCell::new(Vec::new()),
         }
     }
 
@@ -68,7 +70,7 @@ impl Pushrod {
     }
 
     pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
-        println!("Handle event listening addition to vector list here.");
+        self.event_listeners.borrow_mut().push(listener);
     }
 
     // By handling events internally, we bypass the risk of the user having to interpret each
@@ -87,7 +89,7 @@ impl Pushrod {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
         while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
-//            let mut _event_list: Vec<Event> = Vec::new();
+            let mut event_list: Vec<Box<PushrodEvent>> = Vec::new();
 
             // UPS loop handling
 
@@ -96,9 +98,23 @@ impl Pushrod {
                     x: x as i32,
                     y: y as i32
                 });
+
+                event_list.push(Box::new(EventMouseMovement::new(Point {
+                    x: x as i32,
+                    y: y as i32
+                })));
             }
 
             // Dispatch events here in the bus
+            for event in &event_list {
+                let mut vector_list = self.event_listeners.borrow_mut();
+
+                for listener in &vector_list {
+                    if listener.event_mask() & event.match_mask() == event.match_mask() {
+                        println!("Event mask: {}", event.match_mask());
+                    }
+                }
+            }
 
             // FPS loop handling
 
