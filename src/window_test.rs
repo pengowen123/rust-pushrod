@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use pushrod::core::main::*;
+use pushrod::event::event::*;
 use piston_window::*;
 
 fn main() {

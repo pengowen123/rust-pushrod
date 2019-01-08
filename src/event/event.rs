@@ -15,3 +15,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+pub type EventMask = u64;
+
+pub const EVENT_MOUSE_MOVEMENT: EventMask = 0x00000001;
