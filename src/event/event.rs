@@ -18,6 +18,22 @@
 
 use crate::core::point::Point;
 
+pub type PushrodEventMask = u32;
+
+pub const PUSHROD_EVENT_NONE: PushrodEventMask        = 0x00000000;
+pub const PUSHROD_EVENT_MOUSE_MOVED: PushrodEventMask = 0x00000001;
+
+pub enum PushrodEvent {
+    PushrodMouseEvent {
+        point: Point,
+    },
+}
+
+pub trait PushrodEventListener {
+    fn event_mask(&self) -> PushrodEventMask;
+    fn handle_event(&self, event: &PushrodEvent);
+}
+
 //pub type EventMask = u64;
 //
 //pub const EVENT_MOUSE_MOVEMENT: EventMask = 0x00000001;

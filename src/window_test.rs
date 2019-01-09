@@ -16,23 +16,27 @@ use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::event::event::*;
 
-//struct TestMouseListener { }
-//
-//impl TestMouseListener {
-//    fn new() -> Self {
-//        Self { }
-//    }
-//}
-//
-//impl EventListener for TestMouseListener {
-//    fn event_mask(&self) -> EventMask {
-//        EVENT_MOUSE_MOVEMENT
-//    }
-//
-//    fn handle_event(&self, event: &Box<PushrodEvent>) {
-//        println!("Got a mouse movement event: x={} y={}", event.point.x, event.point.y);
-//    }
-//}
+struct TestMouseListener { }
+
+impl TestMouseListener {
+    fn new() -> Self {
+        Self { }
+    }
+}
+
+impl PushrodEventListener for TestMouseListener {
+    fn event_mask(&self) -> PushrodEventMask {
+        PUSHROD_EVENT_MOUSE_MOVED
+    }
+
+    fn handle_event(&self, event: &PushrodEvent) {
+        match event {
+            PushrodEvent::PushrodMouseEvent { point } => {
+                println!("[TEST CALLBACK] X={} Y={}", point.x, point.y)
+            },
+        }
+    }
+}
 
 fn main() {
     let opengl = OpenGL::V3_2;
@@ -51,7 +55,7 @@ fn main() {
 
     // Adds a window to the stack of watched events
     prod.add_window(window);
-    //    prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
+    prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
 
     // Runs the main event loop
     prod.run();
