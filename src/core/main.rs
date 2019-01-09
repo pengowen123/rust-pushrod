@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
-use opengl_graphics::GlGraphics;
 use crate::core::point::Point;
 use crate::event::event::*;
+use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use std::cell::RefCell;
 
@@ -46,14 +46,17 @@ impl WindowList {
         }
 
         self.window_position = cur_window_position;
-        (self.windows[self.window_position].next(), &self.windows[self.window_position])
+        (
+            self.windows[self.window_position].next(),
+            &self.windows[self.window_position],
+        )
     }
 }
 
 pub struct Pushrod {
     window_opengl: OpenGL,
     windows: RefCell<WindowList>,
-    event_listeners: RefCell<Vec<Box<EventListener>>>,
+    //    event_listeners: RefCell<Vec<Box<EventListener>>>,
 }
 
 impl Pushrod {
@@ -61,7 +64,7 @@ impl Pushrod {
         Self {
             window_opengl: config,
             windows: RefCell::new(WindowList::new()),
-            event_listeners: RefCell::new(Vec::new()),
+            //            event_listeners: RefCell::new(Vec::new()),
         }
     }
 
@@ -69,9 +72,9 @@ impl Pushrod {
         self.windows.borrow_mut().push(window);
     }
 
-    pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
-        self.event_listeners.borrow_mut().push(listener);
-    }
+    //    pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
+    //        self.event_listeners.borrow_mut().push(listener);
+    //    }
 
     // By handling events internally, we bypass the risk of the user having to interpret each
     // event, and having to figure out how to dispatch those events to any widgets that might be
@@ -89,30 +92,30 @@ impl Pushrod {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
         while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
-            let mut event_list: Vec<Box<PushrodEvent>> = Vec::new();
+            //            let mut event_list: Vec<Box<PushrodEvent>> = Vec::new();
 
             // UPS loop handling
 
             if let Some([x, y]) = event.mouse_cursor_args() {
                 self.internal_handle_mouse_event(Point {
                     x: x as i32,
-                    y: y as i32
+                    y: y as i32,
                 });
-
-                event_list.push(Box::new(EventMouseMovement::new(Point {
-                    x: x as i32,
-                    y: y as i32
-                })));
+                //
+                //                event_list.push(Box::new(EventMouseMovement::new(Point {
+                //                    x: x as i32,
+                //                    y: y as i32
+                //                })));
             }
 
             // Dispatch events here in the bus
-            for event in &event_list {
-                for listener in &self.event_listeners.borrow_mut() {
-                    if listener.event_mask() & event.match_mask() == event.match_mask() {
-                        listener.handle_event(event);
-                    }
-                }
-            }
+            //            for event in &event_list {
+            //                for listener in self.event_listeners.borrow_mut().iter() {
+            //                    if listener.event_mask() & event.match_mask() == event.match_mask() {
+            //                        listener.handle_event(event);
+            //                    }
+            //                }
+            //            }
 
             // FPS loop handling
 

@@ -19,6 +19,5 @@
 use crate::core::point::Point;
 
 pub struct MouseMoveEvent {
-  pub origin: Point,
+    pub origin: Point,
 }
-

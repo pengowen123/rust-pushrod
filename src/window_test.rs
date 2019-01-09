@@ -12,27 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::event::event::*;
-use piston_window::*;
 
-struct TestMouseListener { }
-
-impl TestMouseListener {
-    fn new() -> Self {
-        Self { }
-    }
-}
-
-impl EventListener for TestMouseListener {
-    fn event_mask(&self) -> EventMask {
-        EVENT_MOUSE_MOVEMENT
-    }
-
-    fn handle_event(&self) {
-        println!("Got a mouse movement event!");
-    }
-}
+//struct TestMouseListener { }
+//
+//impl TestMouseListener {
+//    fn new() -> Self {
+//        Self { }
+//    }
+//}
+//
+//impl EventListener for TestMouseListener {
+//    fn event_mask(&self) -> EventMask {
+//        EVENT_MOUSE_MOVEMENT
+//    }
+//
+//    fn handle_event(&self, event: &Box<PushrodEvent>) {
+//        println!("Got a mouse movement event: x={} y={}", event.point.x, event.point.y);
+//    }
+//}
 
 fn main() {
     let opengl = OpenGL::V3_2;
@@ -41,10 +41,7 @@ fn main() {
 
     let prod: Pushrod = Pushrod::new(opengl);
 
-    let mut window: PistonWindow = WindowSettings::new(
-        "Pushrod Window",
-        [640, 480]
-    )
+    let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [640, 480])
         .opengl(opengl)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
@@ -54,7 +51,7 @@ fn main() {
 
     // Adds a window to the stack of watched events
     prod.add_window(window);
-    prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
+    //    prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
 
     // Runs the main event loop
     prod.run();

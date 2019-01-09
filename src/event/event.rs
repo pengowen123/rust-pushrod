@@ -18,30 +18,31 @@
 
 use crate::core::point::Point;
 
-pub type EventMask = u64;
-
-pub const EVENT_MOUSE_MOVEMENT: EventMask = 0x00000001;
-
-pub trait EventListener {
-    fn event_mask(&self) -> EventMask;
-//    fn handle_event(&self, event: Event);
-    fn handle_event(&self);
-}
-
-pub trait PushrodEvent {
-    fn match_mask(&self) -> EventMask;
-}
-
-pub struct EventMouseMovement {
-    pub point: Point,
-}
-
-impl EventMouseMovement {
-    pub fn new(point: Point) -> Self {
-        Self { point }
-    }
-}
-
-impl PushrodEvent for EventMouseMovement {
-    fn match_mask(&self) -> EventMask { EVENT_MOUSE_MOVEMENT }
-}
+//pub type EventMask = u64;
+//
+//pub const EVENT_MOUSE_MOVEMENT: EventMask = 0x00000001;
+//
+//pub trait EventListener {
+//    fn event_mask(&self) -> EventMask;
+//    fn handle_event(&self, event: &Box<PushrodEvent>);
+//}
+//
+//pub trait PushrodEvent {
+//    fn match_mask(&self) -> EventMask;
+//}
+//
+//pub struct EventMouseMovement {
+//    pub point: Point,
+//}
+//
+//impl EventMouseMovement {
+//    pub fn new(point: Point) -> Self {
+//        Self { point }
+//    }
+//}
+//
+//impl PushrodEvent for EventMouseMovement {
+//    fn match_mask(&self) -> EventMask {
+//        EVENT_MOUSE_MOVEMENT
+//    }
+//}
