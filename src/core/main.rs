@@ -93,9 +93,7 @@ impl Pushrod {
         let mut event_mask = PUSHROD_EVENT_NONE;
 
         match event {
-            PushrodEvent::PushrodMouseEvent {
-                point: _
-            } => event_mask = PUSHROD_EVENT_MOUSE_MOVED,
+            PushrodEvent::PushrodMouseEvent { point: _ } => event_mask = PUSHROD_EVENT_MOUSE_MOVED,
         }
 
         event_mask
@@ -118,8 +116,8 @@ impl Pushrod {
                 event_list.push(PushrodEvent::PushrodMouseEvent {
                     point: Point {
                         x: x as i32,
-                        y: y as i32
-                    }
+                        y: y as i32,
+                    },
                 });
             }
 

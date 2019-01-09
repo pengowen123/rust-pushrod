@@ -16,11 +16,11 @@ use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::event::event::*;
 
-struct TestMouseListener { }
+struct TestMouseListener {}
 
 impl TestMouseListener {
     fn new() -> Self {
-        Self { }
+        Self {}
     }
 }
 
@@ -33,7 +33,7 @@ impl PushrodEventListener for TestMouseListener {
         match event {
             PushrodEvent::PushrodMouseEvent { point } => {
                 println!("[TEST CALLBACK] X={} Y={}", point.x, point.y)
-            },
+            }
         }
     }
 }
