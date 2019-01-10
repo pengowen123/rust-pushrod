@@ -7,6 +7,8 @@ are ideas of other GUI libraries - Qt, Atari, Amiga, Tk, and others.  It draws
 inspiration from other libraries, letting you concentrate on code rather than
 obsessing over the interface.
 
+Why "Pushrod"?  Well, I obviously can't call it "Valve" ...
+
 ## Reason for Pushrod
 
 The reason I created this library instead of extending another library was that
