@@ -85,8 +85,12 @@ impl Pushrod {
     // should be done at the end of all event processing, within the rendering loop, not the
     // updating loop (UPS vs. FPS)
 
-    fn internal_handle_mouse_event(&self, _point: Point) {
+    fn internal_handle_mouse_move(&self, _point: Point) {
         // Send the point movement to the widget event handler.
+    }
+
+    fn internal_handle_mouse_button(&self, _button: MouseButton) {
+        // Send the button click to the widget event handler.
     }
 
     fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
@@ -111,7 +115,7 @@ impl Pushrod {
             // UPS loop handling
 
             if let Some([x, y]) = event.mouse_cursor_args() {
-                self.internal_handle_mouse_event(Point {
+                self.internal_handle_mouse_move(Point {
                     x: x as i32,
                     y: y as i32,
                 });
@@ -128,7 +132,8 @@ impl Pushrod {
                 if button.state == ButtonState::Press {
                     match button.button {
                         Button::Mouse(button) => {
-                            event_list.push(PushrodEvent::PushrodMouseDownEvent { button })
+                            self.internal_handle_mouse_button(button);
+                            event_list.push(PushrodEvent::PushrodMouseDownEvent { button });
                         }
                         _ => (),
                     }
