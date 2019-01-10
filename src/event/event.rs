@@ -17,14 +17,17 @@
 // limitations under the License.
 
 use crate::core::point::Point;
+use piston_window::*;
 
 pub type PushrodEventMask = u32;
 
 pub const PUSHROD_EVENT_NONE: PushrodEventMask = 0x00000000;
 pub const PUSHROD_EVENT_MOUSE_MOVED: PushrodEventMask = 0x00000001;
+pub const PUSHROD_EVENT_MOUSE_DOWN: PushrodEventMask = 0x00000002;
 
 pub enum PushrodEvent {
     PushrodMouseEvent { point: Point },
+    PushrodMouseDownEvent { button: MouseButton },
 }
 
 pub trait PushrodEventListener {

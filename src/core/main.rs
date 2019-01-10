@@ -94,6 +94,9 @@ impl Pushrod {
 
         match event {
             PushrodEvent::PushrodMouseEvent { point: _ } => event_mask = PUSHROD_EVENT_MOUSE_MOVED,
+            PushrodEvent::PushrodMouseDownEvent { button: _ } => {
+                event_mask = PUSHROD_EVENT_MOUSE_DOWN
+            }
         }
 
         event_mask
@@ -119,6 +122,17 @@ impl Pushrod {
                         y: y as i32,
                     },
                 });
+            }
+
+            if let Some(button) = event.button_args() {
+                if button.state == ButtonState::Press {
+                    match button.button {
+                        Button::Mouse(button) => {
+                            event_list.push(PushrodEvent::PushrodMouseDownEvent { button })
+                        }
+                        _ => (),
+                    }
+                }
             }
 
             // Dispatch events here in the bus
