@@ -16,3 +16,9 @@ only the button state, which is the `piston_window` `ButtonState` enum.  This ev
 
 Triggered when a mouse button is released.  Contains the `piston_window::ButtonState`.  This event
 matches the `PUSHROD_MOUSE_EVENT_UP` event mask.
+
+## PushrodMouseScrollEvent
+
+Triggered when a mouse scroll event takes place - whether horizontal or vertical.  Scrolling down or
+to the right will cause X and Y values to be positive.  Anything scrolling up or to the left will
+cause X and Y values to be negative.  This event matches the `PUSHROD_MOUSE_EVENT_SCROLL` event mask.

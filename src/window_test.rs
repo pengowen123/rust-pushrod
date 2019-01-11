@@ -26,7 +26,7 @@ impl TestMouseListener {
 
 impl PushrodEventListener for TestMouseListener {
     fn event_mask(&self) -> PushrodEventMask {
-        PUSHROD_EVENT_MOUSE_MOVED | PUSHROD_EVENT_MOUSE_DOWN | PUSHROD_EVENT_MOUSE_UP
+        PUSHROD_EVENT_MOUSE_MOVED | PUSHROD_EVENT_MOUSE_DOWN | PUSHROD_EVENT_MOUSE_UP | PUSHROD_EVENT_MOUSE_SCROLL
     }
 
     fn handle_event(&self, event: &PushrodEvent) {
@@ -42,6 +42,9 @@ impl PushrodEventListener for TestMouseListener {
                 MouseButton::Left => println!("[TEST CALLBACK] Left mouse button released."),
                 _ => (),
             },
+            PushrodEvent::PushrodMouseScrollEvent { point } => {
+                println!("[TEST CALLBACK] Scroll X={} Y={}", point.x, point.y);
+            }
         }
     }
 }

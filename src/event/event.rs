@@ -25,11 +25,13 @@ pub const PUSHROD_EVENT_NONE: PushrodEventMask = 0x00000000;
 pub const PUSHROD_EVENT_MOUSE_MOVED: PushrodEventMask = 0x00000001;
 pub const PUSHROD_EVENT_MOUSE_DOWN: PushrodEventMask = 0x00000002;
 pub const PUSHROD_EVENT_MOUSE_UP: PushrodEventMask = 0x00000004;
+pub const PUSHROD_EVENT_MOUSE_SCROLL: PushrodEventMask = 0x00000008;
 
 pub enum PushrodEvent {
     PushrodMouseEvent { point: Point },
     PushrodMouseDownEvent { button: MouseButton },
     PushrodMouseUpEvent { button: MouseButton },
+    PushrodMouseScrollEvent { point: Point },
 }
 
 pub trait PushrodEventListener {

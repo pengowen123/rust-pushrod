@@ -90,7 +90,9 @@ impl Pushrod {
     fn internal_handle_mouse_move(&self, point: Point) {
         // Send the point movement to the widget event handler.
 
-        self.event_list.borrow_mut().push(PushrodEvent::PushrodMouseEvent { point });
+        self.event_list
+            .borrow_mut()
+            .push(PushrodEvent::PushrodMouseEvent { point });
     }
 
     fn internal_handle_mouse_button(&self, button: ButtonArgs) {
@@ -99,18 +101,30 @@ impl Pushrod {
         if button.state == ButtonState::Press {
             match button.button {
                 Button::Mouse(button) => {
-                    self.event_list.borrow_mut().push(PushrodEvent::PushrodMouseDownEvent { button });
+                    self.event_list
+                        .borrow_mut()
+                        .push(PushrodEvent::PushrodMouseDownEvent { button });
                 }
                 _ => (),
             }
         } else if button.state == ButtonState::Release {
             match button.button {
                 Button::Mouse(button) => {
-                    self.event_list.borrow_mut().push(PushrodEvent::PushrodMouseUpEvent { button });
+                    self.event_list
+                        .borrow_mut()
+                        .push(PushrodEvent::PushrodMouseUpEvent { button });
                 }
                 _ => (),
             }
         }
+    }
+
+    fn internal_handle_mouse_scroll(&self, point: Point) {
+        // Send the mouse scroll to the widget event handler.
+
+        self.event_list
+            .borrow_mut()
+            .push(PushrodEvent::PushrodMouseScrollEvent { point });
     }
 
     fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
@@ -121,9 +135,8 @@ impl Pushrod {
             PushrodEvent::PushrodMouseDownEvent { button: _ } => {
                 event_mask = PUSHROD_EVENT_MOUSE_DOWN
             }
-            PushrodEvent::PushrodMouseUpEvent { button: _ } => {
-                event_mask = PUSHROD_EVENT_MOUSE_UP
-            }
+            PushrodEvent::PushrodMouseUpEvent { button: _ } => event_mask = PUSHROD_EVENT_MOUSE_UP,
+            PushrodEvent::PushrodMouseScrollEvent { point: _ } => event_mask = PUSHROD_EVENT_MOUSE_SCROLL,
         }
 
         event_mask
@@ -144,6 +157,13 @@ impl Pushrod {
 
             if let Some(button) = event.button_args() {
                 self.internal_handle_mouse_button(button);
+            }
+
+            if let Some([x, y]) = event.mouse_scroll_args() {
+                self.internal_handle_mouse_scroll(Point {
+                    x: x as i32,
+                    y: y as i32,
+                });
             }
 
             // Dispatch events here in the bus
