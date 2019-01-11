@@ -58,6 +58,7 @@ pub struct Pushrod {
     window_opengl: OpenGL,
     windows: RefCell<WindowList>,
     event_listeners: RefCell<Vec<Box<PushrodEventListener>>>,
+    event_list: RefCell<Vec<PushrodEvent>>,
 }
 
 impl Pushrod {
@@ -66,6 +67,7 @@ impl Pushrod {
             window_opengl: config,
             windows: RefCell::new(WindowList::new()),
             event_listeners: RefCell::new(Vec::new()),
+            event_list: RefCell::new(Vec::new()),
         }
     }
 
@@ -85,12 +87,30 @@ impl Pushrod {
     // should be done at the end of all event processing, within the rendering loop, not the
     // updating loop (UPS vs. FPS)
 
-    fn internal_handle_mouse_move(&self, _point: Point) {
+    fn internal_handle_mouse_move(&self, point: Point) {
         // Send the point movement to the widget event handler.
+
+        self.event_list.borrow_mut().push(PushrodEvent::PushrodMouseEvent { point });
     }
 
-    fn internal_handle_mouse_button(&self, _button: MouseButton) {
+    fn internal_handle_mouse_button(&self, button: ButtonArgs) {
         // Send the button click to the widget event handler.
+
+        if button.state == ButtonState::Press {
+            match button.button {
+                Button::Mouse(button) => {
+                    self.event_list.borrow_mut().push(PushrodEvent::PushrodMouseDownEvent { button });
+                }
+                _ => (),
+            }
+        } else if button.state == ButtonState::Release {
+            match button.button {
+                Button::Mouse(button) => {
+                    self.event_list.borrow_mut().push(PushrodEvent::PushrodMouseUpEvent { button });
+                }
+                _ => (),
+            }
+        }
     }
 
     fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
@@ -113,8 +133,6 @@ impl Pushrod {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
         while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
-            let mut event_list: Vec<PushrodEvent> = Vec::new();
-
             // UPS loop handling
 
             if let Some([x, y]) = event.mouse_cursor_args() {
@@ -122,38 +140,15 @@ impl Pushrod {
                     x: x as i32,
                     y: y as i32,
                 });
-
-                event_list.push(PushrodEvent::PushrodMouseEvent {
-                    point: Point {
-                        x: x as i32,
-                        y: y as i32,
-                    },
-                });
             }
 
             if let Some(button) = event.button_args() {
-                if button.state == ButtonState::Press {
-                    match button.button {
-                        Button::Mouse(button) => {
-                            self.internal_handle_mouse_button(button);
-                            event_list.push(PushrodEvent::PushrodMouseDownEvent { button });
-                        }
-                        _ => (),
-                    }
-                } else if button.state == ButtonState::Release {
-                    match button.button {
-                        Button::Mouse(button) => {
-                            self.internal_handle_mouse_button(button);
-                            event_list.push(PushrodEvent::PushrodMouseUpEvent { button });
-                        }
-                        _ => (),
-                    }
-                }
+                self.internal_handle_mouse_button(button);
             }
 
             // Dispatch events here in the bus
 
-            for event in &event_list {
+            for event in self.event_list.borrow_mut().iter() {
                 for listener in self.event_listeners.borrow_mut().iter() {
                     let event_mask = self.internal_derive_event_mask(event);
 
@@ -162,6 +157,8 @@ impl Pushrod {
                     }
                 }
             }
+
+            self.event_list.borrow_mut().clear();
 
             // FPS loop handling
 
