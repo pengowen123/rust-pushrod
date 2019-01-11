@@ -136,7 +136,9 @@ impl Pushrod {
                 event_mask = PUSHROD_EVENT_MOUSE_DOWN
             }
             PushrodEvent::PushrodMouseUpEvent { button: _ } => event_mask = PUSHROD_EVENT_MOUSE_UP,
-            PushrodEvent::PushrodMouseScrollEvent { point: _ } => event_mask = PUSHROD_EVENT_MOUSE_SCROLL,
+            PushrodEvent::PushrodMouseScrollEvent { point: _ } => {
+                event_mask = PUSHROD_EVENT_MOUSE_SCROLL
+            }
         }
 
         event_mask
