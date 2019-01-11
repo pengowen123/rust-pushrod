@@ -5,6 +5,6 @@ below.
 
 ## Event Classes
 
-- (Mouse Events)[README_MOUSE.md]
+- [Mouse Events](README_MOUSE.md)
 
 ## How to register for, and catch events
