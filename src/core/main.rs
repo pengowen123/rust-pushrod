@@ -101,6 +101,9 @@ impl Pushrod {
             PushrodEvent::PushrodMouseDownEvent { button: _ } => {
                 event_mask = PUSHROD_EVENT_MOUSE_DOWN
             }
+            PushrodEvent::PushrodMouseUpEvent { button: _ } => {
+                event_mask = PUSHROD_EVENT_MOUSE_UP
+            }
         }
 
         event_mask
@@ -134,6 +137,14 @@ impl Pushrod {
                         Button::Mouse(button) => {
                             self.internal_handle_mouse_button(button);
                             event_list.push(PushrodEvent::PushrodMouseDownEvent { button });
+                        }
+                        _ => (),
+                    }
+                } else if button.state == ButtonState::Release {
+                    match button.button {
+                        Button::Mouse(button) => {
+                            self.internal_handle_mouse_button(button);
+                            event_list.push(PushrodEvent::PushrodMouseUpEvent { button });
                         }
                         _ => (),
                     }
