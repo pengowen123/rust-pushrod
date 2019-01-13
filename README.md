@@ -53,13 +53,13 @@ These design ideas are critical.  Keep it simple.  Keep it stupid simple.
        - Audio
        - Sprite
        - Drag-and-drop buffer
-   - Layout Managers
-       - Relative Layout
-       - Grid Layout
-       - Auto Layout
-       - Wrap Layout
+3. Layout Managers (possibly separate project)
+   - Relative Layout
+   - Grid Layout
+   - Auto Layout
+   - Wrap Layout
 3. Themable Library
-   - ONLY ONCE ALL WIDGETS ARE DESIGNED do we do themes.
+   - **ONLY ONCE ALL WIDGETS ARE DESIGNED do we do themes**.
    - Themes will be handled by the base widget
 
 ## Runnable Tests
@@ -67,6 +67,8 @@ These design ideas are critical.  Keep it simple.  Keep it stupid simple.
 To run the all-inclusive window event test, use:
 
 ```
+cargo run
+(or)
 cargo run --bin window_test
 ```
 
@@ -74,6 +76,8 @@ This will only test window-related events with mouse interaction: mouse enter, m
 pointer move, and mouse scroll.
 
 ## 1. Event Library
+
+See [Event Library README](src/event/README.md)
 
 ## 2. Widget Library
 
