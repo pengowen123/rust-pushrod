@@ -40,7 +40,7 @@ These design ideas are critical.  Keep it simple.  Keep it stupid simple.
    - Standard widgets
        - Text
        - Button
-       - Widget Contaioner
+       - Widget Container
        - Scroll bar
        - Progress bar
        - Shape/Poly
