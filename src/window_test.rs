@@ -34,18 +34,18 @@ impl PushrodEventListener for TestMouseListener {
 
     fn handle_event(&self, event: &PushrodEvent) {
         match event {
-            PushrodEvent::PushrodMouseEvent { point } => {
+            PushrodEvent::MouseEvent { point } => {
                 println!("[TEST CALLBACK] X={} Y={}", point.x, point.y)
             }
-            PushrodEvent::PushrodMouseDownEvent { button } => match button {
+            PushrodEvent::MouseDownEvent { button } => match button {
                 MouseButton::Left => println!("[TEST CALLBACK] Left mouse button pressed."),
                 _ => (),
             },
-            PushrodEvent::PushrodMouseUpEvent { button } => match button {
+            PushrodEvent::MouseUpEvent { button } => match button {
                 MouseButton::Left => println!("[TEST CALLBACK] Left mouse button released."),
                 _ => (),
             },
-            PushrodEvent::PushrodMouseScrollEvent { point } => {
+            PushrodEvent::MouseScrollEvent { point } => {
                 println!("[TEST CALLBACK] Scroll X={} Y={}", point.x, point.y);
             }
         }

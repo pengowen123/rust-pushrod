@@ -92,7 +92,7 @@ impl Pushrod {
 
         self.event_list
             .borrow_mut()
-            .push(PushrodEvent::PushrodMouseEvent { point });
+            .push(PushrodEvent::MouseEvent { point });
     }
 
     fn internal_handle_mouse_button(&self, button: ButtonArgs) {
@@ -103,7 +103,7 @@ impl Pushrod {
                 Button::Mouse(button) => {
                     self.event_list
                         .borrow_mut()
-                        .push(PushrodEvent::PushrodMouseDownEvent { button });
+                        .push(PushrodEvent::MouseDownEvent { button });
                 }
                 _ => (),
             }
@@ -112,7 +112,7 @@ impl Pushrod {
                 Button::Mouse(button) => {
                     self.event_list
                         .borrow_mut()
-                        .push(PushrodEvent::PushrodMouseUpEvent { button });
+                        .push(PushrodEvent::MouseUpEvent { button });
                 }
                 _ => (),
             }
@@ -124,21 +124,17 @@ impl Pushrod {
 
         self.event_list
             .borrow_mut()
-            .push(PushrodEvent::PushrodMouseScrollEvent { point });
+            .push(PushrodEvent::MouseScrollEvent { point });
     }
 
     fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
         let mut event_mask = PUSHROD_EVENT_NONE;
 
         match event {
-            PushrodEvent::PushrodMouseEvent { point: _ } => event_mask = PUSHROD_EVENT_MOUSE_MOVED,
-            PushrodEvent::PushrodMouseDownEvent { button: _ } => {
-                event_mask = PUSHROD_EVENT_MOUSE_DOWN
-            }
-            PushrodEvent::PushrodMouseUpEvent { button: _ } => event_mask = PUSHROD_EVENT_MOUSE_UP,
-            PushrodEvent::PushrodMouseScrollEvent { point: _ } => {
-                event_mask = PUSHROD_EVENT_MOUSE_SCROLL
-            }
+            PushrodEvent::MouseEvent { point: _ } => event_mask = PUSHROD_EVENT_MOUSE_MOVED,
+            PushrodEvent::MouseDownEvent { button: _ } => event_mask = PUSHROD_EVENT_MOUSE_DOWN,
+            PushrodEvent::MouseUpEvent { button: _ } => event_mask = PUSHROD_EVENT_MOUSE_UP,
+            PushrodEvent::MouseScrollEvent { point: _ } => event_mask = PUSHROD_EVENT_MOUSE_SCROLL,
         }
 
         event_mask
