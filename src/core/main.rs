@@ -127,6 +127,20 @@ impl Pushrod {
             .push(PushrodEvent::MouseScrollEvent { point });
     }
 
+    fn internal_dispatch_events(&self) {
+        for event in self.event_list.borrow_mut().iter() {
+            for listener in self.event_listeners.borrow_mut().iter() {
+                let event_mask = self.internal_derive_event_mask(event);
+
+                if listener.event_mask() & event_mask == event_mask {
+                    listener.handle_event(event);
+                }
+            }
+        }
+
+        self.event_list.borrow_mut().clear();
+    }
+
     fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
         let mut event_mask = PUSHROD_EVENT_NONE;
 
@@ -165,18 +179,7 @@ impl Pushrod {
             }
 
             // Dispatch events here in the bus
-
-            for event in self.event_list.borrow_mut().iter() {
-                for listener in self.event_listeners.borrow_mut().iter() {
-                    let event_mask = self.internal_derive_event_mask(event);
-
-                    if listener.event_mask() & event_mask == event_mask {
-                        listener.handle_event(event);
-                    }
-                }
-            }
-
-            self.event_list.borrow_mut().clear();
+            self.internal_dispatch_events();
 
             // FPS loop handling
 
