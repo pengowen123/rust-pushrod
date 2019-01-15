@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub trait PushrodWidget {
-    fn origin(&mut self) -> Point;
-    fn size(&mut self) -> Size;
+use crate::core::point::*;
+
+pub trait PushrodWidgetEvents {
+    fn origin(&mut self) -> &Point;
+    fn size(&mut self) -> &Size;
 
     fn on_mouse_enter(&mut self);
     fn on_mouse_exit(&mut self);
@@ -26,37 +28,33 @@ pub struct PushrodWidget {
     size: Size,
 }
 
-pub impl PushrodBaseWidget {
-
+impl PushrodWidget {
     pub fn new(x: i32, y: i32, w: i32, h: i32) -> Self {
         Self {
             origin: Point { x, y },
             size: Size { w, h },
         }
     }
-
 }
 
-pub impl PushrodWidget for PushrodBaseWidget {
-
-    pub fn origin(&mut self) -> Point {
-        self.origin
+impl PushrodWidgetEvents for PushrodWidget {
+    fn origin(&mut self) -> &Point {
+        &self.origin
     }
 
-    pub fn size(&mut self) -> Size {
-        self.size
+    fn size(&mut self) -> &Size {
+        &self.size
     }
 
-    pub fn on_mouse_enter(&mut self) {
+    fn on_mouse_enter(&mut self) {
         println!("BaseWidget: on_mouse_enter");
     }
 
-    pub fn on_mouse_exit(&mut self) {
+    fn on_mouse_exit(&mut self) {
         println!("BaseWidget: on_mouse_exit");
     }
 
-    pub fn on_click(&mut self) {
-        println!("BaseWidget: on_click");
+    fn on_click(&mut self, clicks: u8) {
+        println!("BaseWidget: on_click: {}", clicks);
     }
-
 }

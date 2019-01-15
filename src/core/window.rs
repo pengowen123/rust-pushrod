@@ -1,4 +1,5 @@
-// Widget Module
+// Window Container
+// Contains a PistonWindow and a list of widgets
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,4 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod widget;
+use piston_window::*;
+use crate::widget::widget::*;
+
+pub struct PushrodWindow {
+    pub window: PistonWindow,
+    widgets: Vec<PushrodWidget>,
+}
+
+impl PushrodWindow {
+    pub fn new(window: PistonWindow) -> Self {
+        Self {
+            window,
+            widgets: Vec::new(),
+        }
+    }
+
+    pub fn add_widget(&mut self, widget: PushrodWidget) {
+        self.widgets.push(widget);
+    }
+}

@@ -14,6 +14,7 @@
 
 use piston_window::*;
 use pushrod::core::main::*;
+use pushrod::core::window::*;
 use pushrod::event::event::*;
 
 struct TestMouseListener {}
@@ -59,16 +60,17 @@ fn main() {
 
     let prod: Pushrod = Pushrod::new(opengl);
 
-    let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [640, 480])
+    let window: PistonWindow = WindowSettings::new("Pushrod Window", [640, 480])
         .opengl(opengl)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
+    let mut pushrod_window: PushrodWindow = PushrodWindow::new(window);
 
-    window.set_max_fps(60);
-    window.set_ups(60);
+    pushrod_window.window.set_max_fps(60);
+    pushrod_window.window.set_ups(60);
 
     // Adds a window to the stack of watched events
-    prod.add_window(window);
+    prod.add_window(pushrod_window.window);
     prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
 
     // Runs the main event loop
