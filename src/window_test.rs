@@ -60,11 +60,12 @@ fn main() {
 
     let prod: Pushrod = Pushrod::new(opengl);
 
-    let window: PistonWindow = WindowSettings::new("Pushrod Window", [640, 480])
-        .opengl(opengl)
-        .build()
-        .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-    let mut pushrod_window: PushrodWindow = PushrodWindow::new(window);
+    let mut pushrod_window: PushrodWindow = PushrodWindow::new(
+        WindowSettings::new("Pushrod Window", [640, 480])
+            .opengl(opengl)
+            .build()
+            .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
+    );
 
     pushrod_window.window.set_max_fps(60);
     pushrod_window.window.set_ups(60);

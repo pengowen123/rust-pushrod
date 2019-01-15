@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use crate::widget::widget::*;
+use piston_window::*;
 
 pub struct PushrodWindow {
     pub window: PistonWindow,
