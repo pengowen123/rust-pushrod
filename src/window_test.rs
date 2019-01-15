@@ -14,8 +14,8 @@
 
 use piston_window::*;
 use pushrod::core::main::*;
-use pushrod::core::window::*;
 use pushrod::core::point::*;
+use pushrod::core::window::*;
 use pushrod::event::event::*;
 
 struct TestMouseListener {}

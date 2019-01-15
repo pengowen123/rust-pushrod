@@ -13,14 +13,13 @@
 // limitations under the License.
 
 use crate::core::point::*;
+use crate::widget::signal::*;
 
 pub trait PushrodWidgetEvents {
     fn origin(&mut self) -> &Point;
     fn size(&mut self) -> &Size;
 
-    fn on_mouse_enter(&mut self);
-    fn on_mouse_exit(&mut self);
-    fn on_click(&mut self, clicks: u8);
+    fn on_signal(&mut self, signal: PushrodWidgetSignal);
 }
 
 pub struct PushrodWidget {
@@ -46,15 +45,7 @@ impl PushrodWidgetEvents for PushrodWidget {
         &self.size
     }
 
-    fn on_mouse_enter(&mut self) {
-        println!("BaseWidget: on_mouse_enter");
-    }
-
-    fn on_mouse_exit(&mut self) {
-        println!("BaseWidget: on_mouse_exit");
-    }
-
-    fn on_click(&mut self, clicks: u8) {
-        println!("BaseWidget: on_click: {}", clicks);
+    fn on_signal(&mut self, signal: PushrodWidgetSignal) {
+        println!("On signal received.");
     }
 }
