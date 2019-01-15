@@ -15,6 +15,7 @@
 use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::core::window::*;
+use pushrod::core::point::*;
 use pushrod::event::event::*;
 
 struct TestMouseListener {}
@@ -22,6 +23,28 @@ struct TestMouseListener {}
 impl TestMouseListener {
     fn new() -> Self {
         Self {}
+    }
+
+    fn handle_mouse_move(&self, point: &Point) {
+        println!("X={} Y={}", point.x, point.y);
+    }
+
+    fn handle_mouse_down(&self, button: &MouseButton) {
+        match button {
+            MouseButton::Left => println!("Left mouse button pressed."),
+            _ => println!("Other mouse button pressed."),
+        }
+    }
+
+    fn handle_mouse_up(&self, button: &MouseButton) {
+        match button {
+            MouseButton::Left => println!("Left mouse button released."),
+            _ => println!("Other mouse button released."),
+        }
+    }
+
+    fn handle_mouse_scroll(&self, point: &Point) {
+        println!("Scroll: X={} Y={}", point.x, point.y);
     }
 }
 
@@ -35,20 +58,10 @@ impl PushrodEventListener for TestMouseListener {
 
     fn handle_event(&self, event: &PushrodEvent) {
         match event {
-            PushrodEvent::MouseEvent { point } => {
-                println!("[TEST CALLBACK] X={} Y={}", point.x, point.y)
-            }
-            PushrodEvent::MouseDownEvent { button } => match button {
-                MouseButton::Left => println!("[TEST CALLBACK] Left mouse button pressed."),
-                _ => (),
-            },
-            PushrodEvent::MouseUpEvent { button } => match button {
-                MouseButton::Left => println!("[TEST CALLBACK] Left mouse button released."),
-                _ => (),
-            },
-            PushrodEvent::MouseScrollEvent { point } => {
-                println!("[TEST CALLBACK] Scroll X={} Y={}", point.x, point.y);
-            }
+            PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
+            PushrodEvent::MouseDownEvent { button } => self.handle_mouse_down(&button),
+            PushrodEvent::MouseUpEvent { button } => self.handle_mouse_up(&button),
+            PushrodEvent::MouseScrollEvent { point } => self.handle_mouse_scroll(&point),
         }
     }
 }
