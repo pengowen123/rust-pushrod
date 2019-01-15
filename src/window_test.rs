@@ -50,10 +50,7 @@ impl TestMouseListener {
 
 impl PushrodEventListener for TestMouseListener {
     fn event_mask(&self) -> PushrodEventMask {
-        PUSHROD_EVENT_MOUSE_MOVED
-            | PUSHROD_EVENT_MOUSE_DOWN
-            | PUSHROD_EVENT_MOUSE_UP
-            | PUSHROD_EVENT_MOUSE_SCROLL
+        PUSHROD_EVENT_MOUSE_ALL
     }
 
     fn handle_event(&self, event: &PushrodEvent) {
@@ -68,11 +65,7 @@ impl PushrodEventListener for TestMouseListener {
 
 fn main() {
     let opengl = OpenGL::V3_2;
-
-    println!("Starting Test.");
-
     let prod: Pushrod = Pushrod::new(opengl);
-
     let mut pushrod_window: PushrodWindow = PushrodWindow::new(
         WindowSettings::new("Pushrod Window", [640, 480])
             .opengl(opengl)
