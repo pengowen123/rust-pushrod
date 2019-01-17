@@ -12,11 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use crate::core::point::*;
 use crate::widget::signal::*;
+
+pub struct PushrodWindow {
+    window: PistonWindow,
+    widgets: Vec<PushrodWidget>,
+}
+
+impl PushrodWindow {
+    fn new(window: PistonWindow) -> Self {
+        Self {
+            window,
+            widgets: Vec::new(),
+        }
+    }
+
+    fn window(&mut self) -> &PistonWindow {
+        &self.window
+    }
+
+    fn add_widget(&mut self, widget: PushrodWidget) {
+        self.widgets.push(widget);
+    }
+}
 
 pub trait PushrodWidgetEvents {
     fn origin(&mut self) -> &Point;
