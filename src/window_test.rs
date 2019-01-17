@@ -77,7 +77,7 @@ fn main() {
     pushrod_window.window.set_ups(60);
 
     // Adds a window to the stack of watched events
-    prod.add_window(pushrod_window.window);
+    prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
 
     // Runs the main event loop

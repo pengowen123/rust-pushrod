@@ -14,6 +14,7 @@
 
 use crate::core::point::Point;
 use crate::event::event::*;
+use crate::core::window::*;
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;
@@ -21,7 +22,7 @@ use piston_window::*;
 use std::cell::RefCell;
 
 struct WindowList {
-    windows: Vec<PistonWindow>,
+    windows: Vec<PushrodWindow>,
     window_position: usize,
 }
 
@@ -33,11 +34,11 @@ impl WindowList {
         }
     }
 
-    pub fn push(&mut self, window: PistonWindow) {
+    pub fn push(&mut self, window: PushrodWindow) {
         self.windows.push(window);
     }
 
-    pub fn next_window(&mut self) -> (Option<Event>, &PistonWindow) {
+    pub fn next_window(&mut self) -> (Option<Event>, &PushrodWindow) {
         let mut cur_window_position = self.window_position;
 
         cur_window_position += 1;
@@ -49,7 +50,7 @@ impl WindowList {
         self.window_position = cur_window_position;
 
         (
-            self.windows[self.window_position].next(),
+            self.windows[self.window_position].window.next(),
             &self.windows[self.window_position],
         )
     }
@@ -72,7 +73,7 @@ impl Pushrod {
         }
     }
 
-    pub fn add_window(&self, window: PistonWindow) {
+    pub fn add_window(&self, window: PushrodWindow) {
         self.windows.borrow_mut().push(window);
     }
 
