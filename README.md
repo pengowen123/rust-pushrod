@@ -18,7 +18,7 @@ I wanted to keep these specific design ideas in mind:
 - Easily extensible
 - Easy to use and understand
 
-These design ideas are critical.  Keep it simple.  Keep it stupid simple.
+These design ideas are critical.  **Keep it simple.  Keep it stupid simple.**
 
 ## Prerequisites for Pushrod
 
