@@ -1,22 +1,16 @@
 # rust-pushrod
 
-GEM-like Widget Library for Rust Piston library.
+UI Widget Library for Rust Piston library.  Draws inspiration from Atari GEM,
+TrollTech Qt, and others.
 
-Incorporates Atari GEM/VDI ideas with callbacks and Objects (Widgets), which
-are ideas of other GUI libraries - Qt, Atari, Amiga, Tk, and others.  It draws
-inspiration from other libraries, letting you concentrate on code rather than
-obsessing over the interface.
-
-Why "Pushrod"?  Well, I obviously can't call it "Valve" ...
-
-## Reason for Pushrod
+## Philosophy
 
 The reason I created this library instead of extending another library was that
 I wanted to keep these specific design ideas in mind:
 
 - Maintainable with little effort
 - Easily extensible
-- Easy to use and understand
+- **Easy to use and understand**
 
 These design ideas are critical.  **Keep it simple.  Keep it stupid simple.**
 
