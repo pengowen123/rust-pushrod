@@ -20,6 +20,18 @@ I wanted to keep these specific design ideas in mind:
 
 These design ideas are critical.  Keep it simple.  Keep it stupid simple.
 
+## Prerequisites for Pushrod
+
+Pushrod requires the following minimum versions:
+
+| Library | Version |
+| ------- | ------- |
+| piston_window | 0.80.0 |
+| piston2d-opengl_graphics | 0.53.0 |
+| gfx_core | 0.8.0 |
+| gfx_device_gl | 0.15.4 |
+| rust | 1.32 |
+
 ## Timeline/Plans
 
 1. Event Library
