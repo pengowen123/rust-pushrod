@@ -26,25 +26,25 @@ impl TestMouseListener {
     }
 
     fn handle_mouse_move(&self, point: &Point) {
-        println!("X={} Y={}", point.x, point.y);
+        eprintln!("X={} Y={}", point.x, point.y);
     }
 
     fn handle_mouse_down(&self, button: &MouseButton) {
         match button {
-            MouseButton::Left => println!("Left mouse button pressed."),
-            _ => println!("Other mouse button pressed."),
+            MouseButton::Left => eprintln!("Left mouse button pressed."),
+            _ => eprintln!("Other mouse button pressed."),
         }
     }
 
     fn handle_mouse_up(&self, button: &MouseButton) {
         match button {
-            MouseButton::Left => println!("Left mouse button released."),
-            _ => println!("Other mouse button released."),
+            MouseButton::Left => eprintln!("Left mouse button released."),
+            _ => eprintln!("Other mouse button released."),
         }
     }
 
     fn handle_mouse_scroll(&self, point: &Point) {
-        println!("Scroll: X={} Y={}", point.x, point.y);
+        eprintln!("Scroll: X={} Y={}", point.x, point.y);
     }
 }
 

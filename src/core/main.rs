@@ -155,7 +155,7 @@ impl Pushrod {
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
-        while let (Some(event), _window) = self.windows.borrow_mut().next_window() {
+        while let (Some(event), _pushrod_window) = self.windows.borrow_mut().next_window() {
             // UPS loop handling
 
             if let Some([x, y]) = event.mouse_cursor_args() {
