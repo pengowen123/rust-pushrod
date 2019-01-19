@@ -21,3 +21,7 @@ pub struct Size {
     pub w: i32,
     pub h: i32,
 }
+
+// TODO: Add default Point (x, y = 0)
+// TODO: Add default Size (w, h = 0)
+// TODO: Add constructor impls for Point and Size, both of which take x, y, w, and h respectively as inputs.
