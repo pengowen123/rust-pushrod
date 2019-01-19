@@ -13,8 +13,8 @@
 // limitations under the License.
 
 use crate::core::point::Point;
-use crate::event::event::*;
 use crate::core::window::*;
+use crate::event::event::*;
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;

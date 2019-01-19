@@ -19,16 +19,20 @@ use std::collections::HashMap;
 use crate::core::point::*;
 use crate::widget::signal::*;
 
-pub const MAX_CONFIGS: usize = 40;
-pub const WIDGET_CONFIG_ORIGIN: u8 = 0;
-
 pub enum PushrodWidgetConfig {
     Origin { point: Point },
     Size { size: crate::core::point::Size },
+    Color { color: types::Color },
 }
 
-pub enum PushrodWidget {
-    BaseWidget { configs: HashMap<u8, PushrodWidgetConfig>, }
+pub trait PushrodWidget {
+    fn get_origin(&mut self) -> Point;
+    fn get_size(&mut self) -> crate::core::point::Size;
+    fn get_color(&mut self) -> types::Color;
+
+    fn draw(&mut self, _context: Context, graphics: &mut GlGraphics) {
+        clear(self.get_color(), graphics);
+    }
 }
 
 //trait PushrodBaseWidgetTrait {

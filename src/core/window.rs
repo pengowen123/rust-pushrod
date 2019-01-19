@@ -18,18 +18,18 @@ use piston_window::*;
 
 pub struct PushrodWindow {
     pub window: PistonWindow,
-    widgets: Vec<PushrodWidget>,
+    //    widgets: Vec<PushrodWidget>,
 }
 
 impl PushrodWindow {
     pub fn new(window: PistonWindow) -> Self {
         Self {
             window,
-            widgets: Vec::new(),
+            //            widgets: Vec::new(),
         }
     }
 
-    pub fn add_widget(&mut self, widget: PushrodWidget) {
-        self.widgets.push(widget);
-    }
+    //    pub fn add_widget(&mut self, widget: PushrodWidget) {
+    //        self.widgets.push(widget);
+    //    }
 }
