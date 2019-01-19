@@ -49,10 +49,6 @@ impl TestMouseListener {
 }
 
 impl PushrodEventListener for TestMouseListener {
-    fn event_mask(&self) -> PushrodEventMask {
-        PUSHROD_EVENT_MOUSE_ALL
-    }
-
     fn handle_event(&self, event: &PushrodEvent) {
         match event {
             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
