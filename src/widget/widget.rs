@@ -42,7 +42,16 @@ pub trait PushrodWidget {
         }
     }
 
-    fn get_size(&mut self) -> crate::core::point::Size;
+    fn get_size(&mut self) -> crate::core::point::Size {
+        match self.get_config()[&CONFIG_SIZE] {
+            PushrodWidgetConfig::Size { ref size } => crate::core::point::Size {
+                w: size.w,
+                h: size.h,
+            },
+            _ => crate::core::point::Size { w: 0, h: 0 },
+        }
+    }
+
     fn get_color(&mut self) -> types::Color;
 
     fn draw(&mut self, _context: Context, graphics: &mut GlGraphics) {
