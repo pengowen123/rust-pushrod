@@ -52,63 +52,14 @@ pub trait PushrodWidget {
         }
     }
 
-    fn get_color(&mut self) -> types::Color;
+    fn get_color(&mut self) -> types::Color {
+        match self.get_config()[&CONFIG_COLOR] {
+            PushrodWidgetConfig::Color { color } => color,
+            _ => [1.0; 4],
+        }
+    }
 
     fn draw(&mut self, _context: Context, graphics: &mut GlGraphics) {
         clear(self.get_color(), graphics);
     }
 }
-
-//trait PushrodBaseWidgetTrait {
-//    fn get_config<'a>(&'a self) -> &'a HashMap<u8, PushrodWidgetConfig>;
-//    fn set_origin(&mut self, point: Point) {
-//        self.get_config().entry(WIDGET_CONFIG_ORIGIN).set(point);
-//    }
-//}
-//
-//impl PushrodBaseWidgetTrait for PushrodWidget::BaseWidget {
-//    fn get_config<'a>(&'a self) -> &'a HashMap<u8, PushrodWidgetConfig> {
-//        &self.configs
-//    }
-//}
-//
-//
-//pub trait PushrodWidgetEvents {
-//    fn origin(&mut self) -> &Point;
-//    fn size(&mut self) -> &crate::core::point::Size;
-//
-//    fn on_signal(&mut self, signal: PushrodWidgetSignal);
-//    fn on_draw(&mut self, context: Context, graphics: &mut GlGraphics);
-//}
-//
-//pub struct PushrodWidget {
-//    origin: Point,
-//    size: crate::core::point::Size,
-//}
-//
-//impl PushrodWidget {
-//    pub fn new(x: i32, y: i32, w: i32, h: i32) -> Self {
-//        Self {
-//            origin: Point { x, y },
-//            size: crate::core::point::Size { w, h },
-//        }
-//    }
-//}
-//
-//impl PushrodWidgetEvents for PushrodWidget {
-//    fn origin(&mut self) -> &Point {
-//        &self.origin
-//    }
-//
-//    fn size(&mut self) -> &crate::core::point::Size {
-//        &self.size
-//    }
-//
-//    fn on_signal(&mut self, _signal: PushrodWidgetSignal) {
-//        println!("On signal received.");
-//    }
-//
-//    fn on_draw(&mut self, _context: Context, graphics: &mut GlGraphics) {
-//        clear([1.0; 4], graphics);
-//    }
-//}
