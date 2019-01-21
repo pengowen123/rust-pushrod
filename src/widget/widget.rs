@@ -59,7 +59,12 @@ pub trait PushrodWidget {
         }
     }
 
-    fn draw(&mut self, _context: Context, graphics: &mut GlGraphics) {
+    fn draw(&mut self, context: Context, graphics: &mut GlGraphics) {
+        let origin: Point = self.get_origin();
+        let size: crate::core::point::Size = self.get_size();
+
+        context.draw_state.scissor([origin.x as u32, origin.y as u32, size.w as u32, size.h as u32]);
         clear(self.get_color(), graphics);
+        context.reset();
     }
 }
