@@ -18,7 +18,7 @@ use piston_window::*;
 
 pub struct PushrodWindow {
     pub window: PistonWindow,
-    widgets: Vec<Box<PushrodWidget>>,
+    widgets: Vec<Box<dyn PushrodWidget>>,
 }
 
 impl PushrodWindow {
@@ -29,7 +29,7 @@ impl PushrodWindow {
         }
     }
 
-    pub fn add_widget(&mut self, widget: Box<PushrodWidget>) {
+    pub fn add_widget(&mut self, widget: Box<dyn PushrodWidget>) {
         self.widgets.push(widget);
     }
 }

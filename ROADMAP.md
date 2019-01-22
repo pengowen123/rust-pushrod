@@ -17,12 +17,55 @@
   - [ ] Update test case to show simple widgets
   - [ ] Update draw function to walk all widgets and draw them
   - [ ] Refactor to be as simple and easy to understand as possible (within reason)
-  - [ ] Box Widget with Border Width and Color, extended from Base Widget
-  - [ ] Refactor Box Widget to be simple
+  - [ ] Document Widget Library and how to extend
+  - [ ] Assign Widget ID when added to Window Container
 - [ ] Base Widget Signal Framework
   - [ ] Signal for Mouse Enter
   - [ ] Signal for Mouse Exit
   - [ ] Signal for Mouse Click (Single click)
   - [ ] Signal for Mouse Scroll
+  - [ ] Implement Widget Lookup based on mouse position (done by Widget ID)
+    - [ ] Get Widget at Point (returns Widget ID)
+    - [ ] Get Widget by ID (returns Widget reference)
+  - [ ] Callback in Base Widgets for each event type (done by Widget ID)
 - [ ] Documentation
 
+# 0.2.0
+
+- [ ] Improve Widget Library
+  - [ ] Add parent/child relationship
+  - [ ] Walk children when parent signals an invalidate
+  - [ ] Invalidated child should draw subchildren as well, but not parent
+  - [ ] Extend Widget Store to keep track of (parent, child)
+- [ ] Improve Signal Events
+  - [ ] Implement Double Click
+- [ ] Implement Graphics Library
+  - [ ] Implement a graphics library that is uniform and not independent of any Rust library
+  - [ ] Clip
+  - [ ] Draw Box
+  - [ ] Draw Rounded Rectangle
+  - [ ] Draw Ellipse
+  - [ ] Draw Arc
+  - [ ] Draw Circle
+  - [ ] Draw Poly
+  - [ ] Fill Area
+  - [ ] Translate Points based on Origin/Size
+- [ ] Implement Standard Widget Library (Extends from Base Widget)
+  - [ ] Box Widget with Border Width and Color
+  - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
+  - [ ] Button
+  - [ ] Progress Indicator
+
+# 0.3.0
+
+- [ ] Complicated Widget Library
+  - [ ] Scrollbox (Horizontal and Vertical)
+  - [ ] Editable Text Box
+  - [ ] Scrollable Viewing Area
+  - [ ] Toggle Button
+
+# TBD
+
+- [ ] Convert Widget Library to OpenGL 3D Objects
+  - [ ] All drawing and widget libraries remain the same
+  - [ ] Translate graphics to draw to a canvas/texture
