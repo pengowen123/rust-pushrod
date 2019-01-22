@@ -14,6 +14,8 @@
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;
+
+use std::cell::RefCell;
 use std::collections::HashMap;
 
 use crate::core::point::*;
@@ -30,10 +32,22 @@ pub enum PushrodWidgetConfig {
 }
 
 pub trait PushrodWidget {
-    fn get_config(&mut self) -> HashMap<u8, PushrodWidgetConfig>;
+    fn get_config(&mut self) -> RefCell<HashMap<u8, PushrodWidgetConfig>>;
+
+    fn set_config(&mut self, key: u8, value: PushrodWidgetConfig) {
+        if let Some(x) = self.get_config().borrow_mut().get_mut(&key) {
+            *x = value;
+        } else {
+            self.get_config().borrow_mut().insert(key, value);
+        }
+    }
+
+    fn set_origin(&mut self, point: Point) {
+        self.set_config(CONFIG_ORIGIN, PushrodWidgetConfig::Origin { point });
+    }
 
     fn get_origin(&mut self) -> Point {
-        match self.get_config()[&CONFIG_ORIGIN] {
+        match self.get_config().borrow()[&CONFIG_ORIGIN] {
             PushrodWidgetConfig::Origin { ref point } => Point {
                 x: point.x,
                 y: point.y,
@@ -42,8 +56,12 @@ pub trait PushrodWidget {
         }
     }
 
+    fn set_size(&mut self, size: crate::core::point::Size) {
+        self.set_config(CONFIG_SIZE, PushrodWidgetConfig::Size { size });
+    }
+
     fn get_size(&mut self) -> crate::core::point::Size {
-        match self.get_config()[&CONFIG_SIZE] {
+        match self.get_config().borrow()[&CONFIG_SIZE] {
             PushrodWidgetConfig::Size { ref size } => crate::core::point::Size {
                 w: size.w,
                 h: size.h,
@@ -52,8 +70,12 @@ pub trait PushrodWidget {
         }
     }
 
+    fn set_color(&mut self, color: types::Color) {
+        self.set_config(CONFIG_COLOR, PushrodWidgetConfig::Color { color });
+    }
+
     fn get_color(&mut self) -> types::Color {
-        match self.get_config()[&CONFIG_COLOR] {
+        match self.get_config().borrow()[&CONFIG_COLOR] {
             PushrodWidgetConfig::Color { color } => color,
             _ => [1.0; 4],
         }
@@ -63,7 +85,12 @@ pub trait PushrodWidget {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
 
-        context.draw_state.scissor([origin.x as u32, origin.y as u32, size.w as u32, size.h as u32]);
+        context.draw_state.scissor([
+            origin.x as u32,
+            origin.y as u32,
+            size.w as u32,
+            size.h as u32,
+        ]);
         clear(self.get_color(), graphics);
         context.reset();
     }
