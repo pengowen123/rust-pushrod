@@ -21,11 +21,13 @@ use std::collections::HashMap;
 use crate::core::point::*;
 use crate::widget::signal::*;
 
-pub const CONFIG_ORIGIN: u8 = 0;
-pub const CONFIG_SIZE: u8 = 1;
-pub const CONFIG_COLOR: u8 = 2;
+pub const CONFIG_INVALIDATE: u8 = 0;
+pub const CONFIG_ORIGIN: u8 = 1;
+pub const CONFIG_SIZE: u8 = 2;
+pub const CONFIG_COLOR: u8 = 3;
 
 pub enum PushrodWidgetConfig {
+    Invalidate { },
     Origin { point: Point },
     Size { size: crate::core::point::Size },
     Color { color: types::Color },
@@ -40,6 +42,14 @@ pub trait PushrodWidget {
         } else {
             self.get_config().borrow_mut().insert(key, value);
         }
+    }
+
+    fn invalidate(&mut self) {
+        self.set_config(CONFIG_INVALIDATE, PushrodWidgetConfig::Invalidate {});
+    }
+
+    fn clear_invalidate(&mut self) {
+        self.get_config().borrow_mut().remove(&CONFIG_INVALIDATE);
     }
 
     fn set_origin(&mut self, point: Point) {
