@@ -13,7 +13,9 @@
   - [x] Base Widget Size
   - [x] Base Widget Fill Color (with opacity)
   - [x] Base Widget Draw Function
-  - [ ] Base Widget Invalidate (to indicate a refresh/redraw)
+  - [x] Base Widget Invalidate (to indicate a refresh/redraw)
+  - [ ] Update test case to show simple widgets
+  - [ ] Update draw function to walk all widgets and draw them
   - [ ] Refactor to be as simple and easy to understand as possible (within reason)
   - [ ] Box Widget with Border Width and Color, extended from Base Widget
   - [ ] Refactor Box Widget to be simple
