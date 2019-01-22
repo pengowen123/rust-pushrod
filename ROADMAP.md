@@ -7,12 +7,12 @@
   - [x] Mouse Button Press
   - [x] Mouse Button Release
   - [x] Mouse Button Scroll
-- [ ] Widget Library Skeleton
-  - [ ] Base Widget Framework
-  - [ ] Base Widget Point of Origin
-  - [ ] Base Widget Size
-  - [ ] Base Widget Fill Color (with opacity)
-  - [ ] Base Widget Draw Function
+- [x] Widget Library Skeleton
+  - [x] Base Widget Framework
+  - [x] Base Widget Point of Origin
+  - [x] Base Widget Size
+  - [x] Base Widget Fill Color (with opacity)
+  - [x] Base Widget Draw Function
   - [ ] Base Widget Invalidate (to indicate a refresh/redraw)
   - [ ] Refactor to be as simple and easy to understand as possible (within reason)
   - [ ] Box Widget with Border Width and Color, extended from Base Widget
