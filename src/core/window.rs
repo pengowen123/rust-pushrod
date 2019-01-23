@@ -35,10 +35,18 @@ impl PushrodWindow {
         self.widgets.push(widget);
     }
 
-    pub fn get_widget_id_for_point(&mut self, point: Point) -> u8 {
+    pub fn get_widget_id_for_point(&mut self, point: Point) -> u32 {
         for pos in 0..self.widgets.len() {
-            // TODO Convert Box<dyn PushrodWidget> to PushrodWidget object that can be called
-            // TODO Call PushrodWidget.get_point() and PushrodWidget.get_size() here
+            let widget_point = self.widgets[pos].get_origin();
+            let widget_size: crate::core::point::Size = self.widgets[pos].get_size();
+            let start_x: i32 = widget_point.x;
+            let end_x: i32 = widget_point.x + widget_size.w;
+            let start_y: i32 = widget_point.y;
+            let end_y: i32 = widget_point.y + widget_size.h;
+
+            if point.x >= start_x && point.x <= end_x && point.y >= start_y && point.y <= end_y {
+                return pos as u32;
+            }
         }
 
         0
