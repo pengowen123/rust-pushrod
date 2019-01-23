@@ -27,23 +27,22 @@ pub const CONFIG_SIZE: u8 = 2;
 pub const CONFIG_COLOR: u8 = 3;
 
 pub enum PushrodWidgetConfig {
-    Invalidate { },
+    Invalidate {},
     Origin { point: Point },
     Size { size: crate::core::point::Size },
     Color { color: types::Color },
 }
 
 pub trait PushrodWidget {
-    fn new() -> Self where Self: Sized;
-    
-    fn get_config(&mut self) -> RefCell<HashMap<u8, PushrodWidgetConfig>>;
+    fn new() -> Self
+    where
+        Self: Sized;
+
+    //    fn get_config(&mut self) -> RefCell<HashMap<u8, PushrodWidgetConfig>>;
+    fn get_config(&mut self) -> HashMap<u8, PushrodWidgetConfig>;
 
     fn set_config(&mut self, key: u8, value: PushrodWidgetConfig) {
-        if let Some(x) = self.get_config().borrow_mut().get_mut(&key) {
-            *x = value;
-        } else {
-            self.get_config().borrow_mut().insert(key, value);
-        }
+        self.get_config().insert(key, value);
     }
 
     fn invalidate(&mut self) {
@@ -51,7 +50,7 @@ pub trait PushrodWidget {
     }
 
     fn clear_invalidate(&mut self) {
-        self.get_config().borrow_mut().remove(&CONFIG_INVALIDATE);
+        self.get_config().remove(&CONFIG_INVALIDATE);
     }
 
     fn set_origin(&mut self, point: Point) {
@@ -59,7 +58,7 @@ pub trait PushrodWidget {
     }
 
     fn get_origin(&mut self) -> Point {
-        match self.get_config().borrow()[&CONFIG_ORIGIN] {
+        match self.get_config()[&CONFIG_ORIGIN] {
             PushrodWidgetConfig::Origin { ref point } => Point {
                 x: point.x,
                 y: point.y,
@@ -73,7 +72,7 @@ pub trait PushrodWidget {
     }
 
     fn get_size(&mut self) -> crate::core::point::Size {
-        match self.get_config().borrow()[&CONFIG_SIZE] {
+        match self.get_config()[&CONFIG_SIZE] {
             PushrodWidgetConfig::Size { ref size } => crate::core::point::Size {
                 w: size.w,
                 h: size.h,
@@ -87,7 +86,7 @@ pub trait PushrodWidget {
     }
 
     fn get_color(&mut self) -> types::Color {
-        match self.get_config().borrow()[&CONFIG_COLOR] {
+        match self.get_config()[&CONFIG_COLOR] {
             PushrodWidgetConfig::Color { color } => color,
             _ => [1.0; 4],
         }
