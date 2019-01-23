@@ -25,7 +25,7 @@
   - [ ] Signal for Mouse Click (Single click)
   - [ ] Signal for Mouse Scroll
   - [ ] Implement Widget Lookup based on mouse position (done by Widget ID)
-    - [ ] Get Widget at Point (returns Widget ID)
+    - [x] Get Widget at Point (returns Widget ID)
     - [ ] Get Widget by ID (returns Widget reference)
   - [ ] Callback in Base Widgets for each event type (done by Widget ID)
 - [ ] Documentation
