@@ -52,6 +52,10 @@ pub trait PushrodWidget {
         self.get_config().remove(&CONFIG_INVALIDATE);
     }
 
+    fn is_invalidated(&mut self) -> bool {
+        self.get_config().contains_key(&CONFIG_INVALIDATE)
+    }
+
     fn set_origin(&mut self, point: Point) {
         self.set_config(CONFIG_ORIGIN, PushrodWidgetConfig::Origin { point });
     }
