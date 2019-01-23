@@ -38,7 +38,6 @@ pub trait PushrodWidget {
     where
         Self: Sized;
 
-    //    fn get_config(&mut self) -> RefCell<HashMap<u8, PushrodWidgetConfig>>;
     fn get_config(&mut self) -> HashMap<u8, PushrodWidgetConfig>;
 
     fn set_config(&mut self, key: u8, value: PushrodWidgetConfig) {
