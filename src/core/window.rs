@@ -35,6 +35,7 @@ impl PushrodWindow {
         self.widgets.push(widget);
     }
 
+    // TODO Need to fix to walk children instead of one by one.  Walking children will be far more accurate.
     pub fn get_widget_id_for_point(&mut self, point: Point) -> u32 {
         let mut found_id: u32 = 0;
 
