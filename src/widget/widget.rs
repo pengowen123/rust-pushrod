@@ -57,10 +57,7 @@ pub trait PushrodWidget {
 
     fn get_origin(&mut self) -> Point {
         match self.get_config().borrow()[&CONFIG_ORIGIN] {
-            PushrodWidgetConfig::Origin { ref point } => Point {
-                x: point.x,
-                y: point.y,
-            },
+            PushrodWidgetConfig::Origin { ref point } => point.clone(),
             _ => Point { x: 0, y: 0 },
         }
     }
@@ -71,10 +68,7 @@ pub trait PushrodWidget {
 
     fn get_size(&mut self) -> crate::core::point::Size {
         match self.get_config().borrow()[&CONFIG_SIZE] {
-            PushrodWidgetConfig::Size { ref size } => crate::core::point::Size {
-                w: size.w,
-                h: size.h,
-            },
+            PushrodWidgetConfig::Size { ref size } => size.clone(),
             _ => crate::core::point::Size { w: 0, h: 0 },
         }
     }
