@@ -20,7 +20,7 @@ use piston_window::*;
 
 pub struct PushrodWindow {
     pub window: PistonWindow,
-    widgets: Vec<Box<dyn PushrodWidget>>,
+    pub widgets: Vec<Box<dyn PushrodWidget>>,
 }
 
 impl PushrodWindow {

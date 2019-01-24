@@ -77,6 +77,7 @@ fn main() {
 
     base_widget.set_origin(Point { x: 0, y: 0 });
     base_widget.set_size(pushrod::core::point::Size { w: 640, h: 480 });
+    base_widget.set_color([1.0; 4]);
     pushrod_window.add_widget(Box::new(base_widget));
 
     let mut base_widget2 = PushrodBaseWidget::new();
