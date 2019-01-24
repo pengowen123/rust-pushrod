@@ -22,44 +22,9 @@ use piston_window::*;
 
 use std::cell::RefCell;
 
-struct WindowList {
-    windows: Vec<PushrodWindow>,
-    window_position: usize,
-}
-
-impl WindowList {
-    pub fn new() -> WindowList {
-        WindowList {
-            windows: Vec::new(),
-            window_position: 0,
-        }
-    }
-
-    pub fn push(&mut self, window: PushrodWindow) {
-        self.windows.push(window);
-    }
-
-    pub fn next_window(&mut self) -> (Option<Event>, &PushrodWindow) {
-        let mut cur_window_position = self.window_position;
-
-        cur_window_position += 1;
-
-        if cur_window_position > self.windows.len() - 1 {
-            cur_window_position = 0;
-        }
-
-        self.window_position = cur_window_position;
-
-        (
-            self.windows[self.window_position].window.next(),
-            &self.windows[self.window_position],
-        )
-    }
-}
-
 pub struct Pushrod {
     window_opengl: OpenGL,
-    windows: RefCell<WindowList>,
+    windows: RefCell<Vec<PushrodWindow>>,
     event_listeners: RefCell<Vec<Box<PushrodEventListener>>>,
     event_list: RefCell<Vec<PushrodEvent>>,
 }
@@ -68,7 +33,7 @@ impl Pushrod {
     pub fn new(config: OpenGL) -> Self {
         Self {
             window_opengl: config,
-            windows: RefCell::new(WindowList::new()),
+            windows: RefCell::new(Vec::new()),
             event_listeners: RefCell::new(Vec::new()),
             event_list: RefCell::new(Vec::new()),
         }
@@ -156,40 +121,40 @@ impl Pushrod {
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
-        while let (Some(event), _pushrod_window) = self.windows.borrow_mut().next_window() {
-            // UPS loop handling
+        for (window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
+            while let Some(event) = &pushrod_window.window.next() {
+                if let Some([x, y]) = event.mouse_cursor_args() {
+                    self.internal_handle_mouse_move(Point {
+                        x: x as i32,
+                        y: y as i32,
+                    });
+                }
 
-            if let Some([x, y]) = event.mouse_cursor_args() {
-                self.internal_handle_mouse_move(Point {
-                    x: x as i32,
-                    y: y as i32,
-                });
-            }
+                if let Some(button) = event.button_args() {
+                    self.internal_handle_mouse_button(button);
+                }
 
-            if let Some(button) = event.button_args() {
-                self.internal_handle_mouse_button(button);
-            }
+                if let Some([x, y]) = event.mouse_scroll_args() {
+                    self.internal_handle_mouse_scroll(Point {
+                        x: x as i32,
+                        y: y as i32,
+                    });
+                }
 
-            if let Some([x, y]) = event.mouse_scroll_args() {
-                self.internal_handle_mouse_scroll(Point {
-                    x: x as i32,
-                    y: y as i32,
-                });
-            }
+                // Dispatch events here in the bus
+                self.internal_dispatch_events();
 
-            // Dispatch events here in the bus
-            self.internal_dispatch_events();
+                // FPS loop handling
 
-            // FPS loop handling
+                if let Some(args) = event.render_args() {
+                    gl.draw(args.viewport(), |_context, graphics| {
+                        clear([1.0; 4], graphics);
+                    });
 
-            if let Some(args) = event.render_args() {
-                gl.draw(args.viewport(), |_context, graphics| {
-                    clear([1.0; 4], graphics);
-                });
+                    // Reset GL drawing state
 
-                // Reset GL drawing state
-
-                // Dispatch GL drawing to event loop
+                    // Dispatch GL drawing to event loop
+                }
             }
         }
     }
