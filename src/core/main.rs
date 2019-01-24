@@ -39,7 +39,7 @@ impl WindowList {
         self.windows.push(window);
     }
 
-    pub fn next_window(&mut self) -> (Option<Event>, u32) {
+    pub fn next_window(&mut self) -> (Option<Event>, &PushrodWindow) {
         let mut cur_window_position = self.window_position;
 
         cur_window_position += 1;
@@ -52,7 +52,7 @@ impl WindowList {
 
         (
             self.windows[self.window_position].window.next(),
-            self.window_position as u32,
+            &self.windows[self.window_position],
         )
     }
 }
@@ -156,9 +156,8 @@ impl Pushrod {
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
-        while let (Some(event), window_id) = self.windows.borrow_mut().next_window() {
+        while let (Some(event), _pushrod_window) = self.windows.borrow_mut().next_window() {
             // UPS loop handling
-            eprintln!("Window ID: {}", window_id);
 
             if let Some([x, y]) = event.mouse_cursor_args() {
                 self.internal_handle_mouse_move(Point {
