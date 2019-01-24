@@ -17,6 +17,7 @@ use pushrod::core::main::*;
 use pushrod::core::point::*;
 use pushrod::core::window::*;
 use pushrod::event::event::*;
+use pushrod::widget::widget::*;
 
 struct TestMouseListener {}
 
@@ -72,7 +73,18 @@ fn main() {
     pushrod_window.window.set_max_fps(60);
     pushrod_window.window.set_ups(60);
 
-    // Adds a window to the stack of watched events
+    let mut base_widget = PushrodBaseWidget::new();
+
+    base_widget.set_origin(Point { x: 0, y: 0 });
+    base_widget.set_size(pushrod::core::point::Size { w: 640, h: 480 });
+    pushrod_window.add_widget(Box::new(base_widget));
+
+    let mut base_widget2 = PushrodBaseWidget::new();
+    base_widget2.set_origin(Point { x: 100, y: 100 });
+    base_widget2.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+    base_widget2.set_color([0.5, 0.5, 0.5, 1.0]);
+    pushrod_window.add_widget(Box::new(base_widget2));
+
     prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
 
