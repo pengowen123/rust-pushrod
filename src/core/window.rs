@@ -36,15 +36,14 @@ impl PushrodWindow {
     }
 
     pub fn get_widget_id_for_point(&mut self, point: Point) -> u32 {
-        for pos in 0..self.widgets.len() {
-            let widget_point = self.widgets[pos].get_origin();
-            let widget_size: crate::core::point::Size = self.widgets[pos].get_size();
-            let start_x: i32 = widget_point.x;
-            let end_x: i32 = widget_point.x + widget_size.w;
-            let start_y: i32 = widget_point.y;
-            let end_y: i32 = widget_point.y + widget_size.h;
+        for (pos, obj) in self.widgets.iter_mut().enumerate() {
+            let widget_point = &obj.get_origin();
+            let widget_size: crate::core::point::Size = obj.get_size();
 
-            if point.x >= start_x && point.x <= end_x && point.y >= start_y && point.y <= end_y {
+            if point.x >= widget_point.x &&
+                point.x <= widget_point.x + widget_size.w &&
+                point.y >= widget_point.y &&
+                point.y <= widget_point.y + widget_size.h {
                 return pos as u32;
             }
         }
