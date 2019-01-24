@@ -58,7 +58,7 @@ pub trait PushrodWidget {
     fn get_origin(&mut self) -> Point {
         match self.get_config().borrow()[&CONFIG_ORIGIN] {
             PushrodWidgetConfig::Origin { ref point } => point.clone(),
-            _ => Point { x: 0, y: 0 },
+            _ => make_origin_point(),
         }
     }
 

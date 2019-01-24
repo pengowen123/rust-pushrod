@@ -32,6 +32,10 @@ pub fn make_point_i32(x: i32, y: i32) -> Point {
     Point { x, y }
 }
 
+pub fn make_origin_point() -> Point {
+    Point { x: 0, y: 0 }
+}
+
 pub fn make_point_f64(x: f64, y: f64) -> Point {
     Point {
         x: x as i32,
