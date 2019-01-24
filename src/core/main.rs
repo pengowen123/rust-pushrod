@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::core::point::Point;
+use crate::core::point::*;
 use crate::core::window::*;
 use crate::event::event::*;
 use crate::widget::widget::*;
@@ -121,13 +121,10 @@ impl Pushrod {
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
 
-        for (window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
+        for (_window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
             while let Some(event) = &pushrod_window.window.next() {
                 if let Some([x, y]) = event.mouse_cursor_args() {
-                    self.internal_handle_mouse_move(Point {
-                        x: x as i32,
-                        y: y as i32,
-                    });
+                    self.internal_handle_mouse_move(make_point_f64(x, y));
                 }
 
                 if let Some(button) = event.button_args() {
@@ -135,10 +132,7 @@ impl Pushrod {
                 }
 
                 if let Some([x, y]) = event.mouse_scroll_args() {
-                    self.internal_handle_mouse_scroll(Point {
-                        x: x as i32,
-                        y: y as i32,
-                    });
+                    self.internal_handle_mouse_scroll(make_point_f64(x, y));
                 }
 
                 // Dispatch events here in the bus

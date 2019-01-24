@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#[derive(Clone)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
@@ -25,3 +26,14 @@ pub struct Size {
 // TODO: Add default Point (x, y = 0)
 // TODO: Add default Size (w, h = 0)
 // TODO: Add constructor impls for Point and Size, both of which take x, y, w, and h respectively as inputs.
+
+pub fn make_point_i32(x: i32, y: i32) -> Point {
+    Point { x, y }
+}
+
+pub fn make_point_f64(x: f64, y: f64) -> Point {
+    Point {
+        x: x as i32,
+        y: y as i32,
+    }
+}

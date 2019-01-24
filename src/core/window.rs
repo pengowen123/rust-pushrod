@@ -40,10 +40,11 @@ impl PushrodWindow {
             let widget_point = &obj.get_origin();
             let widget_size: crate::core::point::Size = obj.get_size();
 
-            if point.x >= widget_point.x &&
-                point.x <= widget_point.x + widget_size.w &&
-                point.y >= widget_point.y &&
-                point.y <= widget_point.y + widget_size.h {
+            if point.x >= widget_point.x
+                && point.x <= widget_point.x + widget_size.w
+                && point.y >= widget_point.y
+                && point.y <= widget_point.y + widget_size.h
+            {
                 return pos as u32;
             }
         }
