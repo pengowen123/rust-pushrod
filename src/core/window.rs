@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::widget::widget::*;
 use crate::core::point::*;
+use crate::widget::widget::*;
 
 use piston_window::*;
 
@@ -50,5 +50,9 @@ impl PushrodWindow {
         }
 
         0
+    }
+
+    pub fn get_widget_for_id(&mut self, id: u32) -> &Box<dyn PushrodWidget> {
+        &self.widgets[id as usize]
     }
 }

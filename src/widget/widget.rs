@@ -34,10 +34,10 @@ pub enum PushrodWidgetConfig {
 }
 
 pub trait PushrodWidget {
-//    fn new() -> Self
-//    where
-//        Self: Sized;
-//
+    //    fn new() -> Self
+    //    where
+    //        Self: Sized;
+    //
     fn get_config(&mut self) -> HashMap<u8, PushrodWidgetConfig>;
 
     fn set_config(&mut self, key: u8, value: PushrodWidgetConfig) {
