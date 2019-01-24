@@ -36,6 +36,8 @@ impl PushrodWindow {
     }
 
     pub fn get_widget_id_for_point(&mut self, point: Point) -> u32 {
+        let mut found_id: u32 = 0;
+
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
             let widget_point = &obj.get_origin();
             let widget_size: crate::core::point::Size = obj.get_size();
@@ -45,11 +47,11 @@ impl PushrodWindow {
                 && point.y >= widget_point.y
                 && point.y <= widget_point.y + widget_size.h
             {
-                return pos as u32;
+                found_id = pos as u32;
             }
         }
 
-        0
+        found_id
     }
 
     pub fn get_widget_for_id(&mut self, id: u32) -> &Box<dyn PushrodWidget> {

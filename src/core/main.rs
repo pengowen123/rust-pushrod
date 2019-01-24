@@ -124,7 +124,12 @@ impl Pushrod {
         for (_window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
             while let Some(event) = &pushrod_window.window.next() {
                 if let Some([x, y]) = event.mouse_cursor_args() {
-                    self.internal_handle_mouse_move(make_point_f64(x, y));
+                    let point = make_point_f64(x, y);
+
+                    self.internal_handle_mouse_move(point.clone());
+                    let widget_id = pushrod_window.get_widget_id_for_point(point);
+
+                    eprintln!("Widget ID: {}", widget_id);
                 }
 
                 if let Some(button) = event.button_args() {

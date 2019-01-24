@@ -14,11 +14,11 @@
   - [x] Base Widget Fill Color (with opacity)
   - [x] Base Widget Draw Function
   - [x] Base Widget Invalidate (to indicate a refresh/redraw)
-  - [ ] Update test case to show simple widgets
+  - [x] Update test case to show simple widgets
   - [ ] Update draw function to walk all widgets and draw them
   - [ ] Refactor to be as simple and easy to understand as possible (within reason)
   - [ ] Document Widget Library and how to extend
-  - [ ] Assign Widget ID when added to Window Container
+  - [x] Assign Widget ID when added to Window Container
 - [ ] Base Widget Signal Framework
   - [ ] Signal for Mouse Enter
   - [ ] Signal for Mouse Exit
