@@ -88,8 +88,17 @@ pub trait PushrodWidget {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
 
-        rectangle(self.get_color(), [origin.x as f64, origin.y as f64, size.w as f64, size.h as f64],
-                  context.transform,graphics);
+        rectangle(
+            self.get_color(),
+            [
+                origin.x as f64,
+                origin.y as f64,
+                size.w as f64,
+                size.h as f64,
+            ],
+            context.transform,
+            graphics,
+        );
         context.reset();
     }
 }
