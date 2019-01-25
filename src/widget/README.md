@@ -1,7 +1,7 @@
 # Widgets
 
-## Signaling
+## Callbacks
 
-- [Widget Signals](README_SIGNALS.md)
+- [Widget Callbacks](README_CALLBACKS.md)
 
 ## Standard Widgets

@@ -65,6 +65,11 @@
   - [ ] Editable Text Box
   - [ ] Scrollable Viewing Area
   - [ ] Toggle Button
+- [ ] Main loop
+  - [ ] Object focus
+  - [ ] Window focus
+  - [ ] Window loses focus
+  - [ ] Window resize
 
 # TBD
 
