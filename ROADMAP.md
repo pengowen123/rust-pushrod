@@ -31,6 +31,7 @@
 # 0.2.0
 
 - [ ] Improve Widget Library
+  - [ ] Improve mutability in Pushrod Window for triggering events
   - [ ] Add parent/child relationship
   - [ ] Walk children when parent signals an invalidate
   - [ ] Invalidated child should draw subchildren as well, but not parent
