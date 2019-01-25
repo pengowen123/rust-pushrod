@@ -16,7 +16,6 @@
   - [x] Base Widget Invalidate (to indicate a refresh/redraw)
   - [x] Update test case to show simple widgets
   - [x] Update draw function to walk all widgets and draw them
-  - [ ] Refactor to be as simple and easy to understand as possible (within reason)
   - [ ] Document Widget Library and how to extend
   - [x] Assign Widget ID when added to Window Container
 - [ ] Base Widget Signal Framework
