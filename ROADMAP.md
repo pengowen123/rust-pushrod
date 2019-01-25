@@ -16,7 +16,7 @@
   - [x] Base Widget Invalidate (to indicate a refresh/redraw)
   - [x] Update test case to show simple widgets
   - [x] Update draw function to walk all widgets and draw them
-  - [ ] Document Widget Library and how to extend
+  - [x] Document Widget Library and how to extend
   - [x] Assign Widget ID when added to Window Container
 - [x] Base Widget Callback Framework
   - [x] Callback for Mouse Enter
