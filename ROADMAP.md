@@ -41,6 +41,7 @@
 - [ ] Improve Signal Events
   - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
+  - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
 - [ ] Implement Graphics Library
   - [ ] Implement a graphics library that is uniform and not independent of any Rust library
   - [ ] Clip
