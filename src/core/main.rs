@@ -15,7 +15,6 @@
 use crate::core::point::*;
 use crate::core::window::*;
 use crate::event::event::*;
-use crate::widget::widget::*;
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;

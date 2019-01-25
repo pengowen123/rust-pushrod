@@ -18,10 +18,10 @@
   - [x] Update draw function to walk all widgets and draw them
   - [ ] Document Widget Library and how to extend
   - [x] Assign Widget ID when added to Window Container
-- [ ] Base Widget Signal Framework
-  - [x] Signal for Mouse Enter
-  - [x] Signal for Mouse Exit
-  - [x] Signal for Mouse Scroll
+- [x] Base Widget Callback Framework
+  - [x] Callback for Mouse Enter
+  - [x] Callback for Mouse Exit
+  - [x] Callback for Mouse Scroll
   - [x] Implement Widget Lookup based on mouse position (done by Widget ID)
     - [x] Get Widget at Point (returns Widget ID)
     - [x] Get Widget by ID (returns Widget reference)
