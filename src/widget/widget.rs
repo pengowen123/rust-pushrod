@@ -84,6 +84,14 @@ pub trait PushrodWidget {
         }
     }
 
+    // Events
+
+    fn mouse_entered(&mut self);
+    fn mouse_exited(&mut self);
+    fn mouse_scrolled(&mut self, point: Point);
+
+    // Draw routines
+
     fn draw(&mut self, context: Context, graphics: &mut GlGraphics) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
@@ -118,5 +126,17 @@ impl PushrodBaseWidget {
 impl PushrodWidget for PushrodBaseWidget {
     fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
         &self.config
+    }
+
+    fn mouse_entered(&mut self) {
+        eprintln!("Mouse entered");
+    }
+
+    fn mouse_exited(&mut self) {
+        eprintln!("Mouse exited");
+    }
+
+    fn mouse_scrolled(&mut self, point: Point) {
+        eprintln!("Mouse scrolled: x={} y={}", point.x, point_y);
     }
 }

@@ -36,8 +36,8 @@ impl PushrodWindow {
     }
 
     // TODO Need to fix to walk children instead of one by one.  Walking children will be far more accurate.
-    pub fn get_widget_id_for_point(&mut self, point: Point) -> u32 {
-        let mut found_id: u32 = 0;
+    pub fn get_widget_id_for_point(&mut self, point: Point) -> i32 {
+        let mut found_id: i32 = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
             let widget_point = &obj.get_origin();
@@ -48,14 +48,26 @@ impl PushrodWindow {
                 && point.y >= widget_point.y
                 && point.y <= widget_point.y + widget_size.h
             {
-                found_id = pos as u32;
+                found_id = pos as i32;
             }
         }
 
         found_id
     }
 
-    pub fn get_widget_for_id(&mut self, id: u32) -> &Box<dyn PushrodWidget> {
+    pub fn mouse_entered_for_id(&mut self, id: i32) {
+        &self.widgets[id as usize].mouse_entered();
+    }
+
+    pub fn mouse_exited_for_id(&mut self, id: i32) {
+        &self.widgets[id as usize].mouse_exited();
+    }
+
+    pub fn mouse_scrolled_for_id(&mut self, id: i32, point: Point) {
+        &self.widgets[id as usize].mouse_scrolled(point);
+    }
+
+    pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn PushrodWidget> {
         &self.widgets[id as usize]
     }
 }

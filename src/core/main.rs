@@ -120,11 +120,28 @@ impl Pushrod {
 
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
+        let mut last_widget_id = -1;
 
         for (_window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
             while let Some(event) = &pushrod_window.window.next() {
                 if let Some([x, y]) = event.mouse_cursor_args() {
-                    self.internal_handle_mouse_move(make_point_f64(x, y));
+                    let mouse_point = make_point_f64(x, y);
+
+                    self.internal_handle_mouse_move(mouse_point.clone());
+
+                    let current_widget_id = pushrod_window.get_widget_id_for_point(mouse_point);
+
+                    if current_widget_id != last_widget_id {
+                        if last_widget_id != -1 {
+                            pushrod_window.mouse_exited_for_id(last_widget_id);
+                        }
+
+                        last_widget_id = current_widget_id;
+
+                        if last_widget_id != -1 {
+                            pushrod_window.mouse_entered_for_id(last_widget_id);
+                        }
+                    }
                 }
 
                 if let Some(button) = event.button_args() {
@@ -132,7 +149,13 @@ impl Pushrod {
                 }
 
                 if let Some([x, y]) = event.mouse_scroll_args() {
-                    self.internal_handle_mouse_scroll(make_point_f64(x, y));
+                    let mouse_point = make_point_f64(x, y);
+
+                    self.internal_handle_mouse_scroll(mouse_point.clone());
+
+                    if last_widget_id != -1 {
+                        pushrod_window.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
+                    }
                 }
 
                 // Dispatch events here in the bus

@@ -19,14 +19,13 @@
   - [ ] Document Widget Library and how to extend
   - [x] Assign Widget ID when added to Window Container
 - [ ] Base Widget Signal Framework
-  - [ ] Signal for Mouse Enter
-  - [ ] Signal for Mouse Exit
-  - [ ] Signal for Mouse Click (Single click)
-  - [ ] Signal for Mouse Scroll
+  - [x] Signal for Mouse Enter
+  - [x] Signal for Mouse Exit
+  - [x] Signal for Mouse Scroll
   - [x] Implement Widget Lookup based on mouse position (done by Widget ID)
     - [x] Get Widget at Point (returns Widget ID)
     - [x] Get Widget by ID (returns Widget reference)
-  - [ ] Callback in Base Widgets for each event type (done by Widget ID)
+  - [x] Callback in Base Widgets for each event type (done by Widget ID)
 - [ ] Documentation
 
 # 0.2.0
@@ -37,6 +36,7 @@
   - [ ] Invalidated child should draw subchildren as well, but not parent
   - [ ] Extend Widget Store to keep track of (parent, child)
 - [ ] Improve Signal Events
+  - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
 - [ ] Implement Graphics Library
   - [ ] Implement a graphics library that is uniform and not independent of any Rust library
