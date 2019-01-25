@@ -30,6 +30,8 @@
 
 # 0.2.0
 
+- [ ] Optimize main run loop
+  - [ ] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
   - [ ] Improve mutability in Pushrod Window for triggering events
   - [ ] Add parent/child relationship
