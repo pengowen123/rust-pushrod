@@ -137,6 +137,6 @@ impl PushrodWidget for PushrodBaseWidget {
     }
 
     fn mouse_scrolled(&mut self, point: Point) {
-        eprintln!("Mouse scrolled: x={} y={}", point.x, point_y);
+        eprintln!("Mouse scrolled: x={} y={}", point.x, point.y);
     }
 }
