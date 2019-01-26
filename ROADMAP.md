@@ -28,10 +28,10 @@
   - [x] Callback in Base Widgets for each event type (done by Widget ID)
 - [x] Documentation
 
-# 0.2.0
+# 0.1.x -> 0.2.0
 
 - [ ] Optimize main run loop
-  - [ ] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
+  - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
   - [ ] Improve mutability in Pushrod Window for triggering events
   - [ ] Add parent/child relationship
@@ -59,7 +59,7 @@
   - [ ] Button
   - [ ] Progress Indicator
 
-# 0.3.0
+# 0.2.x -> 0.3.0
 
 - [ ] Complicated Widget Library
   - [ ] Scrollbox (Horizontal and Vertical)
@@ -72,7 +72,7 @@
   - [ ] Object focus
   - [ ] Window focus
   - [ ] Window loses focus
-  - [ ] Window resize
+  - [ ] Window resize (will trigger a window-wide invalidate)
 
 # TBD
 
