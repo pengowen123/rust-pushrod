@@ -20,11 +20,11 @@ Pushrod requires the following minimum versions:
 
 | Library | Version |
 | ------- | ------- |
-| piston_window | 0.80.0 |
-| piston2d-opengl_graphics | 0.53.0 |
-| gfx_core | 0.8.0 |
-| gfx_device_gl | 0.15.4 |
-| rust | 1.32 |
+| piston_window | 0.87.0 |
+| piston2d-opengl_graphics | 0.59.0 |
+| gfx_core | 0.8.3 |
+| gfx_device_gl | 0.15.5 |
+| rust | 2018 |
 
 ## Timeline/Plans
 
