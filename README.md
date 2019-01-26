@@ -70,14 +70,10 @@ Pushrod requires the following minimum versions:
    - **ONLY ONCE ALL WIDGETS ARE DESIGNED do we do themes**.
    - Themes will be handled by the base widget
 
-## Runnable Tests
-
-To run the all-inclusive window event test, use:
+## Runnable Examples
 
 ```
-cargo run
-(or)
-cargo run --bin window_test
+cargo run --example simple_example
 ```
 
 This will only test window-related events with mouse interaction: mouse enter, mouse exit, mouse click, mouse
