@@ -149,25 +149,30 @@ impl Pushrod {
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
         let mut last_widget_id = -1;
+        let mut previous_mouse_position: Point = make_origin_point();
 
         for (_window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
             while let Some(event) = &pushrod_window.window.next() {
                 if let Some([x, y]) = event.mouse_cursor_args() {
                     let mouse_point = make_point_f64(x, y);
 
-                    self.internal_handle_mouse_move(mouse_point.clone());
+                    if mouse_point.x != previous_mouse_position.x || mouse_point.y != previous_mouse_position.y {
+                        previous_mouse_position = mouse_point.clone();
+                        
+                        self.internal_handle_mouse_move(mouse_point.clone());
 
-                    let current_widget_id = pushrod_window.get_widget_id_for_point(mouse_point);
+                        let current_widget_id = pushrod_window.get_widget_id_for_point(mouse_point);
 
-                    if current_widget_id != last_widget_id {
-                        if last_widget_id != -1 {
-                            pushrod_window.mouse_exited_for_id(last_widget_id);
-                        }
+                        if current_widget_id != last_widget_id {
+                            if last_widget_id != -1 {
+                                pushrod_window.mouse_exited_for_id(last_widget_id);
+                            }
 
-                        last_widget_id = current_widget_id;
+                            last_widget_id = current_widget_id;
 
-                        if last_widget_id != -1 {
-                            pushrod_window.mouse_entered_for_id(last_widget_id);
+                            if last_widget_id != -1 {
+                                pushrod_window.mouse_entered_for_id(last_widget_id);
+                            }
                         }
                     }
                 }
