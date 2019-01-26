@@ -58,9 +58,11 @@ pub enum PushrodWidgetConfig {
 /// - mouse_exited
 /// - mouse_scrolled
 ///
-/// You _should_ override `draw`, but you are not required to.  If you want a blank base widget,
-/// refer to the `PushrodBaseWidget`, which will create a base widget that paints the contents
-/// of its bounds with whatever color has been specified with `set_color`.
+/// You _should_ override `draw`, but you are not required to.
+///
+/// If you want a blank base widget, refer to the `PushrodBaseWidget`, which will create a
+/// base widget that paints the contents of its bounds with whatever color has been
+/// specified with `set_color`.
 pub trait PushrodWidget {
     /// Retrieves the configuration HashMap that stores the configuration list of settings
     /// for this widget.
