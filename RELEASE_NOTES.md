@@ -1,5 +1,12 @@
 # Pushrod Releases
 
+## 0.1.4
+
+- Adjusted Cargo.toml to include keywords and README.
+- Added tests for Points.
+- Updated callbacks to use widget_id when calling mouse enter, exit, scroll.
+- Got Travis.CI building the application.
+
 ## 0.1.3
 
 - Got some assistance from @andygrove for documentation and testing.

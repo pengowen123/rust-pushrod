@@ -70,17 +70,17 @@ impl PushrodWindow {
 
     /// Callback to `mouse_entered` for a `PushrodWidget` by ID.
     pub fn mouse_entered_for_id(&mut self, id: i32) {
-        &self.widgets[id as usize].mouse_entered();
+        &self.widgets[id as usize].mouse_entered(id);
     }
 
     /// Callback to `mouse_exited` for a `PushrodWidget` by ID.
     pub fn mouse_exited_for_id(&mut self, id: i32) {
-        &self.widgets[id as usize].mouse_exited();
+        &self.widgets[id as usize].mouse_exited(id);
     }
 
     /// Callback to `mouse_scrolled` for a `PushrodWidget` by ID, with the mouse scroll `Point`.
     pub fn mouse_scrolled_for_id(&mut self, id: i32, point: Point) {
-        &self.widgets[id as usize].mouse_scrolled(point);
+        &self.widgets[id as usize].mouse_scrolled(id, point);
     }
 
     /// Retrieves a reference to the `Box`ed `PushrodWidget` object by its ID.

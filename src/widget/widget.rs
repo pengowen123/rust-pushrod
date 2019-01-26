@@ -105,9 +105,9 @@ pub trait PushrodWidget {
     ///     &self.config
     ///   }
     ///
-    ///  fn mouse_entered(&mut self) {}
-    ///  fn mouse_exited(&mut self) {}
-    ///  fn mouse_scrolled(&mut self, point: Point) {}
+    ///  fn mouse_entered(&mut self, widget_id: i32) {}
+    ///  fn mouse_exited(&mut self, widget_id: i32) {}
+    ///  fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {}
     /// }
     /// ```
     ///
@@ -185,14 +185,14 @@ pub trait PushrodWidget {
 
     // Events
 
-    /// Called when a mouse enters the bounds of the widget.
-    fn mouse_entered(&mut self);
+    /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.
+    fn mouse_entered(&mut self, widget_id: i32);
 
-    /// Called when a mouse exits the bounds of the widget.
-    fn mouse_exited(&mut self);
+    /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.
+    fn mouse_exited(&mut self, widget_id: i32);
 
-    /// Called when a scroll event is called within the bounds of the widget.
-    fn mouse_scrolled(&mut self, point: Point);
+    /// Called when a scroll event is called within the bounds of the widget.  Includes the widget ID.
+    fn mouse_scrolled(&mut self, widget_id: i32, point: Point);
 
     // Draw routines
 
@@ -266,15 +266,15 @@ impl PushrodWidget for PushrodBaseWidget {
         &self.config
     }
 
-    fn mouse_entered(&mut self) {
-        eprintln!("Mouse entered");
+    fn mouse_entered(&mut self, widget_id: i32) {
+        eprintln!("Mouse entered: id={}", widget_id);
     }
 
-    fn mouse_exited(&mut self) {
-        eprintln!("Mouse exited");
+    fn mouse_exited(&mut self, widget_id: i32) {
+        eprintln!("Mouse exited: id={}", widget_id);
     }
 
-    fn mouse_scrolled(&mut self, point: Point) {
-        eprintln!("Mouse scrolled: x={} y={}", point.x, point.y);
+    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
+        eprintln!("Mouse scrolled: x={} y={}: id={}", point.x, point.y, widget_id);
     }
 }
