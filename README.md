@@ -1,7 +1,11 @@
 # rust-pushrod
 
-UI Widget Library for Rust Piston library.  Draws inspiration from Atari GEM,
-TrollTech Qt, and others.
+**UI Widget Library for Rust Piston library.**
+
+Draws inspiration from Atari GEM, TrollTech Qt, and others.
+
+[![Build Status](https://travis-ci.org/KenSuenobu/rust-pushrod.svg?branch=master)](https://travis-ci.org/KenSuenobu/rust-pushrod)
+[![](https://img.shields.io/crates/d/rust-pushrod.svg)](https://crates.io/crates/rust-pushrod)
 
 ## Philosophy
 
