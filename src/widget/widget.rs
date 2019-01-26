@@ -212,7 +212,6 @@ pub trait PushrodWidget {
             context.transform,
             graphics,
         );
-        context.reset();
     }
 }
 

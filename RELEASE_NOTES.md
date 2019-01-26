@@ -2,10 +2,14 @@
 
 ## 0.1.4
 
-- Adjusted Cargo.toml to include keywords and README.
 - Added tests for Points.
 - Updated callbacks to use widget_id when calling mouse enter, exit, scroll.
+- Optimized mouse movement - repetitive points are redundant.
+- Removed context reset from trait object default draw method.
+- Renamed simple example to "simple"
+- Adjusted Cargo.toml to include keywords and README.
 - Got Travis.CI building the application.
+- Shortened README.
 
 ## 0.1.3
 

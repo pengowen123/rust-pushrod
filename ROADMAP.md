@@ -1,44 +1,18 @@
 # rush-pushrod Roadmap
 
-# 0.1.0
-
-- [x] Event Skeleton
-  - [x] Mouse Movement
-  - [x] Mouse Button Press
-  - [x] Mouse Button Release
-  - [x] Mouse Button Scroll
-- [x] Widget Library Skeleton
-  - [x] Base Widget Framework
-  - [x] Base Widget Point of Origin
-  - [x] Base Widget Size
-  - [x] Base Widget Fill Color (with opacity)
-  - [x] Base Widget Draw Function
-  - [x] Base Widget Invalidate (to indicate a refresh/redraw)
-  - [x] Update test case to show simple widgets
-  - [x] Update draw function to walk all widgets and draw them
-  - [x] Document Widget Library and how to extend
-  - [x] Assign Widget ID when added to Window Container
-- [x] Base Widget Callback Framework
-  - [x] Callback for Mouse Enter
-  - [x] Callback for Mouse Exit
-  - [x] Callback for Mouse Scroll
-  - [x] Implement Widget Lookup based on mouse position (done by Widget ID)
-    - [x] Get Widget at Point (returns Widget ID)
-    - [x] Get Widget by ID (returns Widget reference)
-  - [x] Callback in Base Widgets for each event type (done by Widget ID)
-- [x] Documentation
-
 # 0.1.x -> 0.2.0
 
 - [ ] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
+  - [ ] Implement invalidate in draw cycle
   - [ ] Improve mutability in Pushrod Window for triggering events
   - [ ] Add parent/child relationship
   - [ ] Walk children when parent signals an invalidate
   - [ ] Invalidated child should draw subchildren as well, but not parent
   - [ ] Extend Widget Store to keep track of (parent, child)
 - [ ] Improve Signal Events
+  - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
@@ -51,13 +25,13 @@
   - [ ] Draw Arc
   - [ ] Draw Circle
   - [ ] Draw Poly
+  - [ ] Draw Image
   - [ ] Fill Area (Rectangle)
   - [ ] Translate Points based on Origin/Size
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [ ] Box Widget with Border Width and Color
   - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
-  - [ ] Progress Indicator
 
 # 0.2.x -> 0.3.0
 
@@ -68,6 +42,7 @@
   - [ ] Toggle Button
   - [ ] Timer
   - [ ] Image
+  - [ ] Progress Indicator
 - [ ] Main loop
   - [ ] Object focus
   - [ ] Window focus
