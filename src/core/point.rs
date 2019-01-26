@@ -46,6 +46,7 @@ pub fn make_point_f64(x: f64, y: f64) -> Point {
     }
 }
 
+/// Convenience method to create a non-existent size.
 pub fn make_unsized() -> Size {
     Size { w: 0, h: 0 }
 }
