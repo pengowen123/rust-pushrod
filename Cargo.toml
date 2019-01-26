@@ -11,6 +11,9 @@ include = [
     "**/*.rs",
     "Cargo.toml",
 ]
+exclude = [
+    "src/window_test.rs",
+]
 
 [lib]
 name = "pushrod"
