@@ -1,7 +1,11 @@
 # rust-pushrod
 
-UI Widget Library for Rust Piston library.  Draws inspiration from Atari GEM,
-TrollTech Qt, and others.
+**UI Widget Library for Rust Piston library.**
+
+Draws inspiration from Atari GEM, TrollTech Qt, and others.
+
+[![Build Status](https://travis-ci.org/KenSuenobu/rust-pushrod.svg?branch=master)](https://travis-ci.org/KenSuenobu/rust-pushrod)
+[![](https://img.shields.io/crates/d/rust-pushrod.svg)](https://crates.io/crates/rust-pushrod)
 
 ## Philosophy
 
@@ -70,14 +74,10 @@ Pushrod requires the following minimum versions:
    - **ONLY ONCE ALL WIDGETS ARE DESIGNED do we do themes**.
    - Themes will be handled by the base widget
 
-## Runnable Tests
-
-To run the all-inclusive window event test, use:
+## Runnable Examples
 
 ```
-cargo run
-(or)
-cargo run --bin window_test
+cargo run --example simple_example
 ```
 
 This will only test window-related events with mouse interaction: mouse enter, mouse exit, mouse click, mouse

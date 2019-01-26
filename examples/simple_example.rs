@@ -1,4 +1,4 @@
-// Window Test
+// Simple Windowed Example
 // Super simplistic test to show off the use of the library in its current state
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,9 @@ use pushrod::core::window::*;
 use pushrod::event::event::*;
 use pushrod::widget::widget::*;
 
-struct TestMouseListener {}
+struct ExampleListener {}
 
-impl TestMouseListener {
+impl ExampleListener {
     fn new() -> Self {
         Self {}
     }
@@ -50,7 +50,7 @@ impl TestMouseListener {
     }
 }
 
-impl PushrodEventListener for TestMouseListener {
+impl PushrodEventListener for ExampleListener {
     fn handle_event(&self, event: &PushrodEvent) {
         match event {
             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
@@ -86,7 +86,7 @@ fn main() {
     pushrod_window.add_widget(Box::new(base_widget2));
 
     prod.add_window(pushrod_window);
-    prod.add_event_listener_for_window(Box::new(TestMouseListener::new()));
+    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 
     // Runs the main event loop
     prod.run();

@@ -25,7 +25,10 @@ use std::cell::RefCell;
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
 /// to a managed set of `PushrodWindow` objects, registered `PushrodEventListener`s, and
-/// `PushrodEvent` objects that are pending for dispatch.
+/// `PushrodEvent` objects that are pending dispatch.
+///
+/// The objects contained within this structure are used by the `Pushrod` run loop, and
+/// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
     window_opengl: OpenGL,
     windows: RefCell<Vec<PushrodWindow>>,
@@ -35,8 +38,36 @@ pub struct Pushrod {
 
 /// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
 /// main loop.  Only one of these should be set for the entire application runtime.
+///
+/// Example usage:
+/// ```no_run
+/// # use piston_window::*;
+/// # use pushrod::core::main::*;
+/// # use pushrod::core::window::*;
+/// # fn main() {
+///     // Define the version of OpenGL to use with the application
+///     let opengl = OpenGL::V3_2;
+///
+///     // Create a new Pushrod object with the OpenGL version
+///     let prod: Pushrod = Pushrod::new(opengl);
+///
+///     // Create a PushrodWindow container to store the PistonWindow
+///     let mut pushrod_window: PushrodWindow = PushrodWindow::new(
+///         WindowSettings::new("Pushrod Window", [640, 480])
+///             .opengl(opengl)
+///             .build()
+///             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
+///     );
+///
+///     // Add the window to the managed stack.
+///     prod.add_window(pushrod_window);
+///
+///     // Initiate the run loop.
+///     prod.run();
+/// # }
+/// ```
 impl Pushrod {
-    /// Constructor.  Only accepts OpenGL type for drawing graphics - for now.
+    /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
     pub fn new(config: OpenGL) -> Self {
         Self {
             window_opengl: config,
@@ -53,6 +84,80 @@ impl Pushrod {
 
     /// Adds an event listener to the stack.  This should be an implementation of the
     /// `PushrodEventListener` trait.
+    ///
+    /// Example:
+    /// ```no_run
+    /// # use piston_window::*;
+    /// # use pushrod::core::main::*;
+    /// # use pushrod::core::window::*;
+    /// # use pushrod::core::point::*;
+    /// # use pushrod::event::event::*;
+    /// struct ExampleListener {}
+    ///
+    /// impl ExampleListener {
+    ///     fn new() -> Self {
+    ///         Self {}
+    ///     }
+    ///
+    ///     fn handle_mouse_move(&self, point: &Point) {
+    ///         eprintln!("[Listener] X={} Y={}", point.x, point.y);
+    ///     }
+    ///
+    ///     fn handle_mouse_down(&self, button: &MouseButton) {
+    ///         match button {
+    ///             MouseButton::Left => eprintln!("[Listener] Left mouse button pressed."),
+    ///             _ => eprintln!("[Listener] Other mouse button pressed."),
+    ///         }
+    ///     }
+    ///
+    ///     fn handle_mouse_up(&self, button: &MouseButton) {
+    ///         match button {
+    ///             MouseButton::Left => eprintln!("[Listener] Left mouse button released."),
+    ///             _ => eprintln!("[Listener] Other mouse button released."),
+    ///         }
+    ///     }
+    ///
+    ///     fn handle_mouse_scroll(&self, point: &Point) {
+    ///         eprintln!("[Listener] Scroll: X={} Y={}", point.x, point.y);
+    ///     }
+    /// }
+    ///
+    /// impl PushrodEventListener for ExampleListener {
+    ///     fn handle_event(&self, event: &PushrodEvent) {
+    ///         match event {
+    ///             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
+    ///             PushrodEvent::MouseDownEvent { button } => self.handle_mouse_down(&button),
+    ///             PushrodEvent::MouseUpEvent { button } => self.handle_mouse_up(&button),
+    ///             PushrodEvent::MouseScrollEvent { point } => self.handle_mouse_scroll(&point),
+    ///         }
+    ///     }
+    /// }
+    ///
+    /// fn main() {
+    /// #    // Define the version of OpenGL to use with the application
+    /// #    let opengl = OpenGL::V3_2;
+    /// #
+    ///     // Create a new Pushrod object with the OpenGL version
+    ///     let prod: Pushrod = Pushrod::new(opengl);
+    /// #
+    /// #    // Create a PushrodWindow container to store the PistonWindow
+    /// #    let mut pushrod_window: PushrodWindow = PushrodWindow::new(
+    /// #        WindowSettings::new("Pushrod Window", [640, 480])
+    /// #            .opengl(opengl)
+    /// #            .build()
+    /// #            .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
+    /// #    );
+    /// #
+    /// #    // Add the window to the managed stack.
+    /// #    prod.add_window(pushrod_window);
+    ///
+    ///     // Add the event listener to the run loop.
+    ///     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
+    ///
+    ///     // Initiate the run loop.
+    ///     prod.run();
+    /// }
+    /// ```
     pub fn add_event_listener_for_window(&self, listener: Box<PushrodEventListener>) {
         self.event_listeners.borrow_mut().push(listener);
     }

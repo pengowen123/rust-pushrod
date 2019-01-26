@@ -12,7 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Main module containing the run loop for the UI components, containers for windows and
+/// `PushrodWidget` trait objects, and so on.  Contains the core elements required to build
+/// a UI.
 pub mod core;
 
+/// Companion module used to define and trigger system-wide events.  Uses an event masking
+/// style similar to the Atari ST GEM series: event masks can be used to tell the Pushrod
+/// run loop which events the programmer desires to receive.
 pub mod event;
+
+/// Widget library used for on-screen UI interaction.  This is a core set of `PushrodWidget`
+/// objects that are used to allow users to interact with an application.  Contains a core set
+/// of widgets that can be extended.
 pub mod widget;

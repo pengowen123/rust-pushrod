@@ -3,27 +3,27 @@ name = "rust-pushrod"
 version = "0.2.0"
 authors = ["Ken Suenobu <ksuenobu@fastmail.com>"]
 edition = "2018"
-description = "Rust Pushrod GUI Library"
+description = "Pushrod UI Library"
 license = "Apache-2.0"
+readme = "README.md"
 repository = "https://www.github.com/KenSuenobu/rust-pushrod/"
+documentation = "http://docs.rs/crate/rust-pushrod/"
+keywords = ["piston", "opengl", "ui", "gui", "conrod"]
+categories = ["gui", "user-interface"]
 include = [
     "**/*.rs",
     "Cargo.toml",
 ]
 exclude = [
-    "src/window_test.rs",
+    "examples/*.rs",
 ]
 
 [lib]
 name = "pushrod"
-path = "./src/lib.rs"
+path = "src/lib.rs"
 
 [dependencies]
-piston_window = "0.87.0"
-piston2d-opengl_graphics = "0.59.0"
-gfx_core = "0.8.3"
-gfx_device_gl = "0.15.5"
-
-[[bin]]
-name = "window_test"
-path = "src/window_test.rs"
+piston_window = "^0.87.0"
+piston2d-opengl_graphics = "^0.59.0"
+gfx_core = "^0.8.3"
+gfx_device_gl = "^0.15.5"

@@ -12,4 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Event definitions, used to detect when UI-specific events occur, and defining callbacks.
 pub mod event;
