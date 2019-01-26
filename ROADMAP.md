@@ -26,7 +26,7 @@
     - [x] Get Widget at Point (returns Widget ID)
     - [x] Get Widget by ID (returns Widget reference)
   - [x] Callback in Base Widgets for each event type (done by Widget ID)
-- [ ] Documentation
+- [x] Documentation
 
 # 0.2.0
 
@@ -42,7 +42,7 @@
   - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
-- [ ] Implement Graphics Library
+- [ ] Implement Graphics Translation Library
   - [ ] Implement a graphics library that is uniform and not independent of any Rust library
   - [ ] Clip
   - [ ] Draw Box
@@ -51,7 +51,7 @@
   - [ ] Draw Arc
   - [ ] Draw Circle
   - [ ] Draw Poly
-  - [ ] Fill Area
+  - [ ] Fill Area (Rectangle)
   - [ ] Translate Points based on Origin/Size
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [ ] Box Widget with Border Width and Color
@@ -66,6 +66,8 @@
   - [ ] Editable Text Box
   - [ ] Scrollable Viewing Area
   - [ ] Toggle Button
+  - [ ] Timer
+  - [ ] Image
 - [ ] Main loop
   - [ ] Object focus
   - [ ] Window focus

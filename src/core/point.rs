@@ -12,30 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Structure identifying a point on the screen by X and Y coordinates.
 #[derive(Clone)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
 }
 
+/// Structure identifying a size of an object by W and H, respectively.
 #[derive(Clone)]
 pub struct Size {
     pub w: i32,
     pub h: i32,
 }
 
-// TODO: Add default Point (x, y = 0)
 // TODO: Add default Size (w, h = 0)
-// TODO: Add constructor impls for Point and Size, both of which take x, y, w, and h respectively as inputs.
 
+/// Convenience method to create a new `Point`.
 pub fn make_point_i32(x: i32, y: i32) -> Point {
     Point { x, y }
 }
 
+/// Convenience method to create a `Point` of origin.
 pub fn make_origin_point() -> Point {
     Point { x: 0, y: 0 }
 }
 
+/// Convenience method to convert floating point X and Y positions to a graphical `Point`.
 pub fn make_point_f64(x: f64, y: f64) -> Point {
     Point {
         x: x as i32,

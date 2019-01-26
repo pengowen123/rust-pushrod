@@ -1,4 +1,5 @@
 // Main Event Dispatcher
+// Master of the Universe
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +22,10 @@ use piston_window::*;
 
 use std::cell::RefCell;
 
+/// This structure is returned when instantiating a new Pushrod main object.
+/// It stores the OpenGL configuration that is desired for drawing, a list of references
+/// to a managed set of `PushrodWindow` objects, registered `PushrodEventListener`s, and
+/// `PushrodEvent` objects that are pending for dispatch.
 pub struct Pushrod {
     window_opengl: OpenGL,
     windows: RefCell<Vec<PushrodWindow>>,
@@ -28,7 +33,10 @@ pub struct Pushrod {
     event_list: RefCell<Vec<PushrodEvent>>,
 }
 
+/// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
+/// main loop.  Only one of these should be set for the entire application runtime.
 impl Pushrod {
+    /// Constructor.  Only accepts OpenGL type for drawing graphics - for now.
     pub fn new(config: OpenGL) -> Self {
         Self {
             window_opengl: config,
@@ -38,21 +46,26 @@ impl Pushrod {
         }
     }
 
+    /// Adds a managed window to the stack.
     pub fn add_window(&self, window: PushrodWindow) {
         self.windows.borrow_mut().push(window);
     }
 
+    /// Adds an event listener to the stack.  This should be an implementation of the
+    /// `PushrodEventListener` trait.
     pub fn add_event_listener_for_window(&self, listener: Box<PushrodEventListener>) {
         self.event_listeners.borrow_mut().push(listener);
     }
 
-    // By handling events internally, we bypass the risk of the user having to interpret each
-    // event, and having to figure out how to dispatch those events to any widgets that might be
-    // in the display area.  Events will eventually be dispatched using a "dispatch all" method,
-    // which will be done at the end of the event loop.  Any draw routines will be done within
-    // the render_args() area, and a separate event will be sent out for that, as drawing
-    // should be done at the end of all event processing, within the rendering loop, not the
-    // updating loop (UPS vs. FPS)
+    /*
+     * By handling events internally, we bypass the risk of the user having to interpret each
+     * event, and having to figure out how to dispatch those events to any widgets that might be
+     * in the display area.  Events will eventually be dispatched using a "dispatch all" method,
+     * which will be done at the end of the event loop.  Any draw routines will be done within
+     * the render_args() area, and a separate event will be sent out for that, as drawing
+     * should be done at the end of all event processing, within the rendering loop, not the
+     * updating loop (UPS vs. FPS)
+     */
 
     fn internal_handle_mouse_move(&self, point: Point) {
         // Send the point movement to the widget event handler.
@@ -117,6 +130,22 @@ impl Pushrod {
         }
     }
 
+    /// This is the main run loop that is called to process all UI events.  This loop is responsible
+    /// for handling events from the OS, converting them to workable objects, and passing them off
+    /// to quick callback dispatchers.
+    ///
+    /// The run loop handles events in the following order:
+    ///
+    /// - Mouse events:
+    ///   - Movement events
+    ///   - Button events
+    ///   - Scroll button events
+    /// - Custom events are then dispatched to any registered event listeners
+    /// - Draw loop
+    ///
+    /// This event is handled window-by-window.  Once a window has processed all of its pending
+    /// events, the next window is then processed.  No particular window takes precidence - any
+    /// window that has events to process gets handled in order.
     pub fn run(&self) {
         let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
         let mut last_widget_id = -1;
