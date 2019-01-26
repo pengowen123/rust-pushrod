@@ -58,19 +58,46 @@ pub trait PushrodWidget {
     /// To implement this, the following code could be used in your object's structure:
     ///
     /// ```
+    /// # use pushrod::widget::widget::PushrodWidget;
+    /// # use pushrod::widget::widget::PushrodWidgetConfig;
+    /// # use std::collections::HashMap;
+    /// # use std::cell::RefCell;
+    ///
+    /// struct MyWidget {
+    ///   config: RefCell<HashMap<u8, PushrodWidgetConfig>>
+    /// }
+    ///
+    /// impl MyWidget {
     ///   fn new() -> Self {
     ///     Self {
     ///       config: RefCell::new(HashMap::new()),
     ///     }
     ///   }
+    /// }
     /// ```
     ///
     /// And in the overridden function for get_config in your implementation, use:
     ///
     /// ```
-    ///   fn get_config(&mut self) -> ... {
+    /// # use pushrod::widget::widget::PushrodWidget;
+    /// # use pushrod::widget::widget::PushrodWidgetConfig;
+    /// # use std::collections::HashMap;
+    /// # use std::cell::RefCell;
+    /// # use pushrod::core::point::Point;
+    /// struct MyWidget {
+    ///   config: RefCell<HashMap<u8, PushrodWidgetConfig>>
+    /// }
+    ///
+    /// impl PushrodWidget for MyWidget {
+    ///
+    ///   fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
     ///     &self.config
     ///   }
+    ///
+    ///  fn mouse_entered(&mut self) {}
+    ///  fn mouse_exited(&mut self) {}
+    ///  fn mouse_scrolled(&mut self, point: Point) {}
+    /// }
     /// ```
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
