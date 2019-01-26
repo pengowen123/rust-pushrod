@@ -103,9 +103,11 @@ pub trait PushrodWidget {
     }
 
     /// Retrieves the `Point` of origin for this object.
+    /// Defaults to origin (0, 0) if not set.
     fn get_origin(&mut self) -> Point {
-        match self.get_config().borrow()[&CONFIG_ORIGIN] {
-            PushrodWidgetConfig::Origin { ref point } => point.clone(),
+        match self.get_config().borrow().get(&CONFIG_ORIGIN) {
+            Some(PushrodWidgetConfig::Origin { ref point }) => point.clone(),
+            None => make_origin_point(),
             _ => make_origin_point(),
         }
     }
@@ -116,10 +118,12 @@ pub trait PushrodWidget {
     }
 
     /// Retrieves the `Size` bounds for this widget.
+    /// Defaults to size (0, 0) if not set.
     fn get_size(&mut self) -> crate::core::point::Size {
-        match self.get_config().borrow()[&CONFIG_SIZE] {
-            PushrodWidgetConfig::Size { ref size } => size.clone(),
-            _ => crate::core::point::Size { w: 0, h: 0 },
+        match self.get_config().borrow().get(&CONFIG_SIZE) {
+            Some(PushrodWidgetConfig::Size { ref size }) => size.clone(),
+            None => make_unsized(),
+            _ => make_unsized(),
         }
     }
 
@@ -129,10 +133,15 @@ pub trait PushrodWidget {
     }
 
     /// Retrieves the color of this widget.
+    /// Returns white color `[1.0; 4]` if not set.
     fn get_color(&mut self) -> types::Color {
-        match self.get_config().borrow()[&CONFIG_COLOR] {
-            PushrodWidgetConfig::Color { color } => color,
-            _ => [1.0; 4],
+        if self.get_config().borrow().contains_key(&CONFIG_COLOR) {
+            match self.get_config().borrow()[&CONFIG_COLOR] {
+                PushrodWidgetConfig::Color { color } => color,
+                _ => [1.0; 4],
+            }
+        } else {
+            [1.0; 4]
         }
     }
 
