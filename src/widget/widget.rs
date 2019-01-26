@@ -32,11 +32,19 @@ pub const CONFIG_SIZE: u8 = 2;
 /// Config entry key for retrieving the widget's color.
 pub const CONFIG_COLOR: u8 = 3;
 
-/// Algebraic data type containing storage areas for each configuration object.
+/// Enumeration data type containing storage areas for each configuration object.
 pub enum PushrodWidgetConfig {
+    /// Indicates that a widget's paint contents have become invalidated, and need to be redrawn.
     Invalidate {},
+
+    /// `Point` of origin of this Widget.
     Origin { point: Point },
+
+    /// `Size` of this widget.
     Size { size: crate::core::point::Size },
+
+    /// The `types::Color` of this widget: `[f64; 4]` where the values are
+    /// `[red, green, blue, transparency]` values between 0 and 1.0.
     Color { color: types::Color },
 }
 
@@ -50,7 +58,9 @@ pub enum PushrodWidgetConfig {
 /// - mouse_exited
 /// - mouse_scrolled
 ///
-/// You _should_ override `draw`, but you are not required to.
+/// You _should_ override `draw`, but you are not required to.  If you want a blank base widget,
+/// refer to the `PushrodBaseWidget`, which will create a base widget that paints the contents
+/// of its bounds with whatever color has been specified with `set_color`.
 pub trait PushrodWidget {
     /// Retrieves the configuration HashMap that stores the configuration list of settings
     /// for this widget.
@@ -62,7 +72,6 @@ pub trait PushrodWidget {
     /// # use pushrod::widget::widget::PushrodWidgetConfig;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
-    ///
     /// struct MyWidget {
     ///   config: RefCell<HashMap<u8, PushrodWidgetConfig>>
     /// }
@@ -160,7 +169,7 @@ pub trait PushrodWidget {
     }
 
     /// Retrieves the color of this widget.
-    /// Returns white color `[1.0; 4]` if not set.
+    /// Defaults to white color `[1.0; 4]` if not set.
     fn get_color(&mut self) -> types::Color {
         if self.get_config().borrow().contains_key(&CONFIG_COLOR) {
             match self.get_config().borrow()[&CONFIG_COLOR] {
@@ -205,12 +214,14 @@ pub trait PushrodWidget {
     }
 }
 
-/// Base widget structure.
+/// This is the `PushrodBaseWidget`, which contains a top-level widget for display.  It does
+/// not contain any special logic other than being a base for a display layer.
 pub struct PushrodBaseWidget {
     config: RefCell<HashMap<u8, PushrodWidgetConfig>>,
 }
 
-/// Implementation of the PushrodBaseWidget.  Creates a new base widget object.
+/// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
+/// that can be positioned anywhere on the screen.
 impl PushrodBaseWidget {
     pub fn new() -> Self {
         Self {
@@ -219,7 +230,35 @@ impl PushrodBaseWidget {
     }
 }
 
-/// Implementation of the PushrodBaseWidget.
+/// Implementation of the `PushrodBaseWidget` object with the `PushrodWidget` traits implemented.
+/// This function only implements `get_config`, and samples of `mouse_entered`, `mouse_exited`,
+/// and `mouse_scrolled`, which currently trigger messages to the screen.
+///
+/// Example usage:
+/// ```no_run
+/// # use piston_window::*;
+/// # use pushrod::core::point::*;
+/// # use pushrod::core::window::*;
+/// # use pushrod::widget::widget::*;
+/// # fn main() {
+/// #   let opengl = OpenGL::V3_2;
+/// #   let mut pushrod_window: PushrodWindow = PushrodWindow::new(
+/// #       WindowSettings::new("Pushrod Window", [640, 480])
+/// #           .opengl(opengl)
+/// #           .build()
+/// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
+/// #   );
+/// #
+///    let mut base_widget = PushrodBaseWidget::new();
+///
+///    base_widget.set_origin(Point { x: 100, y: 100 });
+///    base_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
+///
+///    // PushrodWidgets must be boxed, as they are trait objects.
+///    pushrod_window.add_widget(Box::new(base_widget));
+/// # }
+/// ```
 impl PushrodWidget for PushrodBaseWidget {
     fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
         &self.config
