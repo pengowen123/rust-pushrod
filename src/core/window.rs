@@ -18,13 +18,19 @@ use crate::widget::widget::*;
 
 use piston_window::*;
 
-/// This structure contains a window and its corresponding onscreen widgets.
+/// This structure contains a window and its corresponding onscreen widgets.  These objects
+/// are stored in the Pushrod main loop.
 pub struct PushrodWindow {
+    /// A `piston_window::PistonWindow` object.
     pub window: PistonWindow,
+
+    /// A vector list of Boxed `PushrodWidget` trait objects.
     pub widgets: Vec<Box<dyn PushrodWidget>>,
 }
 
-/// Implementation for a new `PushrodWindow`
+/// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
+/// managed window stack in the Pushrod main loop, this object is created to store its
+/// components.
 impl PushrodWindow {
     /// Constructor, takes a managed `PistonWindow` from the `piston_window` crate.
     pub fn new(window: PistonWindow) -> Self {

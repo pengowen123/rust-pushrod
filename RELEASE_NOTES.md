@@ -1,5 +1,11 @@
 # Pushrod Releases
 
+## 0.1.3
+
+- Got some assistance from @andygrove for documentation and testing.
+- Completed documentation in the application
+- Moved example away from the `src` directory, and into its own `examples` directory.
+
 ## 0.1.2
 
 - Adjustments for Crates.

@@ -19,21 +19,19 @@ pub struct Point {
     pub y: i32,
 }
 
-/// Structure identifying a size of an object by W and H, respectively.
+/// Structure identifying a size of an object by W (width) and H (height), respectively.
 #[derive(Clone)]
 pub struct Size {
     pub w: i32,
     pub h: i32,
 }
 
-// TODO: Add default Size (w, h = 0)
-
 /// Convenience method to create a new `Point`.
 pub fn make_point_i32(x: i32, y: i32) -> Point {
     Point { x, y }
 }
 
-/// Convenience method to create a `Point` of origin.
+/// Convenience method to create a `Point` of origin, defined as an X and Y coordinate of 0.
 pub fn make_origin_point() -> Point {
     Point { x: 0, y: 0 }
 }
@@ -46,7 +44,7 @@ pub fn make_point_f64(x: f64, y: f64) -> Point {
     }
 }
 
-/// Convenience method to create a non-existent size.
+/// Convenience method to create a non-existent size, defined as a width and height of 0.
 pub fn make_unsized() -> Size {
     Size { w: 0, h: 0 }
 }
