@@ -89,16 +89,5 @@ See [Event Library README](src/event/README.md)
 
 ## 2. Widget Library
 
-### Base Widget
-
-### Uniform Font System
-
-### Standard Widgets
-
-### Extended Widgets
-
-### Layout Managers
-
-## 3. Themable Library
-
+See [Widget Library README](src/widget/README.md)
 
