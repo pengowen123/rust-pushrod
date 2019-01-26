@@ -23,7 +23,3 @@ piston_window = "0.87.0"
 piston2d-opengl_graphics = "0.59.0"
 gfx_core = "0.8.3"
 gfx_device_gl = "0.15.5"
-
-[[bin]]
-name = "window_test"
-path = "examples/window_test.rs"

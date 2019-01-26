@@ -1,4 +1,4 @@
-// Window Test
+// Simple Windowed Example
 // Super simplistic test to show off the use of the library in its current state
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
