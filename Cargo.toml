@@ -1,11 +1,10 @@
 [package]
 name = "rust-pushrod"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Ken Suenobu <ksuenobu@fastmail.com>"]
 edition = "2018"
 description = "Rust Pushrod GUI Library"
 license = "Apache-2.0"
-license-file = "LICENSE"
 repository = "https://www.github.com/KenSuenobu/rust-pushrod/"
 include = [
     "**/*.rs",

@@ -72,7 +72,7 @@
   - [ ] Object focus
   - [ ] Window focus
   - [ ] Window loses focus
-  - [ ] Window resize
+  - [ ] Window resize (will trigger a window-wide invalidate)
 
 # TBD
 
