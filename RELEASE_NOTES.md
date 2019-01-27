@@ -2,10 +2,18 @@
 
 ## 0.1.4
 
-- Adjusted Cargo.toml to include keywords and README.
+- Run loop optimization:
+  - Optimized mouse movement - repetitive points are redundant.
+  - Added invalidation to set origin, size, and color.
+  - Added clear_invalidation flag to draw.
 - Added tests for Points.
+- Added example to show invalidation behavior in Piston.
 - Updated callbacks to use widget_id when calling mouse enter, exit, scroll.
+- Removed context reset from trait object default draw method.
+- Renamed simple example to "simple"
+- Adjusted Cargo.toml to include keywords and README.
 - Got Travis.CI building the application.
+- Shortened README.
 
 ## 0.1.3
 
