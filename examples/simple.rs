@@ -73,6 +73,7 @@ fn main() {
 
     pushrod_window.window.set_max_fps(60);
     pushrod_window.window.set_ups(60);
+    pushrod_window.window.set_lazy(true);
 
     let mut base_widget = PushrodBaseWidget::new();
 

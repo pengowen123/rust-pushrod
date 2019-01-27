@@ -2,9 +2,13 @@
 
 ## 0.1.4
 
+- Run loop optimization:
+  - Optimized mouse movement - repetitive points are redundant.
+  - Added invalidation to set origin, size, and color.
+  - Added clear_invalidation flag to draw.
+  - Getting some REALLY bizarre screen flickering when trying to draw invalidated objects, skipping that logic for now.
 - Added tests for Points.
 - Updated callbacks to use widget_id when calling mouse enter, exit, scroll.
-- Optimized mouse movement - repetitive points are redundant.
 - Removed context reset from trait object default draw method.
 - Renamed simple example to "simple"
 - Adjusted Cargo.toml to include keywords and README.

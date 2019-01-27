@@ -135,9 +135,10 @@ pub trait PushrodWidget {
         self.get_config().borrow().contains_key(&CONFIG_INVALIDATE)
     }
 
-    /// Sets the `Point` of origin for this widget.
+    /// Sets the `Point` of origin for this widget.  Invalidates the widget afterward.
     fn set_origin(&mut self, point: Point) {
         self.set_config(CONFIG_ORIGIN, PushrodWidgetConfig::Origin { point });
+        self.invalidate();
     }
 
     /// Retrieves the `Point` of origin for this object.
@@ -150,9 +151,10 @@ pub trait PushrodWidget {
         }
     }
 
-    /// Sets the `Size` for this widget.
+    /// Sets the `Size` for this widget.  Invalidates the widget afterward.
     fn set_size(&mut self, size: crate::core::point::Size) {
         self.set_config(CONFIG_SIZE, PushrodWidgetConfig::Size { size });
+        self.invalidate();
     }
 
     /// Retrieves the `Size` bounds for this widget.
@@ -165,9 +167,10 @@ pub trait PushrodWidget {
         }
     }
 
-    /// Sets the color for this widget.
+    /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
         self.set_config(CONFIG_COLOR, PushrodWidgetConfig::Color { color });
+        self.invalidate();
     }
 
     /// Retrieves the color of this widget.
