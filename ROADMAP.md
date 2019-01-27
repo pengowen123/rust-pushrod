@@ -5,8 +5,8 @@
 - [ ] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
-  - [ ] Implement invalidate in draw cycle
-  - [ ] Use window.window.swap_buffers() only after drawing the screen with invalidated items
+  - [x] Implement invalidate in draw cycle
+  - [x] Use window.window.swap_buffers() only after drawing the screen with invalidated items
   - [ ] Improve mutability in Pushrod Window for triggering events
   - [ ] Add parent/child relationship
   - [ ] Walk children when parent signals an invalidate
@@ -48,7 +48,7 @@
   - [ ] Object focus
   - [ ] Window focus
   - [ ] Window loses focus
-  - [ ] Window resize (will trigger a window-wide invalidate)
+  - [ ] Window resize (needs to trigger a window-wide invalidate)
 
 # TBD
 

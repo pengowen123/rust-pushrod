@@ -200,6 +200,9 @@ pub trait PushrodWidget {
     // Draw routines
 
     /// Draws the contents of the widget, provided a `piston2d` `Context` and `GlGraphics` object.
+    /// It is highly recommended that you call `clear_invalidate()` after the draw completes,
+    /// otherwise, this will continue to be redrawn continuously (unless this is the desired
+    /// behavior.)
     fn draw(&mut self, context: Context, graphics: &mut GlGraphics) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
@@ -215,6 +218,8 @@ pub trait PushrodWidget {
             context.transform,
             graphics,
         );
+
+        self.clear_invalidate();
     }
 }
 
