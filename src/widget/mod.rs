@@ -15,3 +15,6 @@
 /// UI Components (Widget) library.  These components are used for on-screen interactions
 /// between the user and the application.
 pub mod widget;
+
+/// Box component: draws a box on the screen with Widget interaction.
+pub mod box_widget;

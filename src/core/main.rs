@@ -265,9 +265,11 @@ impl Pushrod {
                 if let Some([x, y]) = event.mouse_cursor_args() {
                     let mouse_point = make_point_f64(x, y);
 
-                    if mouse_point.x != previous_mouse_position.x || mouse_point.y != previous_mouse_position.y {
+                    if mouse_point.x != previous_mouse_position.x
+                        || mouse_point.y != previous_mouse_position.y
+                    {
                         previous_mouse_position = mouse_point.clone();
-                        
+
                         self.internal_handle_mouse_move(mouse_point.clone());
 
                         let current_widget_id = pushrod_window.get_widget_id_for_point(mouse_point);
@@ -309,15 +311,12 @@ impl Pushrod {
                     let mut require_buffer_swap = false;
 
                     gl.draw(args.viewport(), |context, graphics| {
-                        pushrod_window
-                            .widgets
-                            .iter_mut()
-                            .for_each(|widget| {
-                                if widget.is_invalidated() {
-                                    widget.draw(context, graphics);
-                                    require_buffer_swap = true;
-                                }
-                            });
+                        pushrod_window.widgets.iter_mut().for_each(|widget| {
+                            if widget.is_invalidated() {
+                                widget.draw(context, graphics);
+                                require_buffer_swap = true;
+                            }
+                        });
                     });
 
                     if require_buffer_swap {

@@ -85,6 +85,13 @@ fn main() {
     base_widget2.set_color([0.5, 0.5, 0.5, 1.0]);
     pushrod_window.add_widget(Box::new(base_widget2));
 
+    let mut box_widget = PushrodBoxWidget::new();
+    box_widget.set_origin(Point { x: 100, y: 250 });
+    box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+    box_widget.set_border_color([1.0, 0.0, 0.0, 1.0]);
+    box_widget.set_border_thickness(3);
+    pushrod_window.add_widget(Box::new(box_widget));
+
     prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 
