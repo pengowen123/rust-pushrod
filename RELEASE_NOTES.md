@@ -7,6 +7,13 @@
 - Run loop optimization:
   - Checks to see if widgets need to be drawn/refreshed (invalidated)
   - Upon invalidation, draw is called, and display buffer is swapped
+- Added ability to draw a box using `line()` calls
+- Created `PushrodBoxWidget` object to draw a box with a backing widget
+  - Created as an extension of PushrodWidget
+    - Added `get/set_border_color` to set get and set border color
+    - Added `get/set_border_thickness` to set border width
+    - Uses the PushrodBaseWidget as its top-level widget for drawing
+    - set origin, color, and point all control the top level and base widget
 
 ## 0.1.4
 

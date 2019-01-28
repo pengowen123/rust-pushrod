@@ -1,4 +1,5 @@
 // Pushrod Box Widget
+// Extensible widget for the widget library - handles drawing a box with a border and a fill color
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +40,7 @@ impl PushrodBoxWidget {
     }
 
     /// Sets the border color for this widget.
-    fn set_border_color(&mut self, color: types::Color) {
+    pub fn set_border_color(&mut self, color: types::Color) {
         self.set_config(
             CONFIG_COLOR_BORDER,
             PushrodWidgetConfig::BorderColor { color },
@@ -49,7 +50,7 @@ impl PushrodBoxWidget {
 
     /// Retrieves the border color of this widget.
     /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
-    fn get_border_color(&mut self) -> types::Color {
+    pub fn get_border_color(&mut self) -> types::Color {
         if self
             .get_config()
             .borrow()
@@ -65,7 +66,7 @@ impl PushrodBoxWidget {
     }
 
     /// Sets the thickness of the border for this widget.
-    fn set_border_thickness(&mut self, thickness: u8) {
+    pub fn set_border_thickness(&mut self, thickness: u8) {
         self.set_config(
             CONFIG_BORDER_WIDTH,
             PushrodWidgetConfig::BorderWidth { thickness },
@@ -75,7 +76,7 @@ impl PushrodBoxWidget {
 
     /// Retrieves the border thickness of this widget.
     /// Defaults to 1 if not set.
-    fn get_border_thickness(&mut self) -> u8 {
+    pub fn get_border_thickness(&mut self) -> u8 {
         if self
             .get_config()
             .borrow()
@@ -91,35 +92,35 @@ impl PushrodBoxWidget {
     }
 
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
-    /// along with the width of the border.  Starts from the outside in.
+    /// along with the width of the border.
     fn draw_box(&mut self, context: Context, graphics: &mut GlGraphics) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
-        let border: u8 = self.get_border_thickness();
+        let border: f64 = self.get_border_thickness() as f64;
         let color: types::Color = self.get_border_color();
 
         // Upper left to upper right
         line(
             color,
-            border as f64,
+            border,
             [
                 origin.x as f64,
-                origin.y as f64,
+                origin.y as f64 + border,
                 (origin.x + size.w) as f64,
-                origin.y as f64,
+                origin.y as f64 + border,
             ],
             context.transform,
             graphics,
         );
 
-        // Upper right to lower right
+        // Upper left to lower right
         line(
             color,
-            border as f64,
+            border,
             [
-                (origin.x + size.w) as f64,
-                origin.y as f64,
-                (origin.x + size.w) as f64,
+                (origin.x + size.w) as f64 - border,
+                origin.y as f64 + border,
+                (origin.x + size.w) as f64 - border,
                 (origin.y + size.h) as f64,
             ],
             context.transform,
@@ -129,11 +130,11 @@ impl PushrodBoxWidget {
         // Upper left to lower left
         line(
             color,
-            border as f64,
+            border,
             [
-                origin.x as f64,
-                origin.y as f64,
-                origin.x as f64,
+                origin.x as f64 + border,
+                origin.y as f64 + border,
+                origin.x as f64 + border,
                 (origin.y + size.h) as f64,
             ],
             context.transform,
@@ -143,12 +144,12 @@ impl PushrodBoxWidget {
         // Lower left to lower right
         line(
             color,
-            border as f64,
+            border,
             [
                 origin.x as f64,
-                (origin.y + size.h) as f64,
+                (origin.y + size.h) as f64 - border,
                 (origin.x + size.w) as f64,
-                (origin.y + size.h) as f64,
+                (origin.y + size.h) as f64 - border,
             ],
             context.transform,
             graphics,
@@ -159,6 +160,9 @@ impl PushrodBoxWidget {
 /// Implementation of the `PushrodBoxWidget` object with the `PushrodWidget` traits implemented.
 /// This implementation is similar to the `PushrodBaseWidget`, but incorporates a drawable box inside
 /// the widget.  Base widget is the `PushrodBaseWidget`.
+///
+/// This is basically just a box with a fill color.  Use this to draw other things like buttons,
+/// text widgets, and so on, if you need anything with a drawable border.
 ///
 /// Example usage:
 /// ```no_run

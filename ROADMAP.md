@@ -20,7 +20,7 @@
 - [ ] Implement Graphics Translation Library
   - [ ] Implement a graphics library that is uniform and not independent of any Rust library
   - [ ] Clip
-  - [ ] Draw Box
+  - [x] Draw Box
   - [ ] Draw Rounded Rectangle
   - [ ] Draw Ellipse
   - [ ] Draw Arc
@@ -30,7 +30,8 @@
   - [ ] Fill Area (Rectangle)
   - [ ] Translate Points based on Origin/Size
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
-  - [ ] Box Widget with Border Width and Color
+  - [x] Box Widget with Border Width and Color
+  - [ ] Timer
   - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
 
@@ -41,7 +42,6 @@
   - [ ] Editable Text Box
   - [ ] Scrollable Viewing Area
   - [ ] Toggle Button
-  - [ ] Timer
   - [ ] Image
   - [ ] Progress Indicator
 - [ ] Main loop
