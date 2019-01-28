@@ -2,6 +2,9 @@
 
 # 0.1.x -> 0.2.0
 
+- [ ] Widget Library Changes
+  - [ ] Add chainable functions that return self, so functions can be chained
+  - [ ] Add white base widget to Pushrod Window constructor
 - [ ] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
