@@ -25,7 +25,7 @@ pub struct PushrodWindow {
     pub window: PistonWindow,
 
     /// A vector list of Boxed `PushrodWidget` trait objects.
-    pub widgets: Vec<Box<dyn PushrodWidget>>,
+    pub widgets: Vec<Box<dyn Widget>>,
 }
 
 /// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
@@ -36,8 +36,8 @@ impl PushrodWindow {
     /// widget to the list that is a white container widget.  This is the base for all other widgets
     /// tht will be added to the window.
     pub fn new(window: PistonWindow) -> Self {
-        let mut widgets_list: Vec<Box<dyn PushrodWidget>> = Vec::new();
-        let mut base_widget = PushrodBaseWidget::new();
+        let mut widgets_list: Vec<Box<dyn Widget>> = Vec::new();
+        let mut base_widget = BaseWidget::new();
 
         base_widget.set_size(crate::core::point::Size { w: 800, h: 600 });
         widgets_list.push(Box::new(base_widget));
@@ -49,7 +49,7 @@ impl PushrodWindow {
     }
 
     /// Adds a UI widget to this window.
-    pub fn add_widget(&mut self, widget: Box<dyn PushrodWidget>) {
+    pub fn add_widget(&mut self, widget: Box<dyn Widget>) {
         self.widgets.push(widget);
     }
 
@@ -92,7 +92,7 @@ impl PushrodWindow {
     }
 
     /// Retrieves a reference to the `Box`ed `PushrodWidget` object by its ID.
-    pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn PushrodWidget> {
+    pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn Widget> {
         &self.widgets[id as usize]
     }
 }

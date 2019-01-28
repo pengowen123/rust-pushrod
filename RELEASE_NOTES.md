@@ -5,6 +5,9 @@
 - Modified so that you no longer have to add a base widget to the window.
 - Removed README markdown files, as they are not necessary.
 - Renamed event masking to start with "MASK" instead of "PUSHROD"
+- Renamed PushrodBoxWidget to BoxWidget
+- Renamed PushrodWidget to Widget
+- Renamed PushrodEventMask to EventMask
 
 ## 0.1.5
 

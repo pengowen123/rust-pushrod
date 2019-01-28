@@ -228,7 +228,7 @@ impl Pushrod {
         self.event_list.borrow_mut().clear();
     }
 
-    fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
+    fn internal_derive_event_mask(&self, event: &PushrodEvent) -> EventMask {
         match event {
             PushrodEvent::MouseEvent { point: _ } => MASK_EVENT_MOUSE_MOVED,
             PushrodEvent::MouseDownEvent { button: _ } => MASK_EVENT_MOUSE_DOWN,

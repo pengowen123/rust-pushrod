@@ -1,4 +1,4 @@
-// Pushrod Box Widget
+// Box Widget
 // Extensible widget for the widget library - handles drawing a box with a border and a fill color
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,20 +22,20 @@ use std::collections::HashMap;
 use crate::core::point::*;
 use crate::widget::widget::*;
 
-/// This is the `PushrodBoxWidget`, which contains a top-level widget for display, overriding the
+/// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
-pub struct PushrodBoxWidget {
+pub struct BoxWidget {
     config: RefCell<HashMap<u8, PushrodWidgetConfig>>,
-    base_widget: PushrodBaseWidget,
+    base_widget: BaseWidget,
 }
 
 /// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
 /// that can be positioned anywhere on the screen.
-impl PushrodBoxWidget {
+impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: RefCell::new(HashMap::new()),
-            base_widget: PushrodBaseWidget::new(),
+            base_widget: BaseWidget::new(),
         }
     }
 
@@ -180,7 +180,7 @@ impl PushrodBoxWidget {
 /// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
 /// #   );
 /// #
-///    let mut box_widget = PushrodBoxWidget::new();
+///    let mut box_widget = BoxWidget::new();
 ///
 ///    box_widget.set_origin(Point { x: 100, y: 100 });
 ///    box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
@@ -192,7 +192,7 @@ impl PushrodBoxWidget {
 ///    pushrod_window.add_widget(Box::new(box_widget));
 /// # }
 /// ```
-impl PushrodWidget for PushrodBoxWidget {
+impl Widget for BoxWidget {
     fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
         &self.config
     }

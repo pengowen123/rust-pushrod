@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// Main module containing the run loop for the UI components, containers for windows and
-/// `PushrodWidget` trait objects, and so on.  Contains the core elements required to build
+/// `Widget` trait objects, and so on.  Contains the core elements required to build
 /// a UI.
 pub mod core;
 
@@ -22,7 +22,7 @@ pub mod core;
 /// run loop which events the programmer desires to receive.
 pub mod event;
 
-/// Widget library used for on-screen UI interaction.  This is a core set of `PushrodWidget`
+/// Widget library used for on-screen UI interaction.  This is a core set of `Widget`
 /// objects that are used to allow users to interact with an application.  Contains a core set
 /// of widgets that can be extended.
 ///
