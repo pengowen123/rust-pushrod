@@ -170,6 +170,7 @@ impl PushrodBoxWidget {
 /// # use pushrod::core::point::*;
 /// # use pushrod::core::window::*;
 /// # use pushrod::widget::widget::*;
+/// # use pushrod::widget::box_widget::*;
 /// # fn main() {
 /// #   let opengl = OpenGL::V3_2;
 /// #   let mut pushrod_window: PushrodWindow = PushrodWindow::new(
