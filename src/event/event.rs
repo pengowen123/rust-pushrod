@@ -70,15 +70,15 @@ pub enum PushrodEvent {
 /// ```
 /// # use pushrod::event::event::*;
 /// # use pushrod::core::point::*;
-/// # struct EventListener { }
+/// # struct TestEventListener { }
 /// #
-/// # impl EventListener {
+/// # impl TestEventListener {
 /// #     fn new() -> Self {
 /// #         Self { }
 /// #     }
 /// # }
 /// #
-/// impl PushrodEventListener for EventListener {
+/// impl EventListener for TestEventListener {
 ///     fn event_mask(&self) -> EventMask {
 ///         MASK_EVENT_MOUSE_MOVED
 ///     }
@@ -95,7 +95,7 @@ pub enum PushrodEvent {
 /// Programmers who use this event system are encouraged to override `event_mask` so that
 /// they only receive the events that pertain to your application.  If this is strictly set
 /// to `MASK_EVENT_ALL`, all wrapped events will be sent to `handle_event`.
-pub trait PushrodEventListener {
+pub trait EventListener {
     /// Identifies which events to receive in the `handle_event` function.  Any events that
     /// do not match the masks (defined in constants) will not trigger a `handle_event` callback.
     fn event_mask(&self) -> EventMask {

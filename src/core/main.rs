@@ -32,7 +32,7 @@ use std::cell::RefCell;
 pub struct Pushrod {
     window_opengl: OpenGL,
     windows: RefCell<Vec<PushrodWindow>>,
-    event_listeners: RefCell<Vec<Box<PushrodEventListener>>>,
+    event_listeners: RefCell<Vec<Box<EventListener>>>,
     event_list: RefCell<Vec<PushrodEvent>>,
 }
 
@@ -124,7 +124,7 @@ impl Pushrod {
     ///     }
     /// }
     ///
-    /// impl PushrodEventListener for ExampleListener {
+    /// impl EventListener for ExampleListener {
     ///     fn handle_event(&self, event: &PushrodEvent) {
     ///         match event {
     ///             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
@@ -160,7 +160,7 @@ impl Pushrod {
     ///     prod.run();
     /// }
     /// ```
-    pub fn add_event_listener_for_window(&self, listener: Box<PushrodEventListener>) {
+    pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
         self.event_listeners.borrow_mut().push(listener);
     }
 

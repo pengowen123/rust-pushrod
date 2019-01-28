@@ -53,7 +53,7 @@ impl ExampleListener {
     }
 }
 
-impl PushrodEventListener for ExampleListener {
+impl EventListener for ExampleListener {
     fn handle_event(&self, event: &PushrodEvent) {
         match event {
             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
