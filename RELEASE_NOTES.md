@@ -9,6 +9,7 @@
 - Renamed PushrodWidget to Widget
 - Renamed PushrodEventMask to EventMask
 - Renamed PushrodEventListener to EventListener
+- Renamed PushrodWidgetConfig to WidgetConfig
 
 ## 0.1.5
 
