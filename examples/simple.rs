@@ -13,12 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+extern crate pushrod;
+
 use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::core::point::*;
 use pushrod::core::window::*;
 use pushrod::event::event::*;
 use pushrod::widget::widget::*;
+use pushrod::widget::box_widget::*;
 
 struct ExampleListener {}
 
@@ -65,7 +68,7 @@ fn main() {
     let opengl = OpenGL::V3_2;
     let prod: Pushrod = Pushrod::new(opengl);
     let mut pushrod_window: PushrodWindow = PushrodWindow::new(
-        WindowSettings::new("Pushrod Window", [640, 480])
+        WindowSettings::new("Pushrod Window", [800, 600])
             .opengl(opengl)
             .build()
             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
@@ -76,7 +79,7 @@ fn main() {
 
     let mut base_widget = PushrodBaseWidget::new();
 
-    base_widget.set_size(pushrod::core::point::Size { w: 640, h: 480 });
+    base_widget.set_size(pushrod::core::point::Size { w: 800, h: 600 });
     pushrod_window.add_widget(Box::new(base_widget));
 
     let mut base_widget2 = PushrodBaseWidget::new();
@@ -84,6 +87,14 @@ fn main() {
     base_widget2.set_size(pushrod::core::point::Size { w: 200, h: 200 });
     base_widget2.set_color([0.5, 0.5, 0.5, 1.0]);
     pushrod_window.add_widget(Box::new(base_widget2));
+
+    let mut box_widget = PushrodBoxWidget::new();
+    box_widget.set_origin(Point { x: 350, y: 100 });
+    box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+    box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
+    box_widget.set_border_color([1.0, 0.0, 0.0, 1.0]);
+    box_widget.set_border_thickness(4);
+    pushrod_window.add_widget(Box::new(box_widget));
 
     prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));

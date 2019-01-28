@@ -32,6 +32,12 @@ pub const CONFIG_SIZE: u8 = 2;
 /// Config entry key for retrieving the widget's color.
 pub const CONFIG_COLOR: u8 = 3;
 
+/// Config entry key for retrieving the widget's border color.
+pub const CONFIG_COLOR_BORDER: u8 = 4;
+
+/// Config entry key for retrieving the widget's border width.
+pub const CONFIG_BORDER_WIDTH: u8 = 5;
+
 /// Enumeration data type containing storage areas for each configuration object.
 pub enum PushrodWidgetConfig {
     /// Indicates that a widget's paint contents have become invalidated, and need to be redrawn.
@@ -44,8 +50,16 @@ pub enum PushrodWidgetConfig {
     Size { size: crate::core::point::Size },
 
     /// The `types::Color` of this widget: `[f64; 4]` where the values are
-    /// `[red, green, blue, transparency]` values between 0 and 1.0.
+    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
     Color { color: types::Color },
+
+    /// The `types::Color` of the border of this widget: `[f64; 4]` where the values are
+    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
+    BorderColor { color: types::Color },
+
+    /// Indicates the thickness of the border width to be drawn inside widgets that draw a
+    /// border.  (See `BorderColor`.)
+    BorderWidth { thickness: u8 },
 }
 
 /// Implementable trait that is used by every `PushrodWidget`.  These are the public methods,
@@ -200,6 +214,10 @@ pub trait PushrodWidget {
     // Draw routines
 
     /// Draws the contents of the widget, provided a `piston2d` `Context` and `GlGraphics` object.
+    ///
+    /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
+    /// otherwise, this will continue to be redrawn continuously (unless this is the desired
+    /// behavior.)
     fn draw(&mut self, context: Context, graphics: &mut GlGraphics) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
@@ -215,6 +233,8 @@ pub trait PushrodWidget {
             context.transform,
             graphics,
         );
+
+        self.clear_invalidate();
     }
 }
 
@@ -277,6 +297,10 @@ impl PushrodWidget for PushrodBaseWidget {
     }
 
     fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        eprintln!("Mouse scrolled: x={} y={}: id={}", point.x, point.y, widget_id);
+        eprintln!(
+            "Mouse scrolled: x={} y={}: id={}",
+            point.x, point.y, widget_id
+        );
     }
 }
+

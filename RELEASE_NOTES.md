@@ -1,5 +1,21 @@
 # Pushrod Releases
 
+## 0.1.5
+
+- Modified Base Widget to clear its invalidation state after a draw.
+- Set window `swap_buffers` flag to false when added.
+- Run loop optimization:
+  - Checks to see if widgets need to be drawn/refreshed (invalidated)
+  - Upon invalidation, draw is called, and display buffer is swapped
+- Added ability to draw a box using `line()` calls
+- Created `PushrodBoxWidget` object to draw a box with a backing widget
+  - Created as an extension of PushrodWidget
+    - Added `get/set_border_color` to set get and set border color
+    - Added `get/set_border_thickness` to set border width
+    - Uses the PushrodBaseWidget as its top-level widget for drawing
+    - set origin, color, and point all control the top level and base widget
+- Added Timer as list of widgets to build before 0.2.0 release.
+
 ## 0.1.4
 
 - Run loop optimization:

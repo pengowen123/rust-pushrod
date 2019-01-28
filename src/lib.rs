@@ -25,4 +25,8 @@ pub mod event;
 /// Widget library used for on-screen UI interaction.  This is a core set of `PushrodWidget`
 /// objects that are used to allow users to interact with an application.  Contains a core set
 /// of widgets that can be extended.
+///
+/// Currently contains:
+/// - Base Widget (for drawing a plain background)
+/// - Box Widget (for drawing a plain background with a box and a colored border)
 pub mod widget;

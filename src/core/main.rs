@@ -77,8 +77,10 @@ impl Pushrod {
         }
     }
 
-    /// Adds a managed window to the stack.
-    pub fn add_window(&self, window: PushrodWindow) {
+    /// Adds a managed window to the stack.  Changes the `swap_buffers` flag to `false`, as if
+    /// this were set to `true`, the main draw loop would be extremely expensive.
+    pub fn add_window(&self, mut window: PushrodWindow) {
+        &window.window.set_swap_buffers(false);
         self.windows.borrow_mut().push(window);
     }
 
@@ -241,12 +243,14 @@ impl Pushrod {
     ///
     /// The run loop handles events in the following order:
     ///
-    /// - Mouse events:
+    /// - Mouse events
     ///   - Movement events
     ///   - Button events
     ///   - Scroll button events
     /// - Custom events are then dispatched to any registered event listeners
     /// - Draw loop
+    ///   - Draw only widgets whose states have become invalidated
+    ///   - Swap display buffers if required
     ///
     /// This event is handled window-by-window.  Once a window has processed all of its pending
     /// events, the next window is then processed.  No particular window takes precidence - any
@@ -261,9 +265,11 @@ impl Pushrod {
                 if let Some([x, y]) = event.mouse_cursor_args() {
                     let mouse_point = make_point_f64(x, y);
 
-                    if mouse_point.x != previous_mouse_position.x || mouse_point.y != previous_mouse_position.y {
+                    if mouse_point.x != previous_mouse_position.x
+                        || mouse_point.y != previous_mouse_position.y
+                    {
                         previous_mouse_position = mouse_point.clone();
-                        
+
                         self.internal_handle_mouse_move(mouse_point.clone());
 
                         let current_widget_id = pushrod_window.get_widget_id_for_point(mouse_point);
@@ -302,12 +308,21 @@ impl Pushrod {
                 // FPS loop handling
 
                 if let Some(args) = event.render_args() {
+                    let mut require_buffer_swap = false;
+
                     gl.draw(args.viewport(), |context, graphics| {
-                        pushrod_window
-                            .widgets
-                            .iter_mut()
-                            .for_each(|widget| widget.draw(context, graphics));
+                        pushrod_window.widgets.iter_mut().for_each(|widget| {
+                            if widget.is_invalidated() {
+                                widget.draw(context, graphics);
+                                require_buffer_swap = true;
+                            }
+                        });
                     });
+
+                    if require_buffer_swap {
+                        pushrod_window.window.window.swap_buffers();
+                        eprintln!("[Run Loop] Display buffers swapped due to invalidation.");
+                    }
                 }
             }
         }
