@@ -3,6 +3,7 @@
 ## 0.1.6
 
 - Modified so that you no longer have to add a base widget to the window.
+- Removed README markdown files, as they are not necessary.
 
 ## 0.1.5
 
