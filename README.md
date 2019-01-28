@@ -37,7 +37,7 @@ Pushrod requires the following minimum versions:
 ## Runnable Examples
 
 ```
-cargo run --example simple_example
+cargo run --example simple
 ```
 
 This will only test window-related events with mouse interaction: mouse enter, mouse exit, mouse click, mouse
