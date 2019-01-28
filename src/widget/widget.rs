@@ -39,7 +39,7 @@ pub const CONFIG_COLOR_BORDER: u8 = 4;
 pub const CONFIG_BORDER_WIDTH: u8 = 5;
 
 /// Enumeration data type containing storage areas for each configuration object.
-pub enum PushrodWidgetConfig {
+pub enum WidgetConfig {
     /// Indicates that a widget's paint contents have become invalidated, and need to be redrawn.
     Invalidate {},
 
@@ -85,11 +85,11 @@ pub trait Widget {
     ///
     /// ```
     /// # use pushrod::widget::widget::Widget;
-    /// # use pushrod::widget::widget::PushrodWidgetConfig;
+    /// # use pushrod::widget::widget::WidgetConfig;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<u8, PushrodWidgetConfig>>
+    ///   config: RefCell<HashMap<u8, WidgetConfig>>
     /// }
     ///
     /// impl MyWidget {
@@ -105,17 +105,17 @@ pub trait Widget {
     ///
     /// ```
     /// # use pushrod::widget::widget::Widget;
-    /// # use pushrod::widget::widget::PushrodWidgetConfig;
+    /// # use pushrod::widget::widget::WidgetConfig;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<u8, PushrodWidgetConfig>>
+    ///   config: RefCell<HashMap<u8, WidgetConfig>>
     /// }
     ///
     /// impl Widget for MyWidget {
     ///
-    ///   fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
+    ///   fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
     ///     &self.config
     ///   }
     ///
@@ -127,16 +127,16 @@ pub trait Widget {
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>>;
+    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>>;
 
     /// Sets a configuration object by its key.
-    fn set_config(&mut self, key: u8, value: PushrodWidgetConfig) {
+    fn set_config(&mut self, key: u8, value: WidgetConfig) {
         self.get_config().borrow_mut().insert(key, value);
     }
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
-        self.set_config(CONFIG_INVALIDATE, PushrodWidgetConfig::Invalidate {});
+        self.set_config(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
     }
 
     /// Clears the invalidation flag.
@@ -151,7 +151,7 @@ pub trait Widget {
 
     /// Sets the `Point` of origin for this widget.  Invalidates the widget afterward.
     fn set_origin(&mut self, point: Point) {
-        self.set_config(CONFIG_ORIGIN, PushrodWidgetConfig::Origin { point });
+        self.set_config(CONFIG_ORIGIN, WidgetConfig::Origin { point });
         self.invalidate();
     }
 
@@ -159,7 +159,7 @@ pub trait Widget {
     /// Defaults to origin (0, 0) if not set.
     fn get_origin(&mut self) -> Point {
         match self.get_config().borrow().get(&CONFIG_ORIGIN) {
-            Some(PushrodWidgetConfig::Origin { ref point }) => point.clone(),
+            Some(WidgetConfig::Origin { ref point }) => point.clone(),
             None => make_origin_point(),
             _ => make_origin_point(),
         }
@@ -167,7 +167,7 @@ pub trait Widget {
 
     /// Sets the `Size` for this widget.  Invalidates the widget afterward.
     fn set_size(&mut self, size: crate::core::point::Size) {
-        self.set_config(CONFIG_SIZE, PushrodWidgetConfig::Size { size });
+        self.set_config(CONFIG_SIZE, WidgetConfig::Size { size });
         self.invalidate();
     }
 
@@ -175,7 +175,7 @@ pub trait Widget {
     /// Defaults to size (0, 0) if not set.
     fn get_size(&mut self) -> crate::core::point::Size {
         match self.get_config().borrow().get(&CONFIG_SIZE) {
-            Some(PushrodWidgetConfig::Size { ref size }) => size.clone(),
+            Some(WidgetConfig::Size { ref size }) => size.clone(),
             None => make_unsized(),
             _ => make_unsized(),
         }
@@ -183,7 +183,7 @@ pub trait Widget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.set_config(CONFIG_COLOR, PushrodWidgetConfig::Color { color });
+        self.set_config(CONFIG_COLOR, WidgetConfig::Color { color });
         self.invalidate();
     }
 
@@ -192,7 +192,7 @@ pub trait Widget {
     fn get_color(&mut self) -> types::Color {
         if self.get_config().borrow().contains_key(&CONFIG_COLOR) {
             match self.get_config().borrow()[&CONFIG_COLOR] {
-                PushrodWidgetConfig::Color { color } => color,
+                WidgetConfig::Color { color } => color,
                 _ => [1.0; 4],
             }
         } else {
@@ -241,7 +241,7 @@ pub trait Widget {
 /// This is the `BaseWidget`, which contains a top-level widget for display.  It does
 /// not contain any special logic other than being a base for a display layer.
 pub struct BaseWidget {
-    config: RefCell<HashMap<u8, PushrodWidgetConfig>>,
+    config: RefCell<HashMap<u8, WidgetConfig>>,
 }
 
 /// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
@@ -284,7 +284,7 @@ impl BaseWidget {
 /// # }
 /// ```
 impl Widget for BaseWidget {
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
+    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
         &self.config
     }
 
