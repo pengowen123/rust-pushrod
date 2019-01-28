@@ -7,6 +7,10 @@ Draws inspiration from Atari GEM, TrollTech Qt, and others.
 [![Build Status](https://travis-ci.org/KenSuenobu/rust-pushrod.svg?branch=master)](https://travis-ci.org/KenSuenobu/rust-pushrod)
 [![](https://img.shields.io/crates/d/rust-pushrod.svg)](https://crates.io/crates/rust-pushrod)
 
+Current state of the sample app:
+
+[![](docs/sample.png)](docs/sample.png)
+
 ## Philosophy
 
 The reason I created this library instead of extending another library was that
