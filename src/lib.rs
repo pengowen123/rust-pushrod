@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! ## Pushrod is a Cross Platform UI Widget Library for Piston
+//!
+//! It is intended to be lightweight, easy to use, and easy to understand.  Pushrod takes
+//! its inspiration from Atari ST GEM development, TrollTech Qt, and other libraries over
+//! the years.
+
 /// Main module containing the run loop for the UI components, containers for windows and
 /// `Widget` trait objects, and so on.  Contains the core elements required to build
 /// a UI.
