@@ -32,11 +32,19 @@ pub struct PushrodWindow {
 /// managed window stack in the Pushrod main loop, this object is created to store its
 /// components.
 impl PushrodWindow {
-    /// Constructor, takes a managed `PistonWindow` from the `piston_window` crate.
+    /// Constructor, takes a managed `PistonWindow` from the `piston_window` crate.  Adds a top-level
+    /// widget to the list that is a white container widget.  This is the base for all other widgets
+    /// tht will be added to the window.
     pub fn new(window: PistonWindow) -> Self {
+        let mut widgets_list: Vec<Box<dyn PushrodWidget>> = Vec::new();
+        let mut base_widget = PushrodBaseWidget::new();
+
+        base_widget.set_size(crate::core::point::Size { w: 800, h: 600 });
+        widgets_list.push(Box::new(base_widget));
+
         Self {
             window,
-            widgets: Vec::new(),
+            widgets: widgets_list,
         }
     }
 

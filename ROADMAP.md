@@ -1,10 +1,11 @@
-# rush-pushrod Roadmap
+#rgo build
+ rush-pushrod Roadmap
 
 # 0.1.x -> 0.2.0
 
 - [ ] Widget Library Changes
   - [ ] Add chainable functions that return self, so functions can be chained
-  - [ ] Add white base widget to Pushrod Window constructor
+  - [x] Add white base widget to Pushrod Window constructor
   - [ ] Remove OpenGL use when creating a new window
   - [ ] Use glfw for window drawing instead of PistonWindow, as it seems to be more OS independent.
 - [ ] Optimize main run loop

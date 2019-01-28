@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.1.6
+
+- Modified so that you no longer have to add a base widget to the window.
+
 ## 0.1.5
 
 - Modified Base Widget to clear its invalidation state after a draw.
