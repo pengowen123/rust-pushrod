@@ -5,6 +5,7 @@
 - [ ] Widget Library Changes
   - [ ] Add chainable functions that return self, so functions can be chained
   - [ ] Add white base widget to Pushrod Window constructor
+  - [ ] Remove OpenGL use when creating a new window
 - [ ] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
