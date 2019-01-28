@@ -8,7 +8,7 @@
   - [x] Add white base widget to Pushrod Window constructor
   - [ ] Remove OpenGL use when creating a new window
   - [ ] Use glfw for window drawing instead of PistonWindow, as it seems to be more OS independent.
-- [ ] Optimize main run loop
+- [x] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
   - [ ] Remove "Pushrod" from everything - we know it's pushrod, it doesn't need to be vain!

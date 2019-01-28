@@ -4,6 +4,7 @@
 
 - Modified so that you no longer have to add a base widget to the window.
 - Removed README markdown files, as they are not necessary.
+- Renamed event masking to start with "MASK" instead of "PUSHROD"
 
 ## 0.1.5
 

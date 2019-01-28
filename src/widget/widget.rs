@@ -289,16 +289,16 @@ impl PushrodWidget for PushrodBaseWidget {
     }
 
     fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("Mouse entered: id={}", widget_id);
+        eprintln!("[Base] Mouse entered: id={}", widget_id);
     }
 
     fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("Mouse exited: id={}", widget_id);
+        eprintln!("[Base] Mouse exited: id={}", widget_id);
     }
 
     fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
         eprintln!(
-            "Mouse scrolled: x={} y={}: id={}",
+            "[Base] Mouse scrolled: x={} y={}: id={}",
             point.x, point.y, widget_id
         );
     }

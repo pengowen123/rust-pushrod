@@ -230,10 +230,10 @@ impl Pushrod {
 
     fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
         match event {
-            PushrodEvent::MouseEvent { point: _ } => PUSHROD_EVENT_MOUSE_MOVED,
-            PushrodEvent::MouseDownEvent { button: _ } => PUSHROD_EVENT_MOUSE_DOWN,
-            PushrodEvent::MouseUpEvent { button: _ } => PUSHROD_EVENT_MOUSE_UP,
-            PushrodEvent::MouseScrollEvent { point: _ } => PUSHROD_EVENT_MOUSE_SCROLL,
+            PushrodEvent::MouseEvent { point: _ } => MASK_EVENT_MOUSE_MOVED,
+            PushrodEvent::MouseDownEvent { button: _ } => MASK_EVENT_MOUSE_DOWN,
+            PushrodEvent::MouseUpEvent { button: _ } => MASK_EVENT_MOUSE_UP,
+            PushrodEvent::MouseScrollEvent { point: _ } => MASK_EVENT_MOUSE_SCROLL,
         }
     }
 
