@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// UI Components (Widget) library.  These components are used for on-screen interactions
+/// Base component and UI Components (Widget) library.  These components are used for on-screen interactions
 /// between the user and the application.
 pub mod widget;
 
-/// Box component: draws a box on the screen with Widget interaction.
+/// Box component: draws a box on the screen with adjustable border color and width.
 pub mod box_widget;

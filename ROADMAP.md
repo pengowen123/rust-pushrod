@@ -32,18 +32,24 @@
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
   - [ ] Timer
+  - [ ] Image
   - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
+- [ ] More examples
 
 # 0.2.x -> 0.3.0
 
 - [ ] Complicated Widget Library
   - [ ] Scrollbox (Horizontal and Vertical)
-  - [ ] Editable Text Box
+  - [ ] Slider (Horizontal and Vertical)
   - [ ] Scrollable Viewing Area
-  - [ ] Toggle Button
-  - [ ] Image
+  - [ ] Toggle/Push Button
   - [ ] Progress Indicator
+  - [ ] Popup Menu
+  - [ ] Editable Text Box
+- [ ] Widget States
+  - [ ] Enabled/Disabled (disabled means no callback interactions from event loop)
+  - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)
 - [ ] Main loop
   - [ ] Object focus
   - [ ] Window focus
@@ -55,3 +61,4 @@
 - [ ] Convert Widget Library to OpenGL 3D Objects
   - [ ] All drawing and widget libraries remain the same
   - [ ] Translate graphics to draw to a canvas/texture
+  - [ ] Editable text area (all one uniform font)
