@@ -14,6 +14,7 @@
     - Added `get/set_border_thickness` to set border width
     - Uses the PushrodBaseWidget as its top-level widget for drawing
     - set origin, color, and point all control the top level and base widget
+- Added Timer as list of widgets to build before 0.2.0 release.
 
 ## 0.1.4
 
