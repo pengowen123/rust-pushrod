@@ -12,11 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! ## Pushrod is a Cross Platform UI Widget Library for Piston
+//! Pushrod is a Cross Platform UI Widget Library for Piston
 //!
-//! It is intended to be lightweight, easy to use, and easy to understand.  Pushrod takes
-//! its inspiration from Atari ST GEM development, TrollTech Qt, and other libraries over
+//! It is intended to be lightweight, easy to use, and easy to understand.  Pushrod draws
+//! inspiration from Atari ST GEM development, TrollTech Qt, and other libraries over
 //! the years.
+//!
+//! Pushrod uses Piston as its main window drawing and event loop functionality.  It utilizes
+//! piston2d-opengl graphics so that - eventually - the graphics can be represented as 3D
+//! poly objects with textures as canvases.  It also utilizes the `gfx_core` library for
+//! graphics functionality, as well as the `gfx_device_gl` support.
+//!
+//! Pushrod uses the following dependencies:
+//! ```ignore
+//! [dependencies]
+//! piston_window = "^0.87.0"
+//! piston2d-opengl_graphics = "^0.59.0"
+//! gfx_core = "^0.8.3"
+//! gfx_device_gl = "^0.15.5"
+//! ```
 
 /// Main module containing the run loop for the UI components, containers for windows and
 /// `Widget` trait objects, and so on.  Contains the core elements required to build
