@@ -1,4 +1,4 @@
-// Pushrod Box Widget
+// Box Widget
 // Extensible widget for the widget library - handles drawing a box with a border and a fill color
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,20 +22,20 @@ use std::collections::HashMap;
 use crate::core::point::*;
 use crate::widget::widget::*;
 
-/// This is the `PushrodBoxWidget`, which contains a top-level widget for display, overriding the
+/// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
-pub struct PushrodBoxWidget {
-    config: RefCell<HashMap<u8, PushrodWidgetConfig>>,
-    base_widget: PushrodBaseWidget,
+pub struct BoxWidget {
+    config: RefCell<HashMap<u8, WidgetConfig>>,
+    base_widget: BaseWidget,
 }
 
-/// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
+/// Implementation of the constructor for the `BaseWidget`.  Creates a new base widget
 /// that can be positioned anywhere on the screen.
-impl PushrodBoxWidget {
+impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: RefCell::new(HashMap::new()),
-            base_widget: PushrodBaseWidget::new(),
+            base_widget: BaseWidget::new(),
         }
     }
 
@@ -43,7 +43,7 @@ impl PushrodBoxWidget {
     pub fn set_border_color(&mut self, color: types::Color) {
         self.set_config(
             CONFIG_COLOR_BORDER,
-            PushrodWidgetConfig::BorderColor { color },
+            WidgetConfig::BorderColor { color },
         );
         self.invalidate();
     }
@@ -57,7 +57,7 @@ impl PushrodBoxWidget {
             .contains_key(&CONFIG_COLOR_BORDER)
         {
             match self.get_config().borrow()[&CONFIG_COLOR_BORDER] {
-                PushrodWidgetConfig::BorderColor { color } => color,
+                WidgetConfig::BorderColor { color } => color,
                 _ => [0.0, 0.0, 0.0, 1.0],
             }
         } else {
@@ -69,7 +69,7 @@ impl PushrodBoxWidget {
     pub fn set_border_thickness(&mut self, thickness: u8) {
         self.set_config(
             CONFIG_BORDER_WIDTH,
-            PushrodWidgetConfig::BorderWidth { thickness },
+            WidgetConfig::BorderWidth { thickness },
         );
         self.invalidate();
     }
@@ -83,7 +83,7 @@ impl PushrodBoxWidget {
             .contains_key(&CONFIG_BORDER_WIDTH)
         {
             match self.get_config().borrow()[&CONFIG_BORDER_WIDTH] {
-                PushrodWidgetConfig::BorderWidth { thickness } => thickness,
+                WidgetConfig::BorderWidth { thickness } => thickness,
                 _ => 1,
             }
         } else {
@@ -92,7 +92,8 @@ impl PushrodBoxWidget {
     }
 
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
-    /// along with the width of the border.
+    /// along with the width of the border.  This is automatically determined by the origin, so the
+    /// box is automatically drawn for the bounds of the `Widget`.
     fn draw_box(&mut self, context: Context, graphics: &mut GlGraphics) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
@@ -157,9 +158,9 @@ impl PushrodBoxWidget {
     }
 }
 
-/// Implementation of the `PushrodBoxWidget` object with the `PushrodWidget` traits implemented.
-/// This implementation is similar to the `PushrodBaseWidget`, but incorporates a drawable box inside
-/// the widget.  Base widget is the `PushrodBaseWidget`.
+/// Implementation of the `BoxWidget` object with the `Widget` traits implemented.
+/// This implementation is similar to the `BaseWidget`, but incorporates a drawable box inside
+/// the widget.  Base widget is the `BaseWidget`.
 ///
 /// This is basically just a box with a fill color.  Use this to draw other things like buttons,
 /// text widgets, and so on, if you need anything with a drawable border.
@@ -180,20 +181,17 @@ impl PushrodBoxWidget {
 /// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
 /// #   );
 /// #
-///    let mut box_widget = PushrodBoxWidget::new();
+///    let mut box_widget = BoxWidget::new();
 ///
 ///    box_widget.set_origin(Point { x: 100, y: 100 });
 ///    box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
 ///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
 ///    box_widget.set_border_thickness(3);
-///
-///    // PushrodWidgets must be boxed, as they are trait objects.
-///    pushrod_window.add_widget(Box::new(box_widget));
 /// # }
 /// ```
-impl PushrodWidget for PushrodBoxWidget {
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
+impl Widget for BoxWidget {
+    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
         &self.config
     }
 
@@ -201,7 +199,7 @@ impl PushrodWidget for PushrodBoxWidget {
     fn set_origin(&mut self, point: Point) {
         self.set_config(
             CONFIG_ORIGIN,
-            PushrodWidgetConfig::Origin {
+            WidgetConfig::Origin {
                 point: point.clone(),
             },
         );
@@ -213,7 +211,7 @@ impl PushrodWidget for PushrodBoxWidget {
     fn set_size(&mut self, size: crate::core::point::Size) {
         self.set_config(
             CONFIG_SIZE,
-            PushrodWidgetConfig::Size { size: size.clone() },
+            WidgetConfig::Size { size: size.clone() },
         );
         self.base_widget.set_size(size.clone());
         self.invalidate();
@@ -221,7 +219,7 @@ impl PushrodWidget for PushrodBoxWidget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.set_config(CONFIG_COLOR, PushrodWidgetConfig::Color { color });
+        self.set_config(CONFIG_COLOR, WidgetConfig::Color { color });
         self.base_widget.set_color(color);
         self.invalidate();
     }

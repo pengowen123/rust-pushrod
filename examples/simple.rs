@@ -53,7 +53,7 @@ impl ExampleListener {
     }
 }
 
-impl PushrodEventListener for ExampleListener {
+impl EventListener for ExampleListener {
     fn handle_event(&self, event: &PushrodEvent) {
         match event {
             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
@@ -77,18 +77,13 @@ fn main() {
     pushrod_window.window.set_max_fps(60);
     pushrod_window.window.set_ups(60);
 
-    let mut base_widget = PushrodBaseWidget::new();
-
-    base_widget.set_size(pushrod::core::point::Size { w: 800, h: 600 });
+    let mut base_widget = BaseWidget::new();
+    base_widget.set_origin(Point { x: 100, y: 100 });
+    base_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
     pushrod_window.add_widget(Box::new(base_widget));
 
-    let mut base_widget2 = PushrodBaseWidget::new();
-    base_widget2.set_origin(Point { x: 100, y: 100 });
-    base_widget2.set_size(pushrod::core::point::Size { w: 200, h: 200 });
-    base_widget2.set_color([0.5, 0.5, 0.5, 1.0]);
-    pushrod_window.add_widget(Box::new(base_widget2));
-
-    let mut box_widget = PushrodBoxWidget::new();
+    let mut box_widget = BoxWidget::new();
     box_widget.set_origin(Point { x: 350, y: 100 });
     box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
     box_widget.set_color([0.0, 1.0, 0.0, 1.0]);

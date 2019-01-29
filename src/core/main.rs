@@ -24,7 +24,7 @@ use std::cell::RefCell;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
-/// to a managed set of `PushrodWindow` objects, registered `PushrodEventListener`s, and
+/// to a managed set of `PushrodWindow` objects, registered `EventListener`s, and
 /// `PushrodEvent` objects that are pending dispatch.
 ///
 /// The objects contained within this structure are used by the `Pushrod` run loop, and
@@ -32,7 +32,7 @@ use std::cell::RefCell;
 pub struct Pushrod {
     window_opengl: OpenGL,
     windows: RefCell<Vec<PushrodWindow>>,
-    event_listeners: RefCell<Vec<Box<PushrodEventListener>>>,
+    event_listeners: RefCell<Vec<Box<EventListener>>>,
     event_list: RefCell<Vec<PushrodEvent>>,
 }
 
@@ -124,7 +124,7 @@ impl Pushrod {
     ///     }
     /// }
     ///
-    /// impl PushrodEventListener for ExampleListener {
+    /// impl EventListener for ExampleListener {
     ///     fn handle_event(&self, event: &PushrodEvent) {
     ///         match event {
     ///             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
@@ -160,7 +160,7 @@ impl Pushrod {
     ///     prod.run();
     /// }
     /// ```
-    pub fn add_event_listener_for_window(&self, listener: Box<PushrodEventListener>) {
+    pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
         self.event_listeners.borrow_mut().push(listener);
     }
 
@@ -228,12 +228,12 @@ impl Pushrod {
         self.event_list.borrow_mut().clear();
     }
 
-    fn internal_derive_event_mask(&self, event: &PushrodEvent) -> PushrodEventMask {
+    fn internal_derive_event_mask(&self, event: &PushrodEvent) -> EventMask {
         match event {
-            PushrodEvent::MouseEvent { point: _ } => PUSHROD_EVENT_MOUSE_MOVED,
-            PushrodEvent::MouseDownEvent { button: _ } => PUSHROD_EVENT_MOUSE_DOWN,
-            PushrodEvent::MouseUpEvent { button: _ } => PUSHROD_EVENT_MOUSE_UP,
-            PushrodEvent::MouseScrollEvent { point: _ } => PUSHROD_EVENT_MOUSE_SCROLL,
+            PushrodEvent::MouseEvent { point: _ } => MASK_EVENT_MOUSE_MOVED,
+            PushrodEvent::MouseDownEvent { button: _ } => MASK_EVENT_MOUSE_DOWN,
+            PushrodEvent::MouseUpEvent { button: _ } => MASK_EVENT_MOUSE_UP,
+            PushrodEvent::MouseScrollEvent { point: _ } => MASK_EVENT_MOUSE_SCROLL,
         }
     }
 

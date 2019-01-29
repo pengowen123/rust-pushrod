@@ -1,15 +1,21 @@
 # rush-pushrod Roadmap
 
-# 0.1.x -> 0.2.0
+## 0.1.x -> 0.2.0
 
 - [ ] Widget Library Changes
   - [ ] Add chainable functions that return self, so functions can be chained
-  - [ ] Add white base widget to Pushrod Window constructor
+  - [x] Add white base widget to Pushrod Window constructor
   - [ ] Remove OpenGL use when creating a new window
-- [ ] Optimize main run loop
+  - [ ] Use glfw for window drawing instead of PistonWindow, as it seems to be more OS independent.
+  - [ ] Change Widget configs to its own struct instead of being part of Widget
+  - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
+  - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
+  - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
+  - [ ] Ensure that the widget library code is still super simple and easy to understand
+- [x] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
-  - [ ] Remove "Pushrod" from everything - we know it's pushrod, it doesn't need to be vain!
+  - [x] Remove "Pushrod" from everything (if possible) - we know it's pushrod, it doesn't need to be vain!
   - [x] Implement invalidate in draw cycle
   - [x] Use window.window.swap_buffers() only after drawing the screen with invalidated items
   - [ ] Improve mutability in Pushrod Window for triggering events
@@ -42,7 +48,7 @@
   - [ ] Button
 - [ ] More examples
 
-# 0.2.x -> 0.3.0
+## 0.2.x -> 0.3.0
 
 - [ ] Complicated Widget Library
   - [ ] Scrollbox (Horizontal and Vertical)
@@ -61,7 +67,7 @@
   - [ ] Window loses focus
   - [ ] Window resize (needs to trigger a window-wide invalidate)
 
-# TBD
+## TBD
 
 - [ ] Convert Widget Library to OpenGL 3D Objects
   - [ ] All drawing and widget libraries remain the same

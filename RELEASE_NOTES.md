@@ -1,5 +1,17 @@
 # Pushrod Releases
 
+## 0.1.6
+
+- Modified so that you no longer have to add a base widget to the window
+- Removed README markdown files, as they are not necessary
+- Renamed event masking to start with "MASK" instead of "PUSHROD"
+- Renamed PushrodBoxWidget to BoxWidget
+- Renamed PushrodWidget to Widget
+- Renamed PushrodEventMask to EventMask
+- Renamed PushrodEventListener to EventListener
+- Renamed PushrodWidgetConfig to WidgetConfig
+- More corrections to documentation, removed Pushrod from class names where appropriate
+
 ## 0.1.5
 
 - Modified Base Widget to clear its invalidation state after a draw.

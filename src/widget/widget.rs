@@ -39,7 +39,7 @@ pub const CONFIG_COLOR_BORDER: u8 = 4;
 pub const CONFIG_BORDER_WIDTH: u8 = 5;
 
 /// Enumeration data type containing storage areas for each configuration object.
-pub enum PushrodWidgetConfig {
+pub enum WidgetConfig {
     /// Indicates that a widget's paint contents have become invalidated, and need to be redrawn.
     Invalidate {},
 
@@ -62,7 +62,7 @@ pub enum PushrodWidgetConfig {
     BorderWidth { thickness: u8 },
 }
 
-/// Implementable trait that is used by every `PushrodWidget`.  These are the public methods,
+/// Implementable trait that is used by every `Widget`.  These are the public methods,
 /// and a function _may_ override them.
 ///
 /// You _must_ implement the following methods:
@@ -74,22 +74,22 @@ pub enum PushrodWidgetConfig {
 ///
 /// You _should_ override `draw`, but you are not required to.
 ///
-/// If you want a blank base widget, refer to the `PushrodBaseWidget`, which will create a
+/// If you want a blank base widget, refer to the `BaseWidget`, which will create a
 /// base widget that paints the contents of its bounds with whatever color has been
 /// specified with `set_color`.
-pub trait PushrodWidget {
+pub trait Widget {
     /// Retrieves the configuration HashMap that stores the configuration list of settings
     /// for this widget.
     ///
     /// To implement this, the following code could be used in your object's structure:
     ///
     /// ```
-    /// # use pushrod::widget::widget::PushrodWidget;
-    /// # use pushrod::widget::widget::PushrodWidgetConfig;
+    /// # use pushrod::widget::widget::Widget;
+    /// # use pushrod::widget::widget::WidgetConfig;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<u8, PushrodWidgetConfig>>
+    ///   config: RefCell<HashMap<u8, WidgetConfig>>
     /// }
     ///
     /// impl MyWidget {
@@ -104,18 +104,18 @@ pub trait PushrodWidget {
     /// And in the overridden function for get_config in your implementation, use:
     ///
     /// ```
-    /// # use pushrod::widget::widget::PushrodWidget;
-    /// # use pushrod::widget::widget::PushrodWidgetConfig;
+    /// # use pushrod::widget::widget::Widget;
+    /// # use pushrod::widget::widget::WidgetConfig;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<u8, PushrodWidgetConfig>>
+    ///   config: RefCell<HashMap<u8, WidgetConfig>>
     /// }
     ///
-    /// impl PushrodWidget for MyWidget {
+    /// impl Widget for MyWidget {
     ///
-    ///   fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
+    ///   fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
     ///     &self.config
     ///   }
     ///
@@ -127,16 +127,16 @@ pub trait PushrodWidget {
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>>;
+    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>>;
 
     /// Sets a configuration object by its key.
-    fn set_config(&mut self, key: u8, value: PushrodWidgetConfig) {
+    fn set_config(&mut self, key: u8, value: WidgetConfig) {
         self.get_config().borrow_mut().insert(key, value);
     }
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
-        self.set_config(CONFIG_INVALIDATE, PushrodWidgetConfig::Invalidate {});
+        self.set_config(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
     }
 
     /// Clears the invalidation flag.
@@ -151,7 +151,7 @@ pub trait PushrodWidget {
 
     /// Sets the `Point` of origin for this widget.  Invalidates the widget afterward.
     fn set_origin(&mut self, point: Point) {
-        self.set_config(CONFIG_ORIGIN, PushrodWidgetConfig::Origin { point });
+        self.set_config(CONFIG_ORIGIN, WidgetConfig::Origin { point });
         self.invalidate();
     }
 
@@ -159,7 +159,7 @@ pub trait PushrodWidget {
     /// Defaults to origin (0, 0) if not set.
     fn get_origin(&mut self) -> Point {
         match self.get_config().borrow().get(&CONFIG_ORIGIN) {
-            Some(PushrodWidgetConfig::Origin { ref point }) => point.clone(),
+            Some(WidgetConfig::Origin { ref point }) => point.clone(),
             None => make_origin_point(),
             _ => make_origin_point(),
         }
@@ -167,7 +167,7 @@ pub trait PushrodWidget {
 
     /// Sets the `Size` for this widget.  Invalidates the widget afterward.
     fn set_size(&mut self, size: crate::core::point::Size) {
-        self.set_config(CONFIG_SIZE, PushrodWidgetConfig::Size { size });
+        self.set_config(CONFIG_SIZE, WidgetConfig::Size { size });
         self.invalidate();
     }
 
@@ -175,7 +175,7 @@ pub trait PushrodWidget {
     /// Defaults to size (0, 0) if not set.
     fn get_size(&mut self) -> crate::core::point::Size {
         match self.get_config().borrow().get(&CONFIG_SIZE) {
-            Some(PushrodWidgetConfig::Size { ref size }) => size.clone(),
+            Some(WidgetConfig::Size { ref size }) => size.clone(),
             None => make_unsized(),
             _ => make_unsized(),
         }
@@ -183,7 +183,7 @@ pub trait PushrodWidget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.set_config(CONFIG_COLOR, PushrodWidgetConfig::Color { color });
+        self.set_config(CONFIG_COLOR, WidgetConfig::Color { color });
         self.invalidate();
     }
 
@@ -192,7 +192,7 @@ pub trait PushrodWidget {
     fn get_color(&mut self) -> types::Color {
         if self.get_config().borrow().contains_key(&CONFIG_COLOR) {
             match self.get_config().borrow()[&CONFIG_COLOR] {
-                PushrodWidgetConfig::Color { color } => color,
+                WidgetConfig::Color { color } => color,
                 _ => [1.0; 4],
             }
         } else {
@@ -238,15 +238,15 @@ pub trait PushrodWidget {
     }
 }
 
-/// This is the `PushrodBaseWidget`, which contains a top-level widget for display.  It does
+/// This is the `BaseWidget`, which contains a top-level widget for display.  It does
 /// not contain any special logic other than being a base for a display layer.
-pub struct PushrodBaseWidget {
-    config: RefCell<HashMap<u8, PushrodWidgetConfig>>,
+pub struct BaseWidget {
+    config: RefCell<HashMap<u8, WidgetConfig>>,
 }
 
 /// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
 /// that can be positioned anywhere on the screen.
-impl PushrodBaseWidget {
+impl BaseWidget {
     pub fn new() -> Self {
         Self {
             config: RefCell::new(HashMap::new()),
@@ -254,7 +254,7 @@ impl PushrodBaseWidget {
     }
 }
 
-/// Implementation of the `PushrodBaseWidget` object with the `PushrodWidget` traits implemented.
+/// Implementation of the `BaseWidget` object with the `Widget` traits implemented.
 /// This function only implements `get_config`, and samples of `mouse_entered`, `mouse_exited`,
 /// and `mouse_scrolled`, which currently trigger messages to the screen.
 ///
@@ -273,32 +273,32 @@ impl PushrodBaseWidget {
 /// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
 /// #   );
 /// #
-///    let mut base_widget = PushrodBaseWidget::new();
+///    let mut base_widget = BaseWidget::new();
 ///
 ///    base_widget.set_origin(Point { x: 100, y: 100 });
 ///    base_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
 ///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///
-///    // PushrodWidgets must be boxed, as they are trait objects.
+///    // Widgets must be boxed, as they are trait objects.
 ///    pushrod_window.add_widget(Box::new(base_widget));
 /// # }
 /// ```
-impl PushrodWidget for PushrodBaseWidget {
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, PushrodWidgetConfig>> {
+impl Widget for BaseWidget {
+    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
         &self.config
     }
 
     fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("Mouse entered: id={}", widget_id);
+        eprintln!("[Base] Mouse entered: id={}", widget_id);
     }
 
     fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("Mouse exited: id={}", widget_id);
+        eprintln!("[Base] Mouse exited: id={}", widget_id);
     }
 
     fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
         eprintln!(
-            "Mouse scrolled: x={} y={}: id={}",
+            "[Base] Mouse scrolled: x={} y={}: id={}",
             point.x, point.y, widget_id
         );
     }

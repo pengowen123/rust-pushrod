@@ -25,23 +25,31 @@ pub struct PushrodWindow {
     pub window: PistonWindow,
 
     /// A vector list of Boxed `PushrodWidget` trait objects.
-    pub widgets: Vec<Box<dyn PushrodWidget>>,
+    pub widgets: Vec<Box<dyn Widget>>,
 }
 
 /// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
 /// managed window stack in the Pushrod main loop, this object is created to store its
 /// components.
 impl PushrodWindow {
-    /// Constructor, takes a managed `PistonWindow` from the `piston_window` crate.
+    /// Constructor, takes a managed `PistonWindow` from the `piston_window` crate.  Adds a top-level
+    /// widget to the list that is a white container widget.  This is the base for all other widgets
+    /// tht will be added to the window.
     pub fn new(window: PistonWindow) -> Self {
+        let mut widgets_list: Vec<Box<dyn Widget>> = Vec::new();
+        let mut base_widget = BaseWidget::new();
+
+        base_widget.set_size(crate::core::point::Size { w: 800, h: 600 });
+        widgets_list.push(Box::new(base_widget));
+
         Self {
             window,
-            widgets: Vec::new(),
+            widgets: widgets_list,
         }
     }
 
     /// Adds a UI widget to this window.
-    pub fn add_widget(&mut self, widget: Box<dyn PushrodWidget>) {
+    pub fn add_widget(&mut self, widget: Box<dyn Widget>) {
         self.widgets.push(widget);
     }
 
@@ -68,23 +76,23 @@ impl PushrodWindow {
         found_id
     }
 
-    /// Callback to `mouse_entered` for a `PushrodWidget` by ID.
+    /// Callback to `mouse_entered` for a `Widget` by ID.
     pub fn mouse_entered_for_id(&mut self, id: i32) {
         &self.widgets[id as usize].mouse_entered(id);
     }
 
-    /// Callback to `mouse_exited` for a `PushrodWidget` by ID.
+    /// Callback to `mouse_exited` for a `Widget` by ID.
     pub fn mouse_exited_for_id(&mut self, id: i32) {
         &self.widgets[id as usize].mouse_exited(id);
     }
 
-    /// Callback to `mouse_scrolled` for a `PushrodWidget` by ID, with the mouse scroll `Point`.
+    /// Callback to `mouse_scrolled` for a `Widget` by ID, with the mouse scroll `Point`.
     pub fn mouse_scrolled_for_id(&mut self, id: i32, point: Point) {
         &self.widgets[id as usize].mouse_scrolled(id, point);
     }
 
-    /// Retrieves a reference to the `Box`ed `PushrodWidget` object by its ID.
-    pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn PushrodWidget> {
+    /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
+    pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn Widget> {
         &self.widgets[id as usize]
     }
 }

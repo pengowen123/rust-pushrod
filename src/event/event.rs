@@ -22,28 +22,28 @@ use piston_window::*;
 /// Pushrod Event Mask type (`u32`).  Used to define an event mask.  Event masks are hexadecimal masks
 /// identifying which events to listen for, in binary order.  When defining a new event that
 /// is triggered by the OS, they should be defined in this list, with this type.
-pub type PushrodEventMask = u32;
+pub type EventMask = u32;
 
 /// No events mask.
-pub const PUSHROD_EVENT_NONE: PushrodEventMask = 0x00000000;
+pub const MASK_EVENT_NONE: EventMask = 0x00000000;
 
 /// Mouse movement event mask.
-pub const PUSHROD_EVENT_MOUSE_MOVED: PushrodEventMask = 0x00000001;
+pub const MASK_EVENT_MOUSE_MOVED: EventMask = 0x00000001;
 
 /// Mouse button press event mask.
-pub const PUSHROD_EVENT_MOUSE_DOWN: PushrodEventMask = 0x00000002;
+pub const MASK_EVENT_MOUSE_DOWN: EventMask = 0x00000002;
 
 /// Mouse button release event mask.
-pub const PUSHROD_EVENT_MOUSE_UP: PushrodEventMask = 0x00000004;
+pub const MASK_EVENT_MOUSE_UP: EventMask = 0x00000004;
 
 /// Mouse scroll event mask.
-pub const PUSHROD_EVENT_MOUSE_SCROLL: PushrodEventMask = 0x00000008;
+pub const MASK_EVENT_MOUSE_SCROLL: EventMask = 0x00000008;
 
 /// All mouse events mask.
-pub const PUSHROD_EVENT_MOUSE_ALL: PushrodEventMask = 0x0000000F;
+pub const MASK_EVENT_MOUSE_ALL: EventMask = 0x0000000F;
 
 /// All events mask.  (Use this carefully)
-pub const PUSHROD_EVENT_ALL: PushrodEventMask = PUSHROD_EVENT_MOUSE_ALL;
+pub const MASK_EVENT_ALL: EventMask = MASK_EVENT_MOUSE_ALL;
 
 /// Enumeration types for different `PushrodEvents`, translated from the underlying OS.
 pub enum PushrodEvent {
@@ -70,17 +70,17 @@ pub enum PushrodEvent {
 /// ```
 /// # use pushrod::event::event::*;
 /// # use pushrod::core::point::*;
-/// # struct EventListener { }
+/// # struct TestEventListener { }
 /// #
-/// # impl EventListener {
+/// # impl TestEventListener {
 /// #     fn new() -> Self {
 /// #         Self { }
 /// #     }
 /// # }
 /// #
-/// impl PushrodEventListener for EventListener {
-///     fn event_mask(&self) -> PushrodEventMask {
-///         PUSHROD_EVENT_MOUSE_MOVED
+/// impl EventListener for TestEventListener {
+///     fn event_mask(&self) -> EventMask {
+///         MASK_EVENT_MOUSE_MOVED
 ///     }
 ///
 ///     fn handle_event(&self, event: &PushrodEvent) {
@@ -94,12 +94,12 @@ pub enum PushrodEvent {
 ///
 /// Programmers who use this event system are encouraged to override `event_mask` so that
 /// they only receive the events that pertain to your application.  If this is strictly set
-/// to `PUSHROD_EVENT_ALL`, all wrapped events will be sent to `handle_event`.
-pub trait PushrodEventListener {
+/// to `MASK_EVENT_ALL`, all wrapped events will be sent to `handle_event`.
+pub trait EventListener {
     /// Identifies which events to receive in the `handle_event` function.  Any events that
     /// do not match the masks (defined in constants) will not trigger a `handle_event` callback.
-    fn event_mask(&self) -> PushrodEventMask {
-        PUSHROD_EVENT_ALL
+    fn event_mask(&self) -> EventMask {
+        MASK_EVENT_ALL
     }
 
     /// Called when an event matching a masked type (in `event_mask`) occurs.

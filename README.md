@@ -1,6 +1,6 @@
 # rust-pushrod
 
-**UI Widget Library for Rust Piston library.**
+**Cross Platform UI Widget Library for Piston.**
 
 Draws inspiration from Atari GEM, TrollTech Qt, and others.
 
@@ -37,7 +37,7 @@ Pushrod requires the following minimum versions:
 ## Runnable Examples
 
 ```
-cargo run --example simple_example
+cargo run --example simple
 ```
 
 This will only test window-related events with mouse interaction: mouse enter, mouse exit, mouse click, mouse
