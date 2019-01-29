@@ -92,7 +92,8 @@ impl BoxWidget {
     }
 
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
-    /// along with the width of the border.
+    /// along with the width of the border.  This is automatically determined by the origin, so the
+    /// box is automatically drawn for the bounds of the `Widget`.
     fn draw_box(&mut self, context: Context, graphics: &mut GlGraphics) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();

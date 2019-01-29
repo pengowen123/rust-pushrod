@@ -1,7 +1,6 @@
-#rgo build
- rush-pushrod Roadmap
+# rush-pushrod Roadmap
 
-# 0.1.x -> 0.2.0
+## 0.1.x -> 0.2.0
 
 - [ ] Widget Library Changes
   - [ ] Add chainable functions that return self, so functions can be chained
@@ -44,7 +43,7 @@
   - [ ] Button
 - [ ] More examples
 
-# 0.2.x -> 0.3.0
+## 0.2.x -> 0.3.0
 
 - [ ] Complicated Widget Library
   - [ ] Scrollbox (Horizontal and Vertical)
@@ -63,7 +62,7 @@
   - [ ] Window loses focus
   - [ ] Window resize (needs to trigger a window-wide invalidate)
 
-# TBD
+## TBD
 
 - [ ] Convert Widget Library to OpenGL 3D Objects
   - [ ] All drawing and widget libraries remain the same
