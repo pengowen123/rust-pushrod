@@ -24,7 +24,7 @@ use std::cell::RefCell;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
-/// to a managed set of `PushrodWindow` objects, registered `PushrodEventListener`s, and
+/// to a managed set of `PushrodWindow` objects, registered `EventListener`s, and
 /// `PushrodEvent` objects that are pending dispatch.
 ///
 /// The objects contained within this structure are used by the `Pushrod` run loop, and

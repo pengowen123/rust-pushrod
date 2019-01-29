@@ -279,7 +279,7 @@ impl BaseWidget {
 ///    base_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
 ///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///
-///    // PushrodWidgets must be boxed, as they are trait objects.
+///    // Widgets must be boxed, as they are trait objects.
 ///    pushrod_window.add_widget(Box::new(base_widget));
 /// # }
 /// ```

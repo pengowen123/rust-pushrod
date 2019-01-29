@@ -187,9 +187,6 @@ impl BoxWidget {
 ///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
 ///    box_widget.set_border_thickness(3);
-///
-///    // PushrodWidgets must be boxed, as they are trait objects.
-///    pushrod_window.add_widget(Box::new(box_widget));
 /// # }
 /// ```
 impl Widget for BoxWidget {
