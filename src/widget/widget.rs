@@ -20,6 +20,10 @@ use std::collections::HashMap;
 
 use crate::core::point::*;
 
+/// A programmatic type identifying the type of key (and most importantly, size) that is used
+/// for storing configuration values for a `Widget` in the config `HashMap`.
+pub type ConfigKey = u8;
+
 /// Config entry key for invalidated object (invalidated means "requires screen refresh")
 pub const CONFIG_INVALIDATE: u8 = 0;
 
@@ -89,7 +93,7 @@ pub trait Widget {
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<u8, WidgetConfig>>
+    ///   config: RefCell<HashMap<ConfigKey, WidgetConfig>>
     /// }
     ///
     /// impl MyWidget {
@@ -127,7 +131,7 @@ pub trait Widget {
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>>;
+    fn get_config(&mut self) -> &RefCell<HashMap<ConfigKey, WidgetConfig>>;
 
     /// Sets a configuration object by its key.
     fn set_config(&mut self, key: u8, value: WidgetConfig) {
@@ -241,7 +245,7 @@ pub trait Widget {
 /// This is the `BaseWidget`, which contains a top-level widget for display.  It does
 /// not contain any special logic other than being a base for a display layer.
 pub struct BaseWidget {
-    config: RefCell<HashMap<u8, WidgetConfig>>,
+    config: RefCell<HashMap<ConfigKey, WidgetConfig>>,
 }
 
 /// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
@@ -284,7 +288,7 @@ impl BaseWidget {
 /// # }
 /// ```
 impl Widget for BaseWidget {
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
+    fn get_config(&mut self) -> &RefCell<HashMap<ConfigKey, WidgetConfig>> {
         &self.config
     }
 

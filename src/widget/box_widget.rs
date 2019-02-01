@@ -25,7 +25,7 @@ use crate::widget::widget::*;
 /// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
 pub struct BoxWidget {
-    config: RefCell<HashMap<u8, WidgetConfig>>,
+    config: RefCell<HashMap<ConfigKey, WidgetConfig>>,
     base_widget: BaseWidget,
 }
 
@@ -191,7 +191,7 @@ impl BoxWidget {
 /// # }
 /// ```
 impl Widget for BoxWidget {
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
+    fn get_config(&mut self) -> &RefCell<HashMap<ConfigKey, WidgetConfig>> {
         &self.config
     }
 
