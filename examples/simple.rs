@@ -78,18 +78,42 @@ fn main() {
     pushrod_window.window.set_ups(60);
 
     let mut base_widget = BaseWidget::new();
-    base_widget.set_origin(Point { x: 100, y: 100 });
+    base_widget.set_origin(Point { x: 50, y: 50 });
     base_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
     base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
     pushrod_window.add_widget(Box::new(base_widget));
 
     let mut box_widget = BoxWidget::new();
-    box_widget.set_origin(Point { x: 350, y: 100 });
+    box_widget.set_origin(Point { x: 275, y: 50 });
     box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
     box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
     box_widget.set_border_color([1.0, 0.0, 0.0, 1.0]);
     box_widget.set_border_thickness(4);
     pushrod_window.add_widget(Box::new(box_widget));
+
+    let mut box_1 = BoxWidget::new();
+    box_1.set_origin(Point { x: 500, y: 50 });
+    box_1.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+    box_1.set_color([0.5, 0.5, 1.0, 1.0]);
+    box_1.set_border_color([0.0, 0.0, 1.0, 1.0]);
+    box_1.set_border_thickness(2);
+    let box_1_id = pushrod_window.add_widget(Box::new(box_1));
+
+    let mut box_2 = BoxWidget::new();
+    box_2.set_origin(Point { x: 550, y: 75 });
+    box_2.set_size(pushrod::core::point::Size { w: 100, h: 50 });
+    box_2.set_color([0.75, 0.75, 1.0, 1.0]);
+    box_2.set_border_color([1.0, 0.0, 1.0, 1.0]);
+    box_2.set_border_thickness(1);
+    pushrod_window.add_widget_to_parent(Box::new(box_2), box_1_id);
+
+    let mut box_3 = BoxWidget::new();
+    box_3.set_origin(Point { x: 550, y: 175 });
+    box_3.set_size(pushrod::core::point::Size { w: 100, h: 50 });
+    box_3.set_color([0.75, 0.75, 1.0, 1.0]);
+    box_3.set_border_color([1.0, 0.0, 1.0, 1.0]);
+    box_3.set_border_thickness(1);
+    pushrod_window.add_widget_to_parent(Box::new(box_3), box_1_id);
 
     prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));

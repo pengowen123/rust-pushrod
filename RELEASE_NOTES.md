@@ -3,6 +3,12 @@
 ## 0.1.7
 
 - Changed Widget to use ConfigKey type instead of u8, as this might change in a later release.
+- Added parent/child relationship to window store.
+- Added function to retrieve parent based on widget ID.
+- Created widget store to store the widget (boxed) and parent/child relationship.
+- Adding a widget now returns its widget ID.
+- Fixed breaking test after changing to ConfigKey type.
+- Updated examples to include widget ID and parent add.
 
 ## 0.1.6
 

@@ -90,6 +90,7 @@ pub trait Widget {
     /// ```
     /// # use pushrod::widget::widget::Widget;
     /// # use pushrod::widget::widget::WidgetConfig;
+    /// # use pushrod::widget::widget::ConfigKey;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// struct MyWidget {
@@ -284,7 +285,18 @@ impl BaseWidget {
 ///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///
 ///    // Widgets must be boxed, as they are trait objects.
-///    pushrod_window.add_widget(Box::new(base_widget));
+///    let widget_id = pushrod_window.add_widget(Box::new(base_widget));
+///
+///    eprintln!("Added widget: ID={}", widget_id);
+///
+///    let mut base_widget_2 = BaseWidget::new();
+///
+///    base_widget_2.set_origin(Point { x: 125, y: 125 });
+///    base_widget_2.set_size(pushrod::core::poiNt::Size { w: 100, h: 100 });
+///    base_widget_2.set_color([0.75, 0.75, 0.75, 1.0]);
+///
+///    // Add the second widget to the top level base widget.
+///    let widget_id_2 = pushrod_window.add_widget_to_parent(Box::new(base_widget_2, widget_id);
 /// # }
 /// ```
 impl Widget for BaseWidget {
