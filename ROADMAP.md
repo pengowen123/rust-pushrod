@@ -19,10 +19,11 @@
   - [x] Implement invalidate in draw cycle
   - [x] Use window.window.swap_buffers() only after drawing the screen with invalidated items
   - [ ] Improve mutability in Pushrod Window for triggering events
-  - [ ] Add parent/child relationship
+  - [x] Add parent/child relationship
   - [ ] Walk children when parent signals an invalidate
   - [ ] Invalidated child should draw subchildren as well, but not parent
-  - [ ] Extend Widget Store to keep track of (parent, child)
+  - [ ] Create a Widget Store that stores the widget and the parent/child relationship
+  - [x] Extend Widget Store to keep track of (parent, child)
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)

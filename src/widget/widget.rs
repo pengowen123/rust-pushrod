@@ -20,6 +20,10 @@ use std::collections::HashMap;
 
 use crate::core::point::*;
 
+/// A programmatic type identifying the type of key (and most importantly, size) that is used
+/// for storing configuration values for a `Widget` in the config `HashMap`.
+pub type ConfigKey = u8;
+
 /// Config entry key for invalidated object (invalidated means "requires screen refresh")
 pub const CONFIG_INVALIDATE: u8 = 0;
 
@@ -86,10 +90,11 @@ pub trait Widget {
     /// ```
     /// # use pushrod::widget::widget::Widget;
     /// # use pushrod::widget::widget::WidgetConfig;
+    /// # use pushrod::widget::widget::ConfigKey;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<u8, WidgetConfig>>
+    ///   config: RefCell<HashMap<ConfigKey, WidgetConfig>>
     /// }
     ///
     /// impl MyWidget {
@@ -127,7 +132,7 @@ pub trait Widget {
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>>;
+    fn get_config(&mut self) -> &RefCell<HashMap<ConfigKey, WidgetConfig>>;
 
     /// Sets a configuration object by its key.
     fn set_config(&mut self, key: u8, value: WidgetConfig) {
@@ -241,7 +246,7 @@ pub trait Widget {
 /// This is the `BaseWidget`, which contains a top-level widget for display.  It does
 /// not contain any special logic other than being a base for a display layer.
 pub struct BaseWidget {
-    config: RefCell<HashMap<u8, WidgetConfig>>,
+    config: RefCell<HashMap<ConfigKey, WidgetConfig>>,
 }
 
 /// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
@@ -280,11 +285,22 @@ impl BaseWidget {
 ///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///
 ///    // Widgets must be boxed, as they are trait objects.
-///    pushrod_window.add_widget(Box::new(base_widget));
+///    let widget_id = pushrod_window.add_widget(Box::new(base_widget));
+///
+///    eprintln!("Added widget: ID={}", widget_id);
+///
+///    let mut base_widget_2 = BaseWidget::new();
+///
+///    base_widget_2.set_origin(Point { x: 125, y: 125 });
+///    base_widget_2.set_size(pushrod::core::poiNt::Size { w: 100, h: 100 });
+///    base_widget_2.set_color([0.75, 0.75, 0.75, 1.0]);
+///
+///    // Add the second widget to the top level base widget.
+///    let widget_id_2 = pushrod_window.add_widget_to_parent(Box::new(base_widget_2, widget_id);
 /// # }
 /// ```
 impl Widget for BaseWidget {
-    fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
+    fn get_config(&mut self) -> &RefCell<HashMap<ConfigKey, WidgetConfig>> {
         &self.config
     }
 
