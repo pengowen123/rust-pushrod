@@ -154,9 +154,9 @@ pub trait Widget {
         self.get_config().borrow().contains_key(&CONFIG_INVALIDATE)
     }
 
-    /// Sets the `Point` of origin for this widget.  Invalidates the widget afterward.
-    fn set_origin(&mut self, point: Point) {
-        self.set_config(CONFIG_ORIGIN, WidgetConfig::Origin { point });
+    /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
+    fn set_origin(&mut self, x: i32, y: i32) {
+        self.set_config(CONFIG_ORIGIN, WidgetConfig::Origin { point: Point { x, y }});
         self.invalidate();
     }
 
@@ -280,7 +280,7 @@ impl BaseWidget {
 /// #
 ///    let mut base_widget = BaseWidget::new();
 ///
-///    base_widget.set_origin(Point { x: 100, y: 100 });
+///    base_widget.set_origin(100, 100);
 ///    base_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
 ///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///
@@ -291,12 +291,12 @@ impl BaseWidget {
 ///
 ///    let mut base_widget_2 = BaseWidget::new();
 ///
-///    base_widget_2.set_origin(Point { x: 125, y: 125 });
-///    base_widget_2.set_size(pushrod::core::poiNt::Size { w: 100, h: 100 });
+///    base_widget_2.set_origin(125, 125);
+///    base_widget_2.set_size(pushrod::core::point::Size { w: 100, h: 100 });
 ///    base_widget_2.set_color([0.75, 0.75, 0.75, 1.0]);
 ///
 ///    // Add the second widget to the top level base widget.
-///    let widget_id_2 = pushrod_window.add_widget_to_parent(Box::new(base_widget_2, widget_id);
+///    let widget_id_2 = pushrod_window.add_widget_to_parent(Box::new(base_widget_2), widget_id);
 /// # }
 /// ```
 impl Widget for BaseWidget {

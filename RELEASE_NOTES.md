@@ -2,6 +2,7 @@
 
 ## 0.1.8
 
+- Added simplified set_origin that now takes x, y coordinates rather than a `Point` object.
 
 ## 0.1.7
 

@@ -183,7 +183,7 @@ impl BoxWidget {
 /// #
 ///    let mut box_widget = BoxWidget::new();
 ///
-///    box_widget.set_origin(Point { x: 100, y: 100 });
+///    box_widget.set_origin(100, 100);
 ///    box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
 ///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
@@ -195,15 +195,16 @@ impl Widget for BoxWidget {
         &self.config
     }
 
-    /// Sets the `Point` of origin for this widget and the base widget.  Invalidates the widget afterward.
-    fn set_origin(&mut self, point: Point) {
+    /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
+    /// coordinates.  Invalidates the widget afterward.
+    fn set_origin(&mut self, x: i32, y: i32) {
         self.set_config(
             CONFIG_ORIGIN,
             WidgetConfig::Origin {
-                point: point.clone(),
+                point: Point { x, y },
             },
         );
-        self.base_widget.set_origin(point.clone());
+        self.base_widget.set_origin(x, y);
         self.invalidate();
     }
 
