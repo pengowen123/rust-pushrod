@@ -4,6 +4,8 @@
 
 - Added simplified set_origin that now takes x, y coordinates rather than a `Point` object.
 - Added simplified set_size that now takes w, h coordinates rather than a `Size` object.
+- Changed code to only store the parent ID.
+- Added `set_border` helper function to set both the border color and thickness at once.
 
 ## 0.1.7
 

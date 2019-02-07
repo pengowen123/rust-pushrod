@@ -91,6 +91,12 @@ impl BoxWidget {
         }
     }
 
+    /// Helper function that sets both the color of the border and the thickness at the same time.
+    pub fn set_border(&mut self, color: types::Color, thickness: u8) {
+        self.set_border_color(color);
+        self.set_border_thickness(thickness);
+    }
+
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
@@ -188,6 +194,10 @@ impl BoxWidget {
 ///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
 ///    box_widget.set_border_thickness(3);
+///
+///    // (OR)
+///
+///    box_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
 /// # }
 /// ```
 impl Widget for BoxWidget {
