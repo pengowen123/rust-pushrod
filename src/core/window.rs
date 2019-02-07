@@ -56,7 +56,7 @@ impl PushrodWindow {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = BaseWidget::new();
 
-        base_widget.set_size(crate::core::point::Size { w: 800, h: 600 });
+        base_widget.set_size(800, 600);
         widgets_list.push(WidgetContainer {
             widget: Box::new(base_widget),
             pcr: ParentChildRelationship {

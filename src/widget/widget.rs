@@ -170,9 +170,9 @@ pub trait Widget {
         }
     }
 
-    /// Sets the `Size` for this widget.  Invalidates the widget afterward.
-    fn set_size(&mut self, size: crate::core::point::Size) {
-        self.set_config(CONFIG_SIZE, WidgetConfig::Size { size });
+    /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
+    fn set_size(&mut self, w: i32, h: i32) {
+        self.set_config(CONFIG_SIZE, WidgetConfig::Size { size: crate::core::point::Size { w, h } });
         self.invalidate();
     }
 
@@ -281,7 +281,7 @@ impl BaseWidget {
 ///    let mut base_widget = BaseWidget::new();
 ///
 ///    base_widget.set_origin(100, 100);
-///    base_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+///    base_widget.set_size(200, 200);
 ///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///
 ///    // Widgets must be boxed, as they are trait objects.
@@ -292,7 +292,7 @@ impl BaseWidget {
 ///    let mut base_widget_2 = BaseWidget::new();
 ///
 ///    base_widget_2.set_origin(125, 125);
-///    base_widget_2.set_size(pushrod::core::point::Size { w: 100, h: 100 });
+///    base_widget_2.set_size(100, 100);
 ///    base_widget_2.set_color([0.75, 0.75, 0.75, 1.0]);
 ///
 ///    // Add the second widget to the top level base widget.

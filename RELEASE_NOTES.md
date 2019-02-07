@@ -3,6 +3,7 @@
 ## 0.1.8
 
 - Added simplified set_origin that now takes x, y coordinates rather than a `Point` object.
+- Added simplified set_size that now takes w, h coordinates rather than a `Size` object.
 
 ## 0.1.7
 

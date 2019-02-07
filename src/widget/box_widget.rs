@@ -184,7 +184,7 @@ impl BoxWidget {
 ///    let mut box_widget = BoxWidget::new();
 ///
 ///    box_widget.set_origin(100, 100);
-///    box_widget.set_size(pushrod::core::point::Size { w: 200, h: 200 });
+///    box_widget.set_size(200, 200);
 ///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
 ///    box_widget.set_border_thickness(3);
@@ -208,13 +208,13 @@ impl Widget for BoxWidget {
         self.invalidate();
     }
 
-    /// Sets the `Size` for this widget and the base widget.  Invalidates the widget afterward.
-    fn set_size(&mut self, size: crate::core::point::Size) {
+    /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
+    fn set_size(&mut self, w: i32, h: i32) {
         self.set_config(
             CONFIG_SIZE,
-            WidgetConfig::Size { size: size.clone() },
+            WidgetConfig::Size { size: crate::core::point::Size { w, h } },
         );
-        self.base_widget.set_size(size.clone());
+        self.base_widget.set_size(w, h);
         self.invalidate();
     }
 
