@@ -7,7 +7,8 @@
   - [x] Add white base widget to Pushrod Window constructor
   - [ ] Remove OpenGL use when creating a new window
   - [ ] Use glfw for window drawing instead of PistonWindow, as it seems to be more OS independent.
-  - [ ] Change Widget configs to its own struct instead of being part of Widget
+  - [x] Change Widget configs to its own struct instead of being part of Widget
+  - [ ] Move Configurable struct and impl to their own external file
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
@@ -19,9 +20,9 @@
   - [x] Implement invalidate in draw cycle
   - [x] Use window.window.swap_buffers() only after drawing the screen with invalidated items
   - [ ] Improve mutability in Pushrod Window for triggering events
-  - [x] Add parent/child relationship
-  - [ ] Walk children when parent signals an invalidate
-  - [ ] Invalidated child should draw subchildren as well, but not parent
+  - [x] Add parent relationship
+  - [ ] Add "get children of" parent array of IDs
+  - [ ] Walk children when parent signals an invalidate: parent -> children draw order
   - [x] Create a Widget Store that stores the widget and the parent/child relationship
   - [x] Extend Widget Store to keep track of (parent, child)
 - [ ] Improve Signal Events
