@@ -20,8 +20,8 @@ use pushrod::core::main::*;
 use pushrod::core::point::*;
 use pushrod::core::window::*;
 use pushrod::event::event::*;
-use pushrod::widget::widget::*;
 use pushrod::widget::box_widget::*;
+use pushrod::widget::widget::*;
 
 struct ExampleListener {}
 

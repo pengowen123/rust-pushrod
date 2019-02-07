@@ -85,10 +85,7 @@ impl PushrodWindow {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
-        self.widgets.push(WidgetContainer {
-            widget,
-            parent_id,
-        });
+        self.widgets.push(WidgetContainer { widget, parent_id });
 
         widget_size
     }

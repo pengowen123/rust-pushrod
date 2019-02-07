@@ -25,7 +25,7 @@ use crate::widget::widget::*;
 /// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
 pub struct BoxWidget {
-    config: RefCell<HashMap<ConfigKey, WidgetConfig>>,
+    config: Configurable,
     base_widget: BaseWidget,
 }
 
@@ -34,17 +34,14 @@ pub struct BoxWidget {
 impl BoxWidget {
     pub fn new() -> Self {
         Self {
-            config: RefCell::new(HashMap::new()),
+            config: Configurable::new(),
             base_widget: BaseWidget::new(),
         }
     }
 
     /// Sets the border color for this widget.
     pub fn set_border_color(&mut self, color: types::Color) {
-        self.set_config(
-            CONFIG_COLOR_BORDER,
-            WidgetConfig::BorderColor { color },
-        );
+        self.set_config(CONFIG_COLOR_BORDER, WidgetConfig::BorderColor { color });
         self.invalidate();
     }
 
@@ -53,11 +50,10 @@ impl BoxWidget {
     pub fn get_border_color(&mut self) -> types::Color {
         if self
             .get_config()
-            .borrow()
-            .contains_key(&CONFIG_COLOR_BORDER)
+            .contains_key(CONFIG_COLOR_BORDER)
         {
-            match self.get_config().borrow()[&CONFIG_COLOR_BORDER] {
-                WidgetConfig::BorderColor { color } => color,
+            match self.get_config().get(CONFIG_COLOR_BORDER) {
+                Some(WidgetConfig::BorderColor { color }) => [ color[0], color[1], color[2], color[3] ],
                 _ => [0.0, 0.0, 0.0, 1.0],
             }
         } else {
@@ -67,10 +63,7 @@ impl BoxWidget {
 
     /// Sets the thickness of the border for this widget.
     pub fn set_border_thickness(&mut self, thickness: u8) {
-        self.set_config(
-            CONFIG_BORDER_WIDTH,
-            WidgetConfig::BorderWidth { thickness },
-        );
+        self.set_config(CONFIG_BORDER_WIDTH, WidgetConfig::BorderWidth { thickness });
         self.invalidate();
     }
 
@@ -79,11 +72,10 @@ impl BoxWidget {
     pub fn get_border_thickness(&mut self) -> u8 {
         if self
             .get_config()
-            .borrow()
-            .contains_key(&CONFIG_BORDER_WIDTH)
+            .contains_key(CONFIG_BORDER_WIDTH)
         {
-            match self.get_config().borrow()[&CONFIG_BORDER_WIDTH] {
-                WidgetConfig::BorderWidth { thickness } => thickness,
+            match self.get_config().get(CONFIG_BORDER_WIDTH) {
+                Some(WidgetConfig::BorderWidth { ref thickness }) => thickness.clone(),
                 _ => 1,
             }
         } else {
@@ -201,8 +193,8 @@ impl BoxWidget {
 /// # }
 /// ```
 impl Widget for BoxWidget {
-    fn get_config(&mut self) -> &RefCell<HashMap<ConfigKey, WidgetConfig>> {
-        &self.config
+    fn get_config(&mut self) -> &mut Configurable {
+        &mut self.config
     }
 
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
@@ -222,7 +214,9 @@ impl Widget for BoxWidget {
     fn set_size(&mut self, w: i32, h: i32) {
         self.set_config(
             CONFIG_SIZE,
-            WidgetConfig::Size { size: crate::core::point::Size { w, h } },
+            WidgetConfig::Size {
+                size: crate::core::point::Size { w, h },
+            },
         );
         self.base_widget.set_size(w, h);
         self.invalidate();

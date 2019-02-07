@@ -6,6 +6,7 @@
 - Added simplified set_size that now takes w, h coordinates rather than a `Size` object.
 - Changed code to only store the parent ID.
 - Added `set_border` helper function to set both the border color and thickness at once.
+- Added `Configurable` object so that widgets can now separate config logic for set/get.
 
 ## 0.1.7
 
