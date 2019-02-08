@@ -66,32 +66,42 @@ pub enum WidgetConfig {
     BorderWidth { thickness: u8 },
 }
 
-// FIXME ADD DOCUMENTATION FOR CONFIGURABLE
-// FIXME FIX TESTS TO SHOW HOW TO USE CONFIGURABLE
-
+/// This structure is used for the configuration store of `Widget` settings.  It contains its
+/// own structure internally, so all that is used inside extended `Widget` objects is a simple
+/// instantiation of a new `Configurable` object as part of your extension.
 pub struct Configurable {
     config: HashMap<ConfigKey, WidgetConfig>,
 }
 
+/// Implementation of the `Configurable` object.  Contains methods to extend the `HashMap` that
+/// is used for underlying storage.
 impl Configurable {
+    /// Creates a new instance of this object.
     pub fn new() -> Self {
         Self {
             config: HashMap::new(),
         }
     }
 
+    /// Sets a configuration key by its `ConfigKey` ID, assigning a new `WidgetConfig` value
+    /// to that key.
     pub fn set(&mut self, key: ConfigKey, value: WidgetConfig) {
         self.config.insert(key, value);
     }
 
+    /// Retrieves an `Option<&WidgetConfig>` for the key specified.  If the key does not exist,
+    /// a `None` is returned.
     pub fn get(&self, key: ConfigKey) -> Option<&WidgetConfig> {
         self.config.get(&key)
     }
 
+    /// Removes the value for the specified key, if one exists.
     pub fn remove(&mut self, key: ConfigKey) {
         self.config.remove(&key);
     }
 
+    /// Indicates whether or not a `Configurable` store contains a value for the specified key.
+    /// Returns `true` if one is stored, `false` otherwise.
     pub fn contains_key(&self, key: ConfigKey) -> bool {
         self.config.contains_key(&key)
     }
@@ -122,16 +132,17 @@ pub trait Widget {
     /// # use pushrod::widget::widget::Widget;
     /// # use pushrod::widget::widget::WidgetConfig;
     /// # use pushrod::widget::widget::ConfigKey;
+    /// # use pushrod::widget::widget::Configurable;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<ConfigKey, WidgetConfig>>
+    ///   config: Configurable,
     /// }
     ///
     /// impl MyWidget {
     ///   fn new() -> Self {
     ///     Self {
-    ///       config: RefCell::new(HashMap::new()),
+    ///       config: Configurable::new(),
     ///     }
     ///   }
     /// }
@@ -142,17 +153,18 @@ pub trait Widget {
     /// ```
     /// # use pushrod::widget::widget::Widget;
     /// # use pushrod::widget::widget::WidgetConfig;
+    /// # use pushrod::widget::widget::Configurable;
     /// # use std::collections::HashMap;
     /// # use std::cell::RefCell;
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
-    ///   config: RefCell<HashMap<u8, WidgetConfig>>
+    ///   config: Configurable,
     /// }
     ///
     /// impl Widget for MyWidget {
     ///
-    ///   fn get_config(&mut self) -> &RefCell<HashMap<u8, WidgetConfig>> {
-    ///     &self.config
+    ///   fn get_config(&mut self) -> &mut Configurable {
+    ///     &mut self.config
     ///   }
     ///
     ///  fn mouse_entered(&mut self, widget_id: i32) {}
