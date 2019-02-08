@@ -48,12 +48,11 @@ impl BoxWidget {
     /// Retrieves the border color of this widget.
     /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
     pub fn get_border_color(&mut self) -> types::Color {
-        if self
-            .get_config()
-            .contains_key(CONFIG_COLOR_BORDER)
-        {
+        if self.get_config().contains_key(CONFIG_COLOR_BORDER) {
             match self.get_config().get(CONFIG_COLOR_BORDER) {
-                Some(WidgetConfig::BorderColor { color }) => [ color[0], color[1], color[2], color[3] ],
+                Some(WidgetConfig::BorderColor { color }) => {
+                    [color[0], color[1], color[2], color[3]]
+                }
                 _ => [0.0, 0.0, 0.0, 1.0],
             }
         } else {
@@ -70,10 +69,7 @@ impl BoxWidget {
     /// Retrieves the border thickness of this widget.
     /// Defaults to 1 if not set.
     pub fn get_border_thickness(&mut self) -> u8 {
-        if self
-            .get_config()
-            .contains_key(CONFIG_BORDER_WIDTH)
-        {
+        if self.get_config().contains_key(CONFIG_BORDER_WIDTH) {
             match self.get_config().get(CONFIG_BORDER_WIDTH) {
                 Some(WidgetConfig::BorderWidth { ref thickness }) => thickness.clone(),
                 _ => 1,
