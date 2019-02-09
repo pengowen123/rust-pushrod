@@ -1,5 +1,14 @@
 # Pushrod Releases
 
+## 0.1.8
+
+- Added simplified set_origin that now takes x, y coordinates rather than a `Point` object.
+- Added simplified set_size that now takes w, h coordinates rather than a `Size` object.
+- Changed code to only store the parent ID.
+- Added `set_border` helper function to set both the border color and thickness at once.
+- Added `Configurable` object so that widgets can now separate config logic for set/get.
+- Modified all code to use `Configurable` object, so that the configuration logic is separated.
+
 ## 0.1.7
 
 - Changed Widget to use ConfigKey type instead of u8, as this might change in a later release.

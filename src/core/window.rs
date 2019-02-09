@@ -18,21 +18,14 @@ use crate::widget::widget::*;
 
 use piston_window::*;
 
-// Stores the parent-child relationship.  Both are IDs.  If the ID is 0, it indicates the base
-// object.  Children with an ID of 0 indicates no child objects.
-struct ParentChildRelationship {
-    parent: i32,
-    child: i32,
-}
-
 /// This is a container object, used for storing the `Widget` trait object, and the parent-child
 /// relationship for the added `Widget`.  Only the `widget` is public.
 pub struct WidgetContainer {
     /// The `Widget` trait object being stored.
     pub widget: Box<dyn Widget>,
 
-    /// The parent-child relationship, used for determining drawing order.
-    pcr: ParentChildRelationship,
+    /// The parent ID.
+    parent_id: i32,
 }
 
 /// This structure contains a window and its corresponding onscreen widgets.  These objects
@@ -56,13 +49,10 @@ impl PushrodWindow {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = BaseWidget::new();
 
-        base_widget.set_size(crate::core::point::Size { w: 800, h: 600 });
+        base_widget.set_size(800, 600);
         widgets_list.push(WidgetContainer {
             widget: Box::new(base_widget),
-            pcr: ParentChildRelationship {
-                parent: 0,
-                child: 0,
-            }
+            parent_id: 0,
         });
 
         Self {
@@ -81,10 +71,7 @@ impl PushrodWindow {
 
         self.widgets.push(WidgetContainer {
             widget,
-            pcr: ParentChildRelationship {
-                parent: 0,
-                child: 0,
-            }
+            parent_id: 0,
         });
 
         widget_size
@@ -98,13 +85,7 @@ impl PushrodWindow {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
-        self.widgets.push(WidgetContainer {
-            widget,
-            pcr: ParentChildRelationship {
-                parent: parent_id,
-                child: 0,
-            }
-        });
+        self.widgets.push(WidgetContainer { widget, parent_id });
 
         widget_size
     }
@@ -114,7 +95,7 @@ impl PushrodWindow {
         if widget_id <= 0 {
             0
         } else {
-            self.widgets[widget_id as usize].pcr.parent
+            self.widgets[widget_id as usize].parent_id
         }
     }
 

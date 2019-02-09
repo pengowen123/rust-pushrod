@@ -273,7 +273,8 @@ impl Pushrod {
                         self.internal_handle_mouse_move(mouse_point.clone());
 
                         let current_widget_id = pushrod_window.get_widget_id_for_point(mouse_point);
-                        let current_parent_for_widget = pushrod_window.get_parent_of(current_widget_id);
+                        let current_parent_for_widget =
+                            pushrod_window.get_parent_of(current_widget_id);
 
                         if current_widget_id != last_widget_id {
                             if last_widget_id != -1 {
@@ -287,7 +288,10 @@ impl Pushrod {
                             }
                         }
 
-                        eprintln!("Widget IDs: current={} parent={}", current_widget_id, current_parent_for_widget);
+                        eprintln!(
+                            "Widget IDs: current={} parent={}",
+                            current_widget_id, current_parent_for_widget
+                        );
                     }
                 }
 
