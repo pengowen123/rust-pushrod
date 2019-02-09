@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.1.9
+
+- Further optimized config access for widget and base_widget.
+
 ## 0.1.8
 
 - Added simplified set_origin that now takes x, y coordinates rather than a `Point` object.
