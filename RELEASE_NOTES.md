@@ -3,6 +3,8 @@
 ## 0.1.9
 
 - Further optimized config access for widget and base_widget.
+- Updated configuration testing code.
+- Moved configs to their own file, separate from the widget.
 
 ## 0.1.8
 

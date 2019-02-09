@@ -18,3 +18,5 @@ pub mod widget;
 
 /// Box component: draws a box on the screen with adjustable border color and width.
 pub mod box_widget;
+
+pub mod config;

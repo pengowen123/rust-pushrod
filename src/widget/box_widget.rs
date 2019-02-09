@@ -18,6 +18,7 @@ use piston_window::*;
 
 use crate::core::point::*;
 use crate::widget::widget::*;
+use crate::widget::config::*;
 
 /// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.

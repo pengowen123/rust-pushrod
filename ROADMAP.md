@@ -3,12 +3,12 @@
 ## 0.1.x -> 0.2.0
 
 - [ ] Widget Library Changes
-  - [ ] Add chainable functions that return self, so functions can be chained
+  - [ ] ~Add chainable functions that return self, so functions can be chained~
   - [x] Add white base widget to Pushrod Window constructor
   - [ ] Remove OpenGL use when creating a new window
   - [ ] Use glfw for window drawing instead of PistonWindow, as it seems to be more OS independent.
   - [x] Change Widget configs to its own struct instead of being part of Widget
-  - [ ] Move Configurable struct and impl to their own external file
+  - [x] Move Configurable struct and impl to their own external file
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
