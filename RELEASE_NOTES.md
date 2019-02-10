@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.1.10
+
+- Optimized window code to use iterator with filter and map.
+- Optimized widget-for-point lookup code.
+
 ## 0.1.9
 
 - Further optimized config access for widget and base_widget.

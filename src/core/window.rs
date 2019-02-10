@@ -90,7 +90,11 @@ impl PushrodWindow {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
-        self.widgets.push(WidgetContainer { widget, widget_id: widget_size, parent_id });
+        self.widgets.push(WidgetContainer {
+            widget,
+            widget_id: widget_size,
+            parent_id,
+        });
 
         widget_size
     }
@@ -108,25 +112,17 @@ impl PushrodWindow {
     /// can be used recursively to determine the widget ownership tree, or the redraw order in which
     /// repaint should take place.
     pub fn get_children_of(&self, parent_id: i32) -> Vec<i32> {
-        let mut return_list = vec![];
-
-        for (pos, obj) in self
-            .widgets
+        self.widgets
             .iter()
-            .enumerate()
-        {
-            if obj.parent_id == parent_id {
-                return_list.push(pos as i32);
-            }
-        }
-
-        return_list
+            .filter(|x| x.parent_id == parent_id)
+            .map(|x| x.widget_id)
+            .collect()
     }
 
     /// Retrieves a `PushrodWidget` ID for a specified `Point`.  If no ID could be found,
     /// defaults to a -1.
     pub fn get_widget_id_for_point(&mut self, point: Point) -> i32 {
-        let mut found_id: i32 = -1;
+        let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
             let widget_point = &obj.widget.get_origin();
