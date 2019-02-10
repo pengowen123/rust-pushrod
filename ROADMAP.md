@@ -16,10 +16,10 @@
 - [x] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
+  - [ ] ~Improve mutability in Pushrod Window for triggering events~
   - [x] Remove "Pushrod" from everything (if possible) - we know it's pushrod, it doesn't need to be vain!
   - [x] Implement invalidate in draw cycle
   - [x] Use window.window.swap_buffers() only after drawing the screen with invalidated items
-  - [ ] Improve mutability in Pushrod Window for triggering events
   - [x] Add parent relationship
   - [x] Add "get children of" parent array of IDs
   - [ ] Walk children when parent signals an invalidate: parent -> children draw order
