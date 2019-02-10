@@ -3,12 +3,12 @@
 ## 0.1.x -> 0.2.0
 
 - [ ] Widget Library Changes
-  - [ ] Add chainable functions that return self, so functions can be chained
+  - [ ] ~Add chainable functions that return self, so functions can be chained~
   - [x] Add white base widget to Pushrod Window constructor
   - [ ] Remove OpenGL use when creating a new window
   - [ ] Use glfw for window drawing instead of PistonWindow, as it seems to be more OS independent.
   - [x] Change Widget configs to its own struct instead of being part of Widget
-  - [ ] Move Configurable struct and impl to their own external file
+  - [x] Move Configurable struct and impl to their own external file
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
@@ -16,15 +16,17 @@
 - [x] Optimize main run loop
   - [x] Mouse move - if mouse point doesn't change, do not call mouse move dispatch
 - [ ] Improve Widget Library
+  - [ ] ~Improve mutability in Pushrod Window for triggering events~
   - [x] Remove "Pushrod" from everything (if possible) - we know it's pushrod, it doesn't need to be vain!
   - [x] Implement invalidate in draw cycle
   - [x] Use window.window.swap_buffers() only after drawing the screen with invalidated items
-  - [ ] Improve mutability in Pushrod Window for triggering events
   - [x] Add parent relationship
-  - [ ] Add "get children of" parent array of IDs
+  - [x] Add "get children of" parent array of IDs
   - [ ] Walk children when parent signals an invalidate: parent -> children draw order
   - [x] Create a Widget Store that stores the widget and the parent/child relationship
   - [x] Extend Widget Store to keep track of (parent, child)
+  - [x] Need to store the widget_id in the widget store
+  - [ ] Modify iterator to use filter after implementing widget_id
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)

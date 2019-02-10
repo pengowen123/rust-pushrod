@@ -1,5 +1,14 @@
 # Pushrod Releases
 
+## 0.1.9
+
+- Further optimized config access for widget and base_widget.
+- Updated configuration testing code.
+- Moved configs to their own file, separate from the widget.
+- Added `get_children_of` function to return all the child IDs for the requested parent ID.
+- Updated main loop to show children of widget IDs.
+- Added widget_id to the Widget store.
+
 ## 0.1.8
 
 - Added simplified set_origin that now takes x, y coordinates rather than a `Point` object.

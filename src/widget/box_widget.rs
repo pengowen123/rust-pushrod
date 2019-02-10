@@ -16,10 +16,8 @@
 use opengl_graphics::GlGraphics;
 use piston_window::*;
 
-use std::cell::RefCell;
-use std::collections::HashMap;
-
 use crate::core::point::*;
+use crate::widget::config::*;
 use crate::widget::widget::*;
 
 /// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
@@ -41,41 +39,33 @@ impl BoxWidget {
 
     /// Sets the border color for this widget.
     pub fn set_border_color(&mut self, color: types::Color) {
-        self.set_config(CONFIG_COLOR_BORDER, WidgetConfig::BorderColor { color });
+        self.config()
+            .set(CONFIG_COLOR_BORDER, WidgetConfig::BorderColor { color });
         self.invalidate();
     }
 
     /// Retrieves the border color of this widget.
     /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
     pub fn get_border_color(&mut self) -> types::Color {
-        if self.get_config().contains_key(CONFIG_COLOR_BORDER) {
-            match self.get_config().get(CONFIG_COLOR_BORDER) {
-                Some(WidgetConfig::BorderColor { color }) => {
-                    [color[0], color[1], color[2], color[3]]
-                }
-                _ => [0.0, 0.0, 0.0, 1.0],
-            }
-        } else {
-            [0.0, 0.0, 0.0, 1.0]
+        match self.config().get(CONFIG_COLOR_BORDER) {
+            Some(WidgetConfig::BorderColor { color }) => [color[0], color[1], color[2], color[3]],
+            _ => [0.0, 0.0, 0.0, 1.0],
         }
     }
 
     /// Sets the thickness of the border for this widget.
     pub fn set_border_thickness(&mut self, thickness: u8) {
-        self.set_config(CONFIG_BORDER_WIDTH, WidgetConfig::BorderWidth { thickness });
+        self.config()
+            .set(CONFIG_BORDER_WIDTH, WidgetConfig::BorderWidth { thickness });
         self.invalidate();
     }
 
     /// Retrieves the border thickness of this widget.
     /// Defaults to 1 if not set.
     pub fn get_border_thickness(&mut self) -> u8 {
-        if self.get_config().contains_key(CONFIG_BORDER_WIDTH) {
-            match self.get_config().get(CONFIG_BORDER_WIDTH) {
-                Some(WidgetConfig::BorderWidth { ref thickness }) => thickness.clone(),
-                _ => 1,
-            }
-        } else {
-            1
+        match self.config().get(CONFIG_BORDER_WIDTH) {
+            Some(WidgetConfig::BorderWidth { ref thickness }) => thickness.clone(),
+            _ => 1,
         }
     }
 
@@ -189,14 +179,14 @@ impl BoxWidget {
 /// # }
 /// ```
 impl Widget for BoxWidget {
-    fn get_config(&mut self) -> &mut Configurable {
+    fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }
 
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
     /// coordinates.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
-        self.set_config(
+        self.config().set(
             CONFIG_ORIGIN,
             WidgetConfig::Origin {
                 point: Point { x, y },
@@ -208,7 +198,7 @@ impl Widget for BoxWidget {
 
     /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.set_config(
+        self.config().set(
             CONFIG_SIZE,
             WidgetConfig::Size {
                 size: crate::core::point::Size { w, h },
@@ -220,7 +210,8 @@ impl Widget for BoxWidget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.set_config(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config()
+            .set(CONFIG_COLOR, WidgetConfig::Color { color });
         self.base_widget.set_color(color);
         self.invalidate();
     }

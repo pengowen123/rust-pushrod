@@ -15,97 +15,8 @@
 use opengl_graphics::GlGraphics;
 use piston_window::*;
 
-use std::cell::RefCell;
-use std::collections::HashMap;
-
 use crate::core::point::*;
-
-/// A programmatic type identifying the type of key (and most importantly, size) that is used
-/// for storing configuration values for a `Widget` in the config `HashMap`.
-pub type ConfigKey = u8;
-
-/// Config entry key for invalidated object (invalidated means "requires screen refresh")
-pub const CONFIG_INVALIDATE: u8 = 0;
-
-/// Config entry key for retrieving the `Point` of origin.
-pub const CONFIG_ORIGIN: u8 = 1;
-
-/// Config entry key for retrieving the `Size` of the widget.
-pub const CONFIG_SIZE: u8 = 2;
-
-/// Config entry key for retrieving the widget's color.
-pub const CONFIG_COLOR: u8 = 3;
-
-/// Config entry key for retrieving the widget's border color.
-pub const CONFIG_COLOR_BORDER: u8 = 4;
-
-/// Config entry key for retrieving the widget's border width.
-pub const CONFIG_BORDER_WIDTH: u8 = 5;
-
-/// Enumeration data type containing storage areas for each configuration object.
-pub enum WidgetConfig {
-    /// Indicates that a widget's paint contents have become invalidated, and need to be redrawn.
-    Invalidate {},
-
-    /// `Point` of origin of this Widget.
-    Origin { point: Point },
-
-    /// `Size` of this widget.
-    Size { size: crate::core::point::Size },
-
-    /// The `types::Color` of this widget: `[f64; 4]` where the values are
-    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
-    Color { color: types::Color },
-
-    /// The `types::Color` of the border of this widget: `[f64; 4]` where the values are
-    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
-    BorderColor { color: types::Color },
-
-    /// Indicates the thickness of the border width to be drawn inside widgets that draw a
-    /// border.  (See `BorderColor`.)
-    BorderWidth { thickness: u8 },
-}
-
-/// This structure is used for the configuration store of `Widget` settings.  It contains its
-/// own structure internally, so all that is used inside extended `Widget` objects is a simple
-/// instantiation of a new `Configurable` object as part of your extension.
-pub struct Configurable {
-    config: HashMap<ConfigKey, WidgetConfig>,
-}
-
-/// Implementation of the `Configurable` object.  Contains methods to extend the `HashMap` that
-/// is used for underlying storage.
-impl Configurable {
-    /// Creates a new instance of this object.
-    pub fn new() -> Self {
-        Self {
-            config: HashMap::new(),
-        }
-    }
-
-    /// Sets a configuration key by its `ConfigKey` ID, assigning a new `WidgetConfig` value
-    /// to that key.
-    pub fn set(&mut self, key: ConfigKey, value: WidgetConfig) {
-        self.config.insert(key, value);
-    }
-
-    /// Retrieves an `Option<&WidgetConfig>` for the key specified.  If the key does not exist,
-    /// a `None` is returned.
-    pub fn get(&self, key: ConfigKey) -> Option<&WidgetConfig> {
-        self.config.get(&key)
-    }
-
-    /// Removes the value for the specified key, if one exists.
-    pub fn remove(&mut self, key: ConfigKey) {
-        self.config.remove(&key);
-    }
-
-    /// Indicates whether or not a `Configurable` store contains a value for the specified key.
-    /// Returns `true` if one is stored, `false` otherwise.
-    pub fn contains_key(&self, key: ConfigKey) -> bool {
-        self.config.contains_key(&key)
-    }
-}
+use crate::widget::config::*;
 
 /// Implementable trait that is used by every `Widget`.  These are the public methods,
 /// and a function _may_ override them.
@@ -129,12 +40,8 @@ pub trait Widget {
     /// To implement this, the following code could be used in your object's structure:
     ///
     /// ```
-    /// # use pushrod::widget::widget::Widget;
-    /// # use pushrod::widget::widget::WidgetConfig;
-    /// # use pushrod::widget::widget::ConfigKey;
-    /// # use pushrod::widget::widget::Configurable;
-    /// # use std::collections::HashMap;
-    /// # use std::cell::RefCell;
+    /// # use pushrod::widget::widget::*;
+    /// # use pushrod::widget::config::*;
     /// struct MyWidget {
     ///   config: Configurable,
     /// }
@@ -151,19 +58,15 @@ pub trait Widget {
     /// And in the overridden function for get_config in your implementation, use:
     ///
     /// ```
-    /// # use pushrod::widget::widget::Widget;
-    /// # use pushrod::widget::widget::WidgetConfig;
-    /// # use pushrod::widget::widget::Configurable;
-    /// # use std::collections::HashMap;
-    /// # use std::cell::RefCell;
+    /// # use pushrod::widget::widget::*;
+    /// # use pushrod::widget::config::*;
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
     ///   config: Configurable,
     /// }
     ///
     /// impl Widget for MyWidget {
-    ///
-    ///   fn get_config(&mut self) -> &mut Configurable {
+    ///   fn config(&mut self) -> &mut Configurable {
     ///     &mut self.config
     ///   }
     ///
@@ -175,31 +78,27 @@ pub trait Widget {
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
-    fn get_config(&mut self) -> &mut Configurable;
-
-    /// Sets a configuration object by its key.
-    fn set_config(&mut self, key: u8, value: WidgetConfig) {
-        self.get_config().set(key, value);
-    }
+    fn config(&mut self) -> &mut Configurable;
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
-        self.set_config(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
+        self.config()
+            .set(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
     }
 
     /// Clears the invalidation flag.
     fn clear_invalidate(&mut self) {
-        self.get_config().remove(CONFIG_INVALIDATE);
+        self.config().remove(CONFIG_INVALIDATE);
     }
 
     /// Checks to see whether or not the widget needs to be redrawn/refreshed.
     fn is_invalidated(&mut self) -> bool {
-        self.get_config().contains_key(CONFIG_INVALIDATE)
+        self.config().contains_key(CONFIG_INVALIDATE)
     }
 
     /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
-        self.set_config(
+        self.config().set(
             CONFIG_ORIGIN,
             WidgetConfig::Origin {
                 point: Point { x, y },
@@ -211,7 +110,7 @@ pub trait Widget {
     /// Retrieves the `Point` of origin for this object.
     /// Defaults to origin (0, 0) if not set.
     fn get_origin(&mut self) -> Point {
-        match self.get_config().get(CONFIG_ORIGIN) {
+        match self.config().get(CONFIG_ORIGIN) {
             Some(WidgetConfig::Origin { ref point }) => point.clone(),
             None => make_origin_point(),
             _ => make_origin_point(),
@@ -220,7 +119,7 @@ pub trait Widget {
 
     /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.set_config(
+        self.config().set(
             CONFIG_SIZE,
             WidgetConfig::Size {
                 size: crate::core::point::Size { w, h },
@@ -232,7 +131,7 @@ pub trait Widget {
     /// Retrieves the `Size` bounds for this widget.
     /// Defaults to size (0, 0) if not set.
     fn get_size(&mut self) -> crate::core::point::Size {
-        match self.get_config().get(CONFIG_SIZE) {
+        match self.config().get(CONFIG_SIZE) {
             Some(WidgetConfig::Size { ref size }) => size.clone(),
             None => make_unsized(),
             _ => make_unsized(),
@@ -241,15 +140,16 @@ pub trait Widget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.set_config(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config()
+            .set(CONFIG_COLOR, WidgetConfig::Color { color });
         self.invalidate();
     }
 
     /// Retrieves the color of this widget.
     /// Defaults to white color `[1.0; 4]` if not set.
     fn get_color(&mut self) -> types::Color {
-        if self.get_config().contains_key(CONFIG_COLOR) {
-            match self.get_config().get(CONFIG_COLOR) {
+        if self.config().contains_key(CONFIG_COLOR) {
+            match self.config().get(CONFIG_COLOR) {
                 Some(WidgetConfig::Color { ref color }) => [color[0], color[1], color[2], color[3]],
                 None => [1.0; 4],
                 _ => [1.0; 4],
@@ -354,7 +254,7 @@ impl BaseWidget {
 /// # }
 /// ```
 impl Widget for BaseWidget {
-    fn get_config(&mut self) -> &mut Configurable {
+    fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }
 

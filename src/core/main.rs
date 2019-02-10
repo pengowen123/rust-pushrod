@@ -289,8 +289,9 @@ impl Pushrod {
                         }
 
                         eprintln!(
-                            "Widget IDs: current={} parent={}",
-                            current_widget_id, current_parent_for_widget
+                            "Widget IDs: current={} parent={} children={:?}",
+                            current_widget_id, current_parent_for_widget,
+                            pushrod_window.get_children_of(current_widget_id)
                         );
                     }
                 }
