@@ -40,11 +40,8 @@ pub trait Widget {
     /// To implement this, the following code could be used in your object's structure:
     ///
     /// ```
-    /// # use pushrod::widget::widget::Widget;
-    /// # use pushrod::widget::widget::WidgetConfig;
-    /// # use pushrod::widget::widget::ConfigKey;
-    /// # use pushrod::widget::widget::Configurable;
-    /// # use std::collections::HashMap;
+    /// # use pushrod::widget::widget::*;
+    /// # use pushrod::widget::config::*;
     /// struct MyWidget {
     ///   config: Configurable,
     /// }
@@ -61,10 +58,8 @@ pub trait Widget {
     /// And in the overridden function for get_config in your implementation, use:
     ///
     /// ```
-    /// # use pushrod::widget::widget::Widget;
-    /// # use pushrod::widget::widget::WidgetConfig;
-    /// # use pushrod::widget::widget::Configurable;
-    /// # use std::collections::HashMap;
+    /// # use pushrod::widget::widget::*;
+    /// # use pushrod::widget::config::*;
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
     ///   config: Configurable,
