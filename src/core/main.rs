@@ -237,24 +237,24 @@ impl Pushrod {
         }
     }
 
-    fn recursive_draw(&self, pushrod_window: &PushrodWindow, widget_id: i32) {
+    fn recursive_draw(&self, pushrod_window: &mut PushrodWindow, widget_id: i32, context: Context, graphics: &mut GlGraphics) {
         let parents_of_widget = pushrod_window.get_children_of(widget_id);
 
         if parents_of_widget.len() == 0 {
-            eprintln!("Skipping paint for {}, no children.", widget_id);
             return;
         }
 
-        eprintln!("Draw ID: {}", widget_id);
-
         for pos in 0..parents_of_widget.len() {
-            eprintln!("Painting {}", parents_of_widget[pos]);
+            let paint_id = parents_of_widget[pos];
+            let paint_widget = &mut pushrod_window.widgets[paint_id as usize];
 
-            if parents_of_widget[pos] == widget_id {
-                eprintln!("Skipping child walk for widget {} (self)", widget_id);
-            } else {
-                eprintln!("Walking children for paint of {}", parents_of_widget[pos]);
-                self.recursive_draw(pushrod_window, parents_of_widget[pos]);
+            if &paint_widget.widget.is_invalidated() == &true {
+                eprintln!("[Invalidated] Painting {}", paint_id);
+                &paint_widget.widget.draw(context, graphics);
+            }
+
+            if parents_of_widget[pos] != widget_id {
+                self.recursive_draw(pushrod_window, paint_id, context, graphics);
             }
         }
     }
@@ -339,19 +339,16 @@ impl Pushrod {
                 // FPS loop handling
 
                 if let Some(args) = event.render_args() {
-                    let mut require_buffer_swap = false;
+                    let is_invalidated = pushrod_window.widgets
+                        .iter_mut()
+                        .map(|x| x.widget.is_invalidated())
+                        .find(|x| x == &true)
+                        .unwrap_or(false);
 
-                    gl.draw(args.viewport(), |context, graphics| {
-                        pushrod_window.widgets.iter_mut().for_each(|widget| {
-                            if widget.widget.is_invalidated() {
-                                widget.widget.draw(context, graphics);
-                                require_buffer_swap = true;
-                            }
+                    if is_invalidated {
+                        gl.draw(args.viewport(), |context, graphics| {
+                            self.recursive_draw(pushrod_window, 0, context, graphics);
                         });
-                    });
-
-                    if require_buffer_swap {
-                        self.recursive_draw(pushrod_window, 0);
 
                         pushrod_window.window.window.swap_buffers();
                         eprintln!("[Run Loop] Display buffers swapped due to invalidation.");
