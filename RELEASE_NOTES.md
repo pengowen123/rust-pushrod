@@ -6,6 +6,7 @@
 - Updated configuration testing code.
 - Moved configs to their own file, separate from the widget.
 - Added `get_children_of` function to return all the child IDs for the requested parent ID.
+- Updated main loop to show children of widget IDs.
 
 ## 0.1.8
 
