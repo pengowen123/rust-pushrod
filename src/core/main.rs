@@ -237,6 +237,28 @@ impl Pushrod {
         }
     }
 
+    fn recursive_draw(&self, pushrod_window: &PushrodWindow, widget_id: i32) {
+        let parents_of_widget = pushrod_window.get_children_of(widget_id);
+
+        if parents_of_widget.len() == 0 {
+            eprintln!("Skipping paint for {}, no children.", widget_id);
+            return;
+        }
+
+        eprintln!("Draw ID: {}", widget_id);
+
+        for pos in 0..parents_of_widget.len() {
+            eprintln!("Painting {}", parents_of_widget[pos]);
+
+            if parents_of_widget[pos] == widget_id {
+                eprintln!("Skipping child walk for widget {} (self)", widget_id);
+            } else {
+                eprintln!("Walking children for paint of {}", parents_of_widget[pos]);
+                self.recursive_draw(pushrod_window, parents_of_widget[pos]);
+            }
+        }
+    }
+
     /// This is the main run loop that is called to process all UI events.  This loop is responsible
     /// for handling events from the OS, converting them to workable objects, and passing them off
     /// to quick callback dispatchers.
@@ -329,6 +351,8 @@ impl Pushrod {
                     });
 
                     if require_buffer_swap {
+                        self.recursive_draw(pushrod_window, 0);
+
                         pushrod_window.window.window.swap_buffers();
                         eprintln!("[Run Loop] Display buffers swapped due to invalidation.");
                     }
