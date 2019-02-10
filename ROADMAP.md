@@ -25,7 +25,7 @@
   - [ ] Walk children when parent signals an invalidate: parent -> children draw order
   - [x] Create a Widget Store that stores the widget and the parent/child relationship
   - [x] Extend Widget Store to keep track of (parent, child)
-  - [ ] Need to store the widget_id in the widget store
+  - [x] Need to store the widget_id in the widget store
   - [ ] Modify iterator to use filter after implementing widget_id
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive

@@ -24,6 +24,9 @@ pub struct WidgetContainer {
     /// The `Widget` trait object being stored.
     pub widget: Box<dyn Widget>,
 
+    /// This `Widget`'s assigned ID.
+    widget_id: i32,
+
     /// The parent ID.
     parent_id: i32,
 }
@@ -52,6 +55,7 @@ impl PushrodWindow {
         base_widget.set_size(800, 600);
         widgets_list.push(WidgetContainer {
             widget: Box::new(base_widget),
+            widget_id: 0,
             parent_id: 0,
         });
 
@@ -71,6 +75,7 @@ impl PushrodWindow {
 
         self.widgets.push(WidgetContainer {
             widget,
+            widget_id: widget_size,
             parent_id: 0,
         });
 
@@ -85,7 +90,7 @@ impl PushrodWindow {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
-        self.widgets.push(WidgetContainer { widget, parent_id });
+        self.widgets.push(WidgetContainer { widget, widget_id: widget_size, parent_id });
 
         widget_size
     }
