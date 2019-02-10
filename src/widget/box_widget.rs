@@ -17,8 +17,8 @@ use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::point::*;
-use crate::widget::widget::*;
 use crate::widget::config::*;
+use crate::widget::widget::*;
 
 /// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
@@ -39,7 +39,8 @@ impl BoxWidget {
 
     /// Sets the border color for this widget.
     pub fn set_border_color(&mut self, color: types::Color) {
-        self.config().set(CONFIG_COLOR_BORDER, WidgetConfig::BorderColor { color });
+        self.config()
+            .set(CONFIG_COLOR_BORDER, WidgetConfig::BorderColor { color });
         self.invalidate();
     }
 
@@ -47,16 +48,15 @@ impl BoxWidget {
     /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
     pub fn get_border_color(&mut self) -> types::Color {
         match self.config().get(CONFIG_COLOR_BORDER) {
-            Some(WidgetConfig::BorderColor { color }) => {
-                [color[0], color[1], color[2], color[3]]
-            }
+            Some(WidgetConfig::BorderColor { color }) => [color[0], color[1], color[2], color[3]],
             _ => [0.0, 0.0, 0.0, 1.0],
         }
     }
 
     /// Sets the thickness of the border for this widget.
     pub fn set_border_thickness(&mut self, thickness: u8) {
-        self.config().set(CONFIG_BORDER_WIDTH, WidgetConfig::BorderWidth { thickness });
+        self.config()
+            .set(CONFIG_BORDER_WIDTH, WidgetConfig::BorderWidth { thickness });
         self.invalidate();
     }
 
@@ -210,7 +210,8 @@ impl Widget for BoxWidget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.config().set(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config()
+            .set(CONFIG_COLOR, WidgetConfig::Color { color });
         self.base_widget.set_color(color);
         self.invalidate();
     }

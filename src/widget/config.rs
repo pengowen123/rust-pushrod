@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::collections::HashMap;
 use piston_window::types::Color;
+use std::collections::HashMap;
 
 use crate::core::point::Point;
 

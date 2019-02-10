@@ -87,7 +87,8 @@ pub trait Widget {
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
-        self.config().set(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
+        self.config()
+            .set(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
     }
 
     /// Clears the invalidation flag.
@@ -144,7 +145,8 @@ pub trait Widget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.config().set(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config()
+            .set(CONFIG_COLOR, WidgetConfig::Color { color });
         self.invalidate();
     }
 

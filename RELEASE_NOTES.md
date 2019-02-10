@@ -5,6 +5,7 @@
 - Further optimized config access for widget and base_widget.
 - Updated configuration testing code.
 - Moved configs to their own file, separate from the widget.
+- Added `get_children_of` function to return all the child IDs for the requested parent ID.
 
 ## 0.1.8
 

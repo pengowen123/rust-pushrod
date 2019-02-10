@@ -99,7 +99,24 @@ impl PushrodWindow {
         }
     }
 
-    // TODO Need to fix to walk children instead of one by one.  Walking children will be far more accurate.
+    /// Retrieves a list of all of the child IDs that list the `parent_id` as its parent.  This
+    /// can be used recursively to determine the widget ownership tree, or the redraw order in which
+    /// repaint should take place.
+    pub fn get_children_of(&self, parent_id: i32) -> Vec<i32> {
+        let mut return_list = vec![];
+
+        for (pos, obj) in self
+            .widgets
+            .iter()
+            .enumerate()
+        {
+            if obj.parent_id == parent_id {
+                return_list.push(pos as i32);
+            }
+        }
+
+        return_list
+    }
 
     /// Retrieves a `PushrodWidget` ID for a specified `Point`.  If no ID could be found,
     /// defaults to a -1.
