@@ -27,8 +27,8 @@ pub struct TimerWidget {
     enabled: bool,
 }
 
-/// Implementation of the constructor for the `BaseWidget`.  Creates a new base widget
-/// that can be positioned anywhere on the screen.
+/// Implementation of the constructor for the `TimerWidget`.  Timer widgets are not accessible
+/// on the screen, so they have an origin of 0x0 and width of 0x0.
 impl TimerWidget {
     pub fn new() -> Self {
         Self {
