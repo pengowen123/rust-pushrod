@@ -81,6 +81,7 @@ impl Pushrod {
     /// this were set to `true`, the main draw loop would be extremely expensive.
     pub fn add_window(&self, mut window: PushrodWindow) {
         &window.window.set_swap_buffers(false);
+        &window.prepare_buffers();
         self.windows.borrow_mut().push(window);
     }
 

@@ -16,6 +16,8 @@
 use crate::core::point::*;
 use crate::widget::widget::*;
 
+use opengl_graphics::Texture;
+
 use piston_window::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent-child
@@ -41,7 +43,10 @@ pub struct PushrodWindow {
     pub widgets: Vec<WidgetContainer>,
 
     /// Texture buffer for the window, used by OpenGL, stored in heap.
-    pub texture_buf: Box<Vec<u8>>,
+    texture_buf: Box<Vec<u8>>,
+
+    /// The texture against which objects may be drawn.
+    pub texture: Texture,
 }
 
 /// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
@@ -65,7 +70,8 @@ impl PushrodWindow {
         Self {
             window,
             widgets: widgets_list,
-            texture_buf: Box::new(vec![0u8; 800 as usize * 600 as usize]),
+            texture_buf: Box::new(vec![0u8; 1]),
+            texture: Texture::empty(&TextureSettings::new()).unwrap(),
         }
     }
 
@@ -76,6 +82,14 @@ impl PushrodWindow {
     pub fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
         self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
+        self.texture = Texture::from_memory_alpha(&self.texture_buf, width, height,
+        &TextureSettings::new()).unwrap();
+    }
+
+    /// Prepares the initial buffers for drawing.  Do not call more than once.
+    pub fn prepare_buffers(&mut self) {
+        let draw_size = self.window.draw_size();
+        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
     }
 
     /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
