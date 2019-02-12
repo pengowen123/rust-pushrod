@@ -7,6 +7,9 @@
 - Super-optimized the draw loop, now walks children and draws only when an invalidation is sensed before-hand.
 - Optimized mouse cursor events in the main run loop.
 - Starting work on the timer widget.
+- Added beginnings of code to handle textures in OpenGL with 2D drawing.
+- Added "handle_resize" function to the PushrodWindow to recreate the texture buffer.
+- Added resize handling in the main loop.
 
 ## 0.1.9
 

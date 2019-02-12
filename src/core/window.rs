@@ -39,6 +39,9 @@ pub struct PushrodWindow {
 
     /// A vector list of Boxed `PushrodWidget` trait objects.
     pub widgets: Vec<WidgetContainer>,
+
+    /// Texture buffer for the window, used by OpenGL, stored in heap.
+    pub texture_buf: Box<Vec<u8>>,
 }
 
 /// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
@@ -62,7 +65,23 @@ impl PushrodWindow {
         Self {
             window,
             widgets: widgets_list,
+            texture_buf: Box::new(vec![0u8; 800 as usize * 600 as usize]),
         }
+    }
+
+    /// Handles the resizing of the texture buffer after the window resize has taken place.  The
+    /// behavior should be processed before drawing is rendered, so the sequence of events should
+    /// be `event` -> `handle_resize` -> `invalidate` -> `draw`.  This is mainly handled by the
+    /// `pushrod::core::main` loop, but it can be handled programmatically if required.
+    pub fn handle_resize(&mut self, width: u32, height: u32) {
+        self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
+    }
+
+    /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
+    /// window's contents, usually based on a timer expiration, or a window resize.  Use with
+    /// care, as this is an expensive operation.
+    pub fn invalidate_all_widgets(&mut self) {
+        self.widgets.iter_mut().for_each(|x| x.widget.invalidate());
     }
 
     /// Adds a UI `Widget` to this window.  `Widget` objects that are added using this method will

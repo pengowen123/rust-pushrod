@@ -44,17 +44,17 @@ impl TimerWidget {
 
     pub fn tick(&mut self) {
         if self.enabled {
-//            let cur_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().subsec_millis();
-//            let elapsed = cur_time - self.initiated;
-//
-//            eprintln!("Elapsed: {}", elapsed);
-//
-//            if elapsed > self.timeout {
-//                eprintln!("Timeout!");
-//                self.initiated = cur_time;
-//            }
-//
-//            eprintln!("Tick!");
+            //            let cur_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().subsec_millis();
+            //            let elapsed = cur_time - self.initiated;
+            //
+            //            eprintln!("Elapsed: {}", elapsed);
+            //
+            //            if elapsed > self.timeout {
+            //                eprintln!("Timeout!");
+            //                self.initiated = cur_time;
+            //            }
+            //
+            //            eprintln!("Tick!");
         }
     }
 
@@ -96,17 +96,23 @@ impl Widget for TimerWidget {
         &mut self.config
     }
 
-    fn is_invalidated(&mut self) -> bool { true }
+    fn is_invalidated(&mut self) -> bool {
+        true
+    }
 
-    fn get_origin(&mut self) -> Point { make_origin_point() }
+    fn get_origin(&mut self) -> Point {
+        make_origin_point()
+    }
 
-    fn get_size(&mut self) -> crate::core::point::Size { make_unsized() }
+    fn get_size(&mut self) -> crate::core::point::Size {
+        make_unsized()
+    }
 
-    fn mouse_entered(&mut self, _widget_id: i32) { }
+    fn mouse_entered(&mut self, _widget_id: i32) {}
 
-    fn mouse_exited(&mut self, _widget_id: i32) { }
+    fn mouse_exited(&mut self, _widget_id: i32) {}
 
-    fn mouse_scrolled(&mut self, _widget_id: i32, _point: Point) { }
+    fn mouse_scrolled(&mut self, _widget_id: i32, _point: Point) {}
 
     /// Draws the contents of the widget in this order:
     ///

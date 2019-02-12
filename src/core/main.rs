@@ -237,7 +237,13 @@ impl Pushrod {
         }
     }
 
-    fn recursive_draw(&self, pushrod_window: &mut PushrodWindow, widget_id: i32, context: Context, graphics: &mut GlGraphics) {
+    fn recursive_draw(
+        &self,
+        pushrod_window: &mut PushrodWindow,
+        widget_id: i32,
+        context: Context,
+        graphics: &mut GlGraphics,
+    ) {
         let parents_of_widget = pushrod_window.get_children_of(widget_id);
 
         if parents_of_widget.len() == 0 {
@@ -319,11 +325,11 @@ impl Pushrod {
                     }
                 });
 
-                if let Some(button) = event.button_args() {
+                event.button(|button| {
                     self.internal_handle_mouse_button(button);
-                }
+                });
 
-                if let Some([x, y]) = event.mouse_scroll_args() {
+                event.mouse_scroll(|x, y| {
                     let mouse_point = make_point_f64(x, y);
 
                     self.internal_handle_mouse_scroll(mouse_point.clone());
@@ -331,15 +337,21 @@ impl Pushrod {
                     if last_widget_id != -1 {
                         pushrod_window.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
                     }
-                }
+                });
+
+                event.resize(|width, height| {
+                    pushrod_window.handle_resize(width as u32, height as u32);
+                    pushrod_window.invalidate_all_widgets();
+                });
 
                 // Dispatch events here in the bus
                 self.internal_dispatch_events();
 
                 // FPS loop handling
 
-                if let Some(args) = event.render_args() {
-                    let is_invalidated = pushrod_window.widgets
+                event.render(|args| {
+                    let is_invalidated = pushrod_window
+                        .widgets
                         .iter_mut()
                         .map(|x| x.widget.is_invalidated())
                         .find(|x| x == &true)
@@ -353,7 +365,7 @@ impl Pushrod {
                         pushrod_window.window.window.swap_buffers();
                         eprintln!("[Run Loop] Display buffers swapped due to invalidation.");
                     }
-                }
+                });
             }
         }
     }
