@@ -5,6 +5,7 @@
 - [ ] Widget/Run Loop Library Changes
   - [ ] Remove code to swap buffers; use OpenGL 3D draw loop in favor.
   - [ ] Add buffer retrieval so that objects can be drawn to the borrowed texture from the active window.
+  - [ ] Refactor the OpenGL 3D library code into its own separate struct/impl for extending/generics.
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
