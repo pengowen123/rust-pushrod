@@ -74,6 +74,7 @@ impl PushrodWindow {
     /// be `event` -> `handle_resize` -> `invalidate` -> `draw`.  This is mainly handled by the
     /// `pushrod::core::main` loop, but it can be handled programmatically if required.
     pub fn handle_resize(&mut self, width: u32, height: u32) {
+        eprintln!("[Resize] W={} H={}", width, height);
         self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
     }
 
