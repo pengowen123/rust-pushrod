@@ -8,6 +8,7 @@
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
+  - [ ] Create 3D textures are assigned on a per-window basis.
   - [ ] Ensure that the widget library code is still super simple and easy to understand
   - [ ] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
 - [ ] Improve Signal Events

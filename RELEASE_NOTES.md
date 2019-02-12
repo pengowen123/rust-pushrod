@@ -5,6 +5,7 @@
 - Optimized window code to use iterator with filter and map.
 - Optimized widget-for-point lookup code.
 - Super-optimized the draw loop, now walks children and draws only when an invalidation is sensed before-hand.
+- Optimized mouse cursor events in the main run loop.
 - Starting work on the timer widget.
 
 ## 0.1.9
