@@ -15,6 +15,7 @@
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::point::*;
 use crate::widget::config::*;
@@ -25,6 +26,8 @@ use crate::widget::widget::*;
 pub struct TimerWidget {
     config: Configurable,
     enabled: bool,
+    initiated: u128,
+    timeout: u128,
 }
 
 /// Implementation of the constructor for the `TimerWidget`.  Timer widgets are not accessible
@@ -33,18 +36,34 @@ impl TimerWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
-            enabled: true
+            enabled: true,
+            initiated: 0,
+            timeout: 0,
         }
     }
 
     pub fn tick(&mut self) {
         if self.enabled {
-            eprintln!("Tick!");
+//            let cur_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().subsec_millis();
+//            let elapsed = cur_time - self.initiated;
+//
+//            eprintln!("Elapsed: {}", elapsed);
+//
+//            if elapsed > self.timeout {
+//                eprintln!("Timeout!");
+//                self.initiated = cur_time;
+//            }
+//
+//            eprintln!("Tick!");
         }
     }
 
     pub fn set_enabled(&mut self, enabled: bool) {
         self.enabled = enabled;
+    }
+
+    pub fn set_timeout(&mut self, timeout: u128) {
+        self.timeout = timeout;
     }
 }
 
