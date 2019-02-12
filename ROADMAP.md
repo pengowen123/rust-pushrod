@@ -2,15 +2,15 @@
 
 ## 0.1.x -> 0.2.0
 
-- [ ] Widget Library Changes
-  - [ ] Remove OpenGL use when creating a new window
-  - [ ] Use glfw for window drawing instead of PistonWindow, as it seems to be more OS independent.
+- [ ] Widget/Run Loop Library Changes
+  - [ ] Remove code to swap buffers; use OpenGL 3D draw loop in favor.
+  - [ ] Add buffer retrieval so that objects can be drawn to the borrowed texture from the active window.
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
-  - [ ] Create 3D textures are assigned on a per-window basis.
   - [ ] Ensure that the widget library code is still super simple and easy to understand
   - [ ] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
+  - [ ] Implement visibility
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
@@ -32,7 +32,6 @@
   - [ ] Image
   - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
-  - [ ] Implement visibility
 - [ ] More examples
 
 ## 0.1.x Accomplished
@@ -51,8 +50,9 @@
   - [x] Extend Widget Store to keep track of (parent, child)
   - [x] Need to store the widget_id in the widget store
   - [x] Modify iterator to use filter after implementing widget_id
-- [ ] Widget Library Changes
+- [ ] Widget/Run Loop Library Changes
   - [ ] ~Add chainable functions that return self, so functions can be chained~
+  - [x] Create 3D textures are assigned on a per-window basis.
   - [x] Add white base widget to Pushrod Window constructor
   - [x] Change Widget configs to its own struct instead of being part of Widget
   - [x] Move Configurable struct and impl to their own external file
