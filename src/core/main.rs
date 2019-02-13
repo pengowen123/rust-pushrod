@@ -18,6 +18,7 @@ use crate::core::window::*;
 use crate::event::event::*;
 
 use opengl_graphics::GlGraphics;
+use graphics::math::*;
 use piston_window::*;
 
 use std::cell::RefCell;
@@ -80,7 +81,7 @@ impl Pushrod {
     /// Adds a managed window to the stack.  Changes the `swap_buffers` flag to `false`, as if
     /// this were set to `true`, the main draw loop would be extremely expensive.
     pub fn add_window(&self, mut window: PushrodWindow) {
-        &window.window.set_swap_buffers(false);
+        &window.prepare_buffers();
         self.windows.borrow_mut().push(window);
     }
 
@@ -237,6 +238,34 @@ impl Pushrod {
         }
     }
 
+    fn recursive_draw(
+        &self,
+        pushrod_window: &mut PushrodWindow,
+        widget_id: i32,
+        context: Context,
+        graphics: &mut GlGraphics,
+    ) {
+        let parents_of_widget = pushrod_window.get_children_of(widget_id);
+
+        if parents_of_widget.len() == 0 {
+            return;
+        }
+
+        for pos in 0..parents_of_widget.len() {
+            let paint_id = parents_of_widget[pos];
+            let paint_widget = &mut pushrod_window.widgets[paint_id as usize];
+
+            if &paint_widget.widget.is_invalidated() == &true {
+                eprintln!("[Invalidated] Painting {}", paint_id);
+                &paint_widget.widget.draw(context, graphics);
+            }
+
+            if parents_of_widget[pos] != widget_id {
+                self.recursive_draw(pushrod_window, paint_id, context, graphics);
+            }
+        }
+    }
+
     /// This is the main run loop that is called to process all UI events.  This loop is responsible
     /// for handling events from the OS, converting them to workable objects, and passing them off
     /// to quick callback dispatchers.
@@ -262,7 +291,7 @@ impl Pushrod {
 
         for (_window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
             while let Some(event) = &pushrod_window.window.next() {
-                if let Some([x, y]) = event.mouse_cursor_args() {
+                event.mouse_cursor(|x, y| {
                     let mouse_point = make_point_f64(x, y);
 
                     if mouse_point.x != previous_mouse_position.x
@@ -290,17 +319,18 @@ impl Pushrod {
 
                         eprintln!(
                             "Widget IDs: current={} parent={} children={:?}",
-                            current_widget_id, current_parent_for_widget,
+                            current_widget_id,
+                            current_parent_for_widget,
                             pushrod_window.get_children_of(current_widget_id)
                         );
                     }
-                }
+                });
 
-                if let Some(button) = event.button_args() {
+                event.button(|button| {
                     self.internal_handle_mouse_button(button);
-                }
+                });
 
-                if let Some([x, y]) = event.mouse_scroll_args() {
+                event.mouse_scroll(|x, y| {
                     let mouse_point = make_point_f64(x, y);
 
                     self.internal_handle_mouse_scroll(mouse_point.clone());
@@ -308,30 +338,51 @@ impl Pushrod {
                     if last_widget_id != -1 {
                         pushrod_window.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
                     }
-                }
+                });
+
+                event.resize(|width, height| {
+                    pushrod_window.handle_resize(width as u32, height as u32);
+                    pushrod_window.invalidate_all_widgets();
+                });
 
                 // Dispatch events here in the bus
                 self.internal_dispatch_events();
 
                 // FPS loop handling
 
-                if let Some(args) = event.render_args() {
-                    let mut require_buffer_swap = false;
+                event.render(|args| {
+                    let is_invalidated = pushrod_window
+                        .widgets
+                        .iter_mut()
+                        .map(|x| x.widget.is_invalidated())
+                        .find(|x| x == &true)
+                        .unwrap_or(false);
 
-                    gl.draw(args.viewport(), |context, graphics| {
-                        pushrod_window.widgets.iter_mut().for_each(|widget| {
-                            if widget.widget.is_invalidated() {
-                                widget.widget.draw(context, graphics);
-                                require_buffer_swap = true;
-                            }
+                    if is_invalidated {
+                        // Swap frame buffers so that we're drawing to the currently active
+                        // pushrod window's texture.
+                        unsafe {
+                            gl::BindFramebuffer(gl::FRAMEBUFFER, pushrod_window.fbo);
+                        }
+
+                        // Draw the graphics onto the texture, this is _super_ fast.
+                        gl.draw(args.viewport(), |context, graphics| {
+                            self.recursive_draw(pushrod_window, 0, context, graphics);
                         });
-                    });
-
-                    if require_buffer_swap {
-                        pushrod_window.window.window.swap_buffers();
-                        eprintln!("[Run Loop] Display buffers swapped due to invalidation.");
                     }
-                }
+
+                    // Switch back to the main screen's window framebuffer.
+                    unsafe {
+                        gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
+                    }
+
+                    // Continuously draw the screen's texture as an image back to the main screen.
+                    gl.draw(args.viewport(), |c, g| {
+                        clear([1.0, 1.0, 1.0, 0.0], g);
+                        let flipped = c.transform.prepend_transform(scale(1., -1.));
+                        Image::new().draw(&pushrod_window.texture, &c.draw_state, flipped, g);
+                    });
+                });
             }
         }
     }

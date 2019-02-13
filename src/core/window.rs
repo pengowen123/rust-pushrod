@@ -16,6 +16,9 @@
 use crate::core::point::*;
 use crate::widget::widget::*;
 
+use opengl_graphics::Texture;
+use gl::types::GLuint;
+
 use piston_window::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent-child
@@ -39,6 +42,15 @@ pub struct PushrodWindow {
 
     /// A vector list of Boxed `PushrodWidget` trait objects.
     pub widgets: Vec<WidgetContainer>,
+
+    /// Texture buffer for the window, used by OpenGL, stored in heap.
+    texture_buf: Box<Vec<u8>>,
+
+    /// The texture against which objects may be drawn.
+    pub texture: Texture,
+
+    /// Framebuffer Object ID, stored for drawing on the texture.
+    pub fbo: GLuint,
 }
 
 /// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
@@ -62,7 +74,50 @@ impl PushrodWindow {
         Self {
             window,
             widgets: widgets_list,
+            texture_buf: Box::new(vec![0u8; 1]),
+            texture: Texture::empty(&TextureSettings::new()).unwrap(),
+            fbo: 0,
         }
+    }
+
+    /// Handles the resizing of the texture buffer after the window resize has taken place.  The
+    /// behavior should be processed before drawing is rendered, so the sequence of events should
+    /// be `event` -> `handle_resize` -> `invalidate` -> `draw`.  This is mainly handled by the
+    /// `pushrod::core::main` loop, but it can be handled programmatically if required.
+    pub fn handle_resize(&mut self, width: u32, height: u32) {
+        eprintln!("[Resize] W={} H={}", width, height);
+        self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
+        self.texture = Texture::from_memory_alpha(&self.texture_buf, width, height,
+        &TextureSettings::new()).unwrap();
+
+        // I hate this code.  However, this does prepare a texture so that an image can be
+        // drawn on it.  Since it's in memory, it means that the texture only gets recreated once
+        // per resize.
+        unsafe {
+            let mut fbos: [GLuint; 1] = [0];
+
+            gl::GenFramebuffers(1, fbos.as_mut_ptr());
+            self.fbo = fbos[0];
+
+            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
+            gl::FramebufferTexture2D(gl::FRAMEBUFFER,
+                gl::COLOR_ATTACHMENT0, gl::TEXTURE_2D,
+                self.texture.get_id(),
+                0);
+        }
+    }
+
+    /// Prepares the initial buffers for drawing.  Do not call more than once.
+    pub fn prepare_buffers(&mut self) {
+        let draw_size = self.window.draw_size();
+        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
+    }
+
+    /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
+    /// window's contents, usually based on a timer expiration, or a window resize.  Use with
+    /// care, as this is an expensive operation.
+    pub fn invalidate_all_widgets(&mut self) {
+        self.widgets.iter_mut().for_each(|x| x.widget.invalidate());
     }
 
     /// Adds a UI `Widget` to this window.  `Widget` objects that are added using this method will
@@ -90,7 +145,11 @@ impl PushrodWindow {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
-        self.widgets.push(WidgetContainer { widget, widget_id: widget_size, parent_id });
+        self.widgets.push(WidgetContainer {
+            widget,
+            widget_id: widget_size,
+            parent_id,
+        });
 
         widget_size
     }
@@ -108,25 +167,17 @@ impl PushrodWindow {
     /// can be used recursively to determine the widget ownership tree, or the redraw order in which
     /// repaint should take place.
     pub fn get_children_of(&self, parent_id: i32) -> Vec<i32> {
-        let mut return_list = vec![];
-
-        for (pos, obj) in self
-            .widgets
+        self.widgets
             .iter()
-            .enumerate()
-        {
-            if obj.parent_id == parent_id {
-                return_list.push(pos as i32);
-            }
-        }
-
-        return_list
+            .filter(|x| x.parent_id == parent_id)
+            .map(|x| x.widget_id)
+            .collect()
     }
 
     /// Retrieves a `PushrodWidget` ID for a specified `Point`.  If no ID could be found,
     /// defaults to a -1.
     pub fn get_widget_id_for_point(&mut self, point: Point) -> i32 {
-        let mut found_id: i32 = -1;
+        let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
             let widget_point = &obj.widget.get_origin();

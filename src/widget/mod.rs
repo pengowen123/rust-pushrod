@@ -19,5 +19,8 @@ pub mod widget;
 /// Box component: draws a box on the screen with adjustable border color and width.
 pub mod box_widget;
 
+/// Timer component: triggers a callback after a certain amount of time.
+pub mod timer_widget;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;

@@ -1,5 +1,16 @@
 # Pushrod Releases
 
+## 0.1.10
+
+- Optimized window code to use iterator with filter and map.
+- Optimized widget-for-point lookup code.
+- Super-optimized the draw loop, now walks children and draws only when an invalidation is sensed before-hand.
+- Optimized mouse cursor events in the main run loop.
+- Starting work on the timer widget.
+- Added "handle_resize" function to the PushrodWindow to recreate the texture buffer.
+- Added resize handling in the main loop (doesn't work on Mac)
+- Added OpenGL texture support for drawing screen on an OpenGL texture, then drawing its image on the screen in render loop.
+
 ## 0.1.9
 
 - Further optimized config access for widget and base_widget.
