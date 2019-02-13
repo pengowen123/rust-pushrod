@@ -9,6 +9,7 @@
   - [ ] Ensure that the widget library code is still super simple and easy to understand
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
+  - [ ] Re-assign framebuffers when window switches between physical screens
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
