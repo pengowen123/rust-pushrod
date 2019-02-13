@@ -21,7 +21,7 @@ use pushrod::core::point::*;
 use pushrod::core::window::*;
 use pushrod::event::event::*;
 use pushrod::widget::box_widget::*;
-//use pushrod::widget::timer_widget::*;
+use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
 
 struct ExampleListener {}
@@ -71,6 +71,7 @@ fn main() {
     let mut pushrod_window: PushrodWindow = PushrodWindow::new(
         WindowSettings::new("Pushrod Window", [800, 600])
             .opengl(opengl)
+            .resizable(false)
             .build()
             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
     );
@@ -112,10 +113,10 @@ fn main() {
     box_3.set_border([1.0, 0.0, 1.0, 1.0], 1);
     pushrod_window.add_widget_to_parent(Box::new(box_3), box_1_id);
 
-//    let mut timer = TimerWidget::new();
-//    timer.set_timeout(60000);
-//    timer.set_enabled(true);
-//    pushrod_window.add_widget(Box::new(timer));
+    let mut timer = TimerWidget::new();
+    timer.set_timeout(1000);
+    timer.set_enabled(true);
+    pushrod_window.add_widget(Box::new(timer));
 
     prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));

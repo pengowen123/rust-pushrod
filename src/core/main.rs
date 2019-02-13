@@ -366,8 +366,8 @@ impl Pushrod {
                         }
 
                         // Draw the graphics onto the texture, this is _super_ fast.
-                        gl.draw(args.viewport(), |context, graphics| {
-                            self.recursive_draw(pushrod_window, 0, context, graphics);
+                        gl.draw(args.viewport(), |c, g| {
+                            self.recursive_draw(pushrod_window, 0, c, g);
                         });
                     }
 

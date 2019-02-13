@@ -15,7 +15,7 @@
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;
-//use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::point::*;
 use crate::widget::config::*;
@@ -26,8 +26,14 @@ use crate::widget::widget::*;
 pub struct TimerWidget {
     config: Configurable,
     enabled: bool,
-    _initiated: u128,
-    timeout: u128,
+    initiated: u64,
+    timeout: u64,
+}
+
+fn time_ms() -> u64 {
+    let since_the_epoch = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+
+    (since_the_epoch.as_secs() * 1_000) + (since_the_epoch.subsec_nanos() / 1_000_000) as u64
 }
 
 /// Implementation of the constructor for the `TimerWidget`.  Timer widgets are not accessible
@@ -37,32 +43,30 @@ impl TimerWidget {
         Self {
             config: Configurable::new(),
             enabled: true,
-            _initiated: 0,
+            initiated: time_ms(),
             timeout: 0,
         }
     }
 
     pub fn tick(&mut self) {
-        if self.enabled {
-            //            let cur_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().subsec_millis();
-            //            let elapsed = cur_time - self.initiated;
-            //
-            //            eprintln!("Elapsed: {}", elapsed);
-            //
-            //            if elapsed > self.timeout {
-            //                eprintln!("Timeout!");
-            //                self.initiated = cur_time;
-            //            }
-            //
-            //            eprintln!("Tick!");
+        if !self.enabled {
+            return;
+        }
+
+        let elapsed = time_ms() - self.initiated;
+
+        if elapsed > self.timeout {
+            eprintln!("Timeout!");
+            self.initiated = time_ms();
         }
     }
 
     pub fn set_enabled(&mut self, enabled: bool) {
         self.enabled = enabled;
+        self.initiated = time_ms();
     }
 
-    pub fn set_timeout(&mut self, timeout: u128) {
+    pub fn set_timeout(&mut self, timeout: u64) {
         self.timeout = timeout;
     }
 }

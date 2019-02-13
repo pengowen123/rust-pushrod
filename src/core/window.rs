@@ -183,12 +183,15 @@ impl PushrodWindow {
             let widget_point = &obj.widget.get_origin();
             let widget_size: crate::core::point::Size = obj.widget.get_size();
 
-            if point.x >= widget_point.x
-                && point.x <= widget_point.x + widget_size.w
-                && point.y >= widget_point.y
-                && point.y <= widget_point.y + widget_size.h
-            {
-                found_id = pos as i32;
+            // Skip over item widgets that have a width and height of 0.
+            if widget_size.w > 0 && widget_size.h > 0 {
+                if point.x >= widget_point.x
+                    && point.x <= widget_point.x + widget_size.w
+                    && point.y >= widget_point.y
+                    && point.y <= widget_point.y + widget_size.h
+                {
+                    found_id = pos as i32;
+                }
             }
         }
 

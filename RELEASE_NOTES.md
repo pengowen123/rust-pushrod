@@ -1,5 +1,12 @@
 # Pushrod Releases
 
+## 0.1.11
+
+- Changed code so that widgets of size 0x0 are skipped when searching for widget IDs by point.
+- Removed resizable window in the demo for now.
+- Added "time_ms()" function to timer_widget to pull time in milliseconds.
+- Implemented tick function in timer.
+
 ## 0.1.10
 
 - Optimized window code to use iterator with filter and map.

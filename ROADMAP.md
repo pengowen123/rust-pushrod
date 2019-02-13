@@ -7,7 +7,7 @@
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
-  - [ ] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
+  - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
@@ -57,6 +57,7 @@
   - [x] Add white base widget to Pushrod Window constructor
   - [x] Change Widget configs to its own struct instead of being part of Widget
   - [x] Move Configurable struct and impl to their own external file
+  - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
 - [ ] Implement Graphics Translation Library
