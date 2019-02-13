@@ -9,7 +9,7 @@ Draws inspiration from Atari GEM, TrollTech Qt, and others.
 
 Current state of the sample app:
 
-[![](docs/sample-0.1.10.png)](docs/sample-0.1.10.png)
+[![](docs/sample-0.1.8.png)](docs/sample-0.1.8.png)
 
 ## Philosophy
 
