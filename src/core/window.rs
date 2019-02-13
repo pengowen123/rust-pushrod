@@ -17,6 +17,7 @@ use crate::core::point::*;
 use crate::widget::widget::*;
 
 use opengl_graphics::Texture;
+use gl::types::GLuint;
 
 use piston_window::*;
 
@@ -47,6 +48,9 @@ pub struct PushrodWindow {
 
     /// The texture against which objects may be drawn.
     pub texture: Texture,
+
+    /// Framebuffer Object ID, stored for drawing on the texture.
+    pub fbo: GLuint,
 }
 
 /// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
@@ -72,6 +76,7 @@ impl PushrodWindow {
             widgets: widgets_list,
             texture_buf: Box::new(vec![0u8; 1]),
             texture: Texture::empty(&TextureSettings::new()).unwrap(),
+            fbo: 0,
         }
     }
 
@@ -84,6 +89,22 @@ impl PushrodWindow {
         self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
         self.texture = Texture::from_memory_alpha(&self.texture_buf, width, height,
         &TextureSettings::new()).unwrap();
+
+        // I hate this code.  However, this does prepare a texture so that an image can be
+        // drawn on it.  Since it's in memory, it means that the texture only gets recreated once
+        // per resize.
+        unsafe {
+            let mut fbos: [GLuint; 1] = [0];
+
+            gl::GenFramebuffers(1, fbos.as_mut_ptr());
+            self.fbo = fbos[0];
+
+            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
+            gl::FramebufferTexture2D(gl::FRAMEBUFFER,
+                gl::COLOR_ATTACHMENT0, gl::TEXTURE_2D,
+                self.texture.get_id(),
+                0);
+        }
     }
 
     /// Prepares the initial buffers for drawing.  Do not call more than once.

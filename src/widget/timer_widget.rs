@@ -15,7 +15,7 @@
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;
-use std::time::{SystemTime, UNIX_EPOCH};
+//use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::point::*;
 use crate::widget::config::*;
@@ -26,7 +26,7 @@ use crate::widget::widget::*;
 pub struct TimerWidget {
     config: Configurable,
     enabled: bool,
-    initiated: u128,
+    _initiated: u128,
     timeout: u128,
 }
 
@@ -37,7 +37,7 @@ impl TimerWidget {
         Self {
             config: Configurable::new(),
             enabled: true,
-            initiated: 0,
+            _initiated: 0,
             timeout: 0,
         }
     }

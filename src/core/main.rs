@@ -18,6 +18,7 @@ use crate::core::window::*;
 use crate::event::event::*;
 
 use opengl_graphics::GlGraphics;
+use graphics::math::*;
 use piston_window::*;
 
 use std::cell::RefCell;
@@ -80,7 +81,6 @@ impl Pushrod {
     /// Adds a managed window to the stack.  Changes the `swap_buffers` flag to `false`, as if
     /// this were set to `true`, the main draw loop would be extremely expensive.
     pub fn add_window(&self, mut window: PushrodWindow) {
-        &window.window.set_swap_buffers(false);
         &window.prepare_buffers();
         self.windows.borrow_mut().push(window);
     }
@@ -359,13 +359,29 @@ impl Pushrod {
                         .unwrap_or(false);
 
                     if is_invalidated {
+                        // Swap frame buffers so that we're drawing to the currently active
+                        // pushrod window's texture.
+                        unsafe {
+                            gl::BindFramebuffer(gl::FRAMEBUFFER, pushrod_window.fbo);
+                        }
+
+                        // Draw the graphics onto the texture, this is _super_ fast.
                         gl.draw(args.viewport(), |context, graphics| {
                             self.recursive_draw(pushrod_window, 0, context, graphics);
                         });
-
-                        pushrod_window.window.window.swap_buffers();
-                        eprintln!("[Run Loop] Display buffers swapped due to invalidation.");
                     }
+
+                    // Switch back to the main screen's window framebuffer.
+                    unsafe {
+                        gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
+                    }
+
+                    // Continuously draw the screen's texture as an image back to the main screen.
+                    gl.draw(args.viewport(), |c, g| {
+                        clear([1.0, 1.0, 1.0, 0.0], g);
+                        let flipped = c.transform.prepend_transform(scale(1., -1.));
+                        Image::new().draw(&pushrod_window.texture, &c.draw_state, flipped, g);
+                    });
                 });
             }
         }
