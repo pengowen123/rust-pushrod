@@ -6,6 +6,8 @@
 - Removed resizable window in the demo for now.
 - Added "time_ms()" function to timer_widget to pull time in milliseconds.
 - Implemented tick function in timer.
+- Implemented on_timeout as a closure (boxed)
+- Added on_timeout example in simple example.
 
 ## 0.1.10
 

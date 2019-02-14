@@ -116,6 +116,7 @@ fn main() {
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);
     timer.set_enabled(true);
+    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
     pushrod_window.add_widget(Box::new(timer));
 
     prod.add_window(pushrod_window);

@@ -28,6 +28,7 @@ pub struct TimerWidget {
     enabled: bool,
     initiated: u64,
     timeout: u64,
+    timeout_function: Box<Fn() -> ()>,
 }
 
 fn time_ms() -> u64 {
@@ -45,6 +46,7 @@ impl TimerWidget {
             enabled: true,
             initiated: time_ms(),
             timeout: 0,
+            timeout_function: Box::new(|| { }),
         }
     }
 
@@ -56,14 +58,18 @@ impl TimerWidget {
         let elapsed = time_ms() - self.initiated;
 
         if elapsed > self.timeout {
-            eprintln!("Timeout!");
             self.initiated = time_ms();
+            (self.timeout_function)();
         }
     }
 
     pub fn set_enabled(&mut self, enabled: bool) {
         self.enabled = enabled;
         self.initiated = time_ms();
+    }
+
+    pub fn on_timeout(&mut self, timeout_function: Box<Fn() -> ()>) {
+        self.timeout_function = timeout_function;
     }
 
     pub fn set_timeout(&mut self, timeout: u64) {
