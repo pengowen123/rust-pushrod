@@ -7,8 +7,9 @@
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
-  - [ ] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
+  - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
+  - [ ] Re-assign framebuffers when window switches between physical screens
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
@@ -26,7 +27,6 @@
   - [ ] Fill Area (Rectangle)
   - [ ] Translate Points based on Origin/Size
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
-  - [ ] Timer
   - [ ] Image
   - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
@@ -57,10 +57,12 @@
   - [x] Add white base widget to Pushrod Window constructor
   - [x] Change Widget configs to its own struct instead of being part of Widget
   - [x] Move Configurable struct and impl to their own external file
+  - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
 - [ ] Implement Graphics Translation Library
   - [x] Draw Box
+  - [x] Timer
 
 ## 0.2.x -> 0.3.0
 

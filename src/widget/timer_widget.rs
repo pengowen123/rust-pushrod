@@ -15,7 +15,7 @@
 
 use opengl_graphics::GlGraphics;
 use piston_window::*;
-//use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::point::*;
 use crate::widget::config::*;
@@ -26,43 +26,74 @@ use crate::widget::widget::*;
 pub struct TimerWidget {
     config: Configurable,
     enabled: bool,
-    _initiated: u128,
-    timeout: u128,
+    initiated: u64,
+    timeout: u64,
+    timeout_function: Box<Fn() -> ()>,
+}
+
+/// Helper function that returns the current time in milliseconds since the `UNIX_EPOCH`.  This
+/// function is the equivalent of a `System.currentTimeMillis()` in Java.
+fn time_ms() -> u64 {
+    let since_the_epoch = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+
+    (since_the_epoch.as_secs() * 1_000) + (since_the_epoch.subsec_nanos() / 1_000_000) as u64
 }
 
 /// Implementation of the constructor for the `TimerWidget`.  Timer widgets are not accessible
 /// on the screen, so they have an origin of 0x0 and width of 0x0.
+///
+/// The timer provides a simple way to call a callback function after a certain amount of time
+/// has passed.  Upon instantiation, the timer is enabled.
+///
+/// Here are a few limitations of the timer as it currently stands:
+///
+/// - Timer cannot be paused; it is enabled or disabled, and the timer resets when enabled.
+/// - Timer is called when the screen refreshes, so slower FPS settings will affect the timer.
 impl TimerWidget {
+    /// Constructor, creates a new `TimerWidget` struct with an empty timeout function.
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
             enabled: true,
-            _initiated: 0,
+            initiated: time_ms(),
             timeout: 0,
+            timeout_function: Box::new(|| { }),
         }
     }
 
-    pub fn tick(&mut self) {
-        if self.enabled {
-            //            let cur_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().subsec_millis();
-            //            let elapsed = cur_time - self.initiated;
-            //
-            //            eprintln!("Elapsed: {}", elapsed);
-            //
-            //            if elapsed > self.timeout {
-            //                eprintln!("Timeout!");
-            //                self.initiated = cur_time;
-            //            }
-            //
-            //            eprintln!("Tick!");
+    // Called to check the time since initiation, and call the timeout function when a timer has
+    // been triggered.
+    fn tick(&mut self) {
+        if !self.enabled {
+            return;
+        }
+
+        let elapsed = time_ms() - self.initiated;
+
+        if elapsed > self.timeout {
+            self.initiated = time_ms();
+            (self.timeout_function)();
         }
     }
 
+    /// Enables or disables the timer.  When disabled, the timer will not initiate the callback
+    /// function.  When re-enabled, the initiation time resets, so the timer will reset back to
+    /// zero, effectively resetting the entire timer.
     pub fn set_enabled(&mut self, enabled: bool) {
         self.enabled = enabled;
+        self.initiated = time_ms();
     }
 
-    pub fn set_timeout(&mut self, timeout: u128) {
+    /// Sets the closure function for the timer when a timeout has been triggered.  This closure
+    /// needs to be `Boxed`.
+    pub fn on_timeout(&mut self, timeout_function: Box<Fn() -> ()>) {
+        self.timeout_function = timeout_function;
+    }
+
+    /// Sets the timeout in milliseconds for this timer.  Will trigger a call to the function
+    /// set in `on_timeout` when triggered, and will continue to call that function until this
+    /// timer is disabled by using `self.set_enabled(false)`.
+    pub fn set_timeout(&mut self, timeout: u64) {
         self.timeout = timeout;
     }
 }
@@ -87,8 +118,9 @@ impl TimerWidget {
 /// #
 ///    let mut timer_widget = TimerWidget::new();
 ///
-///    // (OR)
-///
+///    timer_widget.set_timeout(60000);
+///    timer_widget.on_timeout(Box::new( || eprintln!("Timer triggered.") ));
+///    timer_widget.set_enabled(true);
 /// # }
 /// ```
 impl Widget for TimerWidget {
@@ -96,28 +128,33 @@ impl Widget for TimerWidget {
         &mut self.config
     }
 
+    /// Timer is always invalidated, this way, the tick function is always called on each
+    /// screen refresh.
     fn is_invalidated(&mut self) -> bool {
         true
     }
 
+    /// Origin is always set to X/Y at points 0x0.
     fn get_origin(&mut self) -> Point {
         make_origin_point()
     }
 
+    /// Size is always unsized, as timers are invisible.
     fn get_size(&mut self) -> crate::core::point::Size {
         make_unsized()
     }
 
+    /// Mouse entered callback is disabled.
     fn mouse_entered(&mut self, _widget_id: i32) {}
 
+    /// Mouse exited callback is disabled.
     fn mouse_exited(&mut self, _widget_id: i32) {}
 
+    /// Mouse scrolled callback is disabled.
     fn mouse_scrolled(&mut self, _widget_id: i32, _point: Point) {}
 
-    /// Draws the contents of the widget in this order:
-    ///
-    /// - Base widget first
-    /// - Box graphic for the specified width
+    /// Does not draw anything - only calls the timer `tick()` function to increment the
+    /// timer.
     fn draw(&mut self, _context: Context, _graphics: &mut GlGraphics) {
         self.tick();
     }
