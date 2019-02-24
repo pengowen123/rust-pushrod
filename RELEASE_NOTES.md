@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.1.12
+
+- Removed OpenGL specification in constructor for Pushrod runtime.
+
 ## 0.1.11
 
 - Changed code so that widgets of size 0x0 are skipped when searching for widget IDs by point.
