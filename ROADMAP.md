@@ -10,6 +10,7 @@
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
   - [ ] Re-assign framebuffers when window switches between physical screens
+  - [ ] Refactor code to use a single window and single set of widgets in a container
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)

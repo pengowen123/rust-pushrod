@@ -31,7 +31,6 @@ use std::cell::RefCell;
 /// The objects contained within this structure are used by the `Pushrod` run loop, and
 /// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
-    window_opengl: OpenGL,
     windows: RefCell<Vec<PushrodWindow>>,
     event_listeners: RefCell<Vec<Box<EventListener>>>,
     event_list: RefCell<Vec<PushrodEvent>>,
@@ -50,7 +49,7 @@ pub struct Pushrod {
 ///     let opengl = OpenGL::V3_2;
 ///
 ///     // Create a new Pushrod object with the OpenGL version
-///     let prod: Pushrod = Pushrod::new(opengl);
+///     let prod: Pushrod = Pushrod::new();
 ///
 ///     // Create a PushrodWindow container to store the PistonWindow
 ///     let mut pushrod_window: PushrodWindow = PushrodWindow::new(
@@ -69,9 +68,8 @@ pub struct Pushrod {
 /// ```
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
-    pub fn new(config: OpenGL) -> Self {
+    pub fn new() -> Self {
         Self {
-            window_opengl: config,
             windows: RefCell::new(Vec::new()),
             event_listeners: RefCell::new(Vec::new()),
             event_list: RefCell::new(Vec::new()),
@@ -140,8 +138,8 @@ impl Pushrod {
     /// #    // Define the version of OpenGL to use with the application
     /// #    let opengl = OpenGL::V3_2;
     /// #
-    ///     // Create a new Pushrod object with the OpenGL version
-    ///     let prod: Pushrod = Pushrod::new(opengl);
+    ///     // Create a new Pushrod object
+    ///     let prod: Pushrod = Pushrod::new();
     /// #
     /// #    // Create a PushrodWindow container to store the PistonWindow
     /// #    let mut pushrod_window: PushrodWindow = PushrodWindow::new(
@@ -285,7 +283,7 @@ impl Pushrod {
     /// events, the next window is then processed.  No particular window takes precidence - any
     /// window that has events to process gets handled in order.
     pub fn run(&self) {
-        let mut gl: GlGraphics = GlGraphics::new(self.window_opengl);
+        let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
 

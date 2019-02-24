@@ -67,7 +67,7 @@ impl EventListener for ExampleListener {
 
 fn main() {
     let opengl = OpenGL::V3_2;
-    let prod: Pushrod = Pushrod::new(opengl);
+    let prod: Pushrod = Pushrod::new();
     let mut pushrod_window: PushrodWindow = PushrodWindow::new(
         WindowSettings::new("Pushrod Window", [800, 600])
             .opengl(opengl)
