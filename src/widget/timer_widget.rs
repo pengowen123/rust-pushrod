@@ -57,7 +57,7 @@ impl TimerWidget {
             enabled: true,
             initiated: time_ms(),
             timeout: 0,
-            timeout_function: Box::new(|| { }),
+            timeout_function: Box::new(|| {}),
         }
     }
 

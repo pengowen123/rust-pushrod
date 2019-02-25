@@ -17,7 +17,6 @@
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
 - [ ] Implement Graphics Translation Library
   - [ ] Implement a graphics library that is uniform and not independent of any Rust library
-  - [ ] Clip
   - [ ] Draw Rounded Rectangle
   - [ ] Draw Ellipse
   - [ ] Draw Arc
@@ -61,6 +60,7 @@
   - [x] Refactor code to use a single window and single set of widgets in a container
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
+  - [x] Clip
 - [ ] Implement Graphics Translation Library
   - [x] Draw Box
   - [x] Timer

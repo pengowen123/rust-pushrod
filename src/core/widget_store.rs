@@ -16,8 +16,8 @@
 use crate::core::point::*;
 use crate::widget::widget::*;
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent-child
 /// relationship for the added `Widget`.  Only the `widget` is public.
@@ -60,12 +60,6 @@ impl WidgetStore {
     /// `pushrod::core::main` loop, but it can be handled programmatically if required.
     pub fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
-    }
-
-    /// Prepares the initial buffers for drawing.  Do not call more than once.
-    pub fn prepare_buffers(&mut self) {
-//        let draw_size = self.window.draw_size();
-//        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
     }
 
     /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
@@ -173,7 +167,41 @@ impl WidgetStore {
             let paint_widget = &mut self.widgets[paint_id as usize];
 
             if &paint_widget.widget.is_invalidated() == &true {
-                eprintln!("[Invalidated] Painting {}", paint_id);
+                let trans = c.transform.trans(
+                    paint_widget.widget.get_origin().x as f64,
+                    paint_widget.widget.get_origin().y as f64,
+                );
+                let viewport = c.viewport.unwrap();
+                let scale_x = viewport.draw_size[0] as f64 / viewport.window_size[0];
+                let scale_y = viewport.draw_size[1] as f64 / viewport.window_size[1];
+
+                let clip_rect = [
+                    ((paint_widget.widget.get_origin().x as f64 + viewport.rect[0] as f64)
+                        * scale_x) as u32,
+                    ((paint_widget.widget.get_origin().y as f64 + viewport.rect[1] as f64)
+                        * scale_y) as u32,
+                    (paint_widget.widget.get_size().w as f64 * scale_x) as u32,
+                    (paint_widget.widget.get_size().h as f64 * scale_y) as u32,
+                ];
+
+                let vp = Viewport {
+                    rect: [
+                        paint_widget.widget.get_origin().x as i32 + viewport.rect[0],
+                        paint_widget.widget.get_origin().y as i32 + viewport.rect[1],
+                        paint_widget.widget.get_size().w as i32,
+                        paint_widget.widget.get_size().h as i32,
+                    ],
+                    draw_size: viewport.draw_size,
+                    window_size: viewport.window_size,
+                };
+
+                let clipped = Context {
+                    viewport: Some(vp),
+                    view: c.view,
+                    transform: trans,
+                    draw_state: c.draw_state.scissor(clip_rect),
+                };
+
                 &paint_widget.widget.draw(c, g);
             }
 

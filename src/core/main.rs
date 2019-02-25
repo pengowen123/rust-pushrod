@@ -17,10 +17,10 @@ use crate::core::point::*;
 use crate::core::widget_store::*;
 use crate::event::event::*;
 
-use opengl_graphics::{GlGraphics, Texture};
-use graphics::math::*;
-use piston_window::*;
 use gl::types::GLuint;
+use graphics::math::*;
+use opengl_graphics::{GlGraphics, Texture};
+use piston_window::*;
 
 use std::cell::RefCell;
 
@@ -162,7 +162,7 @@ impl Pushrod {
     /// }
     /// ```
     pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
-//        self.event_listeners.borrow_mut().push(listener);
+        //        self.event_listeners.borrow_mut().push(listener);
     }
 
     /*
@@ -176,73 +176,74 @@ impl Pushrod {
      */
 
     fn internal_handle_mouse_move(&self, point: Point) {
-//        // Send the point movement to the widget event handler.
-//
-//        self.event_list
-//            .borrow_mut()
-//            .push(PushrodEvent::MouseEvent { point });
+        //        // Send the point movement to the widget event handler.
+        //
+        //        self.event_list
+        //            .borrow_mut()
+        //            .push(PushrodEvent::MouseEvent { point });
     }
 
     fn internal_handle_mouse_button(&self, button: ButtonArgs) {
-//        // Send the button click to the widget event handler.
-//
-//        if button.state == ButtonState::Press {
-//            match button.button {
-//                Button::Mouse(button) => {
-//                    self.event_list
-//                        .borrow_mut()
-//                        .push(PushrodEvent::MouseDownEvent { button });
-//                }
-//                _ => (),
-//            }
-//        } else if button.state == ButtonState::Release {
-//            match button.button {
-//                Button::Mouse(button) => {
-//                    self.event_list
-//                        .borrow_mut()
-//                        .push(PushrodEvent::MouseUpEvent { button });
-//                }
-//                _ => (),
-//            }
-//        }
+        //        // Send the button click to the widget event handler.
+        //
+        //        if button.state == ButtonState::Press {
+        //            match button.button {
+        //                Button::Mouse(button) => {
+        //                    self.event_list
+        //                        .borrow_mut()
+        //                        .push(PushrodEvent::MouseDownEvent { button });
+        //                }
+        //                _ => (),
+        //            }
+        //        } else if button.state == ButtonState::Release {
+        //            match button.button {
+        //                Button::Mouse(button) => {
+        //                    self.event_list
+        //                        .borrow_mut()
+        //                        .push(PushrodEvent::MouseUpEvent { button });
+        //                }
+        //                _ => (),
+        //            }
+        //        }
     }
 
     fn internal_handle_mouse_scroll(&self, point: Point) {
-//        // Send the mouse scroll to the widget event handler.
-//
-//        self.event_list
-//            .borrow_mut()
-//            .push(PushrodEvent::MouseScrollEvent { point });
+        //        // Send the mouse scroll to the widget event handler.
+        //
+        //        self.event_list
+        //            .borrow_mut()
+        //            .push(PushrodEvent::MouseScrollEvent { point });
     }
 
     fn internal_dispatch_events(&self) {
-//        for event in self.event_list.borrow_mut().iter() {
-//            for listener in self.event_listeners.borrow_mut().iter() {
-//                let event_mask = self.internal_derive_event_mask(event);
-//
-//                if listener.event_mask() & event_mask == event_mask {
-//                    listener.handle_event(event);
-//                }
-//            }
-//        }
-//
-//        self.event_list.borrow_mut().clear();
+        //        for event in self.event_list.borrow_mut().iter() {
+        //            for listener in self.event_listeners.borrow_mut().iter() {
+        //                let event_mask = self.internal_derive_event_mask(event);
+        //
+        //                if listener.event_mask() & event_mask == event_mask {
+        //                    listener.handle_event(event);
+        //                }
+        //            }
+        //        }
+        //
+        //        self.event_list.borrow_mut().clear();
     }
 
     fn internal_derive_event_mask(&self, event: &PushrodEvent) -> EventMask {
-//        match event {
-//            PushrodEvent::MouseEvent { point: _ } => MASK_EVENT_MOUSE_MOVED,
-//            PushrodEvent::MouseDownEvent { button: _ } => MASK_EVENT_MOUSE_DOWN,
-//            PushrodEvent::MouseUpEvent { button: _ } => MASK_EVENT_MOUSE_UP,
-//            PushrodEvent::MouseScrollEvent { point: _ } => MASK_EVENT_MOUSE_SCROLL,
-//        }
+        //        match event {
+        //            PushrodEvent::MouseEvent { point: _ } => MASK_EVENT_MOUSE_MOVED,
+        //            PushrodEvent::MouseDownEvent { button: _ } => MASK_EVENT_MOUSE_DOWN,
+        //            PushrodEvent::MouseUpEvent { button: _ } => MASK_EVENT_MOUSE_UP,
+        //            PushrodEvent::MouseScrollEvent { point: _ } => MASK_EVENT_MOUSE_SCROLL,
+        //        }
         0
     }
 
     fn handle_resize(&mut self, width: u32, height: u32) {
         self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
-        self.texture = Texture::from_memory_alpha(&self.texture_buf, width, height,
-        &TextureSettings::new()).unwrap();
+        self.texture =
+            Texture::from_memory_alpha(&self.texture_buf, width, height, &TextureSettings::new())
+                .unwrap();
 
         // I hate this code.  However, this does prepare a texture so that an image can be
         // drawn on it.  Since it's in memory, it means that the texture only gets recreated once
@@ -254,10 +255,19 @@ impl Pushrod {
             self.fbo = fbos[0];
 
             gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-            gl::FramebufferTexture2D(gl::FRAMEBUFFER,
-                gl::COLOR_ATTACHMENT0, gl::TEXTURE_2D,
+            gl::FramebufferTexture2D(
+                gl::FRAMEBUFFER,
+                gl::COLOR_ATTACHMENT0,
+                gl::TEXTURE_2D,
                 self.texture.get_id(),
-                0);
+                0,
+            );
+        }
+    }
+
+    fn switch_fb(&mut self, fb: GLuint) {
+        unsafe {
+            gl::BindFramebuffer(gl::FRAMEBUFFER, fb);
         }
     }
 
@@ -287,56 +297,55 @@ impl Pushrod {
 
         self.handle_resize(draw_size.width as u32, draw_size.height as u32);
 
-//        for (_window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
         while let Some(event) = self.window.next() {
-                event.mouse_cursor(|x, y| {
-//                    let mouse_point = make_point_f64(x, y);
-//
-//                    if mouse_point.x != previous_mouse_position.x
-//                        || mouse_point.y != previous_mouse_position.y
-//                    {
-//                        previous_mouse_position = mouse_point.clone();
-//
-//                        self.internal_handle_mouse_move(mouse_point.clone());
-//
-//                        let current_widget_id = pushrod_window.get_widget_id_for_point(mouse_point);
-//                        let current_parent_for_widget =
-//                            pushrod_window.get_parent_of(current_widget_id);
-//
-//                        if current_widget_id != last_widget_id {
-//                            if last_widget_id != -1 {
-//                                pushrod_window.mouse_exited_for_id(last_widget_id);
-//                            }
-//
-//                            last_widget_id = current_widget_id;
-//
-//                            if last_widget_id != -1 {
-//                                pushrod_window.mouse_entered_for_id(last_widget_id);
-//                            }
-//                        }
-//
-//                        eprintln!(
-//                            "Widget IDs: current={} parent={} children={:?}",
-//                            current_widget_id,
-//                            current_parent_for_widget,
-//                            pushrod_window.get_children_of(current_widget_id)
-//                        );
-//                    }
-                });
+            event.mouse_cursor(|x, y| {
+                let mouse_point = make_point_f64(x, y);
 
-                event.button(|button| {
-//                    self.internal_handle_mouse_button(button);
-                });
+                if mouse_point.x != previous_mouse_position.x
+                    || mouse_point.y != previous_mouse_position.y
+                {
+                    previous_mouse_position = mouse_point.clone();
 
-                event.mouse_scroll(|x, y| {
-//                    let mouse_point = make_point_f64(x, y);
-//
-//                    self.internal_handle_mouse_scroll(mouse_point.clone());
-//
-//                    if last_widget_id != -1 {
-//                        pushrod_window.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
-//                    }
-                });
+                    self.internal_handle_mouse_move(mouse_point.clone());
+
+                    let current_widget_id = self.widget_store.get_widget_id_for_point(mouse_point);
+                    let current_parent_for_widget =
+                        self.widget_store.get_parent_of(current_widget_id);
+
+                    if current_widget_id != last_widget_id {
+                        if last_widget_id != -1 {
+                            self.widget_store.mouse_exited_for_id(last_widget_id);
+                        }
+
+                        last_widget_id = current_widget_id;
+
+                        if last_widget_id != -1 {
+                            self.widget_store.mouse_entered_for_id(last_widget_id);
+                        }
+
+                        eprintln!(
+                            "Widget IDs: current={} parent={} children={:?}",
+                            current_widget_id,
+                            current_parent_for_widget,
+                            self.widget_store.get_children_of(current_widget_id)
+                        );
+                    }
+                }
+            });
+
+            event.button(|button| {
+                //                    self.internal_handle_mouse_button(button);
+            });
+
+            event.mouse_scroll(|x, y| {
+                //                    let mouse_point = make_point_f64(x, y);
+                //
+                //                    self.internal_handle_mouse_scroll(mouse_point.clone());
+                //
+                //                    if last_widget_id != -1 {
+                //                        pushrod_window.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
+                //                    }
+            });
 
             event.resize(|width, height| {
                 self.handle_resize(width as u32, height as u32);
@@ -350,18 +359,14 @@ impl Pushrod {
 
             event.render(|args| {
                 if self.widget_store.needs_repaint() {
-                    unsafe {
-                        gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-                    }
+                    self.switch_fb(self.fbo);
 
                     gl.draw(args.viewport(), |c, g| {
                         self.widget_store.draw(0, c, g);
                     });
                 }
 
-                unsafe {
-                    gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
-                }
+                self.switch_fb(0);
 
                 gl.draw(args.viewport(), |c, g| {
                     clear([1.0, 1.0, 1.0, 0.0], g);

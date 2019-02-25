@@ -66,11 +66,13 @@ impl EventListener for ExampleListener {
 }
 
 fn main() {
-    let mut prod: Pushrod = Pushrod::new(WindowSettings::new("Pushrod Window", [800, 600])
-        .opengl(OpenGL::V3_2)
-        .resizable(false)
-        .build()
-        .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
+    let mut prod: Pushrod = Pushrod::new(
+        WindowSettings::new("Pushrod Window", [800, 600])
+            .opengl(OpenGL::V3_2)
+            .resizable(false)
+            .build()
+            .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
+    );
 
     let mut base_widget = BaseWidget::new();
     base_widget.set_origin(50, 50);
@@ -97,14 +99,16 @@ fn main() {
     box_2.set_size(100, 50);
     box_2.set_color([0.75, 0.75, 1.0, 1.0]);
     box_2.set_border([1.0, 0.0, 1.0, 1.0], 1);
-    prod.widget_store.add_widget_to_parent(Box::new(box_2), box_1_id);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(box_2), box_1_id);
 
     let mut box_3 = BoxWidget::new();
     box_3.set_origin(550, 175);
     box_3.set_size(100, 50);
     box_3.set_color([0.75, 0.75, 1.0, 1.0]);
     box_3.set_border([1.0, 0.0, 1.0, 1.0], 1);
-    prod.widget_store.add_widget_to_parent(Box::new(box_3), box_1_id);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(box_3), box_1_id);
 
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);
@@ -112,7 +116,7 @@ fn main() {
     timer.on_timeout(Box::new(|| eprintln!("Timer.")));
     prod.widget_store.add_widget(Box::new(timer));
 
-//    prod.add_window(pushrod_window);
+    //    prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 
     // Runs the main event loop

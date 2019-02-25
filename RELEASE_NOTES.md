@@ -5,6 +5,9 @@
 - Removed OpenGL specification in constructor for Pushrod runtime.
 - Removing PushrodWindow, changing to a WidgetStore.
 - Moved painting functions to appropriate areas, refactoring.
+- Removed "Invalidated" messages.
+- Optimized debugging messages in run loop.
+- Implemented auto clipping when painting a widget.
 
 ## 0.1.11
 
