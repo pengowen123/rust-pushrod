@@ -133,7 +133,6 @@ pub trait Widget {
     fn get_size(&mut self) -> crate::core::point::Size {
         match self.config().get(CONFIG_SIZE) {
             Some(WidgetConfig::Size { ref size }) => size.clone(),
-            None => make_unsized(),
             _ => make_unsized(),
         }
     }
@@ -156,6 +155,19 @@ pub trait Widget {
             }
         } else {
             [1.0; 4]
+        }
+    }
+
+    fn set_autoclip(&mut self, clip: bool) {
+        self.config()
+            .set(CONFIG_AUTOCLIP, WidgetConfig::Autoclip { clip });
+        self.invalidate();
+    }
+
+    fn get_autoclip(&mut self) -> bool {
+        match self.config().get(CONFIG_AUTOCLIP) {
+            Some(WidgetConfig::Autoclip { ref clip }) => clip.clone(),
+            _ => false,
         }
     }
 

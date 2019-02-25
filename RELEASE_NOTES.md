@@ -8,6 +8,7 @@
 - Removed "Invalidated" messages.
 - Optimized debugging messages in run loop.
 - Implemented auto clipping when painting a widget.
+- Added auto clipping.
 
 ## 0.1.11
 

@@ -10,7 +10,6 @@
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
   - [ ] Re-assign framebuffers when window switches between physical screens
-  - [ ] Add autoclip flag to widget to automatically clip a widget's drawing area if requested
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
@@ -48,6 +47,7 @@
   - [x] Extend Widget Store to keep track of (parent, child)
   - [x] Need to store the widget_id in the widget store
   - [x] Modify iterator to use filter after implementing widget_id
+  - [x] Add autoclip flag to widget to automatically clip a widget's drawing area if requested
 - [ ] Widget/Run Loop Library Changes
   - [ ] ~Add chainable functions that return self, so functions can be chained~
   - [x] Create 3D textures are assigned on a per-window basis.
