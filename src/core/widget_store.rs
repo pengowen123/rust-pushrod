@@ -16,10 +16,8 @@
 use crate::core::point::*;
 use crate::widget::widget::*;
 
-use opengl_graphics::Texture;
-use gl::types::GLuint;
-
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent-child
 /// relationship for the added `Widget`.  Only the `widget` is public.
@@ -34,33 +32,13 @@ pub struct WidgetContainer {
     parent_id: i32,
 }
 
-/// This structure contains a window and its corresponding onscreen widgets.  These objects
-/// are stored in the Pushrod main loop.
-pub struct PushrodWindow {
-    /// A `piston_window::PistonWindow` object.
-    pub window: PistonWindow,
-
+pub struct WidgetStore {
     /// A vector list of Boxed `PushrodWidget` trait objects.
     pub widgets: Vec<WidgetContainer>,
-
-    /// Texture buffer for the window, used by OpenGL, stored in heap.
-    texture_buf: Box<Vec<u8>>,
-
-    /// The texture against which objects may be drawn.
-    pub texture: Texture,
-
-    /// Framebuffer Object ID, stored for drawing on the texture.
-    pub fbo: GLuint,
 }
 
-/// Implementation for a new `PushrodWindow`.  When a new `PushrodWindow` is added to the
-/// managed window stack in the Pushrod main loop, this object is created to store its
-/// components.
-impl PushrodWindow {
-    /// Constructor, takes a managed `PistonWindow` from the `piston_window` crate.  Adds a top-level
-    /// widget to the list that is a white container widget.  This is the base for all other widgets
-    /// tht will be added to the window.
-    pub fn new(window: PistonWindow) -> Self {
+impl WidgetStore {
+    pub fn new() -> Self {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = BaseWidget::new();
 
@@ -72,11 +50,7 @@ impl PushrodWindow {
         });
 
         Self {
-            window,
             widgets: widgets_list,
-            texture_buf: Box::new(vec![0u8; 1]),
-            texture: Texture::empty(&TextureSettings::new()).unwrap(),
-            fbo: 0,
         }
     }
 
@@ -86,31 +60,12 @@ impl PushrodWindow {
     /// `pushrod::core::main` loop, but it can be handled programmatically if required.
     pub fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
-        self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
-        self.texture = Texture::from_memory_alpha(&self.texture_buf, width, height,
-        &TextureSettings::new()).unwrap();
-
-        // I hate this code.  However, this does prepare a texture so that an image can be
-        // drawn on it.  Since it's in memory, it means that the texture only gets recreated once
-        // per resize.
-        unsafe {
-            let mut fbos: [GLuint; 1] = [0];
-
-            gl::GenFramebuffers(1, fbos.as_mut_ptr());
-            self.fbo = fbos[0];
-
-            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-            gl::FramebufferTexture2D(gl::FRAMEBUFFER,
-                gl::COLOR_ATTACHMENT0, gl::TEXTURE_2D,
-                self.texture.get_id(),
-                0);
-        }
     }
 
     /// Prepares the initial buffers for drawing.  Do not call more than once.
     pub fn prepare_buffers(&mut self) {
-        let draw_size = self.window.draw_size();
-        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
+//        let draw_size = self.window.draw_size();
+//        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
     }
 
     /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
@@ -118,6 +73,14 @@ impl PushrodWindow {
     /// care, as this is an expensive operation.
     pub fn invalidate_all_widgets(&mut self) {
         self.widgets.iter_mut().for_each(|x| x.widget.invalidate());
+    }
+
+    pub fn needs_repaint(&mut self) -> bool {
+        self.widgets
+            .iter_mut()
+            .map(|x| x.widget.is_invalidated())
+            .find(|x| x == &true)
+            .unwrap_or(false)
     }
 
     /// Adds a UI `Widget` to this window.  `Widget` objects that are added using this method will
@@ -196,6 +159,28 @@ impl PushrodWindow {
         }
 
         found_id
+    }
+
+    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics) {
+        let parents_of_widget = self.get_children_of(widget_id);
+
+        if parents_of_widget.len() == 0 {
+            return;
+        }
+
+        for pos in 0..parents_of_widget.len() {
+            let paint_id = parents_of_widget[pos];
+            let paint_widget = &mut self.widgets[paint_id as usize];
+
+            if &paint_widget.widget.is_invalidated() == &true {
+                eprintln!("[Invalidated] Painting {}", paint_id);
+                &paint_widget.widget.draw(c, g);
+            }
+
+            if parents_of_widget[pos] != widget_id {
+                self.draw(paint_id, c, g);
+            }
+        }
     }
 
     /// Callback to `mouse_entered` for a `Widget` by ID.

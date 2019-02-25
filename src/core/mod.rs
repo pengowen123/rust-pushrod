@@ -21,8 +21,4 @@ pub mod main;
 /// the screen within a window, and the size of an object.
 pub mod point;
 
-/// Stores a `PistonWindow` and accompanying `Widget` trait objects.  Allows the
-/// main run loop to interact with widgets by signalling when a UI event triggers a
-/// callback that is appropriate for that widget.  Also contains helper functions
-/// to determine which widget is at a specific point in the `PistonWindow`.
-pub mod window;
+pub mod widget_store;
