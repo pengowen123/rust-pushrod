@@ -3,7 +3,8 @@
 ## 0.1.12
 
 - Removed OpenGL specification in constructor for Pushrod runtime.
-- Removing PushrodWindow, changing to a Widget container.
+- Removing PushrodWindow, changing to a WidgetStore.
+- Moved painting functions to appropriate areas, refactoring.
 
 ## 0.1.11
 

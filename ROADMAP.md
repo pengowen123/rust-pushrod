@@ -10,7 +10,6 @@
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
   - [ ] Re-assign framebuffers when window switches between physical screens
-  - [ ] Refactor code to use a single window and single set of widgets in a container
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
@@ -59,6 +58,7 @@
   - [x] Change Widget configs to its own struct instead of being part of Widget
   - [x] Move Configurable struct and impl to their own external file
   - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
+  - [x] Refactor code to use a single window and single set of widgets in a container
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
 - [ ] Implement Graphics Translation Library

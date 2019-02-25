@@ -283,6 +283,9 @@ impl Pushrod {
         let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
+        let draw_size = self.window.draw_size();
+
+        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
 
 //        for (_window_id, pushrod_window) in self.windows.borrow_mut().iter_mut().enumerate() {
         while let Some(event) = self.window.next() {
