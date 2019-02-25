@@ -10,6 +10,7 @@
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
   - [ ] Re-assign framebuffers when window switches between physical screens
+  - [ ] Add autoclip flag to widget to automatically clip a widget's drawing area if requested
 - [ ] Improve Signal Events
   - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
