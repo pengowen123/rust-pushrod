@@ -42,6 +42,9 @@ pub const CONFIG_COLOR_BORDER: u8 = 5;
 /// Config entry key for retrieving the widget's border width.
 pub const CONFIG_BORDER_WIDTH: u8 = 6;
 
+/// Config entry key for retrieving the widget's text color.
+pub const CONFIG_TEXT_COLOR: u8 = 7;
+
 /// Enumeration data type containing storage areas for each configuration object.
 pub enum WidgetConfig {
     /// Indicates that a widget's paint contents have become invalidated, and need to be redrawn.
@@ -68,6 +71,10 @@ pub enum WidgetConfig {
     /// Indicates the thickness of the border width to be drawn inside widgets that draw a
     /// border.  (See `BorderColor`.)
     BorderWidth { thickness: u8 },
+
+    /// The `types::Color` of the text for thsi widget: `[f64; 4]` where the values are
+    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
+    TextColor { color: Color },
 }
 
 /// This structure is used for the configuration store of `Widget` settings.  It contains its

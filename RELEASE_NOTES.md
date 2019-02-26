@@ -9,6 +9,7 @@
 - Optimized debugging messages in run loop.
 - Implemented auto clipping when painting a widget.
 - Added auto clipping.
+- Adding text rendering.
 
 ## 0.1.11
 
