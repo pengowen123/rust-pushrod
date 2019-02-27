@@ -3,7 +3,8 @@
 ## 0.1.x -> 0.2.0
 
 - [ ] Widget/Run Loop Library Changes
-  - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
+  - [ ] Implement callbacks for Pushrod and Widgets
+  - [ ] Change Widget object to be generic so that settings and calls are made against the widget (set as an enum)
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
