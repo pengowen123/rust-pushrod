@@ -37,7 +37,7 @@ pub struct WidgetContainer {
 /// This is the `WidgetStore`, which is used to store `Widget` objects for a `Pushrod`
 /// management object.
 pub struct WidgetStore {
-    /// A vector list of Boxed `WidgetContainer` objects.
+    /// A vector list of `WidgetContainer` objects.
     pub widgets: Vec<WidgetContainer>,
 }
 
