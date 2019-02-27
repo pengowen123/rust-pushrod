@@ -125,10 +125,10 @@ fn main() {
     );
     text_widget.set_origin(8, 8);
     text_widget.set_size(400, 40);
+    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
     text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
     prod.widget_store.add_widget(Box::new(text_widget));
 
-    //    prod.add_window(pushrod_window);
     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 
     // Runs the main event loop

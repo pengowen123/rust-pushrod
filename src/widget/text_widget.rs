@@ -74,14 +74,18 @@ impl TextWidget {
     /// box is automatically drawn for the bounds of the `Widget`.
     pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
         clear([0.0, 0.0, 0.0, 1.0], g);
+
+        let origin: Point = self.get_origin();
+        let transform = c.transform.trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
+
         text(
             [0.0, 0.0, 1.0, 1.0],
             self.font_size,
             &self.text,
             &mut self.font_cache,
-            c.transform,
+            transform,
             g,
-        );
+        ).unwrap();
     }
 }
 

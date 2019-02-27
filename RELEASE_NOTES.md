@@ -10,6 +10,7 @@
 - Implemented auto clipping when painting a widget.
 - Added auto clipping.
 - Changed rendering functionality to draw_2d, required a function in run loop to handle closures.
+- Implemented text rendering.
 
 ## 0.1.11
 
