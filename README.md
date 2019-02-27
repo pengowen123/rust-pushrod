@@ -1,6 +1,6 @@
 # rust-pushrod
 
-**Cross Platform UI Widget Library for Piston.**
+**Cross Platform UI Widget Library for Rust.**
 
 Draws inspiration from Atari GEM, TrollTech Qt, and others.
 
@@ -9,7 +9,7 @@ Draws inspiration from Atari GEM, TrollTech Qt, and others.
 
 Current state of the sample app:
 
-[![](docs/sample-0.1.8.png)](docs/sample-0.1.8.png)
+[![](docs/sample-0.1.12.png)](docs/sample-0.1.12.png)
 
 ## Philosophy
 
