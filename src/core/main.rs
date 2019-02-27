@@ -351,7 +351,8 @@ impl Pushrod {
                 self.internal_handle_mouse_scroll(mouse_point.clone());
 
                 if last_widget_id != -1 {
-                    self.widget_store.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
+                    self.widget_store
+                        .mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
                 }
             });
 

@@ -21,8 +21,8 @@ use pushrod::core::point::*;
 use pushrod::core::widget_store::*;
 use pushrod::event::event::*;
 use pushrod::widget::box_widget::*;
-use pushrod::widget::timer_widget::*;
 use pushrod::widget::text_widget::*;
+use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
 
 struct ExampleListener {}
@@ -117,8 +117,12 @@ fn main() {
     timer.on_timeout(Box::new(|| eprintln!("Timer.")));
     prod.widget_store.add_widget(Box::new(timer));
 
-    let mut text_widget = TextWidget::new(factory, "OpenSans-Regular.ttf".to_string(),
-    "Welcome to Pushrod!".to_string(), 32);
+    let mut text_widget = TextWidget::new(
+        factory,
+        "OpenSans-Regular.ttf".to_string(),
+        "Welcome to Pushrod!".to_string(),
+        32,
+    );
     text_widget.set_origin(8, 8);
     text_widget.set_size(400, 40);
     text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);

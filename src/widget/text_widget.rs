@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use opengl_graphics::GlGraphics;
 use piston_window::*;
-use opengl_graphics::{GlGraphics};
 
 use crate::core::point::*;
 use crate::widget::config::*;
@@ -34,7 +34,8 @@ pub struct TextWidget {
 impl TextWidget {
     pub fn new(factory: GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
-            .for_folder("assets").unwrap();
+            .for_folder("assets")
+            .unwrap();
         let ref font = assets.join(font_name.clone());
         let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
@@ -73,12 +74,14 @@ impl TextWidget {
     /// box is automatically drawn for the bounds of the `Widget`.
     pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
         clear([0.0, 0.0, 0.0, 1.0], g);
-        text([0.0, 0.0, 1.0, 1.0],
-        self.font_size,
-        &self.text,
-        &mut self.font_cache,
-        c.transform,
-        g);
+        text(
+            [0.0, 0.0, 1.0, 1.0],
+            self.font_size,
+            &self.text,
+            &mut self.font_cache,
+            c.transform,
+            g,
+        );
     }
 }
 
