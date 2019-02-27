@@ -48,24 +48,13 @@ pub struct Pushrod {
 /// ```no_run
 /// # use piston_window::*;
 /// # use pushrod::core::main::*;
-/// # use pushrod::core::window::*;
 /// # fn main() {
-///     // Define the version of OpenGL to use with the application
-///     let opengl = OpenGL::V3_2;
-///
-///     // Create a new Pushrod object with the OpenGL version
-///     let prod: Pushrod = Pushrod::new();
-///
 ///     // Create a PushrodWindow container to store the PistonWindow
-///     let mut pushrod_window: PushrodWindow = PushrodWindow::new(
+///     let mut prod: Pushrod = Pushrod::new(
 ///         WindowSettings::new("Pushrod Window", [640, 480])
-///             .opengl(opengl)
+///             .opengl(OpenGL::V3_2)
 ///             .build()
-///             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
-///     );
-///
-///     // Add the window to the managed stack.
-///     prod.add_window(pushrod_window);
+///             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
 ///
 ///     // Initiate the run loop.
 ///     prod.run();
@@ -92,7 +81,6 @@ impl Pushrod {
     /// ```no_run
     /// # use piston_window::*;
     /// # use pushrod::core::main::*;
-    /// # use pushrod::core::window::*;
     /// # use pushrod::core::point::*;
     /// # use pushrod::event::event::*;
     /// struct ExampleListener {}
@@ -137,22 +125,11 @@ impl Pushrod {
     /// }
     ///
     /// fn main() {
-    /// #    // Define the version of OpenGL to use with the application
-    /// #    let opengl = OpenGL::V3_2;
-    /// #
     ///     // Create a new Pushrod object
-    ///     let prod: Pushrod = Pushrod::new();
-    /// #
-    /// #    // Create a PushrodWindow container to store the PistonWindow
-    /// #    let mut pushrod_window: PushrodWindow = PushrodWindow::new(
-    /// #        WindowSettings::new("Pushrod Window", [640, 480])
-    /// #            .opengl(opengl)
-    /// #            .build()
-    /// #            .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
-    /// #    );
-    /// #
-    /// #    // Add the window to the managed stack.
-    /// #    prod.add_window(pushrod_window);
+    ///     let mut prod: Pushrod = Pushrod::new(WindowSettings::new("Pushrod Window", [640, 480])
+    ///             .opengl(OpenGL::V3_2)
+    ///             .build()
+    ///             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
     ///
     ///     // Add the event listener to the run loop.
     ///     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));

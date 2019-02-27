@@ -153,18 +153,9 @@ impl BoxWidget {
 /// ```no_run
 /// # use piston_window::*;
 /// # use pushrod::core::point::*;
-/// # use pushrod::core::window::*;
 /// # use pushrod::widget::widget::*;
 /// # use pushrod::widget::box_widget::*;
 /// # fn main() {
-/// #   let opengl = OpenGL::V3_2;
-/// #   let mut pushrod_window: PushrodWindow = PushrodWindow::new(
-/// #       WindowSettings::new("Pushrod Window", [640, 480])
-/// #           .opengl(opengl)
-/// #           .build()
-/// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
-/// #   );
-/// #
 ///    let mut box_widget = BoxWidget::new();
 ///
 ///    box_widget.set_origin(100, 100);

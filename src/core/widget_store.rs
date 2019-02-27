@@ -19,25 +19,31 @@ use crate::widget::widget::*;
 use opengl_graphics::GlGraphics;
 use piston_window::*;
 
-/// This is a container object, used for storing the `Widget` trait object, and the parent-child
-/// relationship for the added `Widget`.  Only the `widget` is public.
+/// This is a container object, used for storing the `Widget` trait object, and the parent
+/// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
+/// need to have a child relationship, only parent objects are traversed.  A parent object of 0, or
+/// itself, indicates that the parent is self.
 pub struct WidgetContainer {
     /// The `Widget` trait object being stored.
     pub widget: Box<dyn Widget>,
 
-    /// This `Widget`'s assigned ID.
+    /// This `Widget`'s assigned ID.  These IDs are auto-assigned.
     widget_id: i32,
 
     /// The parent ID.
     parent_id: i32,
 }
 
+/// This is the `WidgetStore`, which is used to store `Widget` objects for a `Pushrod`
+/// management object.
 pub struct WidgetStore {
-    /// A vector list of Boxed `PushrodWidget` trait objects.
+    /// A vector list of Boxed `WidgetContainer` objects.
     pub widgets: Vec<WidgetContainer>,
 }
 
+/// Implementation of the `WidgetStore`.
 impl WidgetStore {
+    /// Creates a new `WidgetStore`.
     pub fn new() -> Self {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = BaseWidget::new();
@@ -69,6 +75,8 @@ impl WidgetStore {
         self.widgets.iter_mut().for_each(|x| x.widget.invalidate());
     }
 
+    /// Indicates whether or not any `Widget`s in the `WidgetStore` have been invalidated and need
+    /// to be repainted.
     pub fn needs_repaint(&mut self) -> bool {
         self.widgets
             .iter_mut()
@@ -155,6 +163,11 @@ impl WidgetStore {
         found_id
     }
 
+    /// Recursive draw object: paints objects in order of appearance on the screen.  This does not
+    /// account for object depth, but it is implied that objects' parents are displayed in stacking
+    /// order.  Therefore, the parent is drawn first, then sibling, and other siblings.  This draw
+    /// function is used by the `Pushrod` main loop, and is meant to be called in a `draw_2d`
+    /// closure.
     pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut G2d) {
         let parents_of_widget = self.get_children_of(widget_id);
 
@@ -167,6 +180,7 @@ impl WidgetStore {
             let paint_widget = &mut self.widgets[paint_id as usize];
 
             if &paint_widget.widget.is_invalidated() == &true {
+                // Implementation of auto-clipping.  Clips the object's drawing area.
                 if paint_widget.widget.get_autoclip() {
                     let trans = c.transform.trans(
                         paint_widget.widget.get_origin().x as f64,

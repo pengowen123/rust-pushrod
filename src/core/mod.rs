@@ -21,4 +21,6 @@ pub mod main;
 /// the screen within a window, and the size of an object.
 pub mod point;
 
+/// This is a cache that is used to store `Widget` objects for a `Pushrod` run loop.  Each
+/// `Pushrod` object that is created contains its own set of `Widget` objects, stored here.
 pub mod widget_store;
