@@ -3,6 +3,8 @@
 ## 0.1.13
 
 - Removed texture creation and renewal code.
+- Made `PushrodEvent` type cloneable.
+
 
 ## 0.1.12
 

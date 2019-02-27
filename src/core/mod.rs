@@ -24,3 +24,5 @@ pub mod point;
 /// This is a cache that is used to store `Widget` objects for a `Pushrod` run loop.  Each
 /// `Pushrod` object that is created contains its own set of `Widget` objects, stored here.
 pub mod widget_store;
+
+pub mod callbacks;
