@@ -22,5 +22,8 @@ pub mod box_widget;
 /// Timer component: triggers a callback after a certain amount of time.
 pub mod timer_widget;
 
+/// Text component: draws text on the screen with an adjustable text, font size, color, and fpnt name.
+pub mod text_widget;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;

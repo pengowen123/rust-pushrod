@@ -1,5 +1,17 @@
 # Pushrod Releases
 
+## 0.1.12
+
+- Removed OpenGL specification in constructor for Pushrod runtime.
+- Removing PushrodWindow, changing to a WidgetStore.
+- Moved painting functions to appropriate areas, refactoring.
+- Removed "Invalidated" messages.
+- Optimized debugging messages in run loop.
+- Implemented auto clipping when painting a widget.
+- Added auto clipping.
+- Changed rendering functionality to draw_2d, required a function in run loop to handle closures.
+- Implemented text rendering.
+
 ## 0.1.11
 
 - Changed code so that widgets of size 0x0 are skipped when searching for widget IDs by point.

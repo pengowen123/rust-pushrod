@@ -17,7 +17,6 @@
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
 - [ ] Implement Graphics Translation Library
   - [ ] Implement a graphics library that is uniform and not independent of any Rust library
-  - [ ] Clip
   - [ ] Draw Rounded Rectangle
   - [ ] Draw Ellipse
   - [ ] Draw Arc
@@ -28,7 +27,6 @@
   - [ ] Translate Points based on Origin/Size
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [ ] Image
-  - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
 - [ ] More examples
 
@@ -48,6 +46,7 @@
   - [x] Extend Widget Store to keep track of (parent, child)
   - [x] Need to store the widget_id in the widget store
   - [x] Modify iterator to use filter after implementing widget_id
+  - [x] Add autoclip flag to widget to automatically clip a widget's drawing area if requested
 - [ ] Widget/Run Loop Library Changes
   - [ ] ~Add chainable functions that return self, so functions can be chained~
   - [x] Create 3D textures are assigned on a per-window basis.
@@ -58,11 +57,14 @@
   - [x] Change Widget configs to its own struct instead of being part of Widget
   - [x] Move Configurable struct and impl to their own external file
   - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
+  - [x] Refactor code to use a single window and single set of widgets in a container
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
+  - [x] Clip
 - [ ] Implement Graphics Translation Library
   - [x] Draw Box
   - [x] Timer
+  - [x] Text box (use Google Font Library, as it's the most uniform/generic)
 
 ## 0.2.x -> 0.3.0
 

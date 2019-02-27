@@ -133,7 +133,6 @@ pub trait Widget {
     fn get_size(&mut self) -> crate::core::point::Size {
         match self.config().get(CONFIG_SIZE) {
             Some(WidgetConfig::Size { ref size }) => size.clone(),
-            None => make_unsized(),
             _ => make_unsized(),
         }
     }
@@ -159,6 +158,19 @@ pub trait Widget {
         }
     }
 
+    fn set_autoclip(&mut self, clip: bool) {
+        self.config()
+            .set(CONFIG_AUTOCLIP, WidgetConfig::Autoclip { clip });
+        self.invalidate();
+    }
+
+    fn get_autoclip(&mut self) -> bool {
+        match self.config().get(CONFIG_AUTOCLIP) {
+            Some(WidgetConfig::Autoclip { ref clip }) => clip.clone(),
+            _ => false,
+        }
+    }
+
     // Events
 
     /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.
@@ -177,7 +189,7 @@ pub trait Widget {
     /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
     /// behavior.)
-    fn draw(&mut self, context: Context, graphics: &mut GlGraphics) {
+    fn draw(&mut self, c: Context, g: &mut G2d) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
 
@@ -189,8 +201,8 @@ pub trait Widget {
                 size.w as f64,
                 size.h as f64,
             ],
-            context.transform,
-            graphics,
+            c.transform,
+            g,
         );
 
         self.clear_invalidate();
@@ -221,16 +233,14 @@ impl BaseWidget {
 /// ```no_run
 /// # use piston_window::*;
 /// # use pushrod::core::point::*;
-/// # use pushrod::core::window::*;
+/// # use pushrod::core::main::*;
 /// # use pushrod::widget::widget::*;
 /// # fn main() {
-/// #   let opengl = OpenGL::V3_2;
-/// #   let mut pushrod_window: PushrodWindow = PushrodWindow::new(
+/// #   let mut prod: Pushrod = Pushrod::new(
 /// #       WindowSettings::new("Pushrod Window", [640, 480])
-/// #           .opengl(opengl)
+/// #           .opengl(OpenGL::V3_2)
 /// #           .build()
-/// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
-/// #   );
+/// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
 /// #
 ///    let mut base_widget = BaseWidget::new();
 ///
@@ -239,7 +249,7 @@ impl BaseWidget {
 ///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 ///
 ///    // Widgets must be boxed, as they are trait objects.
-///    let widget_id = pushrod_window.add_widget(Box::new(base_widget));
+///    let widget_id = prod.widget_store.add_widget(Box::new(base_widget));
 ///
 ///    eprintln!("Added widget: ID={}", widget_id);
 ///
@@ -250,7 +260,7 @@ impl BaseWidget {
 ///    base_widget_2.set_color([0.75, 0.75, 0.75, 1.0]);
 ///
 ///    // Add the second widget to the top level base widget.
-///    let widget_id_2 = pushrod_window.add_widget_to_parent(Box::new(base_widget_2), widget_id);
+///    let widget_id_2 = prod.widget_store.add_widget_to_parent(Box::new(base_widget_2), widget_id);
 /// # }
 /// ```
 impl Widget for BaseWidget {

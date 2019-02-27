@@ -78,7 +78,7 @@ impl BoxWidget {
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
-    fn draw_box(&mut self, context: Context, graphics: &mut GlGraphics) {
+    fn draw_box(&mut self, c: Context, g: &mut G2d) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
         let border: f64 = self.get_border_thickness() as f64;
@@ -94,8 +94,8 @@ impl BoxWidget {
                 (origin.x + size.w) as f64,
                 origin.y as f64 + border,
             ],
-            context.transform,
-            graphics,
+            c.transform,
+            g,
         );
 
         // Upper left to lower right
@@ -108,8 +108,8 @@ impl BoxWidget {
                 (origin.x + size.w) as f64 - border,
                 (origin.y + size.h) as f64,
             ],
-            context.transform,
-            graphics,
+            c.transform,
+            g,
         );
 
         // Upper left to lower left
@@ -122,8 +122,8 @@ impl BoxWidget {
                 origin.x as f64 + border,
                 (origin.y + size.h) as f64,
             ],
-            context.transform,
-            graphics,
+            c.transform,
+            g,
         );
 
         // Lower left to lower right
@@ -136,8 +136,8 @@ impl BoxWidget {
                 (origin.x + size.w) as f64,
                 (origin.y + size.h) as f64 - border,
             ],
-            context.transform,
-            graphics,
+            c.transform,
+            g,
         );
     }
 }
@@ -153,18 +153,9 @@ impl BoxWidget {
 /// ```no_run
 /// # use piston_window::*;
 /// # use pushrod::core::point::*;
-/// # use pushrod::core::window::*;
 /// # use pushrod::widget::widget::*;
 /// # use pushrod::widget::box_widget::*;
 /// # fn main() {
-/// #   let opengl = OpenGL::V3_2;
-/// #   let mut pushrod_window: PushrodWindow = PushrodWindow::new(
-/// #       WindowSettings::new("Pushrod Window", [640, 480])
-/// #           .opengl(opengl)
-/// #           .build()
-/// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)),
-/// #   );
-/// #
 ///    let mut box_widget = BoxWidget::new();
 ///
 ///    box_widget.set_origin(100, 100);
@@ -241,13 +232,13 @@ impl Widget for BoxWidget {
     ///
     /// - Base widget first
     /// - Box graphic for the specified width
-    fn draw(&mut self, context: Context, graphics: &mut GlGraphics) {
+    fn draw(&mut self, c: Context, g: &mut G2d) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
-        self.base_widget.draw(context, graphics);
+        self.base_widget.draw(c, g);
 
         // Paint the box.
-        self.draw_box(context, graphics);
+        self.draw_box(c, g);
 
         // Then clear invalidation.
         self.clear_invalidate();
