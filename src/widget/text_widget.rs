@@ -80,7 +80,9 @@ impl TextWidget {
         clear([0.0, 0.0, 0.0, 1.0], g);
 
         let origin: Point = self.get_origin();
-        let transform = c.transform.trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
+        let transform = c
+            .transform
+            .trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
 
         text(
             [0.0, 0.0, 1.0, 1.0],
@@ -89,7 +91,8 @@ impl TextWidget {
             &mut self.font_cache,
             transform,
             g,
-        ).unwrap();
+        )
+        .unwrap();
     }
 }
 

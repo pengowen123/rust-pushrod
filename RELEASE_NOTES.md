@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.1.13
+
+- Removed texture creation and renewal code.
+
 ## 0.1.12
 
 - Removed OpenGL specification in constructor for Pushrod runtime.

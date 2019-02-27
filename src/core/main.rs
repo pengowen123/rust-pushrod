@@ -36,9 +36,6 @@ pub struct Pushrod {
     pub widget_store: WidgetStore,
     event_listeners: RefCell<Vec<Box<EventListener>>>,
     event_list: RefCell<Vec<PushrodEvent>>,
-    texture_buf: Box<Vec<u8>>,
-    texture: Texture,
-    fbo: GLuint,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
@@ -68,9 +65,6 @@ impl Pushrod {
             widget_store: WidgetStore::new(),
             event_listeners: RefCell::new(Vec::new()),
             event_list: RefCell::new(Vec::new()),
-            texture_buf: Box::new(vec![0u8; 1]),
-            texture: Texture::empty(&TextureSettings::new()).unwrap(),
-            fbo: 0,
         }
     }
 
@@ -216,38 +210,6 @@ impl Pushrod {
         0
     }
 
-    fn handle_resize(&mut self, width: u32, height: u32) {
-        self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
-        self.texture =
-            Texture::from_memory_alpha(&self.texture_buf, width, height, &TextureSettings::new())
-                .unwrap();
-
-        // I hate this code.  However, this does prepare a texture so that an image can be
-        // drawn on it.  Since it's in memory, it means that the texture only gets recreated once
-        // per resize.
-        unsafe {
-            let mut fbos: [GLuint; 1] = [0];
-
-            gl::GenFramebuffers(1, fbos.as_mut_ptr());
-            self.fbo = fbos[0];
-
-            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-            gl::FramebufferTexture2D(
-                gl::FRAMEBUFFER,
-                gl::COLOR_ATTACHMENT0,
-                gl::TEXTURE_2D,
-                self.texture.get_id(),
-                0,
-            );
-        }
-    }
-
-    fn switch_fb(&mut self, fb: GLuint) {
-        unsafe {
-            gl::BindFramebuffer(gl::FRAMEBUFFER, fb);
-        }
-    }
-
     fn handle_draw(&mut self, event: &Event) {
         let mut widgets = &mut self.widget_store;
 
@@ -279,8 +241,6 @@ impl Pushrod {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
         let draw_size = self.window.draw_size();
-
-        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -334,7 +294,6 @@ impl Pushrod {
             });
 
             event.resize(|width, height| {
-                self.handle_resize(width as u32, height as u32);
                 self.widget_store.invalidate_all_widgets();
             });
 
