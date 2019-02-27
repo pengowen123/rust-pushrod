@@ -9,7 +9,7 @@
 - Optimized debugging messages in run loop.
 - Implemented auto clipping when painting a widget.
 - Added auto clipping.
-- Adding text rendering.
+- Changed rendering functionality to draw_2d, required a function in run loop to handle closures.
 
 ## 0.1.11
 

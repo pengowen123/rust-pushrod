@@ -189,7 +189,7 @@ pub trait Widget {
     /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
     /// behavior.)
-    fn draw(&mut self, context: Context, graphics: &mut GlGraphics) {
+    fn draw(&mut self, c: Context, g: &mut G2d) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
 
@@ -201,8 +201,8 @@ pub trait Widget {
                 size.w as f64,
                 size.h as f64,
             ],
-            context.transform,
-            graphics,
+            c.transform,
+            g,
         );
 
         self.clear_invalidate();

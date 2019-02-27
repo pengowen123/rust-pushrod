@@ -32,11 +32,10 @@ pub struct TextWidget {
 /// Implementation of the constructor for the `BaseWidget`.  Creates a new base widget
 /// that can be positioned anywhere on the screen.
 impl TextWidget {
-    pub fn new(window: PistonWindow, font_name: String, text: String, font_size: u32) -> Self {
+    pub fn new(factory: GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets").unwrap();
         let ref font = assets.join(font_name.clone());
-        let factory = window.factory.clone();
         let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
         Self {
@@ -72,14 +71,14 @@ impl TextWidget {
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
-    pub fn draw_text(&mut self, c: Context, g: &mut GlGraphics) {
-        text::Text::new_color(self.get_text_color(), self.font_size)
-            .draw(
-            &self.text,
-            &mut self.font_cache,
-            &c.draw_state,
-            c.transform, g
-        ).unwrap();
+    pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
+        clear([0.0, 0.0, 0.0, 1.0], g);
+        text([0.0, 0.0, 1.0, 1.0],
+        self.font_size,
+        &self.text,
+        &mut self.font_cache,
+        c.transform,
+        g);
     }
 }
 
@@ -143,7 +142,7 @@ impl Widget for TextWidget {
     ///
     /// - Base widget first
     /// - Box graphic for the specified width
-    fn draw(&mut self, c: Context, g: &mut GlGraphics) {
+    fn draw(&mut self, c: Context, g: &mut G2d) {
         // Paint the box.
         self.draw_text(c, g);
 

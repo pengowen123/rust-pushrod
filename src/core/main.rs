@@ -271,6 +271,14 @@ impl Pushrod {
         }
     }
 
+    fn handle_draw(&mut self, event: &Event) {
+        let mut widgets = &mut self.widget_store;
+
+        self.window.draw_2d(event, |c, g| {
+            widgets.draw(0, c, g);
+        });
+    }
+
     /// This is the main run loop that is called to process all UI events.  This loop is responsible
     /// for handling events from the OS, converting them to workable objects, and passing them off
     /// to quick callback dispatchers.
@@ -297,7 +305,7 @@ impl Pushrod {
 
         self.handle_resize(draw_size.width as u32, draw_size.height as u32);
 
-        while let Some(event) = self.window.next() {
+        while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
                 let mouse_point = make_point_f64(x, y);
 
@@ -334,17 +342,17 @@ impl Pushrod {
             });
 
             event.button(|button| {
-                //                    self.internal_handle_mouse_button(button);
+                self.internal_handle_mouse_button(button);
             });
 
             event.mouse_scroll(|x, y| {
-                //                    let mouse_point = make_point_f64(x, y);
-                //
-                //                    self.internal_handle_mouse_scroll(mouse_point.clone());
-                //
-                //                    if last_widget_id != -1 {
-                //                        pushrod_window.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
-                //                    }
+                let mouse_point = make_point_f64(x, y);
+
+                self.internal_handle_mouse_scroll(mouse_point.clone());
+
+                if last_widget_id != -1 {
+                    self.widget_store.mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
+                }
             });
 
             event.resize(|width, height| {
@@ -358,21 +366,8 @@ impl Pushrod {
             // FPS loop handling
 
             event.render(|args| {
-                if self.widget_store.needs_repaint() {
-                    self.switch_fb(self.fbo);
-
-                    gl.draw(args.viewport(), |c, g| {
-                        self.widget_store.draw(0, c, g);
-                    });
-                }
-
-                self.switch_fb(0);
-
-                gl.draw(args.viewport(), |c, g| {
-                    clear([1.0, 1.0, 1.0, 0.0], g);
-                    let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
-                    Image::new().draw(&self.texture, &c.draw_state, flipped, g);
-                });
+                self.handle_draw(&event);
+                self.widget_store.invalidate_all_widgets();
             });
         }
     }

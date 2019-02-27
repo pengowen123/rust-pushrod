@@ -155,7 +155,7 @@ impl WidgetStore {
         found_id
     }
 
-    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics) {
+    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut G2d) {
         let parents_of_widget = self.get_children_of(widget_id);
 
         if parents_of_widget.len() == 0 {
