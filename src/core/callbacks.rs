@@ -14,11 +14,14 @@
 // limitations under the License.
 
 use crate::event::event::*;
+use crate::core::point::Point;
+
 use std::collections::HashMap;
 
 pub enum CallbackTypes {
-    SingleCallback { callback: Box<FnMut(Self) -> bool> },
-    EventCallback { event: Box<FnMut(Self, PushrodEvent) -> bool> },
+    SingleCallback { callback: Box<FnMut(u32) -> ()> },
+    PointCallback  { callback: Box<FnMut(u32, Point) -> ()> },
+    ButtonCallback { callback: Box<FnMut(u32, u32, Point) -> ()> },
 }
 
 pub struct CallbackStore {

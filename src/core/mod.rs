@@ -25,4 +25,6 @@ pub mod point;
 /// `Pushrod` object that is created contains its own set of `Widget` objects, stored here.
 pub mod widget_store;
 
+/// This is a per-widget callback store that is used to call closures when an event is
+/// triggered.
 pub mod callbacks;

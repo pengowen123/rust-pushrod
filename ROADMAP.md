@@ -11,7 +11,7 @@
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
 - [ ] Improve Signal Events
-  - [ ] Implement Closure callbacks for widgets
+  - [ ] Implement Closure callback cache for widgets
   - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
