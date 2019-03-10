@@ -173,18 +173,34 @@ pub trait Widget {
 
     // Events
 
-    /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.
-    fn mouse_entered(&mut self, widget_id: i32);
+    /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.  Only override
+    /// if you want to signal a mouse enter event.
+    fn mouse_entered(&mut self, widget_id: i32) { }
 
-    /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.
-    fn mouse_exited(&mut self, widget_id: i32);
+    /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.  Only override
+    /// if you want to signal a mouse exit event.
+    fn mouse_exited(&mut self, widget_id: i32) { }
 
     /// Called when a scroll event is called within the bounds of the widget.  Includes the widget ID.
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point);
+    /// Only override if you want to signal a mouse scroll event.
+    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) { }
+
+    /// Called when the mouse pointer is moved inside a widget.  Includes the widget ID and point.
+    /// Only override if you want to track mouse movement.
+    fn mouse_moved(&mut self, widget_id: i32, point: Point) { }
+
+    /// Called when a mouse button is pressed.  Includes the widget ID, button ID, and point.
+    /// Only override if you want to track when a mouse button is pressed.
+    fn mouse_down(&mut self, widget_id: i32, button: i32, point: Point) { }
+
+    /// Called when a mouse button is released.  Includes the widget ID, button ID, and point.
+    /// Only override if you want to track when a mouse button is released.  (Generally do this
+    /// in tandem with `mouse_down`.)
+    fn mouse_up(&mut self, widget_id: i32, button: i32, point: Point) { }
 
     // Draw routines
 
-    /// Draws the contents of the widget, provided a `piston2d` `Context` and `GlGraphics` object.
+    /// Draws the contents of the widget, provided a `piston2d` `Context` and `G2d` object.
     ///
     /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
@@ -274,12 +290,5 @@ impl Widget for BaseWidget {
 
     fn mouse_exited(&mut self, widget_id: i32) {
         eprintln!("[Base] Mouse exited: id={}", widget_id);
-    }
-
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        eprintln!(
-            "[Base] Mouse scrolled: x={} y={}: id={}",
-            point.x, point.y, widget_id
-        );
     }
 }

@@ -137,21 +137,6 @@ impl Widget for TextWidget {
         &mut self.config
     }
 
-    fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("[Text] Mouse entered: id={}", widget_id);
-    }
-
-    fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("[Text] Mouse exited: id={}", widget_id);
-    }
-
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        eprintln!(
-            "[Text] Mouse scrolled: x={} y={}: id={}",
-            point.x, point.y, widget_id
-        );
-    }
-
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d) {
         // Draw the text.

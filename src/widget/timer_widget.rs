@@ -135,15 +135,6 @@ impl Widget for TimerWidget {
         make_unsized()
     }
 
-    /// Mouse entered callback is disabled.
-    fn mouse_entered(&mut self, _widget_id: i32) {}
-
-    /// Mouse exited callback is disabled.
-    fn mouse_exited(&mut self, _widget_id: i32) {}
-
-    /// Mouse scrolled callback is disabled.
-    fn mouse_scrolled(&mut self, _widget_id: i32, _point: Point) {}
-
     /// Does not draw anything - only calls the timer `tick()` function to increment the
     /// timer.
     fn draw(&mut self, _context: Context, _graphics: &mut G2d) {

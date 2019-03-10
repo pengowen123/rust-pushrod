@@ -213,21 +213,6 @@ impl Widget for BoxWidget {
         self.base_widget.get_color()
     }
 
-    fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("[Box] Mouse entered: id={}", widget_id);
-    }
-
-    fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("[Box] Mouse exited: id={}", widget_id);
-    }
-
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        eprintln!(
-            "[Box] Mouse scrolled: x={} y={}: id={}",
-            point.x, point.y, widget_id
-        );
-    }
-
     /// Draws the contents of the widget in this order:
     ///
     /// - Base widget first
