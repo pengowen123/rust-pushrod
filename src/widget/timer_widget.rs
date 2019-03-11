@@ -18,6 +18,7 @@ use piston_window::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::point::*;
+use crate::core::callbacks::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -25,6 +26,7 @@ use crate::widget::widget::*;
 /// time,
 pub struct TimerWidget {
     config: Configurable,
+    callbacks: CallbackStore,
     enabled: bool,
     initiated: u64,
     timeout: u64,
@@ -54,6 +56,7 @@ impl TimerWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            callbacks: CallbackStore::new(),
             enabled: true,
             initiated: time_ms(),
             timeout: 0,
@@ -117,6 +120,10 @@ impl TimerWidget {
 impl Widget for TimerWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    fn callbacks(&mut self) -> &mut CallbackStore {
+        &mut self.callbacks
     }
 
     /// Timer is always invalidated, this way, the tick function is always called on each

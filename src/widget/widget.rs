@@ -16,6 +16,7 @@ use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::point::*;
+use crate::core::callbacks::*;
 use crate::widget::config::*;
 
 /// Implementable trait that is used by every `Widget`.  These are the public methods,
@@ -79,6 +80,8 @@ pub trait Widget {
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
     fn config(&mut self) -> &mut Configurable;
+
+    fn callbacks(&mut self) -> &mut CallbackStore;
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
@@ -229,6 +232,7 @@ pub trait Widget {
 /// not contain any special logic other than being a base for a display layer.
 pub struct BaseWidget {
     config: Configurable,
+    callbacks: CallbackStore,
 }
 
 /// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
@@ -237,6 +241,7 @@ impl BaseWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            callbacks: CallbackStore::new(),
         }
     }
 }
@@ -282,6 +287,10 @@ impl BaseWidget {
 impl Widget for BaseWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    fn callbacks(&mut self) -> &mut CallbackStore {
+        &mut self.callbacks
     }
 
     fn mouse_entered(&mut self, widget_id: i32) {

@@ -8,6 +8,7 @@
 - Added mouse moved, button down, and button up callbacks; changed all mouse calls to default empty function bodies.
 - Optimized timer, box, and text widgets, removed functions that previously needed to be overridden.
 - Added SingleCallback, PointCallback, and ButtonCallback for closures.
+- Added callbacks(&mut self) call to all widgets to allow for callback/closure storage.
 
 ## 0.1.12
 
