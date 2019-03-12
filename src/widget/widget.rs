@@ -61,9 +61,11 @@ pub trait Widget {
     /// ```
     /// # use pushrod::widget::widget::*;
     /// # use pushrod::widget::config::*;
+    /// # use pushrod::core::callbacks::*;
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
     ///   config: Configurable,
+    ///   callbacks: CallbackStore,
     /// }
     ///
     /// impl Widget for MyWidget {
@@ -71,9 +73,14 @@ pub trait Widget {
     ///     &mut self.config
     ///   }
     ///
-    ///  fn mouse_entered(&mut self, widget_id: i32) {}
-    ///  fn mouse_exited(&mut self, widget_id: i32) {}
-    ///  fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {}
+    ///   fn callbacks(&mut self) -> &mut CallbackStore {
+    ///     &mut self.callbacks
+    ///   }
+    ///
+    ///   // Not necessary below, but here for illustration if you want to override these calls.
+    ///   fn mouse_entered(&mut self, widget_id: i32) {}
+    ///   fn mouse_exited(&mut self, widget_id: i32) {}
+    ///   fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {}
     /// }
     /// ```
     ///

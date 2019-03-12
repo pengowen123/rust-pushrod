@@ -1,5 +1,5 @@
 // Callback Store
-// Callback Cache using FnMut Enumerations for storing closures
+// Callback Cache using fn() Enumerations for storing closures
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,16 +18,52 @@ use crate::core::point::Point;
 
 use std::collections::HashMap;
 
+/// This is an enumerated type that is used to store numerous variations of callbacks that can
+/// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
+/// can be added to/extended as necessary.
 pub enum CallbackTypes {
+    /// Callback that only supplies its widget ID.
     SingleCallback { callback: fn(u32) },
+
+    /// Callback that supplies its widget ID and a `Point` on the screen within the `Widget`.
     PointCallback { callback: fn(u32, Point) },
-    ButtonCallback { callback: fn(u32, u32, Point) },
 }
 
+/// This is the `CallbackStore` that is used to store a list of `CallbackTypes` that are
+/// triggered when an action occurs on a `Widget`.
 pub struct CallbackStore {
     callbacks: HashMap<u32, CallbackTypes>,
 }
 
+/// The actual class implementation of the `CallbackStore`.  This is primarily stored within the
+/// `Widget` class, and its usage looks something similar to the following code:
+///
+/// ```
+/// # use pushrod::core::callbacks::*;
+/// # use pushrod::core::point::*;
+/// # fn main() {
+/// #   let CALLBACK_ON_MOUSE_ENTER: u32 = 1;
+///     let mut cs = CallbackStore::new();
+///
+///     cs.put(CALLBACK_ON_MOUSE_ENTER,
+///         CallbackTypes::PointCallback { callback: |widget_id, point| {
+///             eprintln!("Callback for widget {} resulted in point at {} x {}",
+///                 widget_id, point.x, point.y);
+///         }
+///     });
+///
+///     // And, to call the callback to run it:
+///
+///     match *cs.get(CALLBACK_ON_MOUSE_ENTER) {
+///         CallbackTypes::PointCallback { callback } =>
+///             callback(12, Point { x: 16, y: 24 }),
+///         _ => eprintln!("Unsupported callback for ID 12!"),
+///     }
+/// # }
+/// ```
+///
+/// This is an example of how it would be used in the `Widget` callbacks.  User-specified
+/// callbacks will likely be much simpler than this.
 impl CallbackStore {
     pub fn new() -> Self {
         Self {
