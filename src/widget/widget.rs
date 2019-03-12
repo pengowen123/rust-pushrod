@@ -184,28 +184,39 @@ pub trait Widget {
 
     /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.  Only override
     /// if you want to signal a mouse enter event.
-    fn mouse_entered(&mut self, widget_id: i32) { }
+    fn mouse_entered(&mut self, widget_id: i32) {
+        match *self.callbacks().get(CALLBACK_MOUSE_ENTERED) {
+            CallbackTypes::SingleCallback { callback } => callback(widget_id),
+            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_ENTERED),
+        }
+    }
 
     /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.  Only override
     /// if you want to signal a mouse exit event.
-    fn mouse_exited(&mut self, widget_id: i32) { }
+    fn mouse_exited(&mut self, widget_id: i32) {
+        match *self.callbacks().get(CALLBACK_MOUSE_EXITED) {
+            CallbackTypes::SingleCallback { callback } => callback(widget_id),
+            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_EXITED),
+        }
+    }
 
     /// Called when a scroll event is called within the bounds of the widget.  Includes the widget ID.
     /// Only override if you want to signal a mouse scroll event.
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) { }
+    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
+        match *self.callbacks().get(CALLBACK_MOUSE_SCROLLED) {
+            CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
+            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_SCROLLED),
+        }
+    }
 
     /// Called when the mouse pointer is moved inside a widget.  Includes the widget ID and point.
     /// Only override if you want to track mouse movement.
-    fn mouse_moved(&mut self, widget_id: i32, point: Point) { }
-
-    /// Called when a mouse button is pressed.  Includes the widget ID, button ID, and point.
-    /// Only override if you want to track when a mouse button is pressed.
-    fn mouse_down(&mut self, widget_id: i32, button: i32, point: Point) { }
-
-    /// Called when a mouse button is released.  Includes the widget ID, button ID, and point.
-    /// Only override if you want to track when a mouse button is released.  (Generally do this
-    /// in tandem with `mouse_down`.)
-    fn mouse_up(&mut self, widget_id: i32, button: i32, point: Point) { }
+    fn mouse_moved(&mut self, widget_id: i32, point: Point) {
+        match *self.callbacks().get(CALLBACK_MOUSE_MOVED) {
+            CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
+            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_MOVED),
+        }
+    }
 
     // Draw routines
 

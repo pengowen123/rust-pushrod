@@ -18,15 +18,22 @@ use crate::core::point::Point;
 
 use std::collections::HashMap;
 
+pub const CALLBACK_MOUSE_ENTERED: u32 = 1;
+pub const CALLBACK_MOUSE_EXITED: u32 = 2;
+pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
+pub const CALLBACK_MOUSE_MOVED: u32 = 4;
+pub const CALLBACK_MOUSE_BUTTON_DOWN: u32 = 5;
+pub const CALLBACK_MOUSE_BUTTON_UP: u32 = 6;
+
 /// This is an enumerated type that is used to store numerous variations of callbacks that can
 /// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
 /// can be added to/extended as necessary.
 pub enum CallbackTypes {
     /// Callback that only supplies its widget ID.
-    SingleCallback { callback: fn(u32) },
+    SingleCallback { callback: fn(i32) },
 
     /// Callback that supplies its widget ID and a `Point` on the screen within the `Widget`.
-    PointCallback { callback: fn(u32, Point) },
+    PointCallback { callback: fn(i32, Point) },
 }
 
 /// This is the `CallbackStore` that is used to store a list of `CallbackTypes` that are
@@ -42,10 +49,9 @@ pub struct CallbackStore {
 /// # use pushrod::core::callbacks::*;
 /// # use pushrod::core::point::*;
 /// # fn main() {
-/// #   let CALLBACK_ON_MOUSE_ENTER: u32 = 1;
 ///     let mut cs = CallbackStore::new();
 ///
-///     cs.put(CALLBACK_ON_MOUSE_ENTER,
+///     cs.put(CALLBACK_MOUSE_MOVED,
 ///         CallbackTypes::PointCallback { callback: |widget_id, point| {
 ///             eprintln!("Callback for widget {} resulted in point at {} x {}",
 ///                 widget_id, point.x, point.y);
@@ -54,10 +60,10 @@ pub struct CallbackStore {
 ///
 ///     // And, to call the callback to run it:
 ///
-///     match *cs.get(CALLBACK_ON_MOUSE_ENTER) {
+///     match *cs.get(CALLBACK_MOUSE_MOVED) {
 ///         CallbackTypes::PointCallback { callback } =>
 ///             callback(12, Point { x: 16, y: 24 }),
-///         _ => eprintln!("Unsupported callback for ID 12!"),
+///         _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_MOVED),
 ///     }
 /// # }
 /// ```
