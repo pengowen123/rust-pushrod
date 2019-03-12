@@ -19,8 +19,9 @@ use crate::core::point::Point;
 use std::collections::HashMap;
 
 pub enum CallbackTypes {
-    SingleCallback { callback: fn(String) },
-    DoubleCallback { callback: fn(String, u32) },
+    SingleCallback { callback: fn(u32) },
+    PointCallback { callback: fn(u32, Point) },
+    ButtonCallback { callback: fn(u32, u32, Point) },
 }
 
 pub struct CallbackStore {
@@ -40,7 +41,7 @@ impl CallbackStore {
 
     pub fn get(&mut self, id: u32) -> &CallbackTypes {
         if self.callbacks.contains_key(&id) {
-            self.callbacks.get(&id).unwrap()
+            &self.callbacks[&id]
         } else {
             &CallbackTypes::SingleCallback {
                 callback: |_args| { },
