@@ -24,12 +24,11 @@ use crate::widget::config::*;
 ///
 /// You _must_ implement the following methods:
 ///
-/// - get_config
-/// - mouse_entered
-/// - mouse_exited
-/// - mouse_scrolled
+/// - config
+/// - callbacks
 ///
-/// You _should_ override `draw`, but you are not required to.
+/// You _should_ override `draw`, but you are not required to.  (If you don't, however, your
+/// widget won't really do much.)
 ///
 /// If you want a blank base widget, refer to the `BaseWidget`, which will create a
 /// base widget that paints the contents of its bounds with whatever color has been
