@@ -18,28 +18,28 @@ use crate::core::point::Point;
 
 use std::collections::HashMap;
 
-pub enum CallbackTypes {
-    SingleCallback { callback: Box<FnMut(u32) -> ()> },
-    PointCallback  { callback: Box<FnMut(u32, Point) -> ()> },
-    ButtonCallback { callback: Box<FnMut(u32, u32, Point) -> ()> },
-}
+type Callback = fn(String);
 
 pub struct CallbackStore {
-    store: HashMap<u32, CallbackTypes>,
+    callbacks: HashMap<String, Callback>,
 }
 
 impl CallbackStore {
     pub fn new() -> Self {
         Self {
-            store: HashMap::new(),
+            callbacks: HashMap::new(),
         }
     }
 
-    pub fn put(&mut self, key: u32, callback: CallbackTypes) {
-        self.store.insert(key, callback);
+    pub fn put(&mut self, name: String, func: Callback) {
+        self.callbacks.insert(name, func);
     }
 
-    pub fn get(&self, key: u32) -> Option<&CallbackTypes> {
-        self.store.get(&key)
+    pub fn get(&mut self, name: String) -> Callback {
+        if self.callbacks.contains_key(&name) {
+            *self.callbacks.get(&name).unwrap()
+        } else {
+            |_args| { }
+        }
     }
 }
