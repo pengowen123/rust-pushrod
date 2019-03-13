@@ -182,40 +182,42 @@ pub trait Widget {
 
     // Events
 
+    fn perform_single_callback(&mut self, callback_id: u32, widget_id: i32) {
+        match *self.callbacks().get(callback_id) {
+            CallbackTypes::SingleCallback { callback } => callback(widget_id),
+            _ => (),
+        }
+    }
+
+    fn perform_point_callback(&mut self, callback_id: u32, widget_id: i32, point: Point) {
+        match *self.callbacks().get(callback_id) {
+            CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
+            _ => (),
+        }
+    }
+
     /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.  Only override
     /// if you want to signal a mouse enter event.
     fn mouse_entered(&mut self, widget_id: i32) {
-        match *self.callbacks().get(CALLBACK_MOUSE_ENTERED) {
-            CallbackTypes::SingleCallback { callback } => callback(widget_id),
-            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_ENTERED),
-        }
+        self.perform_single_callback(CALLBACK_MOUSE_ENTERED, widget_id);
     }
 
     /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.  Only override
     /// if you want to signal a mouse exit event.
     fn mouse_exited(&mut self, widget_id: i32) {
-        match *self.callbacks().get(CALLBACK_MOUSE_EXITED) {
-            CallbackTypes::SingleCallback { callback } => callback(widget_id),
-            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_EXITED),
-        }
+        self.perform_single_callback(CALLBACK_MOUSE_EXITED, widget_id);
     }
 
     /// Called when a scroll event is called within the bounds of the widget.  Includes the widget ID.
     /// Only override if you want to signal a mouse scroll event.
     fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        match *self.callbacks().get(CALLBACK_MOUSE_SCROLLED) {
-            CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
-            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_SCROLLED),
-        }
+        self.perform_point_callback(CALLBACK_MOUSE_SCROLLED, widget_id, point.clone());
     }
 
     /// Called when the mouse pointer is moved inside a widget.  Includes the widget ID and point.
     /// Only override if you want to track mouse movement.
     fn mouse_moved(&mut self, widget_id: i32, point: Point) {
-        match *self.callbacks().get(CALLBACK_MOUSE_MOVED) {
-            CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
-            _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_MOVED),
-        }
+        self.perform_point_callback(CALLBACK_MOUSE_MOVED, widget_id, point.clone());
     }
 
     // Draw routines
