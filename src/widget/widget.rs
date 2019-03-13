@@ -185,7 +185,7 @@ pub trait Widget {
         }
     }
 
-    // Events
+    // Callbacks
 
     /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
     /// `CallbackTypes::SingleCallback` enum type.  If the callback does not exist, or is not
@@ -206,6 +206,8 @@ pub trait Widget {
             _ => (),
         }
     }
+
+    // Callback Triggers
 
     /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.  Only override
     /// if you want to signal a mouse enter event.
@@ -229,6 +231,24 @@ pub trait Widget {
     /// Only override if you want to track mouse movement.
     fn mouse_moved(&mut self, widget_id: i32, point: Point) {
         self.perform_point_callback(CALLBACK_MOUSE_MOVED, widget_id, point.clone());
+    }
+
+    // Callback Setters
+
+    fn on_mouse_entered(&mut self, callback: fn(i32)) {
+        self.callbacks().put(CALLBACK_MOUSE_ENTERED, CallbackTypes::SingleCallback { callback });
+    }
+
+    fn on_mouse_exited(&mut self, callback: fn(i32)) {
+        self.callbacks().put(CALLBACK_MOUSE_EXITED, CallbackTypes::SingleCallback { callback });
+    }
+
+    fn on_mouse_scrolled(&mut self, callback: fn(i32, Point)) {
+        self.callbacks().put(CALLBACK_MOUSE_SCROLLED, CallbackTypes::PointCallback { callback });
+    }
+
+    fn on_mouse_moved(&mut self, callback: fn(i32, Point)) {
+        self.callbacks().put(CALLBACK_MOUSE_MOVED, CallbackTypes::PointCallback { callback });
     }
 
     // Draw routines
@@ -277,8 +297,8 @@ impl BaseWidget {
 }
 
 /// Implementation of the `BaseWidget` object with the `Widget` traits implemented.
-/// This function only implements `get_config`, and samples of `mouse_entered`, `mouse_exited`,
-/// and `mouse_scrolled`, which currently trigger messages to the screen.
+/// This function only implements `config` and `callbacks`, which are used as a base for
+/// all `Widget`s.
 ///
 /// Example usage:
 /// ```no_run
@@ -321,13 +341,5 @@ impl Widget for BaseWidget {
 
     fn callbacks(&mut self) -> &mut CallbackStore {
         &mut self.callbacks
-    }
-
-    fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("[Base] Mouse entered: id={}", widget_id);
-    }
-
-    fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("[Base] Mouse exited: id={}", widget_id);
     }
 }
