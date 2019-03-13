@@ -87,6 +87,8 @@ pub trait Widget {
     /// that stores the configs.
     fn config(&mut self) -> &mut Configurable;
 
+    /// Returns the `CallbackStore` for this `Widget`.  This contains a set of callbacks that only
+    /// apply to this `Widget`.
     fn callbacks(&mut self) -> &mut CallbackStore;
 
     /// Indicates that a widget needs to be redrawn/refreshed.
@@ -167,12 +169,15 @@ pub trait Widget {
         }
     }
 
+    /// Indicates to the underlying drawing mechanism as to whether or not this `Widget` needs to
+    /// have drawing clipping automatically applied.
     fn set_autoclip(&mut self, clip: bool) {
         self.config()
             .set(CONFIG_AUTOCLIP, WidgetConfig::Autoclip { clip });
         self.invalidate();
     }
 
+    /// Retrieves the auto clip flag.
     fn get_autoclip(&mut self) -> bool {
         match self.config().get(CONFIG_AUTOCLIP) {
             Some(WidgetConfig::Autoclip { ref clip }) => clip.clone(),
@@ -182,6 +187,9 @@ pub trait Widget {
 
     // Events
 
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::SingleCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
     fn perform_single_callback(&mut self, callback_id: u32, widget_id: i32) {
         match *self.callbacks().get(callback_id) {
             CallbackTypes::SingleCallback { callback } => callback(widget_id),
@@ -189,6 +197,9 @@ pub trait Widget {
         }
     }
 
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::PointCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
     fn perform_point_callback(&mut self, callback_id: u32, widget_id: i32, point: Point) {
         match *self.callbacks().get(callback_id) {
             CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
