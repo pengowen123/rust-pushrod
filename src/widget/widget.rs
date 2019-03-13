@@ -235,18 +235,22 @@ pub trait Widget {
 
     // Callback Setters
 
+    /// Sets the closure action to be performed when a mouse enters a `Widget`.
     fn on_mouse_entered(&mut self, callback: fn(i32)) {
         self.callbacks().put(CALLBACK_MOUSE_ENTERED, CallbackTypes::SingleCallback { callback });
     }
 
+    /// Sets the closure action to be performed when a mouse exits a `Widget`.
     fn on_mouse_exited(&mut self, callback: fn(i32)) {
         self.callbacks().put(CALLBACK_MOUSE_EXITED, CallbackTypes::SingleCallback { callback });
     }
 
+    /// Sets the closure action to be performed when a mouse scrolls inside a `Widget`.
     fn on_mouse_scrolled(&mut self, callback: fn(i32, Point)) {
         self.callbacks().put(CALLBACK_MOUSE_SCROLLED, CallbackTypes::PointCallback { callback });
     }
 
+    /// Sets the closure action to be performed when a mouse moves within a `Widget`.
     fn on_mouse_moved(&mut self, callback: fn(i32, Point)) {
         self.callbacks().put(CALLBACK_MOUSE_MOVED, CallbackTypes::PointCallback { callback });
     }
