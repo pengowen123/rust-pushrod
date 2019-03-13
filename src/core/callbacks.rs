@@ -18,12 +18,21 @@ use crate::core::point::Point;
 
 use std::collections::HashMap;
 
+/// Index for mouse entered callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::SingleCallback``` callback.
 pub const CALLBACK_MOUSE_ENTERED: u32 = 1;
+
+/// Index for mouse exited callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::SingleCallback``` callback.
 pub const CALLBACK_MOUSE_EXITED: u32 = 2;
+
+/// Index for mouse scrolled callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
+
+/// Index for mouse moved callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_MOVED: u32 = 4;
-pub const CALLBACK_MOUSE_BUTTON_DOWN: u32 = 5;
-pub const CALLBACK_MOUSE_BUTTON_UP: u32 = 6;
 
 /// This is an enumerated type that is used to store numerous variations of callbacks that can
 /// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
