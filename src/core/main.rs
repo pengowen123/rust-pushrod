@@ -251,11 +251,16 @@ impl Pushrod {
                 {
                     previous_mouse_position = mouse_point.clone();
 
-                    self.internal_handle_mouse_move(mouse_point.clone());
-
-                    let current_widget_id = self.widget_store.get_widget_id_for_point(mouse_point);
+                    let current_widget_id = self.widget_store.get_widget_id_for_point(mouse_point.clone());
                     let current_parent_for_widget =
                         self.widget_store.get_parent_of(current_widget_id);
+
+                    self.internal_handle_mouse_move(mouse_point.clone());
+
+                    // Handles the mouse move callback.
+                    if current_widget_id != -1 {
+                        self.widget_store.mouse_moved_for_id(current_widget_id, mouse_point.clone());
+                    }
 
                     if current_widget_id != last_widget_id {
                         if last_widget_id != -1 {

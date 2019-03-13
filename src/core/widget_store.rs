@@ -244,6 +244,11 @@ impl WidgetStore {
         &self.widgets[id as usize].widget.mouse_scrolled(id, point);
     }
 
+    /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.
+    pub fn mouse_moved_for_id(&mut self, id: i32, point: Point) {
+        &self.widgets[id as usize].widget.mouse_moved(id, point);
+    }
+
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
     pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn Widget> {
         &self.widgets[id as usize].widget
