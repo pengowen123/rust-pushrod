@@ -11,6 +11,7 @@
 - Added callbacks(&mut self) call to all widgets to allow for callback/closure storage.
 - Added callbacks for mouse enter, exit, scroll, and move.
 - More optimizations done to Widget class, only implementing config and callbacks.
+- Added setters for callbacks in Widget.
 
 ## 0.1.12
 
