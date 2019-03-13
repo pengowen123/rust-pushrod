@@ -15,8 +15,8 @@
 use opengl_graphics::GlGraphics;
 use piston_window::*;
 
-use crate::core::point::*;
 use crate::core::callbacks::*;
+use crate::core::point::*;
 use crate::widget::config::*;
 
 /// Implementable trait that is used by every `Widget`.  These are the public methods,
@@ -237,22 +237,34 @@ pub trait Widget {
 
     /// Sets the closure action to be performed when a mouse enters a `Widget`.
     fn on_mouse_entered(&mut self, callback: fn(i32)) {
-        self.callbacks().put(CALLBACK_MOUSE_ENTERED, CallbackTypes::SingleCallback { callback });
+        self.callbacks().put(
+            CALLBACK_MOUSE_ENTERED,
+            CallbackTypes::SingleCallback { callback },
+        );
     }
 
     /// Sets the closure action to be performed when a mouse exits a `Widget`.
     fn on_mouse_exited(&mut self, callback: fn(i32)) {
-        self.callbacks().put(CALLBACK_MOUSE_EXITED, CallbackTypes::SingleCallback { callback });
+        self.callbacks().put(
+            CALLBACK_MOUSE_EXITED,
+            CallbackTypes::SingleCallback { callback },
+        );
     }
 
     /// Sets the closure action to be performed when a mouse scrolls inside a `Widget`.
     fn on_mouse_scrolled(&mut self, callback: fn(i32, Point)) {
-        self.callbacks().put(CALLBACK_MOUSE_SCROLLED, CallbackTypes::PointCallback { callback });
+        self.callbacks().put(
+            CALLBACK_MOUSE_SCROLLED,
+            CallbackTypes::PointCallback { callback },
+        );
     }
 
     /// Sets the closure action to be performed when a mouse moves within a `Widget`.
     fn on_mouse_moved(&mut self, callback: fn(i32, Point)) {
-        self.callbacks().put(CALLBACK_MOUSE_MOVED, CallbackTypes::PointCallback { callback });
+        self.callbacks().put(
+            CALLBACK_MOUSE_MOVED,
+            CallbackTypes::PointCallback { callback },
+        );
     }
 
     // Draw routines

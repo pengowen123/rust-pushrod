@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::event::event::*;
 use crate::core::point::Point;
+use crate::event::event::*;
 
 use std::collections::HashMap;
 
@@ -95,7 +95,7 @@ impl CallbackStore {
             &self.callbacks[&id]
         } else {
             &CallbackTypes::SingleCallback {
-                callback: |_args| { },
+                callback: |_args| {},
             }
         }
     }
