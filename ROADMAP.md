@@ -11,7 +11,6 @@
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
 - [ ] Improve Signal Events
-  - [ ] Implement Closure callback cache for widgets
   - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
@@ -58,6 +57,8 @@
   - [x] Move Configurable struct and impl to their own external file
   - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
   - [x] Refactor code to use a single window and single set of widgets in a container
+- [ ] Improve Signal Events
+  - [x] Implement Closure callback cache for widgets
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
   - [x] Clip
