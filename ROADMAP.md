@@ -77,6 +77,9 @@
   - [ ] Progress Indicator
   - [ ] Popup Menu
   - [ ] Editable Text Box
+- [ ] Resource Manager
+  - [ ] Store widgets in a centralized resource manager so that they can be (de)serialized to store
+  - [ ] Allow for manipulation of widgets by ID through resource manager
 - [ ] Widget States
   - [ ] Enabled/Disabled (disabled means no callback interactions from event loop)
   - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)
