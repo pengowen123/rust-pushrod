@@ -70,57 +70,12 @@ impl Pushrod {
     /// # use piston_window::*;
     /// # use pushrod::core::main::*;
     /// # use pushrod::core::point::*;
-    /// # use pushrod::event::event::*;
-    /// struct ExampleListener {}
-    ///
-    /// impl ExampleListener {
-    ///     fn new() -> Self {
-    ///         Self {}
-    ///     }
-    ///
-    ///     fn handle_mouse_move(&self, point: &Point) {
-    ///         eprintln!("[Listener] X={} Y={}", point.x, point.y);
-    ///     }
-    ///
-    ///     fn handle_mouse_down(&self, button: &MouseButton) {
-    ///         match button {
-    ///             MouseButton::Left => eprintln!("[Listener] Left mouse button pressed."),
-    ///             _ => eprintln!("[Listener] Other mouse button pressed."),
-    ///         }
-    ///     }
-    ///
-    ///     fn handle_mouse_up(&self, button: &MouseButton) {
-    ///         match button {
-    ///             MouseButton::Left => eprintln!("[Listener] Left mouse button released."),
-    ///             _ => eprintln!("[Listener] Other mouse button released."),
-    ///         }
-    ///     }
-    ///
-    ///     fn handle_mouse_scroll(&self, point: &Point) {
-    ///         eprintln!("[Listener] Scroll: X={} Y={}", point.x, point.y);
-    ///     }
-    /// }
-    ///
-    /// impl EventListener for ExampleListener {
-    ///     fn handle_event(&self, event: &PushrodEvent) {
-    ///         match event {
-    ///             PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
-    ///             PushrodEvent::MouseDownEvent { button } => self.handle_mouse_down(&button),
-    ///             PushrodEvent::MouseUpEvent { button } => self.handle_mouse_up(&button),
-    ///             PushrodEvent::MouseScrollEvent { point } => self.handle_mouse_scroll(&point),
-    ///         }
-    ///     }
-    /// }
-    ///
     /// fn main() {
     ///     // Create a new Pushrod object
     ///     let mut prod: Pushrod = Pushrod::new(WindowSettings::new("Pushrod Window", [640, 480])
     ///             .opengl(OpenGL::V3_2)
     ///             .build()
     ///             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
-    ///
-    ///     // Add the event listener to the run loop.
-    ///     prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
     ///
     ///     // Initiate the run loop.
     ///     prod.run();

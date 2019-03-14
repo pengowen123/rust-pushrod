@@ -17,57 +17,13 @@ extern crate pushrod;
 
 use piston_window::*;
 use pushrod::core::main::*;
-use pushrod::core::point::*;
-use pushrod::core::widget_store::*;
-use pushrod::event::event::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
 
-struct ExampleListener {}
-
-impl ExampleListener {
-    fn new() -> Self {
-        Self {}
-    }
-
-    fn handle_mouse_move(&self, point: &Point) {
-        eprintln!("X={} Y={}", point.x, point.y);
-    }
-
-    fn handle_mouse_down(&self, button: &MouseButton) {
-        match button {
-            MouseButton::Left => eprintln!("Left mouse button pressed."),
-            _ => eprintln!("Other mouse button pressed."),
-        }
-    }
-
-    fn handle_mouse_up(&self, button: &MouseButton) {
-        match button {
-            MouseButton::Left => eprintln!("Left mouse button released."),
-            _ => eprintln!("Other mouse button released."),
-        }
-    }
-
-    fn handle_mouse_scroll(&self, point: &Point) {
-        eprintln!("Scroll: X={} Y={}", point.x, point.y);
-    }
-}
-
-impl EventListener for ExampleListener {
-    fn handle_event(&self, event: &PushrodEvent) {
-        match event {
-            PushrodEvent::MouseEvent { point } => self.handle_mouse_move(&point),
-            PushrodEvent::MouseDownEvent { button } => self.handle_mouse_down(&button),
-            PushrodEvent::MouseUpEvent { button } => self.handle_mouse_up(&button),
-            PushrodEvent::MouseScrollEvent { point } => self.handle_mouse_scroll(&point),
-        }
-    }
-}
-
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(false)
         .build()
@@ -132,7 +88,7 @@ fn main() {
     text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
     prod.widget_store.add_widget(Box::new(text_widget));
 
-    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
+//    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 
     // Runs the main event loop
     prod.run();
