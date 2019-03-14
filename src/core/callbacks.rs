@@ -34,15 +34,18 @@ pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
 /// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_MOVED: u32 = 4;
 
+pub type SingleCallback = Box<Fn(i32) -> ()>;
+pub type PointCallback = Box<Fn(i32, Point) -> ()>;
+
 /// This is an enumerated type that is used to store numerous variations of callbacks that can
 /// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
 /// can be added to/extended as necessary.
 pub enum CallbackTypes {
     /// Callback that only supplies its widget ID.
-    SingleCallback { callback: fn(i32) },
+    SingleCallback { callback: SingleCallback },
 
     /// Callback that supplies its widget ID and a `Point` on the screen within the `Widget`.
-    PointCallback { callback: fn(i32, Point) },
+    PointCallback { callback: PointCallback },
 }
 
 /// This is the `CallbackStore` that is used to store a list of `CallbackTypes` that are
@@ -94,9 +97,11 @@ impl CallbackStore {
         if self.callbacks.contains_key(&id) {
             &self.callbacks[&id]
         } else {
-            &CallbackTypes::SingleCallback {
-                callback: |_args| {},
-            }
+            self.put(id, CallbackTypes::SingleCallback {
+                callback: Box::new(|_arg| { })
+            });
+
+            &self.callbacks[&id]
         }
     }
 }

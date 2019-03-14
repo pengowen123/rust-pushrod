@@ -191,7 +191,7 @@ pub trait Widget {
     /// `CallbackTypes::SingleCallback` enum type.  If the callback does not exist, or is not
     /// defined properly, it will be silently dropped and ignored.
     fn perform_single_callback(&mut self, callback_id: u32, widget_id: i32) {
-        match *self.callbacks().get(callback_id) {
+        match self.callbacks().get(callback_id) {
             CallbackTypes::SingleCallback { callback } => callback(widget_id),
             _ => (),
         }
@@ -201,7 +201,7 @@ pub trait Widget {
     /// `CallbackTypes::PointCallback` enum type.  If the callback does not exist, or is not
     /// defined properly, it will be silently dropped and ignored.
     fn perform_point_callback(&mut self, callback_id: u32, widget_id: i32, point: Point) {
-        match *self.callbacks().get(callback_id) {
+        match self.callbacks().get(callback_id) {
             CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
             _ => (),
         }
@@ -236,7 +236,7 @@ pub trait Widget {
     // Callback Setters
 
     /// Sets the closure action to be performed when a mouse enters a `Widget`.
-    fn on_mouse_entered(&mut self, callback: fn(i32)) {
+    fn on_mouse_entered(&mut self, callback: SingleCallback) {
         self.callbacks().put(
             CALLBACK_MOUSE_ENTERED,
             CallbackTypes::SingleCallback { callback },
@@ -244,7 +244,7 @@ pub trait Widget {
     }
 
     /// Sets the closure action to be performed when a mouse exits a `Widget`.
-    fn on_mouse_exited(&mut self, callback: fn(i32)) {
+    fn on_mouse_exited(&mut self, callback: SingleCallback) {
         self.callbacks().put(
             CALLBACK_MOUSE_EXITED,
             CallbackTypes::SingleCallback { callback },
@@ -252,7 +252,7 @@ pub trait Widget {
     }
 
     /// Sets the closure action to be performed when a mouse scrolls inside a `Widget`.
-    fn on_mouse_scrolled(&mut self, callback: fn(i32, Point)) {
+    fn on_mouse_scrolled(&mut self, callback: PointCallback) {
         self.callbacks().put(
             CALLBACK_MOUSE_SCROLLED,
             CallbackTypes::PointCallback { callback },
@@ -260,7 +260,7 @@ pub trait Widget {
     }
 
     /// Sets the closure action to be performed when a mouse moves within a `Widget`.
-    fn on_mouse_moved(&mut self, callback: fn(i32, Point)) {
+    fn on_mouse_moved(&mut self, callback: PointCallback) {
         self.callbacks().put(
             CALLBACK_MOUSE_MOVED,
             CallbackTypes::PointCallback { callback },

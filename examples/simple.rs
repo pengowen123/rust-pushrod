@@ -74,11 +74,14 @@ fn main() {
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
     let factory: GfxFactory = window.factory.clone();
     let mut prod: Pushrod = Pushrod::new(window);
-
+    
     let mut base_widget = BaseWidget::new();
     base_widget.set_origin(50, 80);
     base_widget.set_size(200, 200);
     base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
+    base_widget.on_mouse_entered(Box::new(|widget_id| {
+        eprintln!("Mouse entered widget {}", widget_id);
+    }));
     prod.widget_store.add_widget(Box::new(base_widget));
 
     let mut box_widget = BoxWidget::new();
