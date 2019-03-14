@@ -74,7 +74,7 @@ fn main() {
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
     let factory: GfxFactory = window.factory.clone();
     let mut prod: Pushrod = Pushrod::new(window);
-    
+
     let mut base_widget = BaseWidget::new();
     base_widget.set_origin(50, 80);
     base_widget.set_size(200, 200);

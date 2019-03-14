@@ -64,15 +64,15 @@ pub struct CallbackStore {
 ///     let mut cs = CallbackStore::new();
 ///
 ///     cs.put(CALLBACK_MOUSE_MOVED,
-///         CallbackTypes::PointCallback { callback: |widget_id, point| {
+///         CallbackTypes::PointCallback { callback: Box::new(|widget_id, point| {
 ///             eprintln!("Callback for widget {} resulted in point at {} x {}",
 ///                 widget_id, point.x, point.y);
-///         }
+///         })
 ///     });
 ///
 ///     // And, to call the callback to run it:
 ///
-///     match *cs.get(CALLBACK_MOUSE_MOVED) {
+///     match cs.get(CALLBACK_MOUSE_MOVED) {
 ///         CallbackTypes::PointCallback { callback } =>
 ///             callback(12, Point { x: 16, y: 24 }),
 ///         _ => eprintln!("Unsupported callback for ID {}!", CALLBACK_MOUSE_MOVED),
