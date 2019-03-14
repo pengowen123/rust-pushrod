@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::*;
@@ -42,7 +41,7 @@ impl TextWidget {
             .for_folder("assets")
             .unwrap();
         let ref font = assets.join(font_name.clone());
-        let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+        let glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
         Self {
             config: Configurable::new(),

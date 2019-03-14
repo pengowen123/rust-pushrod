@@ -16,7 +16,6 @@
 use crate::core::point::*;
 use crate::widget::widget::*;
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent

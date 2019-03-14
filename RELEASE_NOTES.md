@@ -13,6 +13,7 @@
 - More optimizations done to Widget class, only implementing config and callbacks.
 - Added setters for callbacks in Widget.
 - Implemented test case use of callbacks in example application.
+- Code clean-up, removed unused code, commented event code temporarily.
 
 ## 0.1.12
 

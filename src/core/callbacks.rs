@@ -14,7 +14,6 @@
 // limitations under the License.
 
 use crate::core::point::Point;
-use crate::event::event::*;
 
 use std::collections::HashMap;
 
