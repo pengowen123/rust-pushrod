@@ -16,7 +16,6 @@
 use crate::core::point::*;
 use crate::widget::widget::*;
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
@@ -37,7 +36,7 @@ pub struct WidgetContainer {
 /// This is the `WidgetStore`, which is used to store `Widget` objects for a `Pushrod`
 /// management object.
 pub struct WidgetStore {
-    /// A vector list of Boxed `WidgetContainer` objects.
+    /// A vector list of `WidgetContainer` objects.
     pub widgets: Vec<WidgetContainer>,
 }
 
@@ -242,6 +241,11 @@ impl WidgetStore {
     /// Callback to `mouse_scrolled` for a `Widget` by ID, with the mouse scroll `Point`.
     pub fn mouse_scrolled_for_id(&mut self, id: i32, point: Point) {
         &self.widgets[id as usize].widget.mouse_scrolled(id, point);
+    }
+
+    /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.
+    pub fn mouse_moved_for_id(&mut self, id: i32, point: Point) {
+        &self.widgets[id as usize].widget.mouse_moved(id, point);
     }
 
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.

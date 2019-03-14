@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -25,6 +25,7 @@ use crate::widget::widget::*;
 /// time,
 pub struct TimerWidget {
     config: Configurable,
+    callbacks: CallbackStore,
     enabled: bool,
     initiated: u64,
     timeout: u64,
@@ -54,6 +55,7 @@ impl TimerWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            callbacks: CallbackStore::new(),
             enabled: true,
             initiated: time_ms(),
             timeout: 0,
@@ -119,6 +121,10 @@ impl Widget for TimerWidget {
         &mut self.config
     }
 
+    fn callbacks(&mut self) -> &mut CallbackStore {
+        &mut self.callbacks
+    }
+
     /// Timer is always invalidated, this way, the tick function is always called on each
     /// screen refresh.
     fn is_invalidated(&mut self) -> bool {
@@ -134,15 +140,6 @@ impl Widget for TimerWidget {
     fn get_size(&mut self) -> crate::core::point::Size {
         make_unsized()
     }
-
-    /// Mouse entered callback is disabled.
-    fn mouse_entered(&mut self, _widget_id: i32) {}
-
-    /// Mouse exited callback is disabled.
-    fn mouse_exited(&mut self, _widget_id: i32) {}
-
-    /// Mouse scrolled callback is disabled.
-    fn mouse_scrolled(&mut self, _widget_id: i32, _point: Point) {}
 
     /// Does not draw anything - only calls the timer `tick()` function to increment the
     /// timer.

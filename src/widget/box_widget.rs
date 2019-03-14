@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
+use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -24,6 +24,7 @@ use crate::widget::widget::*;
 /// draw method to draw the base widget and the border for this box.
 pub struct BoxWidget {
     config: Configurable,
+    callbacks: CallbackStore,
     base_widget: BaseWidget,
 }
 
@@ -33,6 +34,7 @@ impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            callbacks: CallbackStore::new(),
             base_widget: BaseWidget::new(),
         }
     }
@@ -174,6 +176,10 @@ impl Widget for BoxWidget {
         &mut self.config
     }
 
+    fn callbacks(&mut self) -> &mut CallbackStore {
+        &mut self.callbacks
+    }
+
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
     /// coordinates.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
@@ -211,21 +217,6 @@ impl Widget for BoxWidget {
     /// Defaults to white color `[1.0; 4]` if not set.
     fn get_color(&mut self) -> types::Color {
         self.base_widget.get_color()
-    }
-
-    fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("[Box] Mouse entered: id={}", widget_id);
-    }
-
-    fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("[Box] Mouse exited: id={}", widget_id);
-    }
-
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        eprintln!(
-            "[Box] Mouse scrolled: x={} y={}: id={}",
-            point.x, point.y, widget_id
-        );
     }
 
     /// Draws the contents of the widget in this order:

@@ -46,6 +46,7 @@ pub const MASK_EVENT_MOUSE_ALL: EventMask = 0x0000000F;
 pub const MASK_EVENT_ALL: EventMask = MASK_EVENT_MOUSE_ALL;
 
 /// Enumeration types for different `PushrodEvents`, translated from the underlying OS.
+#[derive(Clone)]
 pub enum PushrodEvent {
     /// Mouse event contains a point to where the mouse was moved.
     MouseEvent { point: Point },

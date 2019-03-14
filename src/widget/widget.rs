@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
+use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 
@@ -23,12 +23,11 @@ use crate::widget::config::*;
 ///
 /// You _must_ implement the following methods:
 ///
-/// - get_config
-/// - mouse_entered
-/// - mouse_exited
-/// - mouse_scrolled
+/// - config
+/// - callbacks
 ///
-/// You _should_ override `draw`, but you are not required to.
+/// You _should_ override `draw`, but you are not required to.  (If you don't, however, your
+/// widget won't really do much.)
 ///
 /// If you want a blank base widget, refer to the `BaseWidget`, which will create a
 /// base widget that paints the contents of its bounds with whatever color has been
@@ -60,9 +59,11 @@ pub trait Widget {
     /// ```
     /// # use pushrod::widget::widget::*;
     /// # use pushrod::widget::config::*;
+    /// # use pushrod::core::callbacks::*;
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
     ///   config: Configurable,
+    ///   callbacks: CallbackStore,
     /// }
     ///
     /// impl Widget for MyWidget {
@@ -70,15 +71,24 @@ pub trait Widget {
     ///     &mut self.config
     ///   }
     ///
-    ///  fn mouse_entered(&mut self, widget_id: i32) {}
-    ///  fn mouse_exited(&mut self, widget_id: i32) {}
-    ///  fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {}
+    ///   fn callbacks(&mut self) -> &mut CallbackStore {
+    ///     &mut self.callbacks
+    ///   }
+    ///
+    ///   // Not necessary below, but here for illustration if you want to override these calls.
+    ///   fn mouse_entered(&mut self, widget_id: i32) {}
+    ///   fn mouse_exited(&mut self, widget_id: i32) {}
+    ///   fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {}
     /// }
     /// ```
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
     fn config(&mut self) -> &mut Configurable;
+
+    /// Returns the `CallbackStore` for this `Widget`.  This contains a set of callbacks that only
+    /// apply to this `Widget`.
+    fn callbacks(&mut self) -> &mut CallbackStore;
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
@@ -158,12 +168,15 @@ pub trait Widget {
         }
     }
 
+    /// Indicates to the underlying drawing mechanism as to whether or not this `Widget` needs to
+    /// have drawing clipping automatically applied.
     fn set_autoclip(&mut self, clip: bool) {
         self.config()
             .set(CONFIG_AUTOCLIP, WidgetConfig::Autoclip { clip });
         self.invalidate();
     }
 
+    /// Retrieves the auto clip flag.
     fn get_autoclip(&mut self) -> bool {
         match self.config().get(CONFIG_AUTOCLIP) {
             Some(WidgetConfig::Autoclip { ref clip }) => clip.clone(),
@@ -171,20 +184,91 @@ pub trait Widget {
         }
     }
 
-    // Events
+    // Callbacks
 
-    /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.
-    fn mouse_entered(&mut self, widget_id: i32);
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::SingleCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
+    fn perform_single_callback(&mut self, callback_id: u32, widget_id: i32) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::SingleCallback { callback } => callback(widget_id),
+            _ => (),
+        }
+    }
 
-    /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.
-    fn mouse_exited(&mut self, widget_id: i32);
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::PointCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
+    fn perform_point_callback(&mut self, callback_id: u32, widget_id: i32, point: Point) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
+            _ => (),
+        }
+    }
+
+    // Callback Triggers
+
+    /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.  Only override
+    /// if you want to signal a mouse enter event.
+    fn mouse_entered(&mut self, widget_id: i32) {
+        self.perform_single_callback(CALLBACK_MOUSE_ENTERED, widget_id);
+    }
+
+    /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.  Only override
+    /// if you want to signal a mouse exit event.
+    fn mouse_exited(&mut self, widget_id: i32) {
+        self.perform_single_callback(CALLBACK_MOUSE_EXITED, widget_id);
+    }
 
     /// Called when a scroll event is called within the bounds of the widget.  Includes the widget ID.
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point);
+    /// Only override if you want to signal a mouse scroll event.
+    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
+        self.perform_point_callback(CALLBACK_MOUSE_SCROLLED, widget_id, point.clone());
+    }
+
+    /// Called when the mouse pointer is moved inside a widget.  Includes the widget ID and point.
+    /// Only override if you want to track mouse movement.
+    fn mouse_moved(&mut self, widget_id: i32, point: Point) {
+        self.perform_point_callback(CALLBACK_MOUSE_MOVED, widget_id, point.clone());
+    }
+
+    // Callback Setters
+
+    /// Sets the closure action to be performed when a mouse enters a `Widget`.
+    fn on_mouse_entered(&mut self, callback: SingleCallback) {
+        self.callbacks().put(
+            CALLBACK_MOUSE_ENTERED,
+            CallbackTypes::SingleCallback { callback },
+        );
+    }
+
+    /// Sets the closure action to be performed when a mouse exits a `Widget`.
+    fn on_mouse_exited(&mut self, callback: SingleCallback) {
+        self.callbacks().put(
+            CALLBACK_MOUSE_EXITED,
+            CallbackTypes::SingleCallback { callback },
+        );
+    }
+
+    /// Sets the closure action to be performed when a mouse scrolls inside a `Widget`.
+    fn on_mouse_scrolled(&mut self, callback: PointCallback) {
+        self.callbacks().put(
+            CALLBACK_MOUSE_SCROLLED,
+            CallbackTypes::PointCallback { callback },
+        );
+    }
+
+    /// Sets the closure action to be performed when a mouse moves within a `Widget`.
+    fn on_mouse_moved(&mut self, callback: PointCallback) {
+        self.callbacks().put(
+            CALLBACK_MOUSE_MOVED,
+            CallbackTypes::PointCallback { callback },
+        );
+    }
 
     // Draw routines
 
-    /// Draws the contents of the widget, provided a `piston2d` `Context` and `GlGraphics` object.
+    /// Draws the contents of the widget, provided a `piston2d` `Context` and `G2d` object.
     ///
     /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
@@ -213,6 +297,7 @@ pub trait Widget {
 /// not contain any special logic other than being a base for a display layer.
 pub struct BaseWidget {
     config: Configurable,
+    callbacks: CallbackStore,
 }
 
 /// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
@@ -221,13 +306,14 @@ impl BaseWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            callbacks: CallbackStore::new(),
         }
     }
 }
 
 /// Implementation of the `BaseWidget` object with the `Widget` traits implemented.
-/// This function only implements `get_config`, and samples of `mouse_entered`, `mouse_exited`,
-/// and `mouse_scrolled`, which currently trigger messages to the screen.
+/// This function only implements `config` and `callbacks`, which are used as a base for
+/// all `Widget`s.
 ///
 /// Example usage:
 /// ```no_run
@@ -268,18 +354,7 @@ impl Widget for BaseWidget {
         &mut self.config
     }
 
-    fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("[Base] Mouse entered: id={}", widget_id);
-    }
-
-    fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("[Base] Mouse exited: id={}", widget_id);
-    }
-
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        eprintln!(
-            "[Base] Mouse scrolled: x={} y={}: id={}",
-            point.x, point.y, widget_id
-        );
+    fn callbacks(&mut self) -> &mut CallbackStore {
+        &mut self.callbacks
     }
 }

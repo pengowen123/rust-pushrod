@@ -3,15 +3,14 @@
 ## 0.1.x -> 0.2.0
 
 - [ ] Widget/Run Loop Library Changes
-  - [ ] Change Widget object to be generic so that settings and calls are made against the widget, not the trait
+  - [ ] Implement callbacks for Pushrod and Widgets
+  - [ ] Change Widget object to be generic so that settings and calls are made against the widget (set as an enum)
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
   - [ ] Implement proper resize - currently horribly broken
   - [ ] Implement visibility
-  - [ ] Re-assign framebuffers when window switches between physical screens
 - [ ] Improve Signal Events
-  - [ ] Implement signal masks so widgets can decide which signals to receive
   - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
@@ -58,6 +57,8 @@
   - [x] Move Configurable struct and impl to their own external file
   - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
   - [x] Refactor code to use a single window and single set of widgets in a container
+- [ ] Improve Signal Events
+  - [x] Implement Closure callback cache for widgets
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [x] Box Widget with Border Width and Color
   - [x] Clip
@@ -76,6 +77,9 @@
   - [ ] Progress Indicator
   - [ ] Popup Menu
   - [ ] Editable Text Box
+- [ ] Resource Manager
+  - [ ] Store widgets in a centralized resource manager so that they can be (de)serialized to store
+  - [ ] Allow for manipulation of widgets by ID through resource manager
 - [ ] Widget States
   - [ ] Enabled/Disabled (disabled means no callback interactions from event loop)
   - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)

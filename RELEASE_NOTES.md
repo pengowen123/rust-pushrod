@@ -1,5 +1,20 @@
 # Pushrod Releases
 
+## 0.1.13
+
+- Removed texture creation and renewal code.
+- Made `PushrodEvent` type cloneable.
+- Changed mouse button callbacks to contain default functions.
+- Added mouse moved, button down, and button up callbacks; changed all mouse calls to default empty function bodies.
+- Optimized timer, box, and text widgets, removed functions that previously needed to be overridden.
+- Added SingleCallback and PointCallback for closures.
+- Added callbacks(&mut self) call to all widgets to allow for callback/closure storage.
+- Added callbacks for mouse enter, exit, scroll, and move.
+- More optimizations done to Widget class, only implementing config and callbacks.
+- Added setters for callbacks in Widget.
+- Implemented test case use of callbacks in example application.
+- Code clean-up, removed unused code, commented event code temporarily.
+
 ## 0.1.12
 
 - Removed OpenGL specification in constructor for Pushrod runtime.

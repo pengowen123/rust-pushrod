@@ -15,14 +15,8 @@
 
 use crate::core::point::*;
 use crate::core::widget_store::*;
-use crate::event::event::*;
 
-use gl::types::GLuint;
-use graphics::math::*;
-use opengl_graphics::{GlGraphics, Texture};
 use piston_window::*;
-
-use std::cell::RefCell;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
@@ -34,11 +28,8 @@ use std::cell::RefCell;
 pub struct Pushrod {
     window: PistonWindow,
     pub widget_store: WidgetStore,
-    event_listeners: RefCell<Vec<Box<EventListener>>>,
-    event_list: RefCell<Vec<PushrodEvent>>,
-    texture_buf: Box<Vec<u8>>,
-    texture: Texture,
-    fbo: GLuint,
+//    event_listeners: RefCell<Vec<Box<EventListener>>>,
+//    event_list: RefCell<Vec<PushrodEvent>>,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
@@ -66,11 +57,8 @@ impl Pushrod {
         Self {
             window,
             widget_store: WidgetStore::new(),
-            event_listeners: RefCell::new(Vec::new()),
-            event_list: RefCell::new(Vec::new()),
-            texture_buf: Box::new(vec![0u8; 1]),
-            texture: Texture::empty(&TextureSettings::new()).unwrap(),
-            fbo: 0,
+//            event_listeners: RefCell::new(Vec::new()),
+//            event_list: RefCell::new(Vec::new()),
         }
     }
 
@@ -138,122 +126,88 @@ impl Pushrod {
     ///     prod.run();
     /// }
     /// ```
-    pub fn add_event_listener_for_window(&self, listener: Box<EventListener>) {
-        //        self.event_listeners.borrow_mut().push(listener);
-    }
-
-    /*
-     * By handling events internally, we bypass the risk of the user having to interpret each
-     * event, and having to figure out how to dispatch those events to any widgets that might be
-     * in the display area.  Events will eventually be dispatched using a "dispatch all" method,
-     * which will be done at the end of the event loop.  Any draw routines will be done within
-     * the render_args() area, and a separate event will be sent out for that, as drawing
-     * should be done at the end of all event processing, within the rendering loop, not the
-     * updating loop (UPS vs. FPS)
-     */
-
-    fn internal_handle_mouse_move(&self, point: Point) {
-        //        // Send the point movement to the widget event handler.
-        //
-        //        self.event_list
-        //            .borrow_mut()
-        //            .push(PushrodEvent::MouseEvent { point });
-    }
-
-    fn internal_handle_mouse_button(&self, button: ButtonArgs) {
-        //        // Send the button click to the widget event handler.
-        //
-        //        if button.state == ButtonState::Press {
-        //            match button.button {
-        //                Button::Mouse(button) => {
-        //                    self.event_list
-        //                        .borrow_mut()
-        //                        .push(PushrodEvent::MouseDownEvent { button });
-        //                }
-        //                _ => (),
-        //            }
-        //        } else if button.state == ButtonState::Release {
-        //            match button.button {
-        //                Button::Mouse(button) => {
-        //                    self.event_list
-        //                        .borrow_mut()
-        //                        .push(PushrodEvent::MouseUpEvent { button });
-        //                }
-        //                _ => (),
-        //            }
-        //        }
-    }
-
-    fn internal_handle_mouse_scroll(&self, point: Point) {
-        //        // Send the mouse scroll to the widget event handler.
-        //
-        //        self.event_list
-        //            .borrow_mut()
-        //            .push(PushrodEvent::MouseScrollEvent { point });
-    }
-
-    fn internal_dispatch_events(&self) {
-        //        for event in self.event_list.borrow_mut().iter() {
-        //            for listener in self.event_listeners.borrow_mut().iter() {
-        //                let event_mask = self.internal_derive_event_mask(event);
-        //
-        //                if listener.event_mask() & event_mask == event_mask {
-        //                    listener.handle_event(event);
-        //                }
-        //            }
-        //        }
-        //
-        //        self.event_list.borrow_mut().clear();
-    }
-
-    fn internal_derive_event_mask(&self, event: &PushrodEvent) -> EventMask {
-        //        match event {
-        //            PushrodEvent::MouseEvent { point: _ } => MASK_EVENT_MOUSE_MOVED,
-        //            PushrodEvent::MouseDownEvent { button: _ } => MASK_EVENT_MOUSE_DOWN,
-        //            PushrodEvent::MouseUpEvent { button: _ } => MASK_EVENT_MOUSE_UP,
-        //            PushrodEvent::MouseScrollEvent { point: _ } => MASK_EVENT_MOUSE_SCROLL,
-        //        }
-        0
-    }
-
-    fn handle_resize(&mut self, width: u32, height: u32) {
-        self.texture_buf = Box::new(vec![0u8; width as usize * height as usize]);
-        self.texture =
-            Texture::from_memory_alpha(&self.texture_buf, width, height, &TextureSettings::new())
-                .unwrap();
-
-        // I hate this code.  However, this does prepare a texture so that an image can be
-        // drawn on it.  Since it's in memory, it means that the texture only gets recreated once
-        // per resize.
-        unsafe {
-            let mut fbos: [GLuint; 1] = [0];
-
-            gl::GenFramebuffers(1, fbos.as_mut_ptr());
-            self.fbo = fbos[0];
-
-            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-            gl::FramebufferTexture2D(
-                gl::FRAMEBUFFER,
-                gl::COLOR_ATTACHMENT0,
-                gl::TEXTURE_2D,
-                self.texture.get_id(),
-                0,
-            );
-        }
-    }
-
-    fn switch_fb(&mut self, fb: GLuint) {
-        unsafe {
-            gl::BindFramebuffer(gl::FRAMEBUFFER, fb);
-        }
-    }
+//    pub fn add_event_listener_for_window(&self, _listener: Box<EventListener>) {
+//        //        self.event_listeners.borrow_mut().push(listener);
+//    }
+//
+//    /*
+//     * By handling events internally, we bypass the risk of the user having to interpret each
+//     * event, and having to figure out how to dispatch those events to any widgets that might be
+//     * in the display area.  Events will eventually be dispatched using a "dispatch all" method,
+//     * which will be done at the end of the event loop.  Any draw routines will be done within
+//     * the render_args() area, and a separate event will be sent out for that, as drawing
+//     * should be done at the end of all event processing, within the rendering loop, not the
+//     * updating loop (UPS vs. FPS)
+//     */
+//
+//    fn internal_handle_mouse_move(&self, _point: Point) {
+//        //        // Send the point movement to the widget event handler.
+//        //
+//        //        self.event_list
+//        //            .borrow_mut()
+//        //            .push(PushrodEvent::MouseEvent { point });
+//    }
+//
+//    fn internal_handle_mouse_button(&self, _button: ButtonArgs) {
+//        //        // Send the button click to the widget event handler.
+//        //
+//        //        if button.state == ButtonState::Press {
+//        //            match button.button {
+//        //                Button::Mouse(button) => {
+//        //                    self.event_list
+//        //                        .borrow_mut()
+//        //                        .push(PushrodEvent::MouseDownEvent { button });
+//        //                }
+//        //                _ => (),
+//        //            }
+//        //        } else if button.state == ButtonState::Release {
+//        //            match button.button {
+//        //                Button::Mouse(button) => {
+//        //                    self.event_list
+//        //                        .borrow_mut()
+//        //                        .push(PushrodEvent::MouseUpEvent { button });
+//        //                }
+//        //                _ => (),
+//        //            }
+//        //        }
+//    }
+//
+//    fn internal_handle_mouse_scroll(&self, _point: Point) {
+//        //        // Send the mouse scroll to the widget event handler.
+//        //
+//        //        self.event_list
+//        //            .borrow_mut()
+//        //            .push(PushrodEvent::MouseScrollEvent { point });
+//    }
+//
+//    fn internal_dispatch_events(&self) {
+//        //        for event in self.event_list.borrow_mut().iter() {
+//        //            for listener in self.event_listeners.borrow_mut().iter() {
+//        //                let event_mask = self.internal_derive_event_mask(event);
+//        //
+//        //                if listener.event_mask() & event_mask == event_mask {
+//        //                    listener.handle_event(event);
+//        //                }
+//        //            }
+//        //        }
+//        //
+//        //        self.event_list.borrow_mut().clear();
+//    }
+//
+//    fn internal_derive_event_mask(&self, _event: &PushrodEvent) -> EventMask {
+//        //        match event {
+//        //            PushrodEvent::MouseEvent { point: _ } => MASK_EVENT_MOUSE_MOVED,
+//        //            PushrodEvent::MouseDownEvent { button: _ } => MASK_EVENT_MOUSE_DOWN,
+//        //            PushrodEvent::MouseUpEvent { button: _ } => MASK_EVENT_MOUSE_UP,
+//        //            PushrodEvent::MouseScrollEvent { point: _ } => MASK_EVENT_MOUSE_SCROLL,
+//        //        }
+//        0
+//    }
 
     fn handle_draw(&mut self, event: &Event) {
-        let mut widgets = &mut self.widget_store;
+        let widgets = &mut self.widget_store;
 
-        self.window.draw_2d(event, |c, g| {
-            widgets.draw(0, c, g);
-        });
+        self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
     }
 
     /// This is the main run loop that is called to process all UI events.  This loop is responsible
@@ -275,12 +229,9 @@ impl Pushrod {
     /// events, the next window is then processed.  No particular window takes precidence - any
     /// window that has events to process gets handled in order.
     pub fn run(&mut self) {
-        let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
-        let draw_size = self.window.draw_size();
-
-        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
+//        let draw_size = self.window.draw_size();
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -291,11 +242,19 @@ impl Pushrod {
                 {
                     previous_mouse_position = mouse_point.clone();
 
-                    self.internal_handle_mouse_move(mouse_point.clone());
-
-                    let current_widget_id = self.widget_store.get_widget_id_for_point(mouse_point);
+                    let current_widget_id = self
+                        .widget_store
+                        .get_widget_id_for_point(mouse_point.clone());
                     let current_parent_for_widget =
                         self.widget_store.get_parent_of(current_widget_id);
+
+//                    self.internal_handle_mouse_move(mouse_point.clone());
+
+                    // Handles the mouse move callback.
+                    if current_widget_id != -1 {
+                        self.widget_store
+                            .mouse_moved_for_id(current_widget_id, mouse_point.clone());
+                    }
 
                     if current_widget_id != last_widget_id {
                         if last_widget_id != -1 {
@@ -318,14 +277,14 @@ impl Pushrod {
                 }
             });
 
-            event.button(|button| {
-                self.internal_handle_mouse_button(button);
-            });
+//            event.button(|button| {
+//                self.internal_handle_mouse_button(button);
+//            });
 
             event.mouse_scroll(|x, y| {
                 let mouse_point = make_point_f64(x, y);
 
-                self.internal_handle_mouse_scroll(mouse_point.clone());
+//                self.internal_handle_mouse_scroll(mouse_point.clone());
 
                 if last_widget_id != -1 {
                     self.widget_store
@@ -333,17 +292,16 @@ impl Pushrod {
                 }
             });
 
-            event.resize(|width, height| {
-                self.handle_resize(width as u32, height as u32);
+            event.resize(|_, _| {
                 self.widget_store.invalidate_all_widgets();
             });
 
             // Dispatch events here in the bus
-            self.internal_dispatch_events();
+//            self.internal_dispatch_events();
 
             // FPS loop handling
 
-            event.render(|args| {
+            event.render(|_| {
                 self.handle_draw(&event);
                 self.widget_store.invalidate_all_widgets();
             });

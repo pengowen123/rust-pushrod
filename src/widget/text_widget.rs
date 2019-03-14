@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
+use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -24,6 +24,7 @@ use crate::widget::widget::*;
 /// no accessable objects, they are all internal to `TextWidget`'s implementation.
 pub struct TextWidget {
     config: Configurable,
+    callbacks: CallbackStore,
     font_cache: Glyphs,
     text: String,
     font_size: u32,
@@ -40,10 +41,11 @@ impl TextWidget {
             .for_folder("assets")
             .unwrap();
         let ref font = assets.join(font_name.clone());
-        let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+        let glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
         Self {
             config: Configurable::new(),
+            callbacks: CallbackStore::new(),
             font_cache: glyphs,
             text,
             font_size,
@@ -80,7 +82,9 @@ impl TextWidget {
         clear([0.0, 0.0, 0.0, 1.0], g);
 
         let origin: Point = self.get_origin();
-        let transform = c.transform.trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
+        let transform = c
+            .transform
+            .trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
 
         text(
             [0.0, 0.0, 1.0, 1.0],
@@ -89,7 +93,8 @@ impl TextWidget {
             &mut self.font_cache,
             transform,
             g,
-        ).unwrap();
+        )
+        .unwrap();
     }
 }
 
@@ -134,19 +139,8 @@ impl Widget for TextWidget {
         &mut self.config
     }
 
-    fn mouse_entered(&mut self, widget_id: i32) {
-        eprintln!("[Text] Mouse entered: id={}", widget_id);
-    }
-
-    fn mouse_exited(&mut self, widget_id: i32) {
-        eprintln!("[Text] Mouse exited: id={}", widget_id);
-    }
-
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        eprintln!(
-            "[Text] Mouse scrolled: x={} y={}: id={}",
-            point.x, point.y, widget_id
-        );
+    fn callbacks(&mut self) -> &mut CallbackStore {
+        &mut self.callbacks
     }
 
     /// Draws the contents of the widget.
