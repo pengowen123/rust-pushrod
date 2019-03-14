@@ -21,6 +21,8 @@ use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
+pub const CALLBACK_TIMER: u32 = 100;
+
 /// This is the `TimerWidget`.  It contains no base widget, it only contains a start and end
 /// time,
 pub struct TimerWidget {
@@ -29,7 +31,6 @@ pub struct TimerWidget {
     enabled: bool,
     initiated: u64,
     timeout: u64,
-    timeout_function: Box<Fn() -> ()>,
 }
 
 /// Helper function that returns the current time in milliseconds since the `UNIX_EPOCH`.  This
@@ -59,7 +60,6 @@ impl TimerWidget {
             enabled: true,
             initiated: time_ms(),
             timeout: 0,
-            timeout_function: Box::new(|| {}),
         }
     }
 
@@ -74,7 +74,7 @@ impl TimerWidget {
 
         if elapsed > self.timeout {
             self.initiated = time_ms();
-            (self.timeout_function)();
+            self.timeout();
         }
     }
 
@@ -88,8 +88,19 @@ impl TimerWidget {
 
     /// Sets the closure function for the timer when a timeout has been triggered.  This closure
     /// needs to be `Boxed`.
-    pub fn on_timeout(&mut self, timeout_function: Box<Fn() -> ()>) {
-        self.timeout_function = timeout_function;
+    pub fn on_timeout(&mut self, callback: BlankCallback) {
+        self.callbacks().put(
+            CALLBACK_TIMER,
+            CallbackTypes::BlankCallback { callback },
+        );
+    }
+
+    /// Calls the timeout function.
+    fn timeout(&mut self) {
+        match self.callbacks().get(CALLBACK_TIMER) {
+            CallbackTypes::BlankCallback { callback } => callback(),
+            _ => (),
+        }
     }
 
     /// Sets the timeout in milliseconds for this timer.  Will trigger a call to the function

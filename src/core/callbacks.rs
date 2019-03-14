@@ -33,6 +33,7 @@ pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
 /// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_MOVED: u32 = 4;
 
+pub type BlankCallback = Box<Fn() -> ()>;
 pub type SingleCallback = Box<Fn(i32) -> ()>;
 pub type PointCallback = Box<Fn(i32, Point) -> ()>;
 
@@ -40,6 +41,9 @@ pub type PointCallback = Box<Fn(i32, Point) -> ()>;
 /// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
 /// can be added to/extended as necessary.
 pub enum CallbackTypes {
+    /// Callback that calls a function without any data.
+    BlankCallback { callback: BlankCallback },
+
     /// Callback that only supplies its widget ID.
     SingleCallback { callback: SingleCallback },
 
