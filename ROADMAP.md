@@ -3,7 +3,6 @@
 ## 0.1.x -> 0.2.0
 
 - [ ] Widget/Run Loop Library Changes
-  - [ ] Implement callbacks for Pushrod and Widgets
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget (set as an enum)
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
@@ -15,7 +14,7 @@
   - [ ] Implement Double Click
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
 - [ ] Implement Graphics Translation Library
-  - [ ] Implement a graphics library that is uniform and not independent of any Rust library
+  - [ ] Implement a graphics library that is uniform and not dependent of any Rust library
   - [ ] Draw Rounded Rectangle
   - [ ] Draw Ellipse
   - [ ] Draw Arc
@@ -57,6 +56,7 @@
   - [x] Move Configurable struct and impl to their own external file
   - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
   - [x] Refactor code to use a single window and single set of widgets in a container
+  - [x] Implement callbacks for Pushrod and Widgets
 - [ ] Improve Signal Events
   - [x] Implement Closure callback cache for widgets
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
