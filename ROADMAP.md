@@ -7,8 +7,6 @@
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
-  - [ ] Implement proper resize - currently horribly broken
-  - [ ] Implement visibility
 - [ ] Improve Signal Events
   - [ ] Implement for Mouse Click (Single click)
   - [ ] Implement Double Click
@@ -80,9 +78,12 @@
 - [ ] Resource Manager
   - [ ] Store widgets in a centralized resource manager so that they can be (de)serialized to store
   - [ ] Allow for manipulation of widgets by ID through resource manager
+  - [ ] Create dialog boxes (windows) with builder
 - [ ] Widget States
   - [ ] Enabled/Disabled (disabled means no callback interactions from event loop)
   - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)
+- [ ] Widget/Run Loop Library Changes
+  - [ ] Implement visibility
 - [ ] Main loop
   - [ ] Object focus
   - [ ] Window focus
