@@ -26,11 +26,6 @@
 //! ```ignore
 //! [dependencies]
 //! piston_window = "^0.89.0"
-//! piston2d-opengl_graphics = "^0.59.0"
-//! piston2d-graphics = "^0.30.0"
-//! gfx_core = "^0.9.0"
-//! gfx_device_gl = "^0.16.0"
-//! gl = "^0.11.0"
 //! find_folder = "^0.3.0"
 //! ```
 
