@@ -25,5 +25,7 @@ pub mod timer_widget;
 /// Text component: draws text on the screen with an adjustable text, font size, color, and font name.
 pub mod text_widget;
 
+pub mod image_widget;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;

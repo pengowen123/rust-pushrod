@@ -20,6 +20,7 @@ use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
+use pushrod::widget::image_widget::*;
 use pushrod::widget::widget::*;
 
 fn main() {
@@ -69,6 +70,11 @@ fn main() {
     box_3.set_border([1.0, 0.0, 1.0, 1.0], 1);
     prod.widget_store
         .add_widget_to_parent(Box::new(box_3), box_1_id);
+
+    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
+    image_widget.set_origin(50, 300);
+    image_widget.set_size(150, 150);
+    prod.widget_store.add_widget(Box::new(image_widget));
 
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);
