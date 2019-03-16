@@ -33,8 +33,13 @@ pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
 /// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_MOVED: u32 = 4;
 
+/// Callback type that takes no input parameters.
 pub type BlankCallback = Box<Fn() -> ()>;
+
+/// Callback type that accepts a widget ID as its input parameter.
 pub type SingleCallback = Box<Fn(i32) -> ()>;
+
+/// Callback type that accepts a widget ID and a `Point` on the screen as its input parameter.
 pub type PointCallback = Box<Fn(i32, Point) -> ()>;
 
 /// This is an enumerated type that is used to store numerous variations of callbacks that can

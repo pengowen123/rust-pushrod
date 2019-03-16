@@ -8,19 +8,7 @@
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
 - [ ] Improve Signal Events
-  - [ ] Implement for Mouse Click (Single click)
-  - [ ] Implement Double Click
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
-- [ ] Implement Graphics Translation Library
-  - [ ] Implement a graphics library that is uniform and not dependent of any Rust library
-  - [ ] Draw Rounded Rectangle
-  - [ ] Draw Ellipse
-  - [ ] Draw Arc
-  - [ ] Draw Circle
-  - [ ] Draw Poly
-  - [ ] Draw Image
-  - [ ] Fill Area (Rectangle)
-  - [ ] Translate Points based on Origin/Size
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [ ] Image
   - [ ] Button
@@ -75,6 +63,12 @@
   - [ ] Progress Indicator
   - [ ] Popup Menu
   - [ ] Editable Text Box
+- [ ] Callbacks
+  - [ ] Implement for Mouse Click (Single click)
+  - [ ] Implement Double Click
+  - [ ] Implement Apple-like Mouse-up-inside
+  - [ ] Implement Apple-like Mouse-up-outside
+  - [ ] Create callbacks with a single option, contains event information instead of multiple callback types
 - [ ] Resource Manager
   - [ ] Store widgets in a centralized resource manager so that they can be (de)serialized to store
   - [ ] Allow for manipulation of widgets by ID through resource manager
@@ -84,6 +78,8 @@
   - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)
 - [ ] Widget/Run Loop Library Changes
   - [ ] Implement visibility
+  - [ ] Improve callbacks to use enum to define input parameters for each callback type
+  - [ ] Implement enum for different `Widget` types.
 - [ ] Main loop
   - [ ] Object focus
   - [ ] Window focus
