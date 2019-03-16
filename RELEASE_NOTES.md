@@ -5,7 +5,9 @@
 - Made a new `BlankCallback` type for timer
 - Changed timer code to use the `BlankCallback` in the CallbackStore.
 - Optimized Cargo.toml file to only include one dependency: piston.
-- Added Image widget.
+- Modified run loop to include window factory object retrieval.
+- Added Image widget, added official 512x512 logo.
+- Fixed text widget so it uses the text color when drawing text.
 
 ## 0.1.14
 

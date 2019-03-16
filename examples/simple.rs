@@ -20,7 +20,6 @@ use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
-use pushrod::widget::image_widget::*;
 use pushrod::widget::widget::*;
 
 fn main() {
@@ -80,13 +79,13 @@ fn main() {
     let mut text_widget = TextWidget::new(
         factory,
         "OpenSans-Regular.ttf".to_string(),
-        "Welcome to Pushrod!".to_string(),
+        "Welcome to rust-pushrod!".to_string(),
         32,
     );
-    text_widget.set_origin(8, 8);
+    text_widget.set_origin(14, 8);
     text_widget.set_size(400, 40);
     text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-    text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
+    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
     prod.widget_store.add_widget(Box::new(text_widget));
 
 //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));

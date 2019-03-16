@@ -87,7 +87,7 @@ impl TextWidget {
             .trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
 
         text(
-            [0.0, 0.0, 1.0, 1.0],
+            self.get_text_color(),
             self.font_size,
             &self.text,
             &mut self.font_cache,
