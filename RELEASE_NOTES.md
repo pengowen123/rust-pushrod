@@ -5,6 +5,7 @@
 - Made a new `BlankCallback` type for timer
 - Changed timer code to use the `BlankCallback` in the CallbackStore.
 - Optimized Cargo.toml file to only include one dependency: piston.
+- Added Image widget.
 
 ## 0.1.14
 
