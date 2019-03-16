@@ -20,10 +20,11 @@ use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
+use pushrod::widget::image_widget::*;
 use pushrod::widget::widget::*;
 
 fn main() {
-    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(false)
         .build()
@@ -69,6 +70,20 @@ fn main() {
     box_3.set_border([1.0, 0.0, 1.0, 1.0], 1);
     prod.widget_store
         .add_widget_to_parent(Box::new(box_3), box_1_id);
+
+    let assets = find_folder::Search::ParentsThenKids(3, 3)
+        .for_folder("assets").unwrap();
+    let rust_logo = assets.join("rust-logo-128x128.png");
+    let mut image_widget = ImageWidget::new(Texture::from_path(
+        prod.get_factory(),
+        &rust_logo,
+        Flip::None,
+        &TextureSettings::new()
+    ).unwrap());
+    image_widget.set_origin(50, 230);
+    image_widget.set_size(128, 128);
+    prod.widget_store
+        .add_widget(Box::new(image_widget));
 
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);

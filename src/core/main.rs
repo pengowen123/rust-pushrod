@@ -159,6 +159,10 @@ impl Pushrod {
 //        0
 //    }
 
+    pub fn get_factory(&mut self) -> &mut GfxFactory {
+        &mut self.window.factory
+    }
+
     fn handle_draw(&mut self, event: &Event) {
         let widgets = &mut self.widget_store;
 
