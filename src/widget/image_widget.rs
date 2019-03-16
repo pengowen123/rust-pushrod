@@ -102,14 +102,11 @@ impl Widget for ImageWidget {
 
         let origin = self.get_origin();
         let size = self.get_size();
-        let transform = c.transform.trans(origin.x as f64, origin.y as f64);
+        let transform = c.transform.trans((origin.x * 2) as f64, (origin.y * 2) as f64);
 
         // Compute clip rectangle from upper left corner.
-        let (clip_x, clip_y, clip_w, clip_h) = (origin.x as u32, origin.y as u32, size.w as u32, size.h as u32);
+        let (clip_x, clip_y, clip_w, clip_h) = ((origin.x * 2) as u32, (origin.y * 2) as u32, (size.w * 2) as u32, (size.h * 2) as u32);
         let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
-
-        Rectangle::new([1.0, 0.0, 0.0, 1.0])
-            .draw([origin.x as f64, origin.y as f64, size.w as f64, size.h as f64], &c.draw_state, c.transform, g);
 
         Image::new().draw(&self.image, &clipped, transform, g);
 
