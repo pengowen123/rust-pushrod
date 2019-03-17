@@ -98,17 +98,23 @@ impl Widget for ImageWidget {
 
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d) {
-        clear([1.0; 4], g);
+        clear(self.get_color(), g);
 
         let origin = self.get_origin();
         let size = self.get_size();
-        let transform = c.transform.trans((origin.x * 2) as f64, (origin.y * 2) as f64);
-
-        // Compute clip rectangle from upper left corner.
-        let (clip_x, clip_y, clip_w, clip_h) = ((origin.x * 2) as u32, (origin.y * 2) as u32, (size.w * 2) as u32, (size.h * 2) as u32);
+        let transform = c.transform.trans(origin.x as f64, origin.y as f64).scale(0.50, 0.50);
+        let (clip_x, clip_y, clip_w, clip_h) = (origin.x as u32, origin.y as u32, size.w as u32, size.h as u32);
         let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
 
-        Image::new().draw(&self.image, &clipped, transform, g);
+        image(&self.image, transform, g);
+
+//        let transform = c.transform.trans((origin.x * 2) as f64, (origin.y * 2) as f64).scale(0.50, 0.50);
+//
+//        // Compute clip rectangle from upper left corner.
+//        let (clip_x, clip_y, clip_w, clip_h) = ((origin.x * 2) as u32, (origin.y * 2) as u32, (size.w * 2) as u32, (size.h * 2) as u32);
+//        let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
+//
+//        Image::new().draw(&self.image, &clipped, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();

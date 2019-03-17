@@ -74,12 +74,13 @@ fn main() {
     let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
     image_widget.set_origin(50, 300);
     image_widget.set_size(150, 150);
+    image_widget.set_color([1.0; 4]);
     prod.widget_store.add_widget(Box::new(image_widget));
 
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);
     timer.set_enabled(true);
-    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
+//    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
     prod.widget_store.add_widget(Box::new(timer));
 
     let mut text_widget = TextWidget::new(
@@ -88,11 +89,11 @@ fn main() {
         "Welcome to rust-pushrod!".to_string(),
         32,
     );
-    text_widget.set_origin(14, 8);
-    text_widget.set_size(400, 40);
-    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
-    prod.widget_store.add_widget(Box::new(text_widget));
+//    text_widget.set_origin(14, 8);
+//    text_widget.set_size(400, 40);
+//    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
+//    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
+//    prod.widget_store.add_widget(Box::new(text_widget));
 
 //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 
