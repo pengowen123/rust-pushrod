@@ -25,6 +25,7 @@ pub struct ImageWidget {
     config: Configurable,
     callbacks: CallbackStore,
     image: G2dTexture,
+    image_size: crate::core::point::Size,
 }
 
 /// Implementation of the constructor for the `ImageWidget`.  Creates a new image object to be
@@ -37,16 +38,18 @@ impl ImageWidget {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
             .unwrap();
+        let texture = Texture::from_path(
+            factory,
+            &assets.join(image_name),
+            Flip::None,
+            &TextureSettings::new()
+        ).unwrap();
 
         Self {
             config: Configurable::new(),
             callbacks: CallbackStore::new(),
-            image: Texture::from_path(
-                factory,
-                &assets.join(image_name),
-                Flip::None,
-                &TextureSettings::new()
-            ).unwrap(),
+            image: texture.clone(),
+            image_size: crate::core::point::Size { w: texture.clone().get_size().0 as i32, h: texture.clone().get_size().1 as i32 },
         }
     }
 }
@@ -102,7 +105,9 @@ impl Widget for ImageWidget {
 
         let origin = self.get_origin();
         let size = self.get_size();
-        let transform = c.transform.trans(origin.x as f64, origin.y as f64).scale(0.50, 0.50);
+        let scale_w = (size.w as f64 / self.image_size.w as f64);
+        let scale_h = (size.h as f64 / self.image_size.h as f64);
+        let transform = c.transform.trans(origin.x as f64, origin.y as f64).scale(scale_w, scale_h);
         let (clip_x, clip_y, clip_w, clip_h) = (origin.x as u32, origin.y as u32, size.w as u32, size.h as u32);
         let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
 

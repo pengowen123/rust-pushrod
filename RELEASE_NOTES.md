@@ -7,6 +7,7 @@
 - Optimized Cargo.toml file to only include one dependency: piston.
 - Modified run loop to include window factory object retrieval.
 - Added Image widget, added official 512x512 logo.
+- Added Image auto-scaling when drawing.
 - Fixed text widget so it uses the text color when drawing text.
 - Currently, text is causing issues with image display
 
