@@ -10,7 +10,7 @@
 - [ ] Improve Signal Events
   - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
-  - [ ] Image
+  - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
 - [ ] More examples
 
@@ -51,7 +51,7 @@
 - [ ] Implement Graphics Translation Library
   - [x] Draw Box
   - [x] Timer
-  - [x] Text box (use Google Font Library, as it's the most uniform/generic)
+  - [x] Image
 
 ## 0.2.x -> 0.3.0
 
