@@ -79,7 +79,7 @@ impl TextWidget {
     /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
     /// based on text justification, and other optional padding, once padding is introduced.)
     pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
-        clear([0.0, 0.0, 0.0, 1.0], g);
+        clear([1.0; 4], g);
 
         let origin: Point = self.get_origin();
         let transform = c

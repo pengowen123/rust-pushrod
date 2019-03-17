@@ -7,8 +7,10 @@
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
-- [ ] Improve Signal Events
-  - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
+- [ ] Improvements
+  - [ ] Automatically clip and modify context for widget drawing
+  - [ ] Auto reset context after drawing
+  - [ ] Treat drawing code as points from 0x0 instead of relative to screen
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
   - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
