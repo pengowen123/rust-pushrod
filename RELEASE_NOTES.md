@@ -8,6 +8,7 @@
 - Modified run loop to include window factory object retrieval.
 - Added Image widget, added official 512x512 logo.
 - Fixed text widget so it uses the text color when drawing text.
+- Currently, text is causing issues with image display
 
 ## 0.1.14
 
