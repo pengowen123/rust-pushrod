@@ -9,7 +9,7 @@
 - Added Image widget, added official 512x512 logo.
 - Added Image auto-scaling when drawing.
 - Fixed text widget so it uses the text color when drawing text.
-- Currently, text is causing issues with image display
+- Currently, text is causing issues with image display.
 
 ## 0.1.14
 

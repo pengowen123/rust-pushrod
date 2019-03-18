@@ -32,17 +32,17 @@ fn main() {
     let factory: GfxFactory = window.factory.clone();
     let mut prod: Pushrod = Pushrod::new(window);
 
-    let mut text_widget = TextWidget::new(
-        factory,
-        "OpenSans-Regular.ttf".to_string(),
-        "Welcome to rust-pushrod!".to_string(),
-        32,
-    );
-    text_widget.set_origin(14, 8);
-    text_widget.set_size(400, 40);
-    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
-    prod.widget_store.add_widget(Box::new(text_widget));
+//    let mut text_widget = TextWidget::new(
+//        factory,
+//        "OpenSans-Regular.ttf".to_string(),
+//        "Welcome to rust-pushrod!".to_string(),
+//        32,
+//    );
+//    text_widget.set_origin(14, 8);
+//    text_widget.set_size(400, 40);
+//    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
+//    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
+//    prod.widget_store.add_widget(Box::new(text_widget));
 
     let mut base_widget = BaseWidget::new();
     base_widget.set_origin(50, 80);
