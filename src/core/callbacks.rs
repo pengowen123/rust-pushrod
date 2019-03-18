@@ -105,9 +105,12 @@ impl CallbackStore {
         if self.callbacks.contains_key(&id) {
             &self.callbacks[&id]
         } else {
-            self.put(id, CallbackTypes::SingleCallback {
-                callback: Box::new(|_arg| { })
-            });
+            self.put(
+                id,
+                CallbackTypes::SingleCallback {
+                    callback: Box::new(|_arg| {}),
+                },
+            );
 
             &self.callbacks[&id]
         }
