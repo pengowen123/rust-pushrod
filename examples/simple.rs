@@ -20,16 +20,29 @@ use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
+use pushrod::widget::image_widget::*;
 use pushrod::widget::widget::*;
 
 fn main() {
-    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(false)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
     let factory: GfxFactory = window.factory.clone();
     let mut prod: Pushrod = Pushrod::new(window);
+
+//    let mut text_widget = TextWidget::new(
+//        factory,
+//        "OpenSans-Regular.ttf".to_string(),
+//        "Welcome to rust-pushrod!".to_string(),
+//        32,
+//    );
+//    text_widget.set_origin(14, 8);
+//    text_widget.set_size(400, 40);
+//    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
+//    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
+//    prod.widget_store.add_widget(Box::new(text_widget));
 
     let mut base_widget = BaseWidget::new();
     base_widget.set_origin(50, 80);
@@ -70,23 +83,17 @@ fn main() {
     prod.widget_store
         .add_widget_to_parent(Box::new(box_3), box_1_id);
 
+    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
+    image_widget.set_origin(50, 300);
+    image_widget.set_size(150, 150);
+    image_widget.set_color([1.0; 4]);
+    prod.widget_store.add_widget(Box::new(image_widget));
+
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);
     timer.set_enabled(true);
-    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
+//    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
     prod.widget_store.add_widget(Box::new(timer));
-
-    let mut text_widget = TextWidget::new(
-        factory,
-        "OpenSans-Regular.ttf".to_string(),
-        "Welcome to Pushrod!".to_string(),
-        32,
-    );
-    text_widget.set_origin(8, 8);
-    text_widget.set_size(400, 40);
-    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-    text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
-    prod.widget_store.add_widget(Box::new(text_widget));
 
 //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 

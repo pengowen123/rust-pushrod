@@ -3,29 +3,16 @@
 ## 0.1.x -> 0.2.0
 
 - [ ] Widget/Run Loop Library Changes
-  - [ ] Implement callbacks for Pushrod and Widgets
   - [ ] Change Widget object to be generic so that settings and calls are made against the widget (set as an enum)
   - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
   - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
   - [ ] Ensure that the widget library code is still super simple and easy to understand
-  - [ ] Implement proper resize - currently horribly broken
-  - [ ] Implement visibility
-- [ ] Improve Signal Events
-  - [ ] Implement for Mouse Click (Single click)
-  - [ ] Implement Double Click
-  - [ ] Implement possible callback registry for events, so code can be called after an event is triggered
-- [ ] Implement Graphics Translation Library
-  - [ ] Implement a graphics library that is uniform and not independent of any Rust library
-  - [ ] Draw Rounded Rectangle
-  - [ ] Draw Ellipse
-  - [ ] Draw Arc
-  - [ ] Draw Circle
-  - [ ] Draw Poly
-  - [ ] Draw Image
-  - [ ] Fill Area (Rectangle)
-  - [ ] Translate Points based on Origin/Size
+- [ ] Improvements
+  - [ ] Automatically clip and modify context for widget drawing
+  - [ ] Auto reset context after drawing
+  - [ ] Treat drawing code as points from 0x0 instead of relative to screen
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
-  - [ ] Image
+  - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
   - [ ] Button
 - [ ] More examples
 
@@ -57,6 +44,7 @@
   - [x] Move Configurable struct and impl to their own external file
   - [x] Ensure that widgets of width and height of 0x0 are not included in the widget_at_point search
   - [x] Refactor code to use a single window and single set of widgets in a container
+  - [x] Implement callbacks for Pushrod and Widgets
 - [ ] Improve Signal Events
   - [x] Implement Closure callback cache for widgets
 - [ ] Implement Standard Widget Library (Extends from Base Widget)
@@ -65,7 +53,7 @@
 - [ ] Implement Graphics Translation Library
   - [x] Draw Box
   - [x] Timer
-  - [x] Text box (use Google Font Library, as it's the most uniform/generic)
+  - [x] Image
 
 ## 0.2.x -> 0.3.0
 
@@ -77,12 +65,23 @@
   - [ ] Progress Indicator
   - [ ] Popup Menu
   - [ ] Editable Text Box
+- [ ] Callbacks
+  - [ ] Implement for Mouse Click (Single click)
+  - [ ] Implement Double Click
+  - [ ] Implement Apple-like Mouse-up-inside
+  - [ ] Implement Apple-like Mouse-up-outside
+  - [ ] Create callbacks with a single option, contains event information instead of multiple callback types
 - [ ] Resource Manager
   - [ ] Store widgets in a centralized resource manager so that they can be (de)serialized to store
   - [ ] Allow for manipulation of widgets by ID through resource manager
+  - [ ] Create dialog boxes (windows) with builder
 - [ ] Widget States
   - [ ] Enabled/Disabled (disabled means no callback interactions from event loop)
   - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)
+- [ ] Widget/Run Loop Library Changes
+  - [ ] Implement visibility
+  - [ ] Improve callbacks to use enum to define input parameters for each callback type
+  - [ ] Implement enum for different `Widget` types.
 - [ ] Main loop
   - [ ] Object focus
   - [ ] Window focus

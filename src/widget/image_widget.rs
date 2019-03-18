@@ -1,5 +1,5 @@
-// Text Widget
-// Draws text in a specified bounding area.
+// Image Widget
+// Draws an image in a specified bounding area.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,81 +20,37 @@ use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
-/// This is the `TextWidget`, which draws a line of text on the screen.  This structure contains
-/// no accessable objects, they are all internal to `TextWidget`'s implementation.
-pub struct TextWidget {
+/// This is the `ImageWidget`, which draws an image on the screen.
+pub struct ImageWidget {
     config: Configurable,
     callbacks: CallbackStore,
-    font_cache: Glyphs,
-    text: String,
-    font_size: u32,
+    image: G2dTexture,
+    image_size: crate::core::point::Size,
 }
 
-/// Implementation of the constructor for the `TextWidget`.  Creates a new text object to be
-/// displayed on the screen, given a font name, font size, and text message.
-impl TextWidget {
+/// Implementation of the constructor for the `ImageWidget`.  Creates a new image object to be
+/// displayed on the screen, given the image filename.
+impl ImageWidget {
     /// Creates a new `TextWidget` object, requiring the current `PistonWindow`'s factory object
     /// (which can be cloned), the name of the font (filename in the `assets` directory), the
     /// text to display, and the font size in which to use.
-    pub fn new(factory: GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
+    pub fn new(factory: &mut GfxFactory, image_name: String) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
             .unwrap();
-        let ref font = assets.join(font_name.clone());
-        let glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+        let texture = Texture::from_path(
+            factory,
+            &assets.join(image_name),
+            Flip::None,
+            &TextureSettings::new()
+        ).unwrap();
 
         Self {
             config: Configurable::new(),
             callbacks: CallbackStore::new(),
-            font_cache: glyphs,
-            text,
-            font_size,
+            image: texture.clone(),
+            image_size: crate::core::point::Size { w: texture.clone().get_size().0 as i32, h: texture.clone().get_size().1 as i32 },
         }
-    }
-
-    /// Sets the color of the text for this `Widget`.
-    pub fn set_text_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_TEXT_COLOR, WidgetConfig::TextColor { color });
-        self.invalidate();
-    }
-
-    /// Retrieves the color of the text for this `Widget`.
-    /// Defaults to black if not set.
-    pub fn get_text_color(&mut self) -> types::Color {
-        match self.config().get(CONFIG_TEXT_COLOR) {
-            Some(WidgetConfig::TextColor { color }) => color.clone(),
-            _ => [1.0; 4],
-        }
-    }
-
-    /// Changes the text, redraws after change.
-    pub fn set_text(&mut self, text: String) {
-        self.text = text.clone();
-        self.invalidate();
-    }
-
-    /// Function to draw the text.  Generates a context transformation to display the text based on
-    /// the point of origin's X and Y coordinates.  Since the text is drawn upwards from the point
-    /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
-    /// based on text justification, and other optional padding, once padding is introduced.)
-    pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
-        clear([1.0; 4], g);
-
-        let origin: Point = self.get_origin();
-        let transform = c
-            .transform
-            .trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
-
-        text(
-            self.get_text_color(),
-            self.font_size,
-            &self.text,
-            &mut self.font_cache,
-            transform,
-            g,
-        )
-        .unwrap();
     }
 }
 
@@ -134,7 +90,7 @@ impl TextWidget {
 ///    prod.widget_store.add_widget(Box::new(text_widget));
 /// # }
 /// ```
-impl Widget for TextWidget {
+impl Widget for ImageWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }
@@ -145,8 +101,25 @@ impl Widget for TextWidget {
 
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d) {
-        // Draw the text.
-        self.draw_text(c, g);
+        clear(self.get_color(), g);
+
+        let origin = self.get_origin();
+        let size = self.get_size();
+        let scale_w = (size.w as f64 / self.image_size.w as f64);
+        let scale_h = (size.h as f64 / self.image_size.h as f64);
+        let transform = c.transform.trans(origin.x as f64, origin.y as f64).scale(scale_w, scale_h);
+        let (clip_x, clip_y, clip_w, clip_h) = (origin.x as u32, origin.y as u32, size.w as u32, size.h as u32);
+        let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
+
+        image(&self.image, transform, g);
+
+//        let transform = c.transform.trans((origin.x * 2) as f64, (origin.y * 2) as f64).scale(0.50, 0.50);
+//
+//        // Compute clip rectangle from upper left corner.
+//        let (clip_x, clip_y, clip_w, clip_h) = ((origin.x * 2) as u32, (origin.y * 2) as u32, (size.w * 2) as u32, (size.h * 2) as u32);
+//        let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
+//
+//        Image::new().draw(&self.image, &clipped, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();

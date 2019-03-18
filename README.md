@@ -9,7 +9,7 @@ Draws inspiration from Atari GEM, TrollTech Qt, and others.
 
 Current state of the sample app:
 
-[![](docs/sample-0.1.12.png)](docs/sample-0.1.12.png)
+[![](docs/sample-0.1.15.png)](docs/sample-0.1.15.png)
 
 ## Philosophy
 
@@ -28,10 +28,7 @@ Pushrod requires the following minimum versions:
 
 | Library | Version |
 | ------- | ------- |
-| piston_window | 0.87.0 |
-| piston2d-opengl_graphics | 0.59.0 |
-| gfx_core | 0.8.3 |
-| gfx_device_gl | 0.15.5 |
+| piston_window | 0.89.0 |
 | rust | 2018 |
 
 ## Runnable Examples

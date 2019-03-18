@@ -218,11 +218,13 @@ impl WidgetStore {
 
                     &paint_widget.widget.draw(clipped, g);
                 } else {
+                    c.reset();
                     &paint_widget.widget.draw(c, g);
                 }
             }
 
             if parents_of_widget[pos] != widget_id {
+                c.reset();
                 self.draw(paint_id, c, g);
             }
         }

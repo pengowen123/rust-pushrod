@@ -159,6 +159,11 @@ impl Pushrod {
 //        0
 //    }
 
+    /// Retrieves the window `GfxFactory` factory object for graphics textures.
+    pub fn get_factory(&mut self) -> &mut GfxFactory {
+        &mut self.window.factory
+    }
+
     fn handle_draw(&mut self, event: &Event) {
         let widgets = &mut self.widget_store;
 
