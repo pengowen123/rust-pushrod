@@ -1,17 +1,5 @@
 # rush-pushrod Roadmap
 
-## 0.1.x -> 0.2.0
-
-- [ ] Improvements
-  - [ ] Remove autoclip setting
-  - [ ] Automatically clip and modify context for widget drawing
-  - [ ] Auto reset context after drawing
-  - [ ] Treat drawing code as points from 0x0 instead of relative to screen
-- [ ] Implement Standard Widget Library (Extends from Base Widget)
-  - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
-  - [ ] Button
-- [ ] More examples
-
 ## 0.1.x Accomplished
 
 - [x] Optimize main run loop
