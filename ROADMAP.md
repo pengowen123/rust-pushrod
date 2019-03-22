@@ -42,35 +42,17 @@
 ## 0.2.x -> 0.3.0
 
 - [ ] Complicated Widget Library
-  - [ ] Scrollbox (Horizontal and Vertical)
-  - [ ] Slider (Horizontal and Vertical)
   - [ ] Scrollable Viewing Area
-  - [ ] Toggle/Push Button
-  - [ ] Progress Indicator
-  - [ ] Popup Menu
   - [ ] Editable Text Box
-- [ ] Callbacks
-  - [ ] Implement for Mouse Click (Single click)
-  - [ ] Implement Double Click
-  - [ ] Implement Apple-like Mouse-up-inside
-  - [ ] Implement Apple-like Mouse-up-outside
-  - [ ] Create callbacks with a single option, contains event information instead of multiple callback types
 - [ ] Resource Manager
   - [ ] Store widgets in a centralized resource manager so that they can be (de)serialized to store
   - [ ] Allow for manipulation of widgets by ID through resource manager
   - [ ] Create dialog boxes (windows) with builder
-- [ ] Widget States
-  - [ ] Enabled/Disabled (disabled means no callback interactions from event loop)
-  - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)
 - [ ] Widget/Run Loop Library Changes
-  - [ ] Implement visibility
   - [ ] Improve callbacks to use enum to define input parameters for each callback type
   - [ ] Implement enum for different `Widget` types.
 - [ ] Main loop
   - [ ] Object focus
-  - [ ] Window focus
-  - [ ] Window loses focus
-  - [ ] Window resize (needs to trigger a window-wide invalidate)
 
 ## TBD
 
