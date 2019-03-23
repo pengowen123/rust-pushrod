@@ -252,6 +252,13 @@ impl Pushrod {
                 }
             });
 
+            match event {
+                Event::Input(Input::Button(ButtonArgs{state, button: Button::Keyboard(key), scancode})) => {
+                    self.widget_store.keypress_for_id(last_widget_id, &key, &state);
+                },
+                _ => {}
+            };
+
             event.resize(|_, _| {
                 self.widget_store.invalidate_all_widgets();
             });

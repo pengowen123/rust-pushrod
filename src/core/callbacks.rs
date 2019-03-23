@@ -17,6 +17,8 @@ use crate::core::point::Point;
 
 use std::collections::HashMap;
 
+use piston_window::*;
+
 /// Index for mouse entered callback, used by `Widget` internally.  Refers to a
 /// ```CallbackTypes::SingleCallback``` callback.
 pub const CALLBACK_MOUSE_ENTERED: u32 = 1;
@@ -33,6 +35,8 @@ pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
 /// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_MOVED: u32 = 4;
 
+pub const CALLBACK_KEY_PRESSED: u32 = 5;
+
 /// Callback type that takes no input parameters.
 pub type BlankCallback = Box<Fn() -> ()>;
 
@@ -41,6 +45,8 @@ pub type SingleCallback = Box<Fn(i32) -> ()>;
 
 /// Callback type that accepts a widget ID and a `Point` on the screen as its input parameter.
 pub type PointCallback = Box<Fn(i32, Point) -> ()>;
+
+pub type KeyCallback = Box<Fn(i32, Key, ButtonState) -> ()>;
 
 /// This is an enumerated type that is used to store numerous variations of callbacks that can
 /// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
@@ -54,6 +60,8 @@ pub enum CallbackTypes {
 
     /// Callback that supplies its widget ID and a `Point` on the screen within the `Widget`.
     PointCallback { callback: PointCallback },
+
+    KeyCallback { callback: KeyCallback },
 }
 
 /// This is the `CallbackStore` that is used to store a list of `CallbackTypes` that are

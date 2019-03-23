@@ -230,6 +230,10 @@ impl WidgetStore {
         }
     }
 
+    pub fn keypress_for_id(&mut self, id: i32, key: &Key, state: &ButtonState) {
+        &self.widgets[id as usize].widget.key_pressed(id, key, state);
+    }
+
     /// Callback to `mouse_entered` for a `Widget` by ID.
     pub fn mouse_entered_for_id(&mut self, id: i32) {
         &self.widgets[id as usize].widget.mouse_entered(id);
