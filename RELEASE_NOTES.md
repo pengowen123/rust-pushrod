@@ -4,6 +4,8 @@
 
 - Keyboard events ticket (#43) completed by dannyfritz, merged to master.
 - Modified code so that origin of drawing is 0x0 relative to the widget (#22)
+- Changed Cargo.toml to only use major version of Piston, minor releases are automatically used.
+- Updated README.
 
 ## 0.1.15
 
