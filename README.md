@@ -2,12 +2,13 @@
 
 **Cross Platform UI Widget Library for Rust.**
 
-Draws inspiration from Atari GEM, TrollTech Qt, and others.
+Draws inspiration from lots of GUI libraries.
 
 [![Build Status](https://travis-ci.org/KenSuenobu/rust-pushrod.svg?branch=master)](https://travis-ci.org/KenSuenobu/rust-pushrod)
 [![](https://img.shields.io/crates/d/rust-pushrod.svg)](https://crates.io/crates/rust-pushrod)
+[![docs.rs for rust-pushrod](https://docs.rs/rust-pushrod/badge.svg)](https://docs.rs/rust-pushrod)
 
-Current state of the sample app:
+## (Ever Evolving) Screenshot of Sample
 
 [![](docs/sample-0.1.15.png)](docs/sample-0.1.15.png)
 
@@ -28,7 +29,7 @@ Pushrod requires the following minimum versions:
 
 | Library | Version |
 | ------- | ------- |
-| piston_window | 0.89.0 |
+| piston_window | 0.89 |
 | rust | 2018 |
 
 ## Runnable Examples
