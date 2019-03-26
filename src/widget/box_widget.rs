@@ -85,18 +85,19 @@ impl BoxWidget {
         let size: crate::core::point::Size = self.get_size();
         let border: f64 = self.get_border_thickness() as f64;
         let color: types::Color = self.get_border_color();
+        let draw_origin: math::Matrix2d = c.transform.trans(origin.x as f64, origin.y as f64);
 
         // Upper left to upper right
         line(
             color,
             border,
             [
-                origin.x as f64,
-                origin.y as f64 + border,
-                (origin.x + size.w) as f64,
-                origin.y as f64 + border,
+                0.0 as f64,
+                border,
+                size.w as f64,
+                border,
             ],
-            c.transform,
+            draw_origin,
             g,
         );
 
@@ -105,12 +106,12 @@ impl BoxWidget {
             color,
             border,
             [
-                (origin.x + size.w) as f64 - border,
-                origin.y as f64 + border,
-                (origin.x + size.w) as f64 - border,
-                (origin.y + size.h) as f64,
+                size.w as f64 - border,
+                border,
+                size.w as f64 - border,
+                size.h as f64,
             ],
-            c.transform,
+            draw_origin,
             g,
         );
 
@@ -119,12 +120,12 @@ impl BoxWidget {
             color,
             border,
             [
-                origin.x as f64 + border,
-                origin.y as f64 + border,
-                origin.x as f64 + border,
-                (origin.y + size.h) as f64,
+                border,
+                border,
+                border,
+                size.h as f64,
             ],
-            c.transform,
+            draw_origin,
             g,
         );
 
@@ -133,12 +134,12 @@ impl BoxWidget {
             color,
             border,
             [
-                origin.x as f64,
-                (origin.y + size.h) as f64 - border,
-                (origin.x + size.w) as f64,
-                (origin.y + size.h) as f64 - border,
+                0.0 as f64,
+                size.h as f64 - border,
+                size.w as f64,
+                size.h as f64 - border,
             ],
-            c.transform,
+            draw_origin,
             g,
         );
     }

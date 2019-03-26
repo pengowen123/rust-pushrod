@@ -292,16 +292,17 @@ pub trait Widget {
     fn draw(&mut self, c: Context, g: &mut G2d) {
         let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
+        let draw_origin: math::Matrix2d = c.transform.trans(origin.x as f64, origin.y as f64);
 
         rectangle(
             self.get_color(),
             [
-                origin.x as f64,
-                origin.y as f64,
+                0.0 as f64,
+                0.0 as f64,
                 size.w as f64,
                 size.h as f64,
             ],
-            c.transform,
+            draw_origin,
             g,
         );
 

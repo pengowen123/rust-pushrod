@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.1.16
+
+- Keyboard events ticket (#43) completed by dannyfritz, merged to master.
+
 ## 0.1.15
 
 - Made a new `BlankCallback` type for timer

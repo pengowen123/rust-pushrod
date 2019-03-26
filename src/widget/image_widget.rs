@@ -116,8 +116,8 @@ impl Widget for ImageWidget {
             .trans(origin.x as f64, origin.y as f64)
             .scale(scale_w, scale_h);
         let (clip_x, clip_y, clip_w, clip_h) = (
-            origin.x as u32,
-            origin.y as u32,
+            0 as u32,
+            0 as u32,
             size.w as u32,
             size.h as u32,
         );
