@@ -91,12 +91,7 @@ impl BoxWidget {
         line(
             color,
             border,
-            [
-                0.0 as f64,
-                border,
-                size.w as f64,
-                border,
-            ],
+            [0.0 as f64, border, size.w as f64, border],
             draw_origin,
             g,
         );
@@ -119,12 +114,7 @@ impl BoxWidget {
         line(
             color,
             border,
-            [
-                border,
-                border,
-                border,
-                size.h as f64,
-            ],
+            [border, border, border, size.h as f64],
             draw_origin,
             g,
         );

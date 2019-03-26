@@ -206,9 +206,17 @@ pub trait Widget {
         }
     }
 
-    fn perform_key_callback(&mut self, callback_id: u32, widget_id: i32, key: Key, state: ButtonState) {
+    fn perform_key_callback(
+        &mut self,
+        callback_id: u32,
+        widget_id: i32,
+        key: Key,
+        state: ButtonState,
+    ) {
         match self.callbacks().get(callback_id) {
-            CallbackTypes::KeyCallback { callback } => callback(widget_id, key.clone(), state.clone()),
+            CallbackTypes::KeyCallback { callback } => {
+                callback(widget_id, key.clone(), state.clone())
+            }
             _ => (),
         }
     }
@@ -296,12 +304,7 @@ pub trait Widget {
 
         rectangle(
             self.get_color(),
-            [
-                0.0 as f64,
-                0.0 as f64,
-                size.w as f64,
-                size.h as f64,
-            ],
+            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
             draw_origin,
             g,
         );

@@ -53,15 +53,23 @@ pub type KeyCallback = Box<Fn(i32, Key, ButtonState) -> ()>;
 /// can be added to/extended as necessary.
 pub enum CallbackTypes {
     /// Callback that calls a function without any data.
-    BlankCallback { callback: BlankCallback },
+    BlankCallback {
+        callback: BlankCallback,
+    },
 
     /// Callback that only supplies its widget ID.
-    SingleCallback { callback: SingleCallback },
+    SingleCallback {
+        callback: SingleCallback,
+    },
 
     /// Callback that supplies its widget ID and a `Point` on the screen within the `Widget`.
-    PointCallback { callback: PointCallback },
+    PointCallback {
+        callback: PointCallback,
+    },
 
-    KeyCallback { callback: KeyCallback },
+    KeyCallback {
+        callback: KeyCallback,
+    },
 }
 
 /// This is the `CallbackStore` that is used to store a list of `CallbackTypes` that are
