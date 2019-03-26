@@ -206,7 +206,17 @@ pub trait Widget {
         }
     }
 
+    fn perform_key_callback(&mut self, callback_id: u32, widget_id: i32, key: Key, state: ButtonState) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::KeyCallback { callback } => callback(widget_id, key.clone(), state.clone()),
+            _ => (),
+        }
+    }
+
     // Callback Triggers
+    fn key_pressed(&mut self, widget_id: i32, key: &Key, state: &ButtonState) {
+        self.perform_key_callback(CALLBACK_KEY_PRESSED, widget_id, key.clone(), state.clone());
+    }
 
     /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.  Only override
     /// if you want to signal a mouse enter event.
@@ -233,6 +243,12 @@ pub trait Widget {
     }
 
     // Callback Setters
+    fn on_key_pressed(&mut self, callback: KeyCallback) {
+        self.callbacks().put(
+            CALLBACK_KEY_PRESSED,
+            CallbackTypes::KeyCallback { callback },
+        );
+    }
 
     /// Sets the closure action to be performed when a mouse enters a `Widget`.
     fn on_mouse_entered(&mut self, callback: SingleCallback) {

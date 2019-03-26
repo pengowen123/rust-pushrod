@@ -58,6 +58,9 @@ fn main() {
     box_widget.set_size(200, 200);
     box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
     box_widget.set_border([1.0, 0.0, 0.0, 1.0], 4);
+    box_widget.on_key_pressed(Box::new(|widget_id, key, state| {
+        eprintln!("Key {:?}; State {:?}", key, state);
+    }));
     prod.widget_store.add_widget(Box::new(box_widget));
 
     let mut box_1 = BoxWidget::new();
