@@ -1,8 +1,8 @@
+# rust-pushrod
+
 [![Build Status](https://travis-ci.org/KenSuenobu/rust-pushrod.svg?branch=master)](https://travis-ci.org/KenSuenobu/rust-pushrod)
 [![](https://img.shields.io/crates/d/rust-pushrod.svg)](https://crates.io/crates/rust-pushrod)
 [![docs.rs for rust-pushrod](https://docs.rs/rust-pushrod/badge.svg)](https://docs.rs/rust-pushrod)
-
-# rust-pushrod
 
 **Cross Platform UI Widget Library for Rust.**
 
