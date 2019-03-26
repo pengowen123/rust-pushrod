@@ -3,6 +3,7 @@
 ## 0.1.16
 
 - Keyboard events ticket (#43) completed by dannyfritz, merged to master.
+- Modified code so that origin of drawing is 0x0 relative to the widget (#22)
 
 ## 0.1.15
 
