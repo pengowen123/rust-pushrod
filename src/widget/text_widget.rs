@@ -16,7 +16,6 @@
 use piston_window::*;
 
 use crate::core::callbacks::*;
-use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -80,8 +79,6 @@ impl TextWidget {
     /// based on text justification, and other optional padding, once padding is introduced.)
     pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
         clear([1.0; 4], g);
-
-        let origin: Point = self.get_origin();
 
         text(
             self.get_text_color(),

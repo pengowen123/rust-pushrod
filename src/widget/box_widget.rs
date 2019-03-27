@@ -81,7 +81,6 @@ impl BoxWidget {
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
     fn draw_box(&mut self, c: Context, g: &mut G2d) {
-        let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
         let border: f64 = self.get_border_thickness() as f64;
         let color: types::Color = self.get_border_color();

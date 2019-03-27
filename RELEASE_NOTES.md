@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.1.17
+
+- Warnings and unused code cleaned up.
+
 ## 0.1.16
 
 - Keyboard events ticket (#43) completed by dannyfritz, merged to master.

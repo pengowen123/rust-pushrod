@@ -285,7 +285,6 @@ pub trait Widget {
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
     /// behavior.)
     fn draw(&mut self, c: Context, g: &mut G2d) {
-        let origin: Point = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
 
         rectangle(

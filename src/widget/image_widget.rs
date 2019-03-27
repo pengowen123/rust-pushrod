@@ -16,7 +16,6 @@
 use piston_window::*;
 
 use crate::core::callbacks::*;
-use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -107,23 +106,13 @@ impl Widget for ImageWidget {
     fn draw(&mut self, c: Context, g: &mut G2d) {
         clear(self.get_color(), g);
 
-        let origin = self.get_origin();
         let size = self.get_size();
-        let scale_w = (size.w as f64 / self.image_size.w as f64);
-        let scale_h = (size.h as f64 / self.image_size.h as f64);
-        let transform = c.transform.scale(scale_w, scale_h);
-        let (clip_x, clip_y, clip_w, clip_h) = (0 as u32, 0 as u32, size.w as u32, size.h as u32);
-        let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
+        let transform = c.transform.scale(
+            size.w as f64 / self.image_size.w as f64,
+            size.h as f64 / self.image_size.h as f64,
+        );
 
         image(&self.image, transform, g);
-
-        //        let transform = c.transform.trans((origin.x * 2) as f64, (origin.y * 2) as f64).scale(0.50, 0.50);
-        //
-        //        // Compute clip rectangle from upper left corner.
-        //        let (clip_x, clip_y, clip_w, clip_h) = ((origin.x * 2) as u32, (origin.y * 2) as u32, (size.w * 2) as u32, (size.h * 2) as u32);
-        //        let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
-        //
-        //        Image::new().draw(&self.image, &clipped, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();

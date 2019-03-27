@@ -19,17 +19,15 @@ use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::image_widget::*;
-use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
 
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(false)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-    let factory: GfxFactory = window.factory.clone();
     let mut prod: Pushrod = Pushrod::new(window);
 
     //    let mut text_widget = TextWidget::new(
@@ -58,7 +56,7 @@ fn main() {
     box_widget.set_size(200, 200);
     box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
     box_widget.set_border([1.0, 0.0, 0.0, 1.0], 4);
-    box_widget.on_key_pressed(Box::new(|widget_id, key, state| {
+    box_widget.on_key_pressed(Box::new(|_, key, state| {
         eprintln!("Key {:?}; State {:?}", key, state);
     }));
     prod.widget_store.add_widget(Box::new(box_widget));
