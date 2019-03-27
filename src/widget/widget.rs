@@ -206,6 +206,9 @@ pub trait Widget {
     }
 
     // Callback Triggers
+
+    /// Called when a keyboard event takes place within the bounds of a widget.  Includes the widget
+    /// ID, the key code that was affected, and its state - pressed or released.
     fn key_pressed(&mut self, widget_id: i32, key: &Key, state: &ButtonState) {
         self.perform_key_callback(CALLBACK_KEY_PRESSED, widget_id, key.clone(), state.clone());
     }

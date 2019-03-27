@@ -199,6 +199,8 @@ impl WidgetStore {
         }
     }
 
+    /// Callback to `key_pressed` for a `Widget` by ID with its corresponding key, and button
+    /// state (pressed or released)
     pub fn keypress_for_id(&mut self, id: i32, key: &Key, state: &ButtonState) {
         &self.widgets[id as usize].widget.key_pressed(id, key, state);
     }
