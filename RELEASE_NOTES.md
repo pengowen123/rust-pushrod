@@ -6,6 +6,7 @@
 - Modified code so that origin of drawing is 0x0 relative to the widget (#22)
 - Changed Cargo.toml to only use major version of Piston, minor releases are automatically used.
 - Updated README.
+- Moved the context origin to 0x0 outside of the draw loop (#67)
 
 ## 0.1.15
 
