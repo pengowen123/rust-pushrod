@@ -187,7 +187,7 @@ impl WidgetStore {
                     viewport: c.viewport,
                     view: c.view,
                     transform: c.transform.trans(origin.x as f64, origin.y as f64),
-                    draw_state: c.draw_state,
+                    draw_state: DrawState::new_inside(),
                 };
 
                 &paint_widget.widget.draw(new_context, g);
