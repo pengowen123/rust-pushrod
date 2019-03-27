@@ -25,17 +25,17 @@ use crate::widget::widget::*;
 pub struct BoxWidget {
     config: Configurable,
     callbacks: CallbackStore,
-    base_widget: BaseWidget,
+    base_widget: CanvasWidget,
 }
 
-/// Implementation of the constructor for the `BaseWidget`.  Creates a new base widget
+/// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
 /// that can be positioned anywhere on the screen.
 impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
             callbacks: CallbackStore::new(),
-            base_widget: BaseWidget::new(),
+            base_widget: CanvasWidget::new(),
         }
     }
 
@@ -90,12 +90,7 @@ impl BoxWidget {
         line(
             color,
             border,
-            [
-                origin.x as f64,
-                origin.y as f64 + border,
-                (origin.x + size.w) as f64,
-                origin.y as f64 + border,
-            ],
+            [0.0 as f64, border, size.w as f64, border],
             c.transform,
             g,
         );
@@ -105,10 +100,10 @@ impl BoxWidget {
             color,
             border,
             [
-                (origin.x + size.w) as f64 - border,
-                origin.y as f64 + border,
-                (origin.x + size.w) as f64 - border,
-                (origin.y + size.h) as f64,
+                size.w as f64 - border,
+                border,
+                size.w as f64 - border,
+                size.h as f64,
             ],
             c.transform,
             g,
@@ -118,12 +113,7 @@ impl BoxWidget {
         line(
             color,
             border,
-            [
-                origin.x as f64 + border,
-                origin.y as f64 + border,
-                origin.x as f64 + border,
-                (origin.y + size.h) as f64,
-            ],
+            [border, border, border, size.h as f64],
             c.transform,
             g,
         );
@@ -133,10 +123,10 @@ impl BoxWidget {
             color,
             border,
             [
-                origin.x as f64,
-                (origin.y + size.h) as f64 - border,
-                (origin.x + size.w) as f64,
-                (origin.y + size.h) as f64 - border,
+                0.0 as f64,
+                size.h as f64 - border,
+                size.w as f64,
+                size.h as f64 - border,
             ],
             c.transform,
             g,
@@ -145,8 +135,8 @@ impl BoxWidget {
 }
 
 /// Implementation of the `BoxWidget` object with the `Widget` traits implemented.
-/// This implementation is similar to the `BaseWidget`, but incorporates a drawable box inside
-/// the widget.  Base widget is the `BaseWidget`.
+/// This implementation is similar to the `CanvasWidget`, but incorporates a drawable box inside
+/// the widget.  Base widget is the `CanvasWidget`.
 ///
 /// This is basically just a box with a fill color.  Use this to draw other things like buttons,
 /// text widgets, and so on, if you need anything with a drawable border.

@@ -42,21 +42,25 @@ impl ImageWidget {
             factory,
             &assets.join(image_name),
             Flip::None,
-            &TextureSettings::new()
-        ).unwrap();
+            &TextureSettings::new(),
+        )
+        .unwrap();
 
         Self {
             config: Configurable::new(),
             callbacks: CallbackStore::new(),
             image: texture.clone(),
-            image_size: crate::core::point::Size { w: texture.clone().get_size().0 as i32, h: texture.clone().get_size().1 as i32 },
+            image_size: crate::core::point::Size {
+                w: texture.clone().get_size().0 as i32,
+                h: texture.clone().get_size().1 as i32,
+            },
         }
     }
 }
 
 /// Implementation of the `BoxWidget` object with the `Widget` traits implemented.
-/// This implementation is similar to the `BaseWidget`, but incorporates a drawable box inside
-/// the widget.  Base widget is the `BaseWidget`.
+/// This implementation is similar to the `CanvasWidget`, but incorporates a drawable box inside
+/// the widget.  Base widget is the `CanvasWidget`.
 ///
 /// This is basically just a box with a fill color.  Use this to draw other things like buttons,
 /// text widgets, and so on, if you need anything with a drawable border.
@@ -107,19 +111,19 @@ impl Widget for ImageWidget {
         let size = self.get_size();
         let scale_w = (size.w as f64 / self.image_size.w as f64);
         let scale_h = (size.h as f64 / self.image_size.h as f64);
-        let transform = c.transform.trans(origin.x as f64, origin.y as f64).scale(scale_w, scale_h);
-        let (clip_x, clip_y, clip_w, clip_h) = (origin.x as u32, origin.y as u32, size.w as u32, size.h as u32);
+        let transform = c.transform.scale(scale_w, scale_h);
+        let (clip_x, clip_y, clip_w, clip_h) = (0 as u32, 0 as u32, size.w as u32, size.h as u32);
         let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
 
         image(&self.image, transform, g);
 
-//        let transform = c.transform.trans((origin.x * 2) as f64, (origin.y * 2) as f64).scale(0.50, 0.50);
-//
-//        // Compute clip rectangle from upper left corner.
-//        let (clip_x, clip_y, clip_w, clip_h) = ((origin.x * 2) as u32, (origin.y * 2) as u32, (size.w * 2) as u32, (size.h * 2) as u32);
-//        let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
-//
-//        Image::new().draw(&self.image, &clipped, transform, g);
+        //        let transform = c.transform.trans((origin.x * 2) as f64, (origin.y * 2) as f64).scale(0.50, 0.50);
+        //
+        //        // Compute clip rectangle from upper left corner.
+        //        let (clip_x, clip_y, clip_w, clip_h) = ((origin.x * 2) as u32, (origin.y * 2) as u32, (size.w * 2) as u32, (size.h * 2) as u32);
+        //        let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
+        //
+        //        Image::new().draw(&self.image, &clipped, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();

@@ -82,16 +82,13 @@ impl TextWidget {
         clear([1.0; 4], g);
 
         let origin: Point = self.get_origin();
-        let transform = c
-            .transform
-            .trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
 
         text(
             self.get_text_color(),
             self.font_size,
             &self.text,
             &mut self.font_cache,
-            transform,
+            c.transform,
             g,
         )
         .unwrap();
@@ -99,8 +96,8 @@ impl TextWidget {
 }
 
 /// Implementation of the `BoxWidget` object with the `Widget` traits implemented.
-/// This implementation is similar to the `BaseWidget`, but incorporates a drawable box inside
-/// the widget.  Base widget is the `BaseWidget`.
+/// This implementation is similar to the `CanvasWidget`, but incorporates a drawable box inside
+/// the widget.  Base widget is the `CanvasWidget`.
 ///
 /// This is basically just a box with a fill color.  Use this to draw other things like buttons,
 /// text widgets, and so on, if you need anything with a drawable border.

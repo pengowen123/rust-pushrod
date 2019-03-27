@@ -1,21 +1,5 @@
 # rush-pushrod Roadmap
 
-## 0.1.x -> 0.2.0
-
-- [ ] Widget/Run Loop Library Changes
-  - [ ] Change Widget object to be generic so that settings and calls are made against the widget (set as an enum)
-  - [ ] Change Widget to be a Struct<> to include widget generics for drawing and re-entrant functions
-  - [ ] Impl Widget<> should take generic widget and assign it internally so interactions are done against it as `widget.(x)`
-  - [ ] Ensure that the widget library code is still super simple and easy to understand
-- [ ] Improvements
-  - [ ] Automatically clip and modify context for widget drawing
-  - [ ] Auto reset context after drawing
-  - [ ] Treat drawing code as points from 0x0 instead of relative to screen
-- [ ] Implement Standard Widget Library (Extends from Base Widget)
-  - [ ] Text box (use Google Font Library, as it's the most uniform/generic)
-  - [ ] Button
-- [ ] More examples
-
 ## 0.1.x Accomplished
 
 - [x] Optimize main run loop
@@ -58,35 +42,17 @@
 ## 0.2.x -> 0.3.0
 
 - [ ] Complicated Widget Library
-  - [ ] Scrollbox (Horizontal and Vertical)
-  - [ ] Slider (Horizontal and Vertical)
   - [ ] Scrollable Viewing Area
-  - [ ] Toggle/Push Button
-  - [ ] Progress Indicator
-  - [ ] Popup Menu
   - [ ] Editable Text Box
-- [ ] Callbacks
-  - [ ] Implement for Mouse Click (Single click)
-  - [ ] Implement Double Click
-  - [ ] Implement Apple-like Mouse-up-inside
-  - [ ] Implement Apple-like Mouse-up-outside
-  - [ ] Create callbacks with a single option, contains event information instead of multiple callback types
 - [ ] Resource Manager
   - [ ] Store widgets in a centralized resource manager so that they can be (de)serialized to store
   - [ ] Allow for manipulation of widgets by ID through resource manager
   - [ ] Create dialog boxes (windows) with builder
-- [ ] Widget States
-  - [ ] Enabled/Disabled (disabled means no callback interactions from event loop)
-  - [ ] (In)visible (invisible means skip draw, remove from get_widget_id_for_point)
 - [ ] Widget/Run Loop Library Changes
-  - [ ] Implement visibility
   - [ ] Improve callbacks to use enum to define input parameters for each callback type
   - [ ] Implement enum for different `Widget` types.
 - [ ] Main loop
   - [ ] Object focus
-  - [ ] Window focus
-  - [ ] Window loses focus
-  - [ ] Window resize (needs to trigger a window-wide invalidate)
 
 ## TBD
 

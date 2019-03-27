@@ -89,10 +89,8 @@ impl TimerWidget {
     /// Sets the closure function for the timer when a timeout has been triggered.  This closure
     /// needs to be `Boxed`.
     pub fn on_timeout(&mut self, callback: BlankCallback) {
-        self.callbacks().put(
-            CALLBACK_TIMER,
-            CallbackTypes::BlankCallback { callback },
-        );
+        self.callbacks()
+            .put(CALLBACK_TIMER, CallbackTypes::BlankCallback { callback });
     }
 
     /// Calls the timeout function.
