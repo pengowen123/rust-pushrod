@@ -30,20 +30,17 @@ pub const CONFIG_ORIGIN: u8 = 1;
 /// Config entry key for retrieving the `Size` of the widget.
 pub const CONFIG_SIZE: u8 = 2;
 
-/// Config entry key for autoclipping the widget's drawing area.
-pub const CONFIG_AUTOCLIP: u8 = 3;
-
 /// Config entry key for retrieving the widget's color.
-pub const CONFIG_COLOR: u8 = 4;
+pub const CONFIG_COLOR: u8 = 3;
 
 /// Config entry key for retrieving the widget's border color.
-pub const CONFIG_COLOR_BORDER: u8 = 5;
+pub const CONFIG_COLOR_BORDER: u8 = 4;
 
 /// Config entry key for retrieving the widget's border width.
-pub const CONFIG_BORDER_WIDTH: u8 = 6;
+pub const CONFIG_BORDER_WIDTH: u8 = 5;
 
 /// Config entry key for retrieving the widget's text color.
-pub const CONFIG_TEXT_COLOR: u8 = 7;
+pub const CONFIG_TEXT_COLOR: u8 = 6;
 
 /// Enumeration data type containing storage areas for each configuration object.
 pub enum WidgetConfig {
@@ -55,10 +52,6 @@ pub enum WidgetConfig {
 
     /// `Size` of this widget.
     Size { size: crate::core::point::Size },
-
-    /// Indicates whether or not to automatically clip the drawing area to the bounds of the
-    /// widget.
-    Autoclip { clip: bool },
 
     /// The `types::Color` of this widget: `[f64; 4]` where the values are
     /// `[red, green, blue, transparency]`, values between 0 and 1.0.

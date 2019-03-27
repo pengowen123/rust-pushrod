@@ -168,22 +168,6 @@ pub trait Widget {
         }
     }
 
-    /// Indicates to the underlying drawing mechanism as to whether or not this `Widget` needs to
-    /// have drawing clipping automatically applied.
-    fn set_autoclip(&mut self, clip: bool) {
-        self.config()
-            .set(CONFIG_AUTOCLIP, WidgetConfig::Autoclip { clip });
-        self.invalidate();
-    }
-
-    /// Retrieves the auto clip flag.
-    fn get_autoclip(&mut self) -> bool {
-        match self.config().get(CONFIG_AUTOCLIP) {
-            Some(WidgetConfig::Autoclip { ref clip }) => clip.clone(),
-            _ => false,
-        }
-    }
-
     // Callbacks
 
     /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the

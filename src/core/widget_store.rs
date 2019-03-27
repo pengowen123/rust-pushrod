@@ -179,62 +179,21 @@ impl WidgetStore {
             let paint_widget = &mut self.widgets[paint_id as usize];
 
             if &paint_widget.widget.is_invalidated() == &true {
-//                // Implementation of auto-clipping.  Clips the object's drawing area.
-//                if paint_widget.widget.get_autoclip() {
-//                    let trans = c.transform.trans(
-//                        paint_widget.widget.get_origin().x as f64,
-//                        paint_widget.widget.get_origin().y as f64,
-//                    );
-//                    let viewport = c.viewport.unwrap();
-//                    let scale_x = viewport.draw_size[0] as f64 / viewport.window_size[0];
-//                    let scale_y = viewport.draw_size[1] as f64 / viewport.window_size[1];
-//
-//                    let clip_rect = [
-//                        ((paint_widget.widget.get_origin().x as f64 + viewport.rect[0] as f64)
-//                            * scale_x) as u32,
-//                        ((paint_widget.widget.get_origin().y as f64 + viewport.rect[1] as f64)
-//                            * scale_y) as u32,
-//                        (paint_widget.widget.get_size().w as f64 * scale_x) as u32,
-//                        (paint_widget.widget.get_size().h as f64 * scale_y) as u32,
-//                    ];
-//
-//                    let vp = Viewport {
-//                        rect: [
-//                            paint_widget.widget.get_origin().x as i32 + viewport.rect[0],
-//                            paint_widget.widget.get_origin().y as i32 + viewport.rect[1],
-//                            paint_widget.widget.get_size().w as i32,
-//                            paint_widget.widget.get_size().h as i32,
-//                        ],
-//                        draw_size: viewport.draw_size,
-//                        window_size: viewport.window_size,
-//                    };
-//
-//                    let clipped = Context {
-//                        viewport: Some(vp),
-//                        view: c.view,
-//                        transform: trans,
-//                        draw_state: c.draw_state.scissor(clip_rect),
-//                    };
-//
-//                    &paint_widget.widget.draw(clipped, g);
-//                } else {
-                    let origin: Point = paint_widget.widget.get_origin().clone();
+                let origin: Point = paint_widget.widget.get_origin().clone();
 
-                    c.reset();
+                c.reset();
 
-                    let new_context = Context {
-                        viewport: c.viewport,
-                        view: c.view,
-                        transform: c.transform.trans(origin.x as f64, origin.y as f64),
-                        draw_state: c.draw_state,
-                    };
+                let new_context = Context {
+                    viewport: c.viewport,
+                    view: c.view,
+                    transform: c.transform.trans(origin.x as f64, origin.y as f64),
+                    draw_state: c.draw_state,
+                };
 
-                    &paint_widget.widget.draw(new_context, g);
-//                }
+                &paint_widget.widget.draw(new_context, g);
             }
 
             if parents_of_widget[pos] != widget_id {
-                c.reset();
                 self.draw(paint_id, c, g);
             }
         }
