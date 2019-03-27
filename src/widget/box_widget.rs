@@ -85,14 +85,13 @@ impl BoxWidget {
         let size: crate::core::point::Size = self.get_size();
         let border: f64 = self.get_border_thickness() as f64;
         let color: types::Color = self.get_border_color();
-        let draw_origin: math::Matrix2d = c.transform.trans(origin.x as f64, origin.y as f64);
 
         // Upper left to upper right
         line(
             color,
             border,
             [0.0 as f64, border, size.w as f64, border],
-            draw_origin,
+            c.transform,
             g,
         );
 
@@ -106,7 +105,7 @@ impl BoxWidget {
                 size.w as f64 - border,
                 size.h as f64,
             ],
-            draw_origin,
+            c.transform,
             g,
         );
 
@@ -115,7 +114,7 @@ impl BoxWidget {
             color,
             border,
             [border, border, border, size.h as f64],
-            draw_origin,
+            c.transform,
             g,
         );
 
@@ -129,7 +128,7 @@ impl BoxWidget {
                 size.w as f64,
                 size.h as f64 - border,
             ],
-            draw_origin,
+            c.transform,
             g,
         );
     }

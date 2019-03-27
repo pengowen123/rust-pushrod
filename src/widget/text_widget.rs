@@ -82,16 +82,13 @@ impl TextWidget {
         clear([1.0; 4], g);
 
         let origin: Point = self.get_origin();
-        let transform = c
-            .transform
-            .trans(origin.x as f64, origin.y as f64 + self.get_size().h as f64);
 
         text(
             self.get_text_color(),
             self.font_size,
             &self.text,
             &mut self.font_cache,
-            transform,
+            c.transform,
             g,
         )
         .unwrap();
