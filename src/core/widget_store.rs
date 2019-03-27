@@ -45,7 +45,7 @@ impl WidgetStore {
     /// Creates a new `WidgetStore`.
     pub fn new() -> Self {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
-        let mut base_widget = BaseWidget::new();
+        let mut base_widget = CanvasWidget::new();
 
         base_widget.set_size(800, 600);
         widgets_list.push(WidgetContainer {

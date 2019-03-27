@@ -29,7 +29,7 @@ use crate::widget::config::*;
 /// You _should_ override `draw`, but you are not required to.  (If you don't, however, your
 /// widget won't really do much.)
 ///
-/// If you want a blank base widget, refer to the `BaseWidget`, which will create a
+/// If you want a blank base widget, refer to the `CanvasWidget`, which will create a
 /// base widget that paints the contents of its bounds with whatever color has been
 /// specified with `set_color`.
 pub trait Widget {
@@ -312,16 +312,16 @@ pub trait Widget {
     }
 }
 
-/// This is the `BaseWidget`, which contains a top-level widget for display.  It does
+/// This is the `CanvasWidget`, which contains a top-level widget for display.  It does
 /// not contain any special logic other than being a base for a display layer.
-pub struct BaseWidget {
+pub struct CanvasWidget {
     config: Configurable,
     callbacks: CallbackStore,
 }
 
-/// Implementation of the constructor for the `PushrodBaseWidget`.  Creates a new base widget
+/// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
 /// that can be positioned anywhere on the screen.
-impl BaseWidget {
+impl CanvasWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
@@ -330,7 +330,7 @@ impl BaseWidget {
     }
 }
 
-/// Implementation of the `BaseWidget` object with the `Widget` traits implemented.
+/// Implementation of the `CanvasWidget` object with the `Widget` traits implemented.
 /// This function only implements `config` and `callbacks`, which are used as a base for
 /// all `Widget`s.
 ///
@@ -347,7 +347,7 @@ impl BaseWidget {
 /// #           .build()
 /// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
 /// #
-///    let mut base_widget = BaseWidget::new();
+///    let mut base_widget = CanvasWidget::new();
 ///
 ///    base_widget.set_origin(100, 100);
 ///    base_widget.set_size(200, 200);
@@ -358,7 +358,7 @@ impl BaseWidget {
 ///
 ///    eprintln!("Added widget: ID={}", widget_id);
 ///
-///    let mut base_widget_2 = BaseWidget::new();
+///    let mut base_widget_2 = CanvasWidget::new();
 ///
 ///    base_widget_2.set_origin(125, 125);
 ///    base_widget_2.set_size(100, 100);
@@ -368,7 +368,7 @@ impl BaseWidget {
 ///    let widget_id_2 = prod.widget_store.add_widget_to_parent(Box::new(base_widget_2), widget_id);
 /// # }
 /// ```
-impl Widget for BaseWidget {
+impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }

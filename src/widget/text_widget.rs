@@ -96,8 +96,8 @@ impl TextWidget {
 }
 
 /// Implementation of the `BoxWidget` object with the `Widget` traits implemented.
-/// This implementation is similar to the `BaseWidget`, but incorporates a drawable box inside
-/// the widget.  Base widget is the `BaseWidget`.
+/// This implementation is similar to the `CanvasWidget`, but incorporates a drawable box inside
+/// the widget.  Base widget is the `CanvasWidget`.
 ///
 /// This is basically just a box with a fill color.  Use this to draw other things like buttons,
 /// text widgets, and so on, if you need anything with a drawable border.

@@ -7,6 +7,7 @@
 - Changed Cargo.toml to only use major version of Piston, minor releases are automatically used.
 - Updated README.
 - Moved the context origin to 0x0 outside of the draw loop (#67)
+- Renamed BaseWidget to CanvasWidget (#27)
 
 ## 0.1.15
 

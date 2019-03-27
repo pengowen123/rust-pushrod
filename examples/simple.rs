@@ -44,7 +44,7 @@ fn main() {
     //    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
     //    prod.widget_store.add_widget(Box::new(text_widget));
 
-    let mut base_widget = BaseWidget::new();
+    let mut base_widget = CanvasWidget::new();
     base_widget.set_origin(50, 80);
     base_widget.set_size(200, 200);
     base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
