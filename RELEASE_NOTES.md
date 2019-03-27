@@ -9,6 +9,7 @@
 - Moved the context origin to 0x0 outside of the draw loop (#67)
 - Renamed BaseWidget to CanvasWidget (#27)
 - Removed autoclip config, as this will be automatic. (#20)
+- Context reset automatically takes place before each draw (#21)
 
 ## 0.1.15
 
