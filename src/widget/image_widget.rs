@@ -111,9 +111,7 @@ impl Widget for ImageWidget {
         let size = self.get_size();
         let scale_w = (size.w as f64 / self.image_size.w as f64);
         let scale_h = (size.h as f64 / self.image_size.h as f64);
-        let transform = c
-            .transform
-            .scale(scale_w, scale_h);
+        let transform = c.transform.scale(scale_w, scale_h);
         let (clip_x, clip_y, clip_w, clip_h) = (0 as u32, 0 as u32, size.w as u32, size.h as u32);
         let clipped = c.draw_state.scissor([clip_x, clip_y, clip_w, clip_h]);
 
