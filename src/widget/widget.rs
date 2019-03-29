@@ -97,12 +97,12 @@ pub trait Widget {
 
     /// Clears the invalidation flag.
     fn clear_invalidate(&mut self) {
-        self.config().remove(CONFIG_INVALIDATE);
+        self.config().remove::<Invalidate>();
     }
 
     /// Checks to see whether or not the widget needs to be redrawn/refreshed.
     fn is_invalidated(&mut self) -> bool {
-        self.config().contains_key(CONFIG_INVALIDATE)
+        self.config().contains_key::<Invalidate>()
     }
 
     /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
@@ -114,26 +114,28 @@ pub trait Widget {
     /// Retrieves the `Point` of origin for this object.
     /// Defaults to origin (0, 0) if not set.
     fn get_origin(&mut self) -> Point {
-        match self.config().get(CONFIG_ORIGIN) {
-            Some(WidgetConfig::Origin { ref point }) => point.clone(),
-            None => make_origin_point(),
-            _ => make_origin_point(),
-        }
+        self.config()
+            .get::<Origin>()
+            .unwrap_or(&Origin(Point { x: 0, y: 0 }))
+            .0
+            .clone()
     }
 
     /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.config().set(BodySize(Size { w, h }));
+        self.config()
+            .set(BodySize(crate::core::point::Size { w, h }));
         self.invalidate();
     }
 
     /// Retrieves the `Size` bounds for this widget.
     /// Defaults to size (0, 0) if not set.
     fn get_size(&mut self) -> crate::core::point::Size {
-        match self.config().get(CONFIG_SIZE) {
-            Some(WidgetConfig::Size { ref size }) => size.clone(),
-            _ => make_unsized(),
-        }
+        self.config()
+            .get::<BodySize>()
+            .unwrap_or(&BodySize(crate::core::point::Size { w: 0, h: 0 }))
+            .0
+            .clone()
     }
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
@@ -145,15 +147,10 @@ pub trait Widget {
     /// Retrieves the color of this widget.
     /// Defaults to white color `[1.0; 4]` if not set.
     fn get_color(&mut self) -> types::Color {
-        if self.config().contains_key(CONFIG_COLOR) {
-            match self.config().get(CONFIG_COLOR) {
-                Some(WidgetConfig::Color { ref color }) => [color[0], color[1], color[2], color[3]],
-                None => [1.0; 4],
-                _ => [1.0; 4],
-            }
-        } else {
-            [1.0; 4]
-        }
+        self.config()
+            .get::<MainColor>()
+            .unwrap_or(&MainColor([1.0; 4]))
+            .0
     }
 
     // Callbacks

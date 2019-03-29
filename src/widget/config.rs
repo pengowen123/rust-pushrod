@@ -1,4 +1,5 @@
 // Configurable Implementation
+// New configuration module, as described by u/JayDepp on Reddit - THANKS!!!
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
 // limitations under the License.
 
 use piston_window::types::Color;
-use std::collections::HashMap;
 
 use crate::core::point::Point;
 use crate::core::point::Size;

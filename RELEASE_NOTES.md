@@ -3,6 +3,7 @@
 ## 0.1.17
 
 - Warnings and unused code cleaned up.
+- Added a much more uniform Config design based on u/RayDepp on Reddit (#25)
 
 ## 0.1.16
 

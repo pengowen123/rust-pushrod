@@ -53,18 +53,14 @@ impl TextWidget {
 
     /// Sets the color of the text for this `Widget`.
     pub fn set_text_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_TEXT_COLOR, WidgetConfig::TextColor { color });
+        self.config().set(TextColor(color));
         self.invalidate();
     }
 
     /// Retrieves the color of the text for this `Widget`.
     /// Defaults to black if not set.
     pub fn get_text_color(&mut self) -> types::Color {
-        match self.config().get(CONFIG_TEXT_COLOR) {
-            Some(WidgetConfig::TextColor { color }) => color.clone(),
-            _ => [1.0; 4],
-        }
+        self.config().get::<TextColor>().unwrap().0
     }
 
     /// Changes the text, redraws after change.

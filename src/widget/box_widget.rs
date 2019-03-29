@@ -48,10 +48,7 @@ impl BoxWidget {
     /// Retrieves the border color of this widget.
     /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
     pub fn get_border_color(&mut self) -> types::Color {
-        match self.config().get(CONFIG_COLOR_BORDER) {
-            Some(WidgetConfig::BorderColor { color }) => [color[0], color[1], color[2], color[3]],
-            _ => [0.0, 0.0, 0.0, 1.0],
-        }
+        self.config().get::<BorderColor>().unwrap().0
     }
 
     /// Sets the thickness of the border for this widget.
@@ -63,10 +60,7 @@ impl BoxWidget {
     /// Retrieves the border thickness of this widget.
     /// Defaults to 1 if not set.
     pub fn get_border_thickness(&mut self) -> u8 {
-        match self.config().get(CONFIG_BORDER_WIDTH) {
-            Some(WidgetConfig::BorderWidth { ref thickness }) => thickness.clone(),
-            _ => 1,
-        }
+        self.config().get::<BorderWidth>().unwrap().0
     }
 
     /// Helper function that sets both the color of the border and the thickness at the same time.
@@ -177,7 +171,8 @@ impl Widget for BoxWidget {
 
     /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.config().set(BodySize(Size { w, h }));
+        self.config()
+            .set(BodySize(crate::core::point::Size { w, h }));
         self.base_widget.set_size(w, h);
         self.invalidate();
     }
