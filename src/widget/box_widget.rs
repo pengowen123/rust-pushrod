@@ -41,8 +41,7 @@ impl BoxWidget {
 
     /// Sets the border color for this widget.
     pub fn set_border_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_COLOR_BORDER, WidgetConfig::BorderColor { color });
+        self.config().set(BorderColor(color));
         self.invalidate();
     }
 
@@ -57,8 +56,7 @@ impl BoxWidget {
 
     /// Sets the thickness of the border for this widget.
     pub fn set_border_thickness(&mut self, thickness: u8) {
-        self.config()
-            .set(CONFIG_BORDER_WIDTH, WidgetConfig::BorderWidth { thickness });
+        self.config().set(BorderWidth(thickness));
         self.invalidate();
     }
 
@@ -172,32 +170,21 @@ impl Widget for BoxWidget {
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
     /// coordinates.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
-        self.config().set(
-            CONFIG_ORIGIN,
-            WidgetConfig::Origin {
-                point: Point { x, y },
-            },
-        );
+        self.config().set(Origin(Point { x, y }));
         self.base_widget.set_origin(x, y);
         self.invalidate();
     }
 
     /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.config().set(
-            CONFIG_SIZE,
-            WidgetConfig::Size {
-                size: crate::core::point::Size { w, h },
-            },
-        );
+        self.config().set(BodySize(Size { w, h }));
         self.base_widget.set_size(w, h);
         self.invalidate();
     }
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config().set(MainColor(color));
         self.base_widget.set_color(color);
         self.invalidate();
     }

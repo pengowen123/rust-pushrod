@@ -92,8 +92,7 @@ pub trait Widget {
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
-        self.config()
-            .set(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
+        self.config().set(Invalidate);
     }
 
     /// Clears the invalidation flag.
@@ -108,12 +107,7 @@ pub trait Widget {
 
     /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
-        self.config().set(
-            CONFIG_ORIGIN,
-            WidgetConfig::Origin {
-                point: Point { x, y },
-            },
-        );
+        self.config().set(Origin(Point { x, y }));
         self.invalidate();
     }
 
@@ -129,12 +123,7 @@ pub trait Widget {
 
     /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.config().set(
-            CONFIG_SIZE,
-            WidgetConfig::Size {
-                size: crate::core::point::Size { w, h },
-            },
-        );
+        self.config().set(BodySize(Size { w, h }));
         self.invalidate();
     }
 
@@ -149,8 +138,7 @@ pub trait Widget {
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config().set(MainColor(color));
         self.invalidate();
     }
 
