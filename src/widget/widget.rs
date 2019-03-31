@@ -272,11 +272,12 @@ pub trait Widget {
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.get_size();
 
-        Rectangle::new(self.get_color())
-            .draw([0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
+        Rectangle::new(self.get_color()).draw(
+            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
             clip,
             c.transform,
-            g);
+            g,
+        );
 
         self.clear_invalidate();
     }

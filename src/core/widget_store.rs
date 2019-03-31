@@ -191,10 +191,12 @@ impl WidgetStore {
                     draw_state: c.draw_state,
                 };
 
-                let clip: DrawState = c.draw_state.scissor([origin.x as u32 * 2,
+                let clip: DrawState = c.draw_state.scissor([
+                    origin.x as u32 * 2,
                     origin.y as u32 * 2,
                     size.w as u32 * 2,
-                    size.h as u32 * 2]);
+                    size.h as u32 * 2,
+                ]);
 
                 &paint_widget.widget.draw(new_context, g, &clip);
             }

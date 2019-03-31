@@ -112,10 +112,7 @@ impl Widget for ImageWidget {
             size.h as f64 / self.image_size.h as f64,
         );
 
-        Image::new().draw(&self.image,
-                          clip,
-                          transform,
-                          g);
+        Image::new().draw(&self.image, clip, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();
