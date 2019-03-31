@@ -77,16 +77,12 @@ impl TextWidget {
         clear([1.0; 4], g);
 
         let origin = self.get_origin();
-        let size = self.get_size();
+        let transform = c
+            .transform
+            .trans(origin.x as f64, origin.y as f64 + self.font_size as f64);
 
-        let transform = c.transform.trans(origin.x as f64, origin.y as f64 + self.font_size as f64);
-
-        Text::new_color(self.get_text_color(), self.font_size).draw(
-            &self.text,
-            &mut self.font_cache,
-            clip,
-            transform,
-            g)
+        Text::new_color(self.get_text_color(), self.font_size)
+            .draw(&self.text, &mut self.font_cache, clip, transform, g)
             .unwrap();
     }
 }

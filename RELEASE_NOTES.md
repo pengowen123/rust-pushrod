@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.1.18
+
+- Fixing test code, problem is with image rendering; need to figure that out.
+
 ## 0.1.17
 
 - Warnings and unused code cleaned up.
