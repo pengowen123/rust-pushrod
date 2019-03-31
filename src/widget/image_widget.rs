@@ -103,7 +103,7 @@ impl Widget for ImageWidget {
     }
 
     /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut G2d) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         clear(self.get_color(), g);
 
         let size = self.get_size();
@@ -112,7 +112,10 @@ impl Widget for ImageWidget {
             size.h as f64 / self.image_size.h as f64,
         );
 
-        image(&self.image, transform, g);
+        Image::new().draw(&self.image,
+                          clip,
+                          transform,
+                          g);
 
         // Then clear invalidation.
         self.clear_invalidate();

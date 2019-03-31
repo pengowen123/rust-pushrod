@@ -73,7 +73,7 @@ impl TextWidget {
     /// the point of origin's X and Y coordinates.  Since the text is drawn upwards from the point
     /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
     /// based on text justification, and other optional padding, once padding is introduced.)
-    pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
+    pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         clear([1.0; 4], g);
 
         text(
@@ -134,9 +134,9 @@ impl Widget for TextWidget {
     }
 
     /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut G2d) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Draw the text.
-        self.draw_text(c, g);
+        self.draw_text(c, g, &clip);
 
         // Then clear invalidation.
         self.clear_invalidate();

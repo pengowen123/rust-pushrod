@@ -72,56 +72,44 @@ impl BoxWidget {
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
-    fn draw_box(&mut self, c: Context, g: &mut G2d) {
+    fn draw_box(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.get_size();
         let border: f64 = self.get_border_thickness() as f64;
         let color: types::Color = self.get_border_color();
 
         // Upper left to upper right
-        line(
-            color,
-            border,
-            [0.0 as f64, border, size.w as f64, border],
+        Line::new(color, border)
+            .draw([0.0 as f64, border, size.w as f64, border],
+            clip,
             c.transform,
-            g,
-        );
+            g);
 
         // Upper left to lower right
-        line(
-            color,
-            border,
-            [
-                size.w as f64 - border,
-                border,
-                size.w as f64 - border,
-                size.h as f64,
-            ],
-            c.transform,
-            g,
-        );
+        Line::new(color, border)
+            .draw([size.w as f64 - border,
+                      border,
+                      size.w as f64 - border,
+                      size.h as f64],
+                  clip,
+                  c.transform,
+                  g);
 
         // Upper left to lower left
-        line(
-            color,
-            border,
-            [border, border, border, size.h as f64],
-            c.transform,
-            g,
-        );
+        Line::new(color, border)
+            .draw([border, border, border, size.h as f64],
+                  clip,
+                  c.transform,
+                  g);
 
         // Lower left to lower right
-        line(
-            color,
-            border,
-            [
-                0.0 as f64,
-                size.h as f64 - border,
-                size.w as f64,
-                size.h as f64 - border,
-            ],
-            c.transform,
-            g,
-        );
+        Line::new(color, border)
+            .draw([0.0 as f64,
+                      size.h as f64 - border,
+                      size.w as f64,
+                      size.h as f64 - border],
+                  clip,
+                  c.transform,
+                  g);
     }
 }
 
@@ -194,13 +182,13 @@ impl Widget for BoxWidget {
     ///
     /// - Base widget first
     /// - Box graphic for the specified width
-    fn draw(&mut self, c: Context, g: &mut G2d) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
-        self.base_widget.draw(c, g);
+        self.base_widget.draw(c, g, clip);
 
         // Paint the box.
-        self.draw_box(c, g);
+        self.draw_box(c, g, &clip);
 
         // Then clear invalidation.
         self.clear_invalidate();
