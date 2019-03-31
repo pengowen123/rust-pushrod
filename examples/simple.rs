@@ -24,25 +24,24 @@ use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
 
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(false)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-    let factory: GfxFactory = window.factory.clone();
     let mut prod: Pushrod = Pushrod::new(window);
 
-    //    let mut text_widget = TextWidget::new(
-    //        factory,
-    //        "OpenSans-Regular.ttf".to_string(),
-    //        "Welcome to rust-pushrod!".to_string(),
-    //        32,
-    //    );
-    //    text_widget.set_origin(14, 8);
-    //    text_widget.set_size(400, 40);
-    //    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-    //    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
-    //    prod.widget_store.add_widget(Box::new(text_widget));
+    let mut text_widget = TextWidget::new(
+        prod.get_factory(),
+        "OpenSans-Regular.ttf".to_string(),
+        "Welcome to rust-pushrod!".to_string(),
+        32,
+    );
+    text_widget.set_origin(14, 8);
+    text_widget.set_size(400, 48);
+    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
+    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
+    prod.widget_store.add_widget(Box::new(text_widget));
 
     let mut base_widget = CanvasWidget::new();
     base_widget.set_origin(50, 80);
@@ -58,45 +57,37 @@ fn main() {
     box_widget.set_size(200, 200);
     box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
     box_widget.set_border([1.0, 0.0, 0.0, 1.0], 4);
-    box_widget.on_key_pressed(Box::new(|widget_id, key, state| {
+    box_widget.on_key_pressed(Box::new(|_, key, state| {
         eprintln!("Key {:?}; State {:?}", key, state);
     }));
     prod.widget_store.add_widget(Box::new(box_widget));
 
-    let mut box_1 = BoxWidget::new();
-    box_1.set_origin(500, 80);
-    box_1.set_size(200, 200);
-    box_1.set_color([0.5, 0.5, 1.0, 1.0]);
-    box_1.set_border([0.0, 0.0, 1.0, 1.0], 2);
-    let box_1_id = prod.widget_store.add_widget(Box::new(box_1));
-
-    let mut box_2 = BoxWidget::new();
-    box_2.set_origin(550, 105);
-    box_2.set_size(100, 50);
-    box_2.set_color([0.75, 0.75, 1.0, 1.0]);
-    box_2.set_border([1.0, 0.0, 1.0, 1.0], 1);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(box_2), box_1_id);
-
-    let mut box_3 = BoxWidget::new();
-    box_3.set_origin(550, 205);
-    box_3.set_size(100, 50);
-    box_3.set_color([0.75, 0.75, 1.0, 1.0]);
-    box_3.set_border([1.0, 0.0, 1.0, 1.0], 1);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(box_3), box_1_id);
-
-    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
-    image_widget.set_origin(50, 300);
-    image_widget.set_size(150, 150);
-    image_widget.set_color([1.0; 4]);
-    prod.widget_store.add_widget(Box::new(image_widget));
-
-    let mut timer = TimerWidget::new();
-    timer.set_timeout(1000);
-    timer.set_enabled(true);
-    //    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
-    prod.widget_store.add_widget(Box::new(timer));
+//    let mut box_1 = BoxWidget::new();
+//    box_1.set_origin(500, 80);
+//    box_1.set_size(200, 200);
+//    box_1.set_color([0.5, 0.5, 1.0, 1.0]);
+//    box_1.set_border([0.0, 0.0, 1.0, 1.0], 2);
+//    let box_1_id = prod.widget_store.add_widget(Box::new(box_1));
+//
+//    let mut box_2 = BoxWidget::new();
+//    box_2.set_origin(550, 105);
+//    box_2.set_size(100, 150);
+//    box_2.set_color([0.75, 0.75, 1.0, 1.0]);
+//    box_2.set_border([1.0, 0.0, 1.0, 1.0], 1);
+//    prod.widget_store
+//        .add_widget_to_parent(Box::new(box_2), box_1_id);
+//
+//    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
+//    image_widget.set_origin(50, 300);
+//    image_widget.set_size(150, 150);
+//    image_widget.set_color([1.0; 4]);
+//    prod.widget_store.add_widget(Box::new(image_widget));
+//
+//    let mut timer = TimerWidget::new();
+//    timer.set_timeout(1000);
+//    timer.set_enabled(true);
+//    //    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
+//    prod.widget_store.add_widget(Box::new(timer));
 
     //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 

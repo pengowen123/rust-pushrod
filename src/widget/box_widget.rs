@@ -41,34 +41,26 @@ impl BoxWidget {
 
     /// Sets the border color for this widget.
     pub fn set_border_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_COLOR_BORDER, WidgetConfig::BorderColor { color });
+        self.config().set(BorderColor(color));
         self.invalidate();
     }
 
     /// Retrieves the border color of this widget.
     /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
     pub fn get_border_color(&mut self) -> types::Color {
-        match self.config().get(CONFIG_COLOR_BORDER) {
-            Some(WidgetConfig::BorderColor { color }) => [color[0], color[1], color[2], color[3]],
-            _ => [0.0, 0.0, 0.0, 1.0],
-        }
+        self.config().get::<BorderColor>().unwrap().0
     }
 
     /// Sets the thickness of the border for this widget.
     pub fn set_border_thickness(&mut self, thickness: u8) {
-        self.config()
-            .set(CONFIG_BORDER_WIDTH, WidgetConfig::BorderWidth { thickness });
+        self.config().set(BorderWidth(thickness));
         self.invalidate();
     }
 
     /// Retrieves the border thickness of this widget.
     /// Defaults to 1 if not set.
     pub fn get_border_thickness(&mut self) -> u8 {
-        match self.config().get(CONFIG_BORDER_WIDTH) {
-            Some(WidgetConfig::BorderWidth { ref thickness }) => thickness.clone(),
-            _ => 1,
-        }
+        self.config().get::<BorderWidth>().unwrap().0
     }
 
     /// Helper function that sets both the color of the border and the thickness at the same time.
@@ -80,54 +72,49 @@ impl BoxWidget {
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
-    fn draw_box(&mut self, c: Context, g: &mut G2d) {
-        let origin: Point = self.get_origin();
+    fn draw_box(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.get_size();
         let border: f64 = self.get_border_thickness() as f64;
         let color: types::Color = self.get_border_color();
 
         // Upper left to upper right
-        line(
-            color,
-            border,
+        Line::new(color, border).draw(
             [0.0 as f64, border, size.w as f64, border],
+            clip,
             c.transform,
             g,
         );
 
         // Upper left to lower right
-        line(
-            color,
-            border,
+        Line::new(color, border).draw(
             [
                 size.w as f64 - border,
                 border,
                 size.w as f64 - border,
                 size.h as f64,
             ],
+            clip,
             c.transform,
             g,
         );
 
         // Upper left to lower left
-        line(
-            color,
-            border,
+        Line::new(color, border).draw(
             [border, border, border, size.h as f64],
+            clip,
             c.transform,
             g,
         );
 
         // Lower left to lower right
-        line(
-            color,
-            border,
+        Line::new(color, border).draw(
             [
                 0.0 as f64,
                 size.h as f64 - border,
                 size.w as f64,
                 size.h as f64 - border,
             ],
+            clip,
             c.transform,
             g,
         );
@@ -173,32 +160,22 @@ impl Widget for BoxWidget {
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
     /// coordinates.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
-        self.config().set(
-            CONFIG_ORIGIN,
-            WidgetConfig::Origin {
-                point: Point { x, y },
-            },
-        );
+        self.config().set(Origin(Point { x, y }));
         self.base_widget.set_origin(x, y);
         self.invalidate();
     }
 
     /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.config().set(
-            CONFIG_SIZE,
-            WidgetConfig::Size {
-                size: crate::core::point::Size { w, h },
-            },
-        );
+        self.config()
+            .set(BodySize(crate::core::point::Size { w, h }));
         self.base_widget.set_size(w, h);
         self.invalidate();
     }
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config().set(MainColor(color));
         self.base_widget.set_color(color);
         self.invalidate();
     }
@@ -213,13 +190,13 @@ impl Widget for BoxWidget {
     ///
     /// - Base widget first
     /// - Box graphic for the specified width
-    fn draw(&mut self, c: Context, g: &mut G2d) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
-        self.base_widget.draw(c, g);
+        self.base_widget.draw(c, g, &clip);
 
         // Paint the box.
-        self.draw_box(c, g);
+        self.draw_box(c, g, &clip);
 
         // Then clear invalidation.
         self.clear_invalidate();

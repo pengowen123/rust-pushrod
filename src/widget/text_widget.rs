@@ -16,7 +16,6 @@
 use piston_window::*;
 
 use crate::core::callbacks::*;
-use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -36,12 +35,12 @@ impl TextWidget {
     /// Creates a new `TextWidget` object, requiring the current `PistonWindow`'s factory object
     /// (which can be cloned), the name of the font (filename in the `assets` directory), the
     /// text to display, and the font size in which to use.
-    pub fn new(factory: GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
+    pub fn new(factory: &mut GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
             .unwrap();
         let ref font = assets.join(font_name.clone());
-        let glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+        let glyphs = Glyphs::new(font, factory.clone(), TextureSettings::new()).unwrap();
 
         Self {
             config: Configurable::new(),
@@ -54,18 +53,14 @@ impl TextWidget {
 
     /// Sets the color of the text for this `Widget`.
     pub fn set_text_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_TEXT_COLOR, WidgetConfig::TextColor { color });
+        self.config().set(TextColor(color));
         self.invalidate();
     }
 
     /// Retrieves the color of the text for this `Widget`.
     /// Defaults to black if not set.
     pub fn get_text_color(&mut self) -> types::Color {
-        match self.config().get(CONFIG_TEXT_COLOR) {
-            Some(WidgetConfig::TextColor { color }) => color.clone(),
-            _ => [1.0; 4],
-        }
+        self.config().get::<TextColor>().unwrap().0
     }
 
     /// Changes the text, redraws after change.
@@ -78,20 +73,21 @@ impl TextWidget {
     /// the point of origin's X and Y coordinates.  Since the text is drawn upwards from the point
     /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
     /// based on text justification, and other optional padding, once padding is introduced.)
-    pub fn draw_text(&mut self, c: Context, g: &mut G2d) {
+    pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         clear([1.0; 4], g);
 
-        let origin: Point = self.get_origin();
+        let origin = self.get_origin();
+        let size = self.get_size();
 
-        text(
-            self.get_text_color(),
-            self.font_size,
+        let transform = c.transform.trans(origin.x as f64, origin.y as f64 + self.font_size as f64);
+
+        Text::new_color(self.get_text_color(), self.font_size).draw(
             &self.text,
             &mut self.font_cache,
-            c.transform,
-            g,
-        )
-        .unwrap();
+            clip,
+            transform,
+            g)
+            .unwrap();
     }
 }
 
@@ -118,14 +114,14 @@ impl TextWidget {
 ///    let factory: GfxFactory = window.factory.clone();
 ///    let mut prod: Pushrod = Pushrod::new(window);
 ///    let mut text_widget = TextWidget::new(
-///       factory,
+///       prod.get_factory(),
 ///       "OpenSans-Regular.ttf".to_string(),
 ///       "Welcome to Pushrod!".to_string(),
 ///       32,
 ///    );
 ///
 ///    text_widget.set_origin(8, 8);
-///    text_widget.set_size(400, 40);
+///    text_widget.set_size(400, 48);
 ///    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
 ///    text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
 ///    prod.widget_store.add_widget(Box::new(text_widget));
@@ -141,9 +137,9 @@ impl Widget for TextWidget {
     }
 
     /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut G2d) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Draw the text.
-        self.draw_text(c, g);
+        self.draw_text(c, g, &clip);
 
         // Then clear invalidation.
         self.clear_invalidate();

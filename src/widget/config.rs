@@ -1,4 +1,5 @@
 // Configurable Implementation
+// New configuration module, as described by u/JayDepp on Reddit - THANKS!!!
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,100 +14,78 @@
 // limitations under the License.
 
 use piston_window::types::Color;
-use std::collections::HashMap;
 
 use crate::core::point::Point;
+use crate::core::point::Size;
 
-/// A programmatic type identifying the type of key (and most importantly, size) that is used
-/// for storing configuration values for a `Widget` in the config `HashMap`.
-pub type ConfigKey = u8;
+macro_rules! impl_configurable {
+    ($($name:ty => $field:ident,)*) => {
+        pub trait ConfigKey: private::ConfigKeyInner {}
+        $( impl ConfigKey for $name {} )*
 
-/// Config entry key for invalidated object (invalidated means "requires screen refresh")
-pub const CONFIG_INVALIDATE: u8 = 0;
+        mod private {
+            use super::*;
 
-/// Config entry key for retrieving the `Point` of origin.
-pub const CONFIG_ORIGIN: u8 = 1;
+            pub trait ConfigKeyInner: Sized {
+                fn field(config: &Configurable) -> &Option<Self>;
+                fn field_mut(config: &mut Configurable) -> &mut Option<Self>;
+            }
 
-/// Config entry key for retrieving the `Size` of the widget.
-pub const CONFIG_SIZE: u8 = 2;
+            $(
+            impl ConfigKeyInner for $name {
+                fn field(config: &Configurable) -> &Option<Self> {
+                    &config.$field
+                }
+                fn field_mut(config: &mut Configurable) -> &mut Option<Self> {
+                    &mut config.$field
+                }
+            }
+            )*
+        }
 
-/// Config entry key for retrieving the widget's color.
-pub const CONFIG_COLOR: u8 = 3;
-
-/// Config entry key for retrieving the widget's border color.
-pub const CONFIG_COLOR_BORDER: u8 = 4;
-
-/// Config entry key for retrieving the widget's border width.
-pub const CONFIG_BORDER_WIDTH: u8 = 5;
-
-/// Config entry key for retrieving the widget's text color.
-pub const CONFIG_TEXT_COLOR: u8 = 6;
-
-/// Enumeration data type containing storage areas for each configuration object.
-pub enum WidgetConfig {
-    /// Indicates that a widget's paint contents have become invalidated, and need to be redrawn.
-    Invalidate {},
-
-    /// `Point` of origin of this Widget.
-    Origin { point: Point },
-
-    /// `Size` of this widget.
-    Size { size: crate::core::point::Size },
-
-    /// The `types::Color` of this widget: `[f64; 4]` where the values are
-    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
-    Color { color: Color },
-
-    /// The `types::Color` of the border of this widget: `[f64; 4]` where the values are
-    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
-    BorderColor { color: Color },
-
-    /// Indicates the thickness of the border width to be drawn inside widgets that draw a
-    /// border.  (See `BorderColor`.)
-    BorderWidth { thickness: u8 },
-
-    /// The `types::Color` of the text for thsi widget: `[f64; 4]` where the values are
-    /// `[red, green, blue, transparency]`, values between 0 and 1.0.
-    TextColor { color: Color },
-}
-
-/// This structure is used for the configuration store of `Widget` settings.  It contains its
-/// own structure internally, so all that is used inside extended `Widget` objects is a simple
-/// instantiation of a new `Configurable` object as part of your extension.
-pub struct Configurable {
-    config: HashMap<ConfigKey, WidgetConfig>,
-}
-
-/// Implementation of the `Configurable` object.  Contains methods to extend the `HashMap` that
-/// is used for underlying storage.
-impl Configurable {
-    /// Creates a new instance of this object.
-    pub fn new() -> Self {
-        Self {
-            config: HashMap::new(),
+        #[derive(Default)]
+        pub struct Configurable {
+            $( $field: Option<$name>, )*
         }
     }
+}
 
-    /// Sets a configuration key by its `ConfigKey` ID, assigning a new `WidgetConfig` value
-    /// to that key.
-    pub fn set(&mut self, key: ConfigKey, value: WidgetConfig) {
-        self.config.insert(key, value);
+pub struct Invalidate;
+pub struct Origin(pub Point);
+pub struct BodySize(pub Size);
+pub struct MainColor(pub Color);
+pub struct BorderColor(pub Color);
+pub struct BorderWidth(pub u8);
+pub struct TextColor(pub Color);
+
+impl_configurable! {
+    Invalidate => invalidate,
+    Origin => origin,
+    BodySize => body_size,
+    MainColor => main_color,
+    BorderColor => border_color,
+    BorderWidth => border_width,
+    TextColor => text_color,
+}
+
+impl Configurable {
+    pub fn new() -> Self {
+        Self::default()
     }
 
-    /// Retrieves an `Option<&WidgetConfig>` for the key specified.  If the key does not exist,
-    /// a `None` is returned.
-    pub fn get(&self, key: ConfigKey) -> Option<&WidgetConfig> {
-        self.config.get(&key)
+    pub fn set<T: ConfigKey>(&mut self, value: T) {
+        *T::field_mut(self) = Some(value);
     }
 
-    /// Removes the value for the specified key, if one exists.
-    pub fn remove(&mut self, key: ConfigKey) {
-        self.config.remove(&key);
+    pub fn get<T: ConfigKey>(&self) -> Option<&T> {
+        T::field(self).as_ref()
     }
 
-    /// Indicates whether or not a `Configurable` store contains a value for the specified key.
-    /// Returns `true` if one is stored, `false` otherwise.
-    pub fn contains_key(&self, key: ConfigKey) -> bool {
-        self.config.contains_key(&key)
+    pub fn remove<T: ConfigKey>(&mut self) {
+        *T::field_mut(self) = None;
+    }
+
+    pub fn contains_key<T: ConfigKey>(&self) -> bool {
+        T::field(self).is_some()
     }
 }

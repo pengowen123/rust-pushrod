@@ -92,80 +92,65 @@ pub trait Widget {
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
-        self.config()
-            .set(CONFIG_INVALIDATE, WidgetConfig::Invalidate {});
+        self.config().set(Invalidate);
     }
 
     /// Clears the invalidation flag.
     fn clear_invalidate(&mut self) {
-        self.config().remove(CONFIG_INVALIDATE);
+        self.config().remove::<Invalidate>();
     }
 
     /// Checks to see whether or not the widget needs to be redrawn/refreshed.
     fn is_invalidated(&mut self) -> bool {
-        self.config().contains_key(CONFIG_INVALIDATE)
+        self.config().contains_key::<Invalidate>()
     }
 
     /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
-        self.config().set(
-            CONFIG_ORIGIN,
-            WidgetConfig::Origin {
-                point: Point { x, y },
-            },
-        );
+        self.config().set(Origin(Point { x, y }));
         self.invalidate();
     }
 
     /// Retrieves the `Point` of origin for this object.
     /// Defaults to origin (0, 0) if not set.
     fn get_origin(&mut self) -> Point {
-        match self.config().get(CONFIG_ORIGIN) {
-            Some(WidgetConfig::Origin { ref point }) => point.clone(),
-            None => make_origin_point(),
-            _ => make_origin_point(),
-        }
+        self.config()
+            .get::<Origin>()
+            .unwrap_or(&Origin(Point { x: 0, y: 0 }))
+            .0
+            .clone()
     }
 
     /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
     fn set_size(&mut self, w: i32, h: i32) {
-        self.config().set(
-            CONFIG_SIZE,
-            WidgetConfig::Size {
-                size: crate::core::point::Size { w, h },
-            },
-        );
+        self.config()
+            .set(BodySize(crate::core::point::Size { w, h }));
         self.invalidate();
     }
 
     /// Retrieves the `Size` bounds for this widget.
     /// Defaults to size (0, 0) if not set.
     fn get_size(&mut self) -> crate::core::point::Size {
-        match self.config().get(CONFIG_SIZE) {
-            Some(WidgetConfig::Size { ref size }) => size.clone(),
-            _ => make_unsized(),
-        }
+        self.config()
+            .get::<BodySize>()
+            .unwrap_or(&BodySize(crate::core::point::Size { w: 0, h: 0 }))
+            .0
+            .clone()
     }
 
     /// Sets the color for this widget.  Invalidates the widget afterward.
     fn set_color(&mut self, color: types::Color) {
-        self.config()
-            .set(CONFIG_COLOR, WidgetConfig::Color { color });
+        self.config().set(MainColor(color));
         self.invalidate();
     }
 
     /// Retrieves the color of this widget.
     /// Defaults to white color `[1.0; 4]` if not set.
     fn get_color(&mut self) -> types::Color {
-        if self.config().contains_key(CONFIG_COLOR) {
-            match self.config().get(CONFIG_COLOR) {
-                Some(WidgetConfig::Color { ref color }) => [color[0], color[1], color[2], color[3]],
-                None => [1.0; 4],
-                _ => [1.0; 4],
-            }
-        } else {
-            [1.0; 4]
-        }
+        self.config()
+            .get::<MainColor>()
+            .unwrap_or(&MainColor([1.0; 4]))
+            .0
     }
 
     // Callbacks
@@ -284,13 +269,12 @@ pub trait Widget {
     /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
     /// behavior.)
-    fn draw(&mut self, c: Context, g: &mut G2d) {
-        let origin: Point = self.get_origin();
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.get_size();
 
-        rectangle(
-            self.get_color(),
+        Rectangle::new(self.get_color()).draw(
             [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
+            clip,
             c.transform,
             g,
         );

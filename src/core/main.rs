@@ -256,7 +256,7 @@ impl Pushrod {
                 Event::Input(Input::Button(ButtonArgs {
                     state,
                     button: Button::Keyboard(key),
-                    scancode,
+                    scancode: _,
                 })) => {
                     self.widget_store
                         .keypress_for_id(last_widget_id, &key, &state);
