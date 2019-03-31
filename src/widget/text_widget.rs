@@ -35,12 +35,12 @@ impl TextWidget {
     /// Creates a new `TextWidget` object, requiring the current `PistonWindow`'s factory object
     /// (which can be cloned), the name of the font (filename in the `assets` directory), the
     /// text to display, and the font size in which to use.
-    pub fn new(factory: GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
+    pub fn new(factory: &mut GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
             .unwrap();
         let ref font = assets.join(font_name.clone());
-        let glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+        let glyphs = Glyphs::new(font, factory.clone(), TextureSettings::new()).unwrap();
 
         Self {
             config: Configurable::new(),
@@ -76,15 +76,18 @@ impl TextWidget {
     pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         clear([1.0; 4], g);
 
-        text(
-            self.get_text_color(),
-            self.font_size,
+        let origin = self.get_origin();
+        let size = self.get_size();
+
+        let transform = c.transform.trans(origin.x as f64, origin.y as f64 + self.font_size as f64);
+
+        Text::new_color(self.get_text_color(), self.font_size).draw(
             &self.text,
             &mut self.font_cache,
-            c.transform,
-            g,
-        )
-        .unwrap();
+            clip,
+            transform,
+            g)
+            .unwrap();
     }
 }
 

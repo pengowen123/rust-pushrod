@@ -4,6 +4,8 @@
 
 - Warnings and unused code cleaned up.
 - Added a much more uniform Config design based on u/RayDepp on Reddit (#25)
+- Autoclip with scissors (#19)
+- Fixed text widget so that it displays properly with clipping (#23)
 
 ## 0.1.16
 

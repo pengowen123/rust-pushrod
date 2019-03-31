@@ -175,14 +175,14 @@ impl WidgetStore {
         }
 
         for pos in 0..parents_of_widget.len() {
+            c.reset();
+
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
 
             if &paint_widget.widget.is_invalidated() == &true {
                 let origin: Point = paint_widget.widget.get_origin().clone();
                 let size: crate::core::point::Size = paint_widget.widget.get_size().clone();
-
-                c.reset();
 
                 let mut new_context: Context = Context {
                     viewport: c.viewport,
@@ -202,7 +202,6 @@ impl WidgetStore {
             }
 
             if parents_of_widget[pos] != widget_id {
-                c.reset();
                 self.draw(paint_id, c, g);
             }
         }
