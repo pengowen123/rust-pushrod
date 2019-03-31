@@ -114,14 +114,14 @@ impl TextWidget {
 ///    let factory: GfxFactory = window.factory.clone();
 ///    let mut prod: Pushrod = Pushrod::new(window);
 ///    let mut text_widget = TextWidget::new(
-///       factory,
+///       prod.get_factory(),
 ///       "OpenSans-Regular.ttf".to_string(),
 ///       "Welcome to Pushrod!".to_string(),
 ///       32,
 ///    );
 ///
 ///    text_widget.set_origin(8, 8);
-///    text_widget.set_size(400, 40);
+///    text_widget.set_size(400, 48);
 ///    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
 ///    text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
 ///    prod.widget_store.add_widget(Box::new(text_widget));

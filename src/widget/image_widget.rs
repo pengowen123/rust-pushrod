@@ -80,7 +80,7 @@ impl ImageWidget {
 ///    let factory: GfxFactory = window.factory.clone();
 ///    let mut prod: Pushrod = Pushrod::new(window);
 ///    let mut text_widget = TextWidget::new(
-///       factory,
+///       prod.get_factory(),
 ///       "OpenSans-Regular.ttf".to_string(),
 ///       "Welcome to Pushrod!".to_string(),
 ///       32,
