@@ -184,7 +184,7 @@ impl WidgetStore {
                 let origin: Point = paint_widget.widget.get_origin().clone();
                 let size: crate::core::point::Size = paint_widget.widget.get_size().clone();
 
-                let mut new_context: Context = Context {
+                let new_context: Context = Context {
                     viewport: c.viewport,
                     view: c.view,
                     transform: c.transform.trans(origin.x as f64, origin.y as f64),
