@@ -19,6 +19,8 @@ If this is a core library improvement, please **provide some code or an example*
 
 [Consider creating a Playground.](http://play.rust-lang.org)
 
+Please make sure to assign the appropriate labels to the issue.  This way, we can see the type of feature it is that you're wanting to add.  If the label isn't there, consider creating another label that better identifies your request.
+
 **Describe alternatives you've considered**
 A clear and concise description of any alternative solutions or features you've considered.
 
