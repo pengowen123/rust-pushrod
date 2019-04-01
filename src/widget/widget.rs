@@ -285,25 +285,6 @@ pub trait Widget {
 
 /// This is the `CanvasWidget`, which contains a top-level widget for display.  It does
 /// not contain any special logic other than being a base for a display layer.
-pub struct CanvasWidget {
-    config: Configurable,
-    callbacks: CallbackStore,
-}
-
-/// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
-/// that can be positioned anywhere on the screen.
-impl CanvasWidget {
-    pub fn new() -> Self {
-        Self {
-            config: Configurable::new(),
-            callbacks: CallbackStore::new(),
-        }
-    }
-}
-
-/// Implementation of the `CanvasWidget` object with the `Widget` traits implemented.
-/// This function only implements `config` and `callbacks`, which are used as a base for
-/// all `Widget`s.
 ///
 /// Example usage:
 /// ```no_run
@@ -339,6 +320,25 @@ impl CanvasWidget {
 ///    let widget_id_2 = prod.widget_store.add_widget_to_parent(Box::new(base_widget_2), widget_id);
 /// # }
 /// ```
+pub struct CanvasWidget {
+    config: Configurable,
+    callbacks: CallbackStore,
+}
+
+/// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
+/// that can be positioned anywhere on the screen.
+impl CanvasWidget {
+    pub fn new() -> Self {
+        Self {
+            config: Configurable::new(),
+            callbacks: CallbackStore::new(),
+        }
+    }
+}
+
+/// Implementation of the `CanvasWidget` object with the `Widget` traits implemented.
+/// This function only implements `config` and `callbacks`, which are used as a base for
+/// all `Widget`s.
 impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config

@@ -25,6 +25,21 @@ pub const CALLBACK_TIMER: u32 = 100;
 
 /// This is the `TimerWidget`.  It contains no base widget, it only contains a start and end
 /// time,
+///
+/// Example usage:
+/// ```no_run
+/// # use piston_window::*;
+/// # use pushrod::core::point::*;
+/// # use pushrod::widget::widget::*;
+/// # use pushrod::widget::timer_widget::*;
+/// # fn main() {
+///    let mut timer_widget = TimerWidget::new();
+///
+///    timer_widget.set_timeout(60000);
+///    timer_widget.on_timeout(Box::new( || eprintln!("Timer triggered.") ));
+///    timer_widget.set_enabled(true);
+/// # }
+/// ```
 pub struct TimerWidget {
     config: Configurable,
     callbacks: CallbackStore,
@@ -110,21 +125,6 @@ impl TimerWidget {
 }
 
 /// Implementation of the `TimerWidget` object with the `Widget` traits implemented.
-///
-/// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::timer_widget::*;
-/// # fn main() {
-///    let mut timer_widget = TimerWidget::new();
-///
-///    timer_widget.set_timeout(60000);
-///    timer_widget.on_timeout(Box::new( || eprintln!("Timer triggered.") ));
-///    timer_widget.set_enabled(true);
-/// # }
-/// ```
 impl Widget for TimerWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config

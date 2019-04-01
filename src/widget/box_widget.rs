@@ -22,6 +22,27 @@ use crate::widget::widget::*;
 
 /// This is the `BoxWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
+///
+/// Example usage:
+/// ```no_run
+/// # use piston_window::*;
+/// # use pushrod::core::point::*;
+/// # use pushrod::widget::widget::*;
+/// # use pushrod::widget::box_widget::*;
+/// # fn main() {
+///    let mut box_widget = BoxWidget::new();
+///
+///    box_widget.set_origin(100, 100);
+///    box_widget.set_size(200, 200);
+///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
+///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
+///    box_widget.set_border_thickness(3);
+///
+///    // (OR)
+///
+///    box_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
+/// # }
+/// ```
 pub struct BoxWidget {
     config: Configurable,
     callbacks: CallbackStore,
@@ -127,27 +148,6 @@ impl BoxWidget {
 ///
 /// This is basically just a box with a fill color.  Use this to draw other things like buttons,
 /// text widgets, and so on, if you need anything with a drawable border.
-///
-/// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::box_widget::*;
-/// # fn main() {
-///    let mut box_widget = BoxWidget::new();
-///
-///    box_widget.set_origin(100, 100);
-///    box_widget.set_size(200, 200);
-///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
-///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
-///    box_widget.set_border_thickness(3);
-///
-///    // (OR)
-///
-///    box_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
-/// # }
-/// ```
 impl Widget for BoxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
