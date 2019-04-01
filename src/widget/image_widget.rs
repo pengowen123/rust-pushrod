@@ -23,7 +23,7 @@ use crate::widget::widget::*;
 pub struct ImageWidget {
     config: Configurable,
     callbacks: CallbackStore,
-    image: G2dTexture,
+    image: Box<G2dTexture>,
     image_size: crate::core::point::Size,
 }
 
@@ -48,7 +48,7 @@ impl ImageWidget {
         Self {
             config: Configurable::new(),
             callbacks: CallbackStore::new(),
-            image: texture.clone(),
+            image: Box::new(texture.clone()),
             image_size: crate::core::point::Size {
                 w: texture.clone().get_size().0 as i32,
                 h: texture.clone().get_size().1 as i32,
@@ -104,15 +104,13 @@ impl Widget for ImageWidget {
 
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
-        clear(self.get_color(), g);
-
         let size = self.get_size();
         let transform = c.transform.scale(
             size.w as f64 / self.image_size.w as f64,
             size.h as f64 / self.image_size.h as f64,
         );
 
-        Image::new().draw(&self.image, clip, transform, g);
+        Image::new().draw(&*self.image, clip, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();

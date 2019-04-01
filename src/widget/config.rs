@@ -18,6 +18,9 @@ use piston_window::types::Color;
 use crate::core::point::Point;
 use crate::core::point::Size;
 
+/// Powerful macro that automatically creates a configuration object from a specified struct.
+/// Each struct has its own getter, setter, removal of a key (by its value), and checking to see
+/// if a key exists (by its value.)
 macro_rules! impl_configurable {
     ($($name:ty => $field:ident,)*) => {
         pub trait ConfigKey: private::ConfigKeyInner {}
@@ -44,20 +47,38 @@ macro_rules! impl_configurable {
         }
 
         #[derive(Default)]
+        /// Default Configurable object, created for each struct represented in the
+        /// `impl_configurable!` macro.
         pub struct Configurable {
             $( $field: Option<$name>, )*
         }
     }
 }
 
+/// Existence of this object indicates that a `Widget` needs to be redrawn.
 pub struct Invalidate;
+
+/// Origin `Point` at which a `Widget` exists on the display window.
 pub struct Origin(pub Point);
+
+/// Physical size of the `Widget`.
 pub struct BodySize(pub Size);
+
+/// Color of the body of the `Widget`.
 pub struct MainColor(pub Color);
+
+/// Color of the border for the `BoxWidget` and any `Widget` objects that contain a border.
 pub struct BorderColor(pub Color);
+
+/// Width (in pixels) of the border for the `BoxWidget` or any `Widget` objects that contain a border.
 pub struct BorderWidth(pub u8);
+
+/// `Color` of text to be displayed in a `TextWidget`.
 pub struct TextColor(pub Color);
 
+/// This macro implements the availability of configuration items.  The first value is the name
+/// of the `struct` that the configuration object applies, and the second value is the name of the
+/// private inner trait that is responsible for setting and getting values for that `struct`
 impl_configurable! {
     Invalidate => invalidate,
     Origin => origin,
@@ -68,6 +89,26 @@ impl_configurable! {
     TextColor => text_color,
 }
 
+/// Implementation of the default `Configurable` object.
+///
+/// There are two ways in which configuration objects can be used:
+/// ```
+/// # use pushrod::widget::config::*;
+/// # use pushrod::core::point::Point;
+/// # use pushrod::core::point::Size;
+/// fn main() {
+///   let mut config: Configurable = Configurable::new();
+///
+///   config.set(Origin(Point { x: 0, y: 100 }));
+///   config.set(BodySize(Size { w: 150, h: 150 }));
+///
+///   // To get the value of the Origin, you can use type inference:
+///   let main_origin: &Origin = config.get().unwrap();
+///
+///   // Or you can use declared types with ::<> as such:
+///   let body_size = &config.get::<BodySize>().unwrap().0;
+/// }
+/// ```
 impl Configurable {
     pub fn new() -> Self {
         Self::default()

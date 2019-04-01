@@ -62,32 +62,55 @@ fn main() {
     }));
     prod.widget_store.add_widget(Box::new(box_widget));
 
-//    let mut box_1 = BoxWidget::new();
-//    box_1.set_origin(500, 80);
-//    box_1.set_size(200, 200);
-//    box_1.set_color([0.5, 0.5, 1.0, 1.0]);
-//    box_1.set_border([0.0, 0.0, 1.0, 1.0], 2);
-//    let box_1_id = prod.widget_store.add_widget(Box::new(box_1));
-//
-//    let mut box_2 = BoxWidget::new();
-//    box_2.set_origin(550, 105);
-//    box_2.set_size(100, 150);
-//    box_2.set_color([0.75, 0.75, 1.0, 1.0]);
-//    box_2.set_border([1.0, 0.0, 1.0, 1.0], 1);
-//    prod.widget_store
-//        .add_widget_to_parent(Box::new(box_2), box_1_id);
-//
-//    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
-//    image_widget.set_origin(50, 300);
-//    image_widget.set_size(150, 150);
-//    image_widget.set_color([1.0; 4]);
-//    prod.widget_store.add_widget(Box::new(image_widget));
-//
-//    let mut timer = TimerWidget::new();
-//    timer.set_timeout(1000);
-//    timer.set_enabled(true);
-//    //    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
-//    prod.widget_store.add_widget(Box::new(timer));
+    let mut box_1 = BoxWidget::new();
+    box_1.set_origin(500, 80);
+    box_1.set_size(200, 200);
+    box_1.set_color([0.5, 0.5, 1.0, 1.0]);
+    box_1.set_border([0.0, 0.0, 1.0, 1.0], 2);
+    let box_1_id = prod.widget_store.add_widget(Box::new(box_1));
+
+    let mut inner_box_1 = BoxWidget::new();
+    inner_box_1.set_origin(525, 105);
+    inner_box_1.set_size(70, 60);
+    inner_box_1.set_color([0.75, 0.75, 1.0, 1.0]);
+    inner_box_1.set_border([1.0, 0.0, 1.0, 1.0], 1);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(inner_box_1), box_1_id);
+
+    let mut inner_box_2 = BoxWidget::new();
+    inner_box_2.set_origin(605, 105);
+    inner_box_2.set_size(70, 60);
+    inner_box_2.set_color([0.75, 0.25, 1.0, 1.0]);
+    inner_box_2.set_border([1.0, 1.0, 0.0, 1.0], 1);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(inner_box_2), box_1_id);
+
+    let mut inner_box_3 = BoxWidget::new();
+    inner_box_3.set_origin(525, 190);
+    inner_box_3.set_size(70, 60);
+    inner_box_3.set_color([0.25, 0.50, 0.75, 1.0]);
+    inner_box_3.set_border([1.0, 0.50, 1.0, 1.0], 1);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(inner_box_3), box_1_id);
+
+    let mut inner_box_4 = BoxWidget::new();
+    inner_box_4.set_origin(605, 190);
+    inner_box_4.set_size(70, 60);
+    inner_box_4.set_color([0.75, 0.50, 0.0, 1.0]);
+    inner_box_4.set_border([0.50, 0.0, 0.25, 1.0], 1);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(inner_box_4), box_1_id);
+
+    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
+    image_widget.set_origin(50, 300);
+    image_widget.set_size(125, 125);
+    prod.widget_store.add_widget(Box::new(image_widget));
+
+    //    let mut timer = TimerWidget::new();
+    //    timer.set_timeout(1000);
+    //    timer.set_enabled(true);
+    //    //    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
+    //    prod.widget_store.add_widget(Box::new(timer));
 
     //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 
