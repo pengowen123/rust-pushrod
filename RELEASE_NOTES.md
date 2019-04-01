@@ -3,6 +3,8 @@
 ## 0.1.18
 
 - Fixing test code, problem is with image rendering; need to figure that out.
+- Removed use of clear() call, it caused issues when drawing widgets on the screen. (#69)
+- Modified image_widget so that it now stores the texture in heap.
 
 ## 0.1.17
 
