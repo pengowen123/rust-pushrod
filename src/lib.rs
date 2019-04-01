@@ -25,6 +25,12 @@
 //! find_folder = "^0.3.0"
 //! ```
 //!
+//! To use the crate in your project, add the following dependencies:
+//! ```ignore
+//! [dependencies]
+//! rust-pushrod = "^0.1"
+//! ```
+//!
 //! # Core Components
 //!
 //! # Callbacks
@@ -32,6 +38,24 @@
 //! # Events
 //!
 //! # Widgets
+//! The following `Widget` objects are provided:
+//!
+//! `BaseWidget` is a top-level `Widget` object.  It can be configured with
+//! an origin, size, and background color.  If you wish to design your own `Widget`, you would
+//! want to either extend the `BaseWidget`, or use it as a backing in your own `Widget` object.
+//! (See `BoxWidget` for an example of how to use it in tandem with another object.)
+//!
+//! `BoxWidget` incorporates a `BaseWidget`, extending it to include a border color and width.
+//!
+//! `TextWidget` provides a way to display text in the main window.  Fonts are in `ttf` format,
+//! which can be downloaded from Google, so long as they are free/open source.  One has been
+//! included with the source distribution in the `assets` directory.
+//!
+//! `TimerWidget` provides a rudimentary timer, which increases ticks based on the screen
+//! refresh.  After a timer has expired, a callback is triggered, allowing an action to occur.
+//!
+//! `ImageWidget` draws an image on the screen.  `png` format has been tested, but `jpg` and `gif`
+//! formats should also work, as they are part of the Piston library.
 
 /// Main module containing the run loop for the UI components, containers for windows and
 /// `Widget` trait objects, and so on.  Contains the core elements required to build

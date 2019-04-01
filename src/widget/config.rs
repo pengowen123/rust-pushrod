@@ -47,6 +47,8 @@ macro_rules! impl_configurable {
         }
 
         #[derive(Default)]
+        /// Default Configurable object, created for each struct represented in the
+        /// `impl_configurable!` macro.
         pub struct Configurable {
             $( $field: Option<$name>, )*
         }
@@ -91,10 +93,9 @@ impl_configurable! {
 ///
 /// There are two ways in which configuration objects can be used:
 /// ```
-/// use pushrod::widget::config::*;
-/// use pushrod::core::point::Point;
-/// use pushrod::core::point::Size;
-///
+/// # use pushrod::widget::config::*;
+/// # use pushrod::core::point::Point;
+/// # use pushrod::core::point::Size;
 /// fn main() {
 ///   let mut config: Configurable = Configurable::new();
 ///
