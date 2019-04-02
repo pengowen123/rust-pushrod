@@ -178,7 +178,12 @@ pub trait Widget {
     /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
     /// `CallbackTypes::SizeCallback` enum type.  If the callback does not exist, or is not
     /// defined properly, it will be silently dropped and ignored.
-    fn perform_size_callback(&mut self, callback_id: u32, widget_id: i32, size: crate::core::point::Size) {
+    fn perform_size_callback(
+        &mut self,
+        callback_id: u32,
+        widget_id: i32,
+        size: crate::core::point::Size,
+    ) {
         match self.callbacks().get(callback_id) {
             CallbackTypes::SizeCallback { callback } => callback(widget_id, size.clone()),
             _ => (),

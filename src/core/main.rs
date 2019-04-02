@@ -151,6 +151,10 @@ impl Pushrod {
                 self.widget_store.handle_resize(w as u32, h as u32);
             });
 
+            event.focus(|focused| {
+                eprintln!("Window Focus: {:?}", focused);
+            });
+
             match event {
                 Event::Input(Input::Button(ButtonArgs {
                     state,

@@ -67,7 +67,13 @@ impl WidgetStore {
         self.widgets[0].widget.set_size(width as i32, height as i32);
 
         for pos in 0..self.widgets.len() {
-            self.window_resized_for_id(pos as i32, crate::core::point::Size { w: width as i32, h: height as i32 });
+            self.window_resized_for_id(
+                pos as i32,
+                crate::core::point::Size {
+                    w: width as i32,
+                    h: height as i32,
+                },
+            );
         }
     }
 
