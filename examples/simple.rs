@@ -26,7 +26,7 @@ use pushrod::widget::widget::*;
 fn main() {
     let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
-        .resizable(false)
+        .resizable(true)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
     let mut prod: Pushrod = Pushrod::new(window);
@@ -106,11 +106,11 @@ fn main() {
     image_widget.set_size(125, 125);
     prod.widget_store.add_widget(Box::new(image_widget));
 
-    //    let mut timer = TimerWidget::new();
-    //    timer.set_timeout(1000);
-    //    timer.set_enabled(true);
-    //    //    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
-    //    prod.widget_store.add_widget(Box::new(timer));
+    let mut timer = TimerWidget::new();
+    timer.set_timeout(1000);
+    timer.set_enabled(true);
+    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
+    prod.widget_store.add_widget(Box::new(timer));
 
     //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
 

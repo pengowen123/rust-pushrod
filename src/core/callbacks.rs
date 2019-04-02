@@ -35,17 +35,27 @@ pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
 /// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_MOVED: u32 = 4;
 
+/// Index for keyboard event callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::KeyCallback``` callback.
 pub const CALLBACK_KEY_PRESSED: u32 = 5;
 
-/// Callback type that takes no input parameters.
+/// Index for window resized callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::SizeCallback``` callback.
+pub const CALLBACK_WINDOW_RESIZED: u32 = 6;
+
+/// Callback type that takes no input.
 pub type BlankCallback = Box<Fn() -> ()>;
 
-/// Callback type that accepts a widget ID as its input parameter.
+/// Callback type that accepts a widget ID.
 pub type SingleCallback = Box<Fn(i32) -> ()>;
 
 /// Callback type that accepts a widget ID and a `Point` on the screen as its input parameter.
 pub type PointCallback = Box<Fn(i32, Point) -> ()>;
 
+/// Callback type that accepts a widget ID and a `Size`.
+pub type SizeCallback = Box<Fn(i32, crate::core::point::Size) -> ()>;
+
+/// Callback type that accepts a widget ID, a key code, and its down/up button keypress state.
 pub type KeyCallback = Box<Fn(i32, Key, ButtonState) -> ()>;
 
 /// This is an enumerated type that is used to store numerous variations of callbacks that can
@@ -67,6 +77,12 @@ pub enum CallbackTypes {
         callback: PointCallback,
     },
 
+    /// Callback that supplies its widget ID and a `Size`.
+    SizeCallback {
+        callback: SizeCallback,
+    },
+
+    /// Callback that supplies its widget ID, a key code, and button state.
     KeyCallback {
         callback: KeyCallback,
     },

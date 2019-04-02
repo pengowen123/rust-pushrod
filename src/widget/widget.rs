@@ -175,6 +175,19 @@ pub trait Widget {
         }
     }
 
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::SizeCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
+    fn perform_size_callback(&mut self, callback_id: u32, widget_id: i32, size: crate::core::point::Size) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::SizeCallback { callback } => callback(widget_id, size.clone()),
+            _ => (),
+        }
+    }
+
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::KeyCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
     fn perform_key_callback(
         &mut self,
         callback_id: u32,
@@ -222,6 +235,12 @@ pub trait Widget {
         self.perform_point_callback(CALLBACK_MOUSE_MOVED, widget_id, point.clone());
     }
 
+    /// Called when the main window is resized.  Includes the widget ID and the new window size.
+    /// Only override if you want to respond to a window resize (and if the window is resizable.)
+    fn window_resized(&mut self, widget_id: i32, size: crate::core::point::Size) {
+        self.perform_size_callback(CALLBACK_WINDOW_RESIZED, widget_id, size.clone());
+    }
+
     // Callback Setters
     fn on_key_pressed(&mut self, callback: KeyCallback) {
         self.callbacks().put(
@@ -259,6 +278,13 @@ pub trait Widget {
         self.callbacks().put(
             CALLBACK_MOUSE_MOVED,
             CallbackTypes::PointCallback { callback },
+        );
+    }
+
+    fn on_window_resized(&mut self, callback: SizeCallback) {
+        self.callbacks().put(
+            CALLBACK_WINDOW_RESIZED,
+            CallbackTypes::SizeCallback { callback },
         );
     }
 
