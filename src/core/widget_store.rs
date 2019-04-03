@@ -252,6 +252,13 @@ impl WidgetStore {
         &self.widgets[id as usize].widget.window_resized(id, size);
     }
 
+    /// Callback to `focused` for a `Widget` by ID.
+    pub fn handle_focus(&mut self, focus: bool) {
+        for id in 0..self.widgets.len() as i32 {
+            &self.widgets[id as usize].widget.window_focused(id, focus);
+        }
+    }
+
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
     pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn Widget> {
         &self.widgets[id as usize].widget

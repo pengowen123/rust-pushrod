@@ -151,7 +151,7 @@ impl Pushrod {
             });
 
             event.focus(|focused| {
-                eprintln!("Window Focus: {:?}", focused);
+                self.widget_store.handle_focus(focused);
             });
 
             match event {

@@ -43,11 +43,18 @@ pub const CALLBACK_KEY_PRESSED: u32 = 5;
 /// ```CallbackTypes::SizeCallback``` callback.
 pub const CALLBACK_WINDOW_RESIZED: u32 = 6;
 
+/// Index for window focused callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::BoolCallback``` callback.
+pub const CALLBACK_WINDOW_FOCUSED: u32 = 7;
+
 /// Callback type that takes no input.
 pub type BlankCallback = Box<Fn() -> ()>;
 
 /// Callback type that accepts a widget ID.
 pub type SingleCallback = Box<Fn(i32) -> ()>;
+
+/// Callback type that accepts a boolean.
+pub type BoolCallback = Box<Fn(i32, bool) -> ()>;
 
 /// Callback type that accepts a widget ID and a `Point` on the screen as its input parameter.
 pub type PointCallback = Box<Fn(i32, Point) -> ()>;
@@ -67,6 +74,9 @@ pub enum CallbackTypes {
 
     /// Callback that only supplies its widget ID.
     SingleCallback { callback: SingleCallback },
+
+    /// Callback that supplies its widget ID and a boolean flag.
+    BoolCallback { callback: BoolCallback },
 
     /// Callback that supplies its widget ID and a `Point` on the screen within the `Widget`.
     PointCallback { callback: PointCallback },

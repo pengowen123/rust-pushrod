@@ -166,6 +166,16 @@ pub trait Widget {
     }
 
     /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::BoolCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
+    fn perform_bool_callback(&mut self, callback_id: u32, widget_id: i32, flag: bool) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::BoolCallback { callback } => callback(widget_id, flag),
+            _ => (),
+        }
+    }
+
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
     /// `CallbackTypes::PointCallback` enum type.  If the callback does not exist, or is not
     /// defined properly, it will be silently dropped and ignored.
     fn perform_point_callback(&mut self, callback_id: u32, widget_id: i32, point: Point) {
@@ -246,6 +256,13 @@ pub trait Widget {
         self.perform_size_callback(CALLBACK_WINDOW_RESIZED, widget_id, size.clone());
     }
 
+    /// Called when a window focus state changes.  Includes the widget ID and a focus flag: `true`
+    /// when window gains focus, `false` otherwise.  Only override if you want to signal a window
+    /// focus event.
+    fn window_focused(&mut self, widget_id: i32, focused: bool) {
+        self.perform_bool_callback(CALLBACK_WINDOW_FOCUSED, widget_id, focused);
+    }
+
     // Callback Setters
     fn on_key_pressed(&mut self, callback: KeyCallback) {
         self.callbacks().put(
@@ -292,6 +309,14 @@ pub trait Widget {
         self.callbacks().put(
             CALLBACK_WINDOW_RESIZED,
             CallbackTypes::SizeCallback { callback },
+        );
+    }
+
+    /// Sets the window focused action to be performed when the window is (un)focused.
+    fn on_focused(&mut self, callback: BoolCallback) {
+        self.callbacks().put(
+            CALLBACK_WINDOW_FOCUSED,
+            CallbackTypes::BoolCallback { callback },
         );
     }
 
