@@ -240,7 +240,10 @@ impl WidgetStore {
 
     /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.
     pub fn mouse_moved_for_id(&mut self, id: i32, point: Point) {
-        &self.widgets[id as usize].widget.mouse_moved(id, point);
+        let origin = &self.widgets[id as usize].widget.get_origin();
+        let new_point = Point { x: point.x - origin.x, y: point.y - origin.y };
+
+        &self.widgets[id as usize].widget.mouse_moved(id, new_point);
     }
 
     /// Callback to `window_resized` for a `Widget` by ID, with the new `Size` of the window.

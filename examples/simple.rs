@@ -50,6 +50,9 @@ fn main() {
     base_widget.on_mouse_entered(Box::new(|widget_id| {
         eprintln!("Mouse entered widget {}", widget_id);
     }));
+    base_widget.on_mouse_moved(Box::new(|widget_id, point| {
+        eprintln!("Relative mouse move: x={} y={}", point.x, point.y);
+    }));
     prod.widget_store.add_widget(Box::new(base_widget));
 
     let mut box_widget = BoxWidget::new();
