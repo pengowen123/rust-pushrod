@@ -238,7 +238,8 @@ impl WidgetStore {
         &self.widgets[id as usize].widget.mouse_scrolled(id, point);
     }
 
-    /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.
+    /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.  The
+    /// mouse point is relative to the `Widget` itself, not its position on the screen.
     pub fn mouse_moved_for_id(&mut self, id: i32, point: Point) {
         let origin = &self.widgets[id as usize].widget.get_origin();
         let new_point = Point { x: point.x - origin.x, y: point.y - origin.y };

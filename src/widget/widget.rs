@@ -278,7 +278,8 @@ pub trait Widget {
         );
     }
 
-    /// Sets the closure action to be performed when a mouse moves within a `Widget`.
+    /// Sets the closure action to be performed when a mouse moves within a `Widget`.  The mouse
+    /// point is based on the position within the `Widget`, not its `Point` relative to the window.
     fn on_mouse_moved(&mut self, callback: PointCallback) {
         self.callbacks().put(
             CALLBACK_MOUSE_MOVED,
@@ -286,6 +287,7 @@ pub trait Widget {
         );
     }
 
+    /// Sets the window resize action to be performed when the window is resized.
     fn on_window_resized(&mut self, callback: SizeCallback) {
         self.callbacks().put(
             CALLBACK_WINDOW_RESIZED,

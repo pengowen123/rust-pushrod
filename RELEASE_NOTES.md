@@ -6,6 +6,7 @@
 - Added CONTRIBUTING and issue templates
 - Added handling of window resizing (#42)
 - Re-enabled timer widget
+- Fixed mouse movement in a widget based on its screen position (#34)
 
 ## 0.1.18
 
