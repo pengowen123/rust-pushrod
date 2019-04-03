@@ -94,7 +94,6 @@ impl Pushrod {
     pub fn run(&mut self) {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
-        //        let draw_size = self.window.draw_size();
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -170,9 +169,6 @@ impl Pushrod {
             event.resize(|_, _| {
                 self.widget_store.invalidate_all_widgets();
             });
-
-            // Dispatch events here in the bus
-            //            self.internal_dispatch_events();
 
             // FPS loop handling
 
