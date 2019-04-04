@@ -35,41 +35,67 @@ pub const CALLBACK_MOUSE_SCROLLED: u32 = 3;
 /// ```CallbackTypes::PointCallback``` callback.
 pub const CALLBACK_MOUSE_MOVED: u32 = 4;
 
+/// Index for keyboard event callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::KeyCallback``` callback.
 pub const CALLBACK_KEY_PRESSED: u32 = 5;
 
-/// Callback type that takes no input parameters.
+/// Index for window resized callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::SizeCallback``` callback.
+pub const CALLBACK_WINDOW_RESIZED: u32 = 6;
+
+/// Index for window focused callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::BoolCallback``` callback.
+pub const CALLBACK_WINDOW_FOCUSED: u32 = 7;
+
+/// Index for button click callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::ButtonCallback``` callback.
+pub const CALLBACK_BUTTON_DOWN: u32 = 8;
+
+/// Callback type that takes no input.
 pub type BlankCallback = Box<Fn() -> ()>;
 
-/// Callback type that accepts a widget ID as its input parameter.
+/// Callback type that accepts a widget ID.
 pub type SingleCallback = Box<Fn(i32) -> ()>;
+
+/// Callback type that accepts a boolean.
+pub type BoolCallback = Box<Fn(i32, bool) -> ()>;
 
 /// Callback type that accepts a widget ID and a `Point` on the screen as its input parameter.
 pub type PointCallback = Box<Fn(i32, Point) -> ()>;
 
+/// Callback type that accepts a widget ID and a `Size`.
+pub type SizeCallback = Box<Fn(i32, crate::core::point::Size) -> ()>;
+
+/// Callback type that accepts a widget ID, a key code, and its down/up button keypress state.
 pub type KeyCallback = Box<Fn(i32, Key, ButtonState) -> ()>;
+
+/// Callback type that accepts a widget ID and a button code.
+pub type ButtonCallback = Box<Fn(i32, Button) -> ()>;
 
 /// This is an enumerated type that is used to store numerous variations of callbacks that can
 /// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
 /// can be added to/extended as necessary.
 pub enum CallbackTypes {
     /// Callback that calls a function without any data.
-    BlankCallback {
-        callback: BlankCallback,
-    },
+    BlankCallback { callback: BlankCallback },
 
     /// Callback that only supplies its widget ID.
-    SingleCallback {
-        callback: SingleCallback,
-    },
+    SingleCallback { callback: SingleCallback },
+
+    /// Callback that supplies its widget ID and a boolean flag.
+    BoolCallback { callback: BoolCallback },
 
     /// Callback that supplies its widget ID and a `Point` on the screen within the `Widget`.
-    PointCallback {
-        callback: PointCallback,
-    },
+    PointCallback { callback: PointCallback },
 
-    KeyCallback {
-        callback: KeyCallback,
-    },
+    /// Callback that supplies its widget ID and a `Size`.
+    SizeCallback { callback: SizeCallback },
+
+    /// Callback that supplies its widget ID, a key code, and button state.
+    KeyCallback { callback: KeyCallback },
+
+    /// Callback that supplies its widget ID and a button code.
+    ButtonCallback { callback: ButtonCallback },
 }
 
 /// This is the `CallbackStore` that is used to store a list of `CallbackTypes` that are

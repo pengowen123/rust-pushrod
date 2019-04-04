@@ -1,5 +1,15 @@
 # Pushrod Releases
 
+## 0.1.19
+
+- Documentation cleanup
+- Added CONTRIBUTING and issue templates
+- Added handling of window resizing (#42)
+- Re-enabled timer widget
+- Fixed mouse movement in a widget based on its screen position (#34)
+- Added window (un)focus event handling (#41)
+- Added mouse button down inside a widget (#35)
+
 ## 0.1.18
 
 - Fixing test code, problem is with image rendering; need to figure that out.

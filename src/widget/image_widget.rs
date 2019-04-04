@@ -19,7 +19,32 @@ use crate::core::callbacks::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
-/// This is the `ImageWidget`, which draws an image on the screen.
+/// This is the `ImageWidget`, which draws an image on the screen.  The image is loaded into
+/// heap memory (using a `Box`).  This way, larger image objects can be loaded.
+///
+/// Example usage:
+/// ```no_run
+/// # use piston_window::*;
+/// # use pushrod::core::point::*;
+/// # use pushrod::core::main::*;
+/// # use pushrod::widget::widget::*;
+/// # use pushrod::widget::image_widget::*;
+/// # fn main() {
+/// let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+///       .opengl(OpenGL::V3_2)
+///       .resizable(false)
+///       .build()
+///       .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
+///    let mut prod: Pushrod = Pushrod::new(window);
+///    let mut image_widget = ImageWidget::new(prod.get_factory(),
+///       "rust-512x512.jpg".to_string());
+///
+///    image_widget.set_origin(25, 25);
+///    image_widget.set_size(200, 200);
+///
+///    prod.widget_store.add_widget(Box::new(image_widget));
+/// # }
+/// ```
 pub struct ImageWidget {
     config: Configurable,
     callbacks: CallbackStore,
@@ -30,9 +55,9 @@ pub struct ImageWidget {
 /// Implementation of the constructor for the `ImageWidget`.  Creates a new image object to be
 /// displayed on the screen, given the image filename.
 impl ImageWidget {
-    /// Creates a new `TextWidget` object, requiring the current `PistonWindow`'s factory object
-    /// (which can be cloned), the name of the font (filename in the `assets` directory), the
-    /// text to display, and the font size in which to use.
+    /// Creates a new `ImageWidget` object, requiring the current `PistonWindow`'s factory object
+    /// (which can be cloned), and the name of the image to load.  The image should be in the
+    /// project's local `assets` directory at the top level.
     pub fn new(factory: &mut GfxFactory, image_name: String) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
@@ -57,42 +82,8 @@ impl ImageWidget {
     }
 }
 
-/// Implementation of the `BoxWidget` object with the `Widget` traits implemented.
-/// This implementation is similar to the `CanvasWidget`, but incorporates a drawable box inside
-/// the widget.  Base widget is the `CanvasWidget`.
-///
-/// This is basically just a box with a fill color.  Use this to draw other things like buttons,
-/// text widgets, and so on, if you need anything with a drawable border.
-///
-/// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::core::main::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::text_widget::*;
-/// # fn main() {
-/// let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
-///       .opengl(OpenGL::V3_2)
-///       .resizable(false)
-///       .build()
-///       .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-///    let factory: GfxFactory = window.factory.clone();
-///    let mut prod: Pushrod = Pushrod::new(window);
-///    let mut text_widget = TextWidget::new(
-///       prod.get_factory(),
-///       "OpenSans-Regular.ttf".to_string(),
-///       "Welcome to Pushrod!".to_string(),
-///       32,
-///    );
-///
-///    text_widget.set_origin(8, 8);
-///    text_widget.set_size(400, 40);
-///    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-///    text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
-///    prod.widget_store.add_widget(Box::new(text_widget));
-/// # }
-/// ```
+/// Implementation of the `ImageWidget` object.  Draws an image on the screen based on the
+/// image file you specify.
 impl Widget for ImageWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config

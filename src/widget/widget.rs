@@ -166,6 +166,16 @@ pub trait Widget {
     }
 
     /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::BoolCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
+    fn perform_bool_callback(&mut self, callback_id: u32, widget_id: i32, flag: bool) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::BoolCallback { callback } => callback(widget_id, flag),
+            _ => (),
+        }
+    }
+
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
     /// `CallbackTypes::PointCallback` enum type.  If the callback does not exist, or is not
     /// defined properly, it will be silently dropped and ignored.
     fn perform_point_callback(&mut self, callback_id: u32, widget_id: i32, point: Point) {
@@ -175,6 +185,31 @@ pub trait Widget {
         }
     }
 
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::SizeCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
+    fn perform_size_callback(
+        &mut self,
+        callback_id: u32,
+        widget_id: i32,
+        size: crate::core::point::Size,
+    ) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::SizeCallback { callback } => callback(widget_id, size.clone()),
+            _ => (),
+        }
+    }
+
+    fn perform_button_callback(&mut self, callback_id: u32, widget_id: i32, button: Button) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::ButtonCallback { callback } => callback(widget_id, button),
+            _ => (),
+        }
+    }
+
+    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
+    /// `CallbackTypes::KeyCallback` enum type.  If the callback does not exist, or is not
+    /// defined properly, it will be silently dropped and ignored.
     fn perform_key_callback(
         &mut self,
         callback_id: u32,
@@ -222,6 +257,25 @@ pub trait Widget {
         self.perform_point_callback(CALLBACK_MOUSE_MOVED, widget_id, point.clone());
     }
 
+    /// Called when the main window is resized.  Includes the widget ID and the new window size.
+    /// Only override if you want to respond to a window resize (and if the window is resizable.)
+    fn window_resized(&mut self, widget_id: i32, size: crate::core::point::Size) {
+        self.perform_size_callback(CALLBACK_WINDOW_RESIZED, widget_id, size.clone());
+    }
+
+    /// Called when a window focus state changes.  Includes the widget ID and a focus flag: `true`
+    /// when window gains focus, `false` otherwise.  Only override if you want to signal a window
+    /// focus event.
+    fn window_focused(&mut self, widget_id: i32, focused: bool) {
+        self.perform_bool_callback(CALLBACK_WINDOW_FOCUSED, widget_id, focused);
+    }
+
+    /// Called when a mouse button is clicked.  Includes the widget ID and the button code.
+    /// Only override if you want to respond to a mouse click.
+    fn button_down(&mut self, widget_id: i32, button: Button) {
+        self.perform_button_callback(CALLBACK_BUTTON_DOWN, widget_id, button);
+    }
+
     // Callback Setters
     fn on_key_pressed(&mut self, callback: KeyCallback) {
         self.callbacks().put(
@@ -254,12 +308,37 @@ pub trait Widget {
         );
     }
 
-    /// Sets the closure action to be performed when a mouse moves within a `Widget`.
+    /// Sets the closure action to be performed when a mouse moves within a `Widget`.  The mouse
+    /// point is based on the position within the `Widget`, not its `Point` relative to the window.
     fn on_mouse_moved(&mut self, callback: PointCallback) {
         self.callbacks().put(
             CALLBACK_MOUSE_MOVED,
             CallbackTypes::PointCallback { callback },
         );
+    }
+
+    /// Sets the window resize action to be performed when the window is resized.
+    fn on_window_resized(&mut self, callback: SizeCallback) {
+        self.callbacks().put(
+            CALLBACK_WINDOW_RESIZED,
+            CallbackTypes::SizeCallback { callback },
+        );
+    }
+
+    /// Sets the window focused action to be performed when the window is (un)focused.
+    fn on_focused(&mut self, callback: BoolCallback) {
+        self.callbacks().put(
+            CALLBACK_WINDOW_FOCUSED,
+            CallbackTypes::BoolCallback { callback },
+        );
+    }
+
+    /// Sets the button click action to be performed when a mouse button is clicked.
+    fn on_mouse_down(&mut self, callback: ButtonCallback) {
+        self.callbacks().put(
+            CALLBACK_BUTTON_DOWN,
+            CallbackTypes::ButtonCallback { callback },
+        )
     }
 
     // Draw routines
@@ -285,25 +364,6 @@ pub trait Widget {
 
 /// This is the `CanvasWidget`, which contains a top-level widget for display.  It does
 /// not contain any special logic other than being a base for a display layer.
-pub struct CanvasWidget {
-    config: Configurable,
-    callbacks: CallbackStore,
-}
-
-/// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
-/// that can be positioned anywhere on the screen.
-impl CanvasWidget {
-    pub fn new() -> Self {
-        Self {
-            config: Configurable::new(),
-            callbacks: CallbackStore::new(),
-        }
-    }
-}
-
-/// Implementation of the `CanvasWidget` object with the `Widget` traits implemented.
-/// This function only implements `config` and `callbacks`, which are used as a base for
-/// all `Widget`s.
 ///
 /// Example usage:
 /// ```no_run
@@ -339,6 +399,25 @@ impl CanvasWidget {
 ///    let widget_id_2 = prod.widget_store.add_widget_to_parent(Box::new(base_widget_2), widget_id);
 /// # }
 /// ```
+pub struct CanvasWidget {
+    config: Configurable,
+    callbacks: CallbackStore,
+}
+
+/// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
+/// that can be positioned anywhere on the screen.
+impl CanvasWidget {
+    pub fn new() -> Self {
+        Self {
+            config: Configurable::new(),
+            callbacks: CallbackStore::new(),
+        }
+    }
+}
+
+/// Implementation of the `CanvasWidget` object with the `Widget` traits implemented.
+/// This function only implements `config` and `callbacks`, which are used as a base for
+/// all `Widget`s.
 impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config

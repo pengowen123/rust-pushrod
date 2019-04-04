@@ -46,9 +46,9 @@ macro_rules! impl_configurable {
             )*
         }
 
-        #[derive(Default)]
         /// Default Configurable object, created for each struct represented in the
         /// `impl_configurable!` macro.
+        #[derive(Default)]
         pub struct Configurable {
             $( $field: Option<$name>, )*
         }

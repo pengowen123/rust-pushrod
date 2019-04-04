@@ -64,7 +64,17 @@ impl WidgetStore {
     /// be `event` -> `handle_resize` -> `invalidate` -> `draw`.  This is mainly handled by the
     /// `pushrod::core::main` loop, but it can be handled programmatically if required.
     pub fn handle_resize(&mut self, width: u32, height: u32) {
-        eprintln!("[Resize] W={} H={}", width, height);
+        self.widgets[0].widget.set_size(width as i32, height as i32);
+
+        for pos in 0..self.widgets.len() {
+            self.window_resized_for_id(
+                pos as i32,
+                crate::core::point::Size {
+                    w: width as i32,
+                    h: height as i32,
+                },
+            );
+        }
     }
 
     /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
@@ -228,9 +238,33 @@ impl WidgetStore {
         &self.widgets[id as usize].widget.mouse_scrolled(id, point);
     }
 
-    /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.
+    /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.  The
+    /// mouse point is relative to the `Widget` itself, not its position on the screen.
     pub fn mouse_moved_for_id(&mut self, id: i32, point: Point) {
-        &self.widgets[id as usize].widget.mouse_moved(id, point);
+        let origin = &self.widgets[id as usize].widget.get_origin();
+        let new_point = Point {
+            x: point.x - origin.x,
+            y: point.y - origin.y,
+        };
+
+        &self.widgets[id as usize].widget.mouse_moved(id, new_point);
+    }
+
+    /// Callback to `window_resized` for a `Widget` by ID, with the new `Size` of the window.
+    pub fn window_resized_for_id(&mut self, id: i32, size: crate::core::point::Size) {
+        &self.widgets[id as usize].widget.window_resized(id, size);
+    }
+
+    /// Callback to `focused` for a `Widget` by ID.
+    pub fn handle_focus(&mut self, focus: bool) {
+        for id in 0..self.widgets.len() as i32 {
+            &self.widgets[id as usize].widget.window_focused(id, focus);
+        }
+    }
+
+    /// Callback to `button_down` for a `Widget` by ID, with the button code.
+    pub fn button_down(&mut self, id: i32, button: Button) {
+        &self.widgets[id as usize].widget.button_down(id, button);
     }
 
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
