@@ -56,6 +56,9 @@ fn main() {
     base_widget.on_mouse_down(Box::new(|widget_id, button| {
         eprintln!("Mouse button click: {:?}", button);
     }));
+    base_widget.on_mouse_up_inside(Box::new(|widget_id, button| {
+        eprintln!("Mouse button released (inside same widget): {:?}", button);
+    }));
     prod.widget_store.add_widget(Box::new(base_widget));
 
     let mut box_widget = BoxWidget::new();

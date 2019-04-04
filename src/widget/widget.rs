@@ -270,10 +270,17 @@ pub trait Widget {
         self.perform_bool_callback(CALLBACK_WINDOW_FOCUSED, widget_id, focused);
     }
 
-    /// Called when a mouse button is clicked.  Includes the widget ID and the button code.
+    /// Called when a mouse button is clicked down.  Includes the widget ID and the button code.
     /// Only override if you want to respond to a mouse click.
     fn button_down(&mut self, widget_id: i32, button: Button) {
         self.perform_button_callback(CALLBACK_BUTTON_DOWN, widget_id, button);
+    }
+
+    /// Called when a mouse button is released inside the same `Widget` that it was clicked inside.
+    /// Includes the widget ID and the button code.  Only override if you want to respond to a mouse
+    /// button release.
+    fn button_up_inside(&mut self, widget_id: i32, button: Button) {
+        self.perform_button_callback(CALLBACK_BUTTON_UP_INSIDE, widget_id, button);
     }
 
     // Callback Setters
@@ -337,6 +344,15 @@ pub trait Widget {
     fn on_mouse_down(&mut self, callback: ButtonCallback) {
         self.callbacks().put(
             CALLBACK_BUTTON_DOWN,
+            CallbackTypes::ButtonCallback { callback },
+        )
+    }
+
+    /// Sets the callback to be performed when a mouse button is released within the same `Widget`
+    /// that it was pressed down inside.
+    fn on_mouse_up_inside(&mut self, callback: ButtonCallback) {
+        self.callbacks().put(
+            CALLBACK_BUTTON_UP_INSIDE,
             CallbackTypes::ButtonCallback { callback },
         )
     }

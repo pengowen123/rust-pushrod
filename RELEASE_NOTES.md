@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.1.20
+
+- Created button map to keep track of buttons down in run loop for button clicks.
+- Added mouse click up inside widget. (#36)
+
 ## 0.1.19
 
 - Documentation cleanup

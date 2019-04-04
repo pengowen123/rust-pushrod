@@ -267,6 +267,11 @@ impl WidgetStore {
         &self.widgets[id as usize].widget.button_down(id, button);
     }
 
+    /// Callback to `button_up_inside` for a `Widget` by ID, with the button code.
+    pub fn button_up_inside(&mut self, id: i32, button: Button) {
+        &self.widgets[id as usize].widget.button_up_inside(id, button);
+    }
+
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
     pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn Widget> {
         &self.widgets[id as usize].widget
