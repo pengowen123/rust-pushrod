@@ -8,6 +8,7 @@
 - Re-enabled timer widget
 - Fixed mouse movement in a widget based on its screen position (#34)
 - Added window (un)focus event handling (#41)
+- Added mouse button down inside a widget (#35)
 
 ## 0.1.18
 

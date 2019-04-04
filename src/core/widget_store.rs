@@ -242,7 +242,10 @@ impl WidgetStore {
     /// mouse point is relative to the `Widget` itself, not its position on the screen.
     pub fn mouse_moved_for_id(&mut self, id: i32, point: Point) {
         let origin = &self.widgets[id as usize].widget.get_origin();
-        let new_point = Point { x: point.x - origin.x, y: point.y - origin.y };
+        let new_point = Point {
+            x: point.x - origin.x,
+            y: point.y - origin.y,
+        };
 
         &self.widgets[id as usize].widget.mouse_moved(id, new_point);
     }
@@ -257,6 +260,11 @@ impl WidgetStore {
         for id in 0..self.widgets.len() as i32 {
             &self.widgets[id as usize].widget.window_focused(id, focus);
         }
+    }
+
+    /// Callback to `button_down` for a `Widget` by ID, with the button code.
+    pub fn button_down(&mut self, id: i32, button: Button) {
+        &self.widgets[id as usize].widget.button_down(id, button);
     }
 
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.

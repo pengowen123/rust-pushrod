@@ -146,6 +146,11 @@ impl Pushrod {
                 }
             });
 
+            event.button(|args| match args.state {
+                ButtonState::Press => self.widget_store.button_down(last_widget_id, args.button),
+                ButtonState::Release => (),
+            });
+
             event.resize(|w, h| {
                 self.widget_store.handle_resize(w as u32, h as u32);
             });

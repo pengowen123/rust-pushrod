@@ -47,6 +47,10 @@ pub const CALLBACK_WINDOW_RESIZED: u32 = 6;
 /// ```CallbackTypes::BoolCallback``` callback.
 pub const CALLBACK_WINDOW_FOCUSED: u32 = 7;
 
+/// Index for button click callback, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::ButtonCallback``` callback.
+pub const CALLBACK_BUTTON_DOWN: u32 = 8;
+
 /// Callback type that takes no input.
 pub type BlankCallback = Box<Fn() -> ()>;
 
@@ -64,6 +68,9 @@ pub type SizeCallback = Box<Fn(i32, crate::core::point::Size) -> ()>;
 
 /// Callback type that accepts a widget ID, a key code, and its down/up button keypress state.
 pub type KeyCallback = Box<Fn(i32, Key, ButtonState) -> ()>;
+
+/// Callback type that accepts a widget ID and a button code.
+pub type ButtonCallback = Box<Fn(i32, Button) -> ()>;
 
 /// This is an enumerated type that is used to store numerous variations of callbacks that can
 /// be used within the `Widget` system.  This is written such that the `CallbackTypes` enum
@@ -86,6 +93,9 @@ pub enum CallbackTypes {
 
     /// Callback that supplies its widget ID, a key code, and button state.
     KeyCallback { callback: KeyCallback },
+
+    /// Callback that supplies its widget ID and a button code.
+    ButtonCallback { callback: ButtonCallback },
 }
 
 /// This is the `CallbackStore` that is used to store a list of `CallbackTypes` that are

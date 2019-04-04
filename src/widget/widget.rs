@@ -200,6 +200,13 @@ pub trait Widget {
         }
     }
 
+    fn perform_button_callback(&mut self, callback_id: u32, widget_id: i32, button: Button) {
+        match self.callbacks().get(callback_id) {
+            CallbackTypes::ButtonCallback { callback } => callback(widget_id, button),
+            _ => (),
+        }
+    }
+
     /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
     /// `CallbackTypes::KeyCallback` enum type.  If the callback does not exist, or is not
     /// defined properly, it will be silently dropped and ignored.
@@ -263,6 +270,12 @@ pub trait Widget {
         self.perform_bool_callback(CALLBACK_WINDOW_FOCUSED, widget_id, focused);
     }
 
+    /// Called when a mouse button is clicked.  Includes the widget ID and the button code.
+    /// Only override if you want to respond to a mouse click.
+    fn button_down(&mut self, widget_id: i32, button: Button) {
+        self.perform_button_callback(CALLBACK_BUTTON_DOWN, widget_id, button);
+    }
+
     // Callback Setters
     fn on_key_pressed(&mut self, callback: KeyCallback) {
         self.callbacks().put(
@@ -318,6 +331,14 @@ pub trait Widget {
             CALLBACK_WINDOW_FOCUSED,
             CallbackTypes::BoolCallback { callback },
         );
+    }
+
+    /// Sets the button click action to be performed when a mouse button is clicked.
+    fn on_mouse_down(&mut self, callback: ButtonCallback) {
+        self.callbacks().put(
+            CALLBACK_BUTTON_DOWN,
+            CallbackTypes::ButtonCallback { callback },
+        )
     }
 
     // Draw routines
