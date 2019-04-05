@@ -348,7 +348,7 @@ pub trait Widget {
     }
 
     /// Sets the button click action to be performed when a mouse button is clicked.
-    fn on_mouse_down(&mut self, callback: ButtonCallback) {
+    fn on_button_down(&mut self, callback: ButtonCallback) {
         self.callbacks().put(
             CALLBACK_BUTTON_DOWN,
             CallbackTypes::ButtonCallback { callback },

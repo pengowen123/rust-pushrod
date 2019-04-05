@@ -50,16 +50,16 @@ fn main() {
     base_widget.on_mouse_entered(Box::new(|widget_id| {
         eprintln!("Mouse entered widget {}", widget_id);
     }));
-    base_widget.on_mouse_moved(Box::new(|widget_id, point| {
+    base_widget.on_mouse_moved(Box::new(|_, point| {
         eprintln!("Relative mouse move: x={} y={}", point.x, point.y);
     }));
-    base_widget.on_mouse_down(Box::new(|widget_id, button| {
-        eprintln!("Mouse button click: {:?}", button);
+    base_widget.on_button_down(Box::new(|_, button| {
+        eprintln!("Mouse button down: {:?}", button);
     }));
-    base_widget.on_button_up_inside(Box::new(|widget_id, button| {
+    base_widget.on_button_up_inside(Box::new(|_, button| {
         eprintln!("Mouse button released (inside same widget): {:?}", button);
     }));
-    base_widget.on_button_up_outside(Box::new(|widget_id, button| {
+    base_widget.on_button_up_outside(Box::new(|_, button| {
         eprintln!("Mouse button release (outside widget): {:?}", button);
     }));
     prod.widget_store.add_widget(Box::new(base_widget));
