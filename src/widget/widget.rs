@@ -283,6 +283,13 @@ pub trait Widget {
         self.perform_button_callback(CALLBACK_BUTTON_UP_INSIDE, widget_id, button);
     }
 
+    /// Called when a mouse button is released outside the same `Widget` that it was clicked inside.
+    /// Includes the widget ID and the button code.  Only override if you want to respond to a mouse
+    /// button release.
+    fn button_up_outside(&mut self, widget_id: i32, button: Button) {
+        self.perform_button_callback(CALLBACK_BUTTON_UP_OUTSIDE, widget_id, button);
+    }
+
     // Callback Setters
     fn on_key_pressed(&mut self, callback: KeyCallback) {
         self.callbacks().put(
@@ -353,6 +360,15 @@ pub trait Widget {
     fn on_mouse_up_inside(&mut self, callback: ButtonCallback) {
         self.callbacks().put(
             CALLBACK_BUTTON_UP_INSIDE,
+            CallbackTypes::ButtonCallback { callback },
+        )
+    }
+
+    /// Sets the callback to be performed when a mouse button is released outside of the same `Widget`
+    /// that it was pressed down inside.
+    fn on_mouse_up_outside(&mut self, callback: ButtonCallback) {
+        self.callbacks().put(
+            CALLBACK_BUTTON_UP_OUTSIDE,
             CallbackTypes::ButtonCallback { callback },
         )
     }

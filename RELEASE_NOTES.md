@@ -4,6 +4,7 @@
 
 - Created button map to keep track of buttons down in run loop for button clicks.
 - Added mouse click up inside widget. (#36)
+- Added mouse click up outside widget. (#37)
 
 ## 0.1.19
 
