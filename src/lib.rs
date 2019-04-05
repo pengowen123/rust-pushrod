@@ -55,15 +55,6 @@
 //! - Mouse button click down inside the scope of a `Widget`
 //! - Mouse button click release inside and outside of a `Widget`
 //!
-//! # Events
-//! Events are currently used internally by the run loop in `Pushrod::run()`.  The reason for
-//! the separation was that `Pushrod` is responsible for handling the events, interpreting them
-//! into runtime events, and creating callbacks that could be used in their place.
-//!
-//! **Version 0.2.x** will introduce an event callback system that will handle raw events from the
-//! run loop.  This should only be used for advanced GUI development, and should not be relied
-//! upon, as the run loop interprets most of these low-level events on your behalf.
-//!
 //! # Widgets
 //! The following `Widget` objects are provided:
 //!

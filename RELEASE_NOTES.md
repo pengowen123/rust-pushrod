@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.1.21
+
+- Code freeze
+- Documentation updates
+
 ## 0.1.20
 
 - Created button map to keep track of buttons down in run loop for button clicks.
