@@ -47,9 +47,17 @@ pub const CALLBACK_WINDOW_RESIZED: u32 = 6;
 /// ```CallbackTypes::BoolCallback``` callback.
 pub const CALLBACK_WINDOW_FOCUSED: u32 = 7;
 
-/// Index for button click callback, used by `Widget` internally.  Refers to a
+/// Index for button click button down callback, used by `Widget` internally.  Refers to a
 /// ```CallbackTypes::ButtonCallback``` callback.
 pub const CALLBACK_BUTTON_DOWN: u32 = 8;
+
+/// Index for button click button release inside the same `Widget`, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::ButtonCallback``` callback.
+pub const CALLBACK_BUTTON_UP_INSIDE: u32 = 9;
+
+/// Index for button click button release outside the same `Widget`, used by `Widget` internally.  Refers to a
+/// ```CallbackTypes::ButtonCallback``` callback.
+pub const CALLBACK_BUTTON_UP_OUTSIDE: u32 = 10;
 
 /// Callback type that takes no input.
 pub type BlankCallback = Box<Fn() -> ()>;
