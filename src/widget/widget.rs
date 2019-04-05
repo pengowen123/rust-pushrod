@@ -357,7 +357,7 @@ pub trait Widget {
 
     /// Sets the callback to be performed when a mouse button is released within the same `Widget`
     /// that it was pressed down inside.
-    fn on_mouse_up_inside(&mut self, callback: ButtonCallback) {
+    fn on_button_up_inside(&mut self, callback: ButtonCallback) {
         self.callbacks().put(
             CALLBACK_BUTTON_UP_INSIDE,
             CallbackTypes::ButtonCallback { callback },
@@ -366,7 +366,7 @@ pub trait Widget {
 
     /// Sets the callback to be performed when a mouse button is released outside of the same `Widget`
     /// that it was pressed down inside.
-    fn on_mouse_up_outside(&mut self, callback: ButtonCallback) {
+    fn on_button_up_outside(&mut self, callback: ButtonCallback) {
         self.callbacks().put(
             CALLBACK_BUTTON_UP_OUTSIDE,
             CallbackTypes::ButtonCallback { callback },
