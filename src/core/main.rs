@@ -158,15 +158,14 @@ impl Pushrod {
                         .insert(args.button);
 
                     self.widget_store.button_down(last_widget_id, args.button);
-                },
+                }
                 ButtonState::Release => {
-                    let button_set = button_map
-                        .entry(last_widget_id)
-                        .or_insert(HashSet::new());
+                    let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
 
                     if button_set.contains(&args.button) {
                         button_set.remove(&args.button);
-                        self.widget_store.button_up_inside(last_widget_id, args.button);
+                        self.widget_store
+                            .button_up_inside(last_widget_id, args.button);
                     } else {
                         for (widget_id, button_set) in button_map.iter_mut() {
                             if button_set.contains(&args.button) {
@@ -179,7 +178,7 @@ impl Pushrod {
                         // The hash_map that matches that ID should be called with a
                         // button_up_outside callback.
                     }
-                },
+                }
             });
 
             event.resize(|w, h| {

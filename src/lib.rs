@@ -32,10 +32,37 @@
 //! ```
 //!
 //! # Core Components
+//! `pushrod::core` is the _core_ library components, representing the main run loop, the callback
+//! store mechanism, and the widget store.
+//!
+//! `pushrod::event` is the event system, reserved for 0.2.x.
+//!
+//! `pushrod::widget` is the core `Widget` library.
 //!
 //! # Callbacks
+//! Callbacks are introduced in the `Widget` libraries as a way to action upon an event that
+//! was triggered.  If no callback is registered for a particular event, it is bypassed, and
+//! no default action occurs.
+//!
+//! The following callbacks are available:
+//! - Main window resizing
+//! - Main window (un)focusing
+//! - Mouse pointer entering a `Widget`
+//! - Mouse pointer exiting a `Widget`
+//! - Mouse pointer moving inside a `Widget`
+//! - Mouse scrolling a mouse wheel inside a `Widget`
+//! - A keyboard press event happening inside a `Widget`
+//! - Mouse button click down inside the scope of a `Widget`
+//! - Mouse button click release inside and outside of a `Widget`
 //!
 //! # Events
+//! Events are currently used internally by the run loop in `Pushrod::run()`.  The reason for
+//! the separation was that `Pushrod` is responsible for handling the events, interpreting them
+//! into runtime events, and creating callbacks that could be used in their place.
+//!
+//! **Version 0.2.x** will introduce an event callback system that will handle raw events from the
+//! run loop.  This should only be used for advanced GUI development, and should not be relied
+//! upon, as the run loop interprets most of these low-level events on your behalf.
 //!
 //! # Widgets
 //! The following `Widget` objects are provided:
