@@ -129,7 +129,8 @@ fn main() {
     text_widget2.set_origin(290, 100);
     text_widget2.set_size(170, 30);
     text_widget2.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    prod.widget_store.add_widget_to_parent(Box::new(text_widget2), box_widget_id);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(text_widget2), box_widget_id);
 
     let mut text_widget3 = TextWidget::new(
         prod.get_factory(),
@@ -141,7 +142,8 @@ fn main() {
     text_widget3.set_origin(290, 166);
     text_widget3.set_size(170, 30);
     text_widget3.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    prod.widget_store.add_widget_to_parent(Box::new(text_widget3), box_widget_id);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(text_widget3), box_widget_id);
 
     let mut text_widget4 = TextWidget::new(
         prod.get_factory(),
@@ -153,7 +155,8 @@ fn main() {
     text_widget4.set_origin(290, 230);
     text_widget4.set_size(170, 30);
     text_widget4.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    prod.widget_store.add_widget_to_parent(Box::new(text_widget4), box_widget_id);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(text_widget4), box_widget_id);
 
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);

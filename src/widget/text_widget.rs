@@ -21,9 +21,8 @@ use crate::widget::widget::*;
 
 mod private {
     use piston_window::character::CharacterCache;
-    use piston_window::math::Matrix2d;
-    use piston_window::types::{Color, FontSize};
-    use piston_window::{color, DrawState, Graphics, Image, Transformed};
+    use piston_window::types::FontSize;
+    use piston_window::Graphics;
 
     pub struct TextHelper {
         /// The font size
@@ -41,11 +40,11 @@ mod private {
             &self,
             text: &str,
             cache: &mut C,
-            g: &mut G,
+            _: &mut G,
         ) -> Result<(i32, i32), C::Error>
-            where
-                C: CharacterCache,
-                G: Graphics<Texture=<C as CharacterCache>::Texture>,
+        where
+            C: CharacterCache,
+            G: Graphics<Texture = <C as CharacterCache>::Texture>,
         {
             let mut x = 0.0;
             let mut y = 0.0;
@@ -169,9 +168,7 @@ impl TextWidget {
     /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
     /// based on text justification, and other optional padding, once padding is introduced.)
     pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
-        let origin = self.get_origin();
         let size: crate::core::point::Size = self.get_size();
-        let mut font_cache = &mut self.font_cache;
 
         // This prevents the calculation from occurring at every single draw cycle.  It only needs
         // to occur once.
