@@ -3,7 +3,7 @@
 ## 0.1.21
 
 - Code freeze
-- Documentation updates
+- Documentation updates and fixes
 - Removal of dead code
 - Added Debug to Point and Size
 
