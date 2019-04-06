@@ -49,8 +49,7 @@ pub struct BoxWidget {
     base_widget: CanvasWidget,
 }
 
-/// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
-/// that can be positioned anywhere on the screen.
+/// Implementation of the constructor for the `BoxWidget`.
 impl BoxWidget {
     pub fn new() -> Self {
         Self {

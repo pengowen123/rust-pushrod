@@ -14,7 +14,7 @@
 
 /// Structure identifying a point on the screen by X and Y coordinates.  X and Y coordinates
 /// are represented from the upper left-hand corner of the base object.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
@@ -23,7 +23,7 @@ pub struct Point {
 /// Structure identifying a size of an object by W (width) and H (height), respectively.
 /// Other systems may use "width" and "height" as nomenclature, however, we wanted to keep
 /// naming consistent.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Size {
     pub w: i32,
     pub h: i32,
@@ -41,7 +41,7 @@ pub fn make_point_i32(x: i32, y: i32) -> Point {
 /// # use pushrod::core::point::*;
 /// # fn main() {
 ///   let point = make_origin_point();
-///   eprintln!("Point: x={} y={}", point.x, point.y);
+///   eprintln!("Point: {:?}", point);
 /// # }
 /// ```
 pub fn make_origin_point() -> Point {
@@ -63,7 +63,7 @@ pub fn make_point_f64(x: f64, y: f64) -> Point {
 /// # use pushrod::core::point::*;
 /// # fn main() {
 ///   let size = make_unsized();
-///   eprintln!("Size: w={} h={}", size.w, size.h);
+///   eprintln!("Size: {:?}", size);
 /// # }
 /// ```
 pub fn make_unsized() -> Size {

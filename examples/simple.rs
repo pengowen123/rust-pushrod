@@ -51,7 +51,7 @@ fn main() {
         eprintln!("Mouse entered widget {}", widget_id);
     }));
     base_widget.on_mouse_moved(Box::new(|_, point| {
-        eprintln!("Relative mouse move: x={} y={}", point.x, point.y);
+        eprintln!("Relative mouse move: {:?}", point);
     }));
     base_widget.on_button_down(Box::new(|_, button| {
         eprintln!("Mouse button down: {:?}", button);

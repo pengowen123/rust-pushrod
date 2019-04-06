@@ -1,5 +1,12 @@
 # Pushrod Releases
 
+## 0.1.21
+
+- Code freeze
+- Documentation updates and fixes
+- Removal of dead code
+- Added Debug to Point and Size
+
 ## 0.1.20
 
 - Created button map to keep track of buttons down in run loop for button clicks.

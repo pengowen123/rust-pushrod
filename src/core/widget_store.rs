@@ -269,12 +269,16 @@ impl WidgetStore {
 
     /// Callback to `button_up_inside` for a `Widget` by ID, with the button code.
     pub fn button_up_inside(&mut self, id: i32, button: Button) {
-        &self.widgets[id as usize].widget.button_up_inside(id, button);
+        &self.widgets[id as usize]
+            .widget
+            .button_up_inside(id, button);
     }
 
     /// Callback to `button_up_outside` for a `Widget` by ID, with the button code.
     pub fn button_up_outside(&mut self, id: i32, button: Button) {
-        &self.widgets[id as usize].widget.button_up_outside(id, button);
+        &self.widgets[id as usize]
+            .widget
+            .button_up_outside(id, button);
     }
 
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
