@@ -4,6 +4,8 @@
 
 - Code freeze
 - Documentation updates
+- Removal of dead code
+- Added Debug to Point and Size
 
 ## 0.1.20
 

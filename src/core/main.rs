@@ -31,8 +31,6 @@ use piston_window::*;
 pub struct Pushrod {
     window: PistonWindow,
     pub widget_store: WidgetStore,
-    //    event_listeners: RefCell<Vec<Box<EventListener>>>,
-    //    event_list: RefCell<Vec<PushrodEvent>>,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
@@ -60,8 +58,6 @@ impl Pushrod {
         Self {
             window,
             widget_store: WidgetStore::new(),
-            //            event_listeners: RefCell::new(Vec::new()),
-            //            event_list: RefCell::new(Vec::new()),
         }
     }
 

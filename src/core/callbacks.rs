@@ -65,7 +65,7 @@ pub type BlankCallback = Box<Fn() -> ()>;
 /// Callback type that accepts a widget ID.
 pub type SingleCallback = Box<Fn(i32) -> ()>;
 
-/// Callback type that accepts a boolean.
+/// Callback type that accepts a widget ID and a boolean.
 pub type BoolCallback = Box<Fn(i32, bool) -> ()>;
 
 /// Callback type that accepts a widget ID and a `Point` on the screen as its input parameter.
