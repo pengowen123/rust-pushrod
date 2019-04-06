@@ -36,8 +36,9 @@ fn main() {
         "OpenSans-Regular.ttf".to_string(),
         "Welcome to rust-pushrod!".to_string(),
         32,
+        TextJustify::Left,
     );
-    text_widget.set_origin(14, 8);
+    text_widget.set_origin(14, 20);
     text_widget.set_size(400, 48);
     text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
     text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
@@ -72,7 +73,7 @@ fn main() {
     box_widget.on_key_pressed(Box::new(|_, key, state| {
         eprintln!("Key {:?}; State {:?}", key, state);
     }));
-    prod.widget_store.add_widget(Box::new(box_widget));
+    let box_widget_id = prod.widget_store.add_widget(Box::new(box_widget));
 
     let mut box_1 = BoxWidget::new();
     box_1.set_origin(500, 80);
@@ -117,6 +118,45 @@ fn main() {
     image_widget.set_origin(50, 300);
     image_widget.set_size(125, 125);
     prod.widget_store.add_widget(Box::new(image_widget));
+
+    let mut text_widget2 = TextWidget::new(
+        prod.get_factory(),
+        "OpenSans-Regular.ttf".to_string(),
+        "Left".to_string(),
+        24,
+        TextJustify::Left,
+    );
+    text_widget2.set_origin(290, 100);
+    text_widget2.set_size(170, 30);
+    text_widget2.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(text_widget2), box_widget_id);
+
+    let mut text_widget3 = TextWidget::new(
+        prod.get_factory(),
+        "OpenSans-Regular.ttf".to_string(),
+        "Center".to_string(),
+        24,
+        TextJustify::Center,
+    );
+    text_widget3.set_origin(290, 166);
+    text_widget3.set_size(170, 30);
+    text_widget3.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(text_widget3), box_widget_id);
+
+    let mut text_widget4 = TextWidget::new(
+        prod.get_factory(),
+        "OpenSans-Regular.ttf".to_string(),
+        "Right".to_string(),
+        24,
+        TextJustify::Right,
+    );
+    text_widget4.set_origin(290, 230);
+    text_widget4.set_size(170, 30);
+    text_widget4.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    prod.widget_store
+        .add_widget_to_parent(Box::new(text_widget4), box_widget_id);
 
     let mut timer = TimerWidget::new();
     timer.set_timeout(1000);
