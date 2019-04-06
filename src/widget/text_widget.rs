@@ -19,6 +19,58 @@ use crate::core::callbacks::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
+mod private {
+    use piston_window::character::CharacterCache;
+    use piston_window::math::Matrix2d;
+    use piston_window::types::{Color, FontSize};
+    use piston_window::{color, DrawState, Graphics, Image, Transformed};
+
+    pub struct TextHelper {
+        /// The font size
+        pub font_size: FontSize,
+    }
+
+    impl TextHelper {
+        /// Creates a new text with black color
+        pub fn new(font_size: FontSize) -> TextHelper {
+            TextHelper { font_size }
+        }
+
+        /// Determines draw width and height with a character cache
+        pub fn determine_size<C, G>(
+            &self,
+            text: &str,
+            cache: &mut C,
+            g: &mut G,
+        ) -> Result<(i32, i32), C::Error>
+            where
+                C: CharacterCache,
+                G: Graphics<Texture=<C as CharacterCache>::Texture>,
+        {
+            let mut x = 0.0;
+            let mut y = 0.0;
+            for ch in text.chars() {
+                let character = cache.character(self.font_size, ch)?;
+                x += character.width();
+                y += character.height();
+            }
+            Ok((x as i32, y as i32))
+        }
+    }
+}
+
+/// This `enum` specifies the desired justification of the text to be drawn.
+pub enum TextJustify {
+    /// Left-justified text.
+    Left,
+
+    /// Center-justified text: `(total width - text width) / 2`
+    Center,
+
+    /// Right-justified text: `(total width - text width)`
+    Right,
+}
+
 /// This is the `TextWidget`, which draws a line of text on the screen.  This structure contains
 /// no accessable objects, they are all internal to `TextWidget`'s implementation.
 ///
@@ -42,6 +94,7 @@ use crate::widget::widget::*;
 ///       "OpenSans-Regular.ttf".to_string(),
 ///       "Hello, World!".to_string(),
 ///       32,
+///       TextJustify::Center,
 ///    );
 ///
 ///    text_widget.set_origin(8, 8);
@@ -57,6 +110,8 @@ pub struct TextWidget {
     font_cache: Glyphs,
     text: String,
     font_size: u32,
+    justify: TextJustify,
+    desired_size: (i32, i32),
 }
 
 /// Implementation of the constructor for the `TextWidget`.  Creates a new text object to be
@@ -64,8 +119,15 @@ pub struct TextWidget {
 impl TextWidget {
     /// Creates a new `TextWidget` object, requiring the current `PistonWindow`'s factory object
     /// (which can be cloned), the name of the font (filename in the `assets` directory), the
-    /// text to display, and the font size in which to use.
-    pub fn new(factory: &mut GfxFactory, font_name: String, text: String, font_size: u32) -> Self {
+    /// text to display, the font size in which to use, and the desired text justification
+    /// strategy.
+    pub fn new(
+        factory: &mut GfxFactory,
+        font_name: String,
+        text: String,
+        font_size: u32,
+        justify: TextJustify,
+    ) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
             .unwrap();
@@ -78,6 +140,8 @@ impl TextWidget {
             font_cache: glyphs,
             text,
             font_size,
+            justify,
+            desired_size: (0, 0),
         }
     }
 
@@ -93,9 +157,10 @@ impl TextWidget {
         self.config().get::<TextColor>().unwrap().0
     }
 
-    /// Changes the text, redraws after change.
+    /// Changes the text, recalculates the desired draw size, and redraws after change.
     pub fn set_text(&mut self, text: String) {
         self.text = text.clone();
+        self.desired_size = (0, 0);
         self.invalidate();
     }
 
@@ -105,12 +170,42 @@ impl TextWidget {
     /// based on text justification, and other optional padding, once padding is introduced.)
     pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let origin = self.get_origin();
-        let transform = c
-            .transform
-            .trans(origin.x as f64, origin.y as f64 + self.font_size as f64);
+        let size: crate::core::point::Size = self.get_size();
+        let mut font_cache = &mut self.font_cache;
 
+        // This prevents the calculation from occurring at every single draw cycle.  It only needs
+        // to occur once.
+        if self.desired_size.0 == 0 {
+            self.desired_size = private::TextHelper::new(self.font_size)
+                .determine_size(&self.text, &mut self.font_cache, g)
+                .unwrap();
+
+            eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
+        }
+
+        // Modify transform here based on the width of the text being drawn, which is element 0 of
+        // self.desired_size
+        let start_x = match self.justify {
+            TextJustify::Left => 0.0,
+            TextJustify::Center => ((size.w - self.desired_size.0) / 2) as f64,
+            TextJustify::Right => (size.w - self.desired_size.0) as f64,
+        };
+
+        // And draw the remaining text based on the starting point adjusted by the text justification.
+        //
+        // IMPORTANT NOTE:
+        // The provided transform from the run loop must be modified, as Piston's text drawing
+        // routines treats the top "y" value specified as the _baseline_ for the image drawing
+        // start point.  We want to treat the _inside_ of the box as the baseline, so we simply
+        // add the size of the font (in pixels), which adjusts the baseline to the desired area.
         Text::new_color(self.get_text_color(), self.font_size)
-            .draw(&self.text, &mut self.font_cache, clip, transform, g)
+            .draw(
+                &self.text,
+                &mut self.font_cache,
+                clip,
+                c.transform.trans(start_x, self.font_size as f64),
+                g,
+            )
             .unwrap();
     }
 }

@@ -1,5 +1,12 @@
 # Pushrod Releases
 
+## 0.2.1
+
+- Added TextHelper to TextWidget to help determine rendering size when drawing text.
+- Added TextJustify enum to determine justification of text in regards to size of bounds.
+- TextWidget now adjusts transformation based on font size, not re-adjusting origin.
+- TextWidget now honoors justification: left, right, and center are now shown in the demo. (#76)
+
 ## 0.1.21
 
 - Code freeze
