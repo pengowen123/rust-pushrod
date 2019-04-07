@@ -86,7 +86,7 @@ impl SimpleWindow {
             // This code does not work, and I have no idea why.
             // I believe this will be a major change to the application to get this working.
 
-//            self.do_something();
+            self.do_something();
         }));
 
         self.pushrod
