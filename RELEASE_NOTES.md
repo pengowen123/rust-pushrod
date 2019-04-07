@@ -1,5 +1,11 @@
 # Pushrod Releases
 
+## 0.2.2
+
+- Added PushButtonWidget. (#24)
+- Fixed BoxWidget so that it returns the defaults in border_color and border_thickness as documented
+- Added PushButtonWidget to the example.
+
 ## 0.2.1
 
 - Added TextHelper to TextWidget to help determine rendering size when drawing text.

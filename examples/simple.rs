@@ -19,6 +19,7 @@ use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::image_widget::*;
+use pushrod::widget::push_button_widget::PushButtonWidget;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
@@ -63,7 +64,23 @@ fn main() {
     base_widget.on_button_up_outside(Box::new(|_, button| {
         eprintln!("Mouse button release (outside widget): {:?}", button);
     }));
-    prod.widget_store.add_widget(Box::new(base_widget));
+    let base_widget_id = prod.widget_store.add_widget(Box::new(base_widget));
+
+    let mut button1 = PushButtonWidget::new(
+        prod.get_factory(),
+        "OpenSans-Regular.ttf".to_string(),
+        "Randomize".to_string(),
+        24,
+        TextJustify::Center,
+    );
+    button1.set_origin(60, 236);
+    button1.set_size(180, 32);
+    button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+    button1.on_clicked(Box::new(|| {
+        eprintln!("Button clicked.");
+    }));
+    prod.widget_store.add_widget_to_parent(Box::new(button1), base_widget_id);
 
     let mut box_widget = BoxWidget::new();
     box_widget.set_origin(275, 80);

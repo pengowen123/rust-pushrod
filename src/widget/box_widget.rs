@@ -68,7 +68,10 @@ impl BoxWidget {
     /// Retrieves the border color of this widget.
     /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
     pub fn get_border_color(&mut self) -> types::Color {
-        self.config().get::<BorderColor>().unwrap().0
+        self.config()
+            .get::<BorderColor>()
+            .unwrap_or(&BorderColor([0.0, 0.0, 0.0, 1.0]))
+            .0
     }
 
     /// Sets the thickness of the border for this widget.
@@ -80,7 +83,10 @@ impl BoxWidget {
     /// Retrieves the border thickness of this widget.
     /// Defaults to 1 if not set.
     pub fn get_border_thickness(&mut self) -> u8 {
-        self.config().get::<BorderWidth>().unwrap().0
+        self.config()
+            .get::<BorderWidth>()
+            .unwrap_or(&BorderWidth(1))
+            .0
     }
 
     /// Helper function that sets both the color of the border and the thickness at the same time.
