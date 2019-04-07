@@ -71,21 +71,17 @@ impl PushButtonWidget {
         font_size: u32,
         justify: TextJustify,
     ) -> Self {
-        let mut text_widget = TextWidget::new(
-            factory,
-            font_name.to_string(),
-            text.to_string(),
-            font_size,
-            justify,
-        );
-
-        let mut box_widget = BoxWidget::new();
-
         Self {
             config: Configurable::new(),
             callbacks: CallbackStore::new(),
             base_widget: BoxWidget::new(),
-            text_widget,
+            text_widget: TextWidget::new(
+                factory,
+                font_name.to_string(),
+                text.to_string(),
+                font_size,
+                justify,
+            ),
             on_clicked_callback: Box::new(|| {}),
         }
     }
