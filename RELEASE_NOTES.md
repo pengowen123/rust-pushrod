@@ -6,6 +6,7 @@
 - Fixed BoxWidget so that it returns the defaults in border_color and border_thickness as documented
 - Added PushButtonWidget to the example
 - Modified PushButtonWidget so that only the left mouse button triggers a click
+- Made `add_widget` function reference widget_store internally, making it easier to add widgets.
 
 ## 0.2.1
 

@@ -15,14 +15,106 @@
 
 extern crate pushrod;
 
+use std::cell::RefCell;
+
 use piston_window::*;
 use pushrod::core::main::*;
-use pushrod::widget::box_widget::*;
-use pushrod::widget::image_widget::*;
+//use pushrod::widget::box_widget::*;
+//use pushrod::widget::image_widget::*;
 use pushrod::widget::push_button_widget::PushButtonWidget;
 use pushrod::widget::text_widget::*;
-use pushrod::widget::timer_widget::*;
+//use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
+
+pub struct SimpleWindow {
+    pushrod: RefCell<Pushrod>,
+}
+
+impl SimpleWindow {
+    fn new(prod: Pushrod) -> Self {
+        Self {
+            pushrod: RefCell::new(prod),
+        }
+    }
+
+    pub fn do_something(&mut self) {
+        eprintln!("Do something.");
+    }
+
+    fn add_hello_world(&mut self) {
+        let mut text_widget = TextWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Welcome to rust-pushrod!".to_string(),
+            32,
+            TextJustify::Left,
+        );
+
+        text_widget.set_origin(20, 20);
+        text_widget.set_size(400, 48);
+        text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
+        text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(text_widget));
+    }
+
+    fn add_base_widget(&mut self) {
+        let mut base_widget = CanvasWidget::new();
+
+        base_widget.set_origin(20, 80);
+        base_widget.set_size(200, 200);
+        base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
+//        base_widget.on_mouse_entered(Box::new(|_| {
+//            self.do_something();
+//        }));
+//        base_widget.on_mouse_moved(Box::new(|_, point| {
+//            eprintln!("Relative mouse move: {:?}", point);
+//        }));
+//        base_widget.on_button_down(Box::new(|_, button| {
+//            eprintln!("Mouse button down: {:?}", button);
+//        }));
+//        base_widget.on_button_up_inside(Box::new(|_, button| {
+//            eprintln!("Mouse button released (inside same widget): {:?}", button);
+//        }));
+//        base_widget.on_button_up_outside(Box::new(|_, button| {
+//            eprintln!("Mouse button release (outside widget): {:?}", button);
+//        }));
+
+        let base_widget_id = self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(base_widget));
+
+        let mut button1 = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Randomize".to_string(),
+            24,
+            TextJustify::Center,
+        );
+        button1.set_origin(30, 236);
+        button1.set_size(180, 32);
+        button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+        button1.on_clicked(Box::new(|| {
+            self.do_something();
+        }));
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget_to_parent(Box::new(button1), base_widget_id);
+    }
+
+    pub fn build(&mut self) {
+        self.add_hello_world();
+        self.add_base_widget();
+    }
+
+    pub fn get_pushrod(&mut self) -> &mut Pushrod {
+        self.pushrod.get_mut()
+    }
+}
 
 fn main() {
     let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
@@ -30,159 +122,128 @@ fn main() {
         .resizable(true)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-    let mut prod: Pushrod = Pushrod::new(window);
+    let mut app_window = SimpleWindow::new(Pushrod::new(window));
 
-    let mut text_widget = TextWidget::new(
-        prod.get_factory(),
-        "OpenSans-Regular.ttf".to_string(),
-        "Welcome to rust-pushrod!".to_string(),
-        32,
-        TextJustify::Left,
-    );
-    text_widget.set_origin(14, 20);
-    text_widget.set_size(400, 48);
-    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-    text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
-    prod.widget_store.add_widget(Box::new(text_widget));
+    app_window.build();
+    app_window.get_pushrod().run();
 
-    let mut base_widget = CanvasWidget::new();
-    base_widget.set_origin(50, 80);
-    base_widget.set_size(200, 200);
-    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
-    base_widget.on_mouse_entered(Box::new(|widget_id| {
-        eprintln!("Mouse entered widget {}", widget_id);
-    }));
-    base_widget.on_mouse_moved(Box::new(|_, point| {
-        eprintln!("Relative mouse move: {:?}", point);
-    }));
-    base_widget.on_button_down(Box::new(|_, button| {
-        eprintln!("Mouse button down: {:?}", button);
-    }));
-    base_widget.on_button_up_inside(Box::new(|_, button| {
-        eprintln!("Mouse button released (inside same widget): {:?}", button);
-    }));
-    base_widget.on_button_up_outside(Box::new(|_, button| {
-        eprintln!("Mouse button release (outside widget): {:?}", button);
-    }));
-    let base_widget_id = prod.widget_store.add_widget(Box::new(base_widget));
-
-    let mut button1 = PushButtonWidget::new(
-        prod.get_factory(),
-        "OpenSans-Regular.ttf".to_string(),
-        "Randomize".to_string(),
-        24,
-        TextJustify::Center,
-    );
-    button1.set_origin(60, 236);
-    button1.set_size(180, 32);
-    button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
-    button1.on_clicked(Box::new(|| {
-        eprintln!("Button clicked.");
-    }));
-    prod.widget_store.add_widget_to_parent(Box::new(button1), base_widget_id);
-
-    let mut box_widget = BoxWidget::new();
-    box_widget.set_origin(275, 80);
-    box_widget.set_size(200, 200);
-    box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
-    box_widget.set_border([1.0, 0.0, 0.0, 1.0], 4);
-    box_widget.on_key_pressed(Box::new(|_, key, state| {
-        eprintln!("Key {:?}; State {:?}", key, state);
-    }));
-    let box_widget_id = prod.widget_store.add_widget(Box::new(box_widget));
-
-    let mut box_1 = BoxWidget::new();
-    box_1.set_origin(500, 80);
-    box_1.set_size(200, 200);
-    box_1.set_color([0.5, 0.5, 1.0, 1.0]);
-    box_1.set_border([0.0, 0.0, 1.0, 1.0], 2);
-    let box_1_id = prod.widget_store.add_widget(Box::new(box_1));
-
-    let mut inner_box_1 = BoxWidget::new();
-    inner_box_1.set_origin(525, 105);
-    inner_box_1.set_size(70, 60);
-    inner_box_1.set_color([0.75, 0.75, 1.0, 1.0]);
-    inner_box_1.set_border([1.0, 0.0, 1.0, 1.0], 1);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(inner_box_1), box_1_id);
-
-    let mut inner_box_2 = BoxWidget::new();
-    inner_box_2.set_origin(605, 105);
-    inner_box_2.set_size(70, 60);
-    inner_box_2.set_color([0.75, 0.25, 1.0, 1.0]);
-    inner_box_2.set_border([1.0, 1.0, 0.0, 1.0], 1);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(inner_box_2), box_1_id);
-
-    let mut inner_box_3 = BoxWidget::new();
-    inner_box_3.set_origin(525, 190);
-    inner_box_3.set_size(70, 60);
-    inner_box_3.set_color([0.25, 0.50, 0.75, 1.0]);
-    inner_box_3.set_border([1.0, 0.50, 1.0, 1.0], 1);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(inner_box_3), box_1_id);
-
-    let mut inner_box_4 = BoxWidget::new();
-    inner_box_4.set_origin(605, 190);
-    inner_box_4.set_size(70, 60);
-    inner_box_4.set_color([0.75, 0.50, 0.0, 1.0]);
-    inner_box_4.set_border([0.50, 0.0, 0.25, 1.0], 1);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(inner_box_4), box_1_id);
-
-    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
-    image_widget.set_origin(50, 300);
-    image_widget.set_size(125, 125);
-    prod.widget_store.add_widget(Box::new(image_widget));
-
-    let mut text_widget2 = TextWidget::new(
-        prod.get_factory(),
-        "OpenSans-Regular.ttf".to_string(),
-        "Left".to_string(),
-        24,
-        TextJustify::Left,
-    );
-    text_widget2.set_origin(290, 100);
-    text_widget2.set_size(170, 30);
-    text_widget2.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(text_widget2), box_widget_id);
-
-    let mut text_widget3 = TextWidget::new(
-        prod.get_factory(),
-        "OpenSans-Regular.ttf".to_string(),
-        "Center".to_string(),
-        24,
-        TextJustify::Center,
-    );
-    text_widget3.set_origin(290, 166);
-    text_widget3.set_size(170, 30);
-    text_widget3.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(text_widget3), box_widget_id);
-
-    let mut text_widget4 = TextWidget::new(
-        prod.get_factory(),
-        "OpenSans-Regular.ttf".to_string(),
-        "Right".to_string(),
-        24,
-        TextJustify::Right,
-    );
-    text_widget4.set_origin(290, 230);
-    text_widget4.set_size(170, 30);
-    text_widget4.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    prod.widget_store
-        .add_widget_to_parent(Box::new(text_widget4), box_widget_id);
-
-    let mut timer = TimerWidget::new();
-    timer.set_timeout(1000);
-    timer.set_enabled(true);
-    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
-    prod.widget_store.add_widget(Box::new(timer));
-
-    //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
-
-    // Runs the main event loop
-    prod.run();
+    //    let mut button1 = PushButtonWidget::new(
+    //        prod.get_factory(),
+    //        "OpenSans-Regular.ttf".to_string(),
+    //        "Randomize".to_string(),
+    //        24,
+    //        TextJustify::Center,
+    //    );
+    //    button1.set_origin(60, 236);
+    //    button1.set_size(180, 32);
+    //    button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    //    button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+    //    button1.on_clicked(Box::new(|| {
+    //        eprintln!("Button clicked.");
+    //    }));
+    //    prod.widget_store.add_widget_to_parent(Box::new(button1), base_widget_id);
+    //
+    //    let mut box_widget = BoxWidget::new();
+    //    box_widget.set_origin(275, 80);
+    //    box_widget.set_size(200, 200);
+    //    box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
+    //    box_widget.set_border([1.0, 0.0, 0.0, 1.0], 4);
+    //    box_widget.on_key_pressed(Box::new(|_, key, state| {
+    //        eprintln!("Key {:?}; State {:?}", key, state);
+    //    }));
+    //    let box_widget_id = prod.widget_store.add_widget(Box::new(box_widget));
+    //
+    //    let mut box_1 = BoxWidget::new();
+    //    box_1.set_origin(500, 80);
+    //    box_1.set_size(200, 200);
+    //    box_1.set_color([0.5, 0.5, 1.0, 1.0]);
+    //    box_1.set_border([0.0, 0.0, 1.0, 1.0], 2);
+    //    let box_1_id = prod.widget_store.add_widget(Box::new(box_1));
+    //
+    //    let mut inner_box_1 = BoxWidget::new();
+    //    inner_box_1.set_origin(525, 105);
+    //    inner_box_1.set_size(70, 60);
+    //    inner_box_1.set_color([0.75, 0.75, 1.0, 1.0]);
+    //    inner_box_1.set_border([1.0, 0.0, 1.0, 1.0], 1);
+    //    prod.widget_store
+    //        .add_widget_to_parent(Box::new(inner_box_1), box_1_id);
+    //
+    //    let mut inner_box_2 = BoxWidget::new();
+    //    inner_box_2.set_origin(605, 105);
+    //    inner_box_2.set_size(70, 60);
+    //    inner_box_2.set_color([0.75, 0.25, 1.0, 1.0]);
+    //    inner_box_2.set_border([1.0, 1.0, 0.0, 1.0], 1);
+    //    prod.widget_store
+    //        .add_widget_to_parent(Box::new(inner_box_2), box_1_id);
+    //
+    //    let mut inner_box_3 = BoxWidget::new();
+    //    inner_box_3.set_origin(525, 190);
+    //    inner_box_3.set_size(70, 60);
+    //    inner_box_3.set_color([0.25, 0.50, 0.75, 1.0]);
+    //    inner_box_3.set_border([1.0, 0.50, 1.0, 1.0], 1);
+    //    prod.widget_store
+    //        .add_widget_to_parent(Box::new(inner_box_3), box_1_id);
+    //
+    //    let mut inner_box_4 = BoxWidget::new();
+    //    inner_box_4.set_origin(605, 190);
+    //    inner_box_4.set_size(70, 60);
+    //    inner_box_4.set_color([0.75, 0.50, 0.0, 1.0]);
+    //    inner_box_4.set_border([0.50, 0.0, 0.25, 1.0], 1);
+    //    prod.widget_store
+    //        .add_widget_to_parent(Box::new(inner_box_4), box_1_id);
+    //
+    //    let mut image_widget = ImageWidget::new(prod.get_factory(), "rust-512x512.jpg".to_string());
+    //    image_widget.set_origin(50, 300);
+    //    image_widget.set_size(125, 125);
+    //    prod.widget_store.add_widget(Box::new(image_widget));
+    //
+    //    let mut text_widget2 = TextWidget::new(
+    //        prod.get_factory(),
+    //        "OpenSans-Regular.ttf".to_string(),
+    //        "Left".to_string(),
+    //        24,
+    //        TextJustify::Left,
+    //    );
+    //    text_widget2.set_origin(290, 100);
+    //    text_widget2.set_size(170, 30);
+    //    text_widget2.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    //    prod.widget_store
+    //        .add_widget_to_parent(Box::new(text_widget2), box_widget_id);
+    //
+    //    let mut text_widget3 = TextWidget::new(
+    //        prod.get_factory(),
+    //        "OpenSans-Regular.ttf".to_string(),
+    //        "Center".to_string(),
+    //        24,
+    //        TextJustify::Center,
+    //    );
+    //    text_widget3.set_origin(290, 166);
+    //    text_widget3.set_size(170, 30);
+    //    text_widget3.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    //    prod.widget_store
+    //        .add_widget_to_parent(Box::new(text_widget3), box_widget_id);
+    //
+    //    let mut text_widget4 = TextWidget::new(
+    //        prod.get_factory(),
+    //        "OpenSans-Regular.ttf".to_string(),
+    //        "Right".to_string(),
+    //        24,
+    //        TextJustify::Right,
+    //    );
+    //    text_widget4.set_origin(290, 230);
+    //    text_widget4.set_size(170, 30);
+    //    text_widget4.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    //    prod.widget_store
+    //        .add_widget_to_parent(Box::new(text_widget4), box_widget_id);
+    //
+    //    let mut timer = TimerWidget::new();
+    //    timer.set_timeout(1000);
+    //    timer.set_enabled(true);
+    //    timer.on_timeout(Box::new(|| eprintln!("Timer.")));
+    //    prod.widget_store.add_widget(Box::new(timer));
+    //
+    //    //    prod.add_event_listener_for_window(Box::new(ExampleListener::new()));
+    //
+    //    // Runs the main event loop
+    //    prod.run();
 }

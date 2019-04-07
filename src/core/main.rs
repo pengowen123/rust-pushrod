@@ -18,6 +18,7 @@ use std::collections::HashSet;
 
 use crate::core::point::*;
 use crate::core::widget_store::*;
+use crate::widget::widget::*;
 
 use piston_window::*;
 
@@ -64,6 +65,19 @@ impl Pushrod {
     /// Retrieves the window `GfxFactory` factory object for graphics textures.
     pub fn get_factory(&mut self) -> &mut GfxFactory {
         &mut self.window.factory
+    }
+
+    /// Helper method that adds a `Widget` to the `WidgetStore`, returning the ID of the `Widget`
+    /// after it has been added.
+    pub fn add_widget(&mut self, widget: Box<dyn Widget>) -> i32 {
+        self.widget_store.add_widget(widget)
+    }
+
+    /// Helper method that adds a `Widget` to the `WidgetStore`, specifying the `parent_id` as the
+    /// parent of which to add this object to.  Returns the new ID of the `Widget` after it has
+    /// been added.
+    pub fn add_widget_to_parent(&mut self, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
+        self.widget_store.add_widget_to_parent(widget, parent_id)
     }
 
     fn handle_draw(&mut self, event: &Event) {

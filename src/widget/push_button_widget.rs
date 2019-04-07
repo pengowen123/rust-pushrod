@@ -200,11 +200,12 @@ impl Widget for PushButtonWidget {
     /// Overrides button down.
     fn button_down(&mut self, _: i32, button: Button) {
         match button {
-            Button::Mouse(mouse_button) =>
+            Button::Mouse(mouse_button) => {
                 if mouse_button == MouseButton::Left {
                     self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
                     self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-                },
+                }
+            }
             _ => (),
         }
     }
@@ -212,12 +213,13 @@ impl Widget for PushButtonWidget {
     /// Overrides button up inside, triggering an `on_clicked` callback.
     fn button_up_inside(&mut self, _: i32, button: Button) {
         match button {
-            Button::Mouse(mouse_button) =>
+            Button::Mouse(mouse_button) => {
                 if mouse_button == MouseButton::Left {
                     self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
                     self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
                     self.call_on_clicked();
-                },
+                }
+            }
             _ => (),
         }
     }
@@ -225,11 +227,12 @@ impl Widget for PushButtonWidget {
     /// Overrides button up outside.
     fn button_up_outside(&mut self, _: i32, button: Button) {
         match button {
-            Button::Mouse(mouse_button) =>
+            Button::Mouse(mouse_button) => {
                 if mouse_button == MouseButton::Left {
                     self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
                     self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-                },
+                }
+            }
             _ => (),
         }
     }
