@@ -51,7 +51,7 @@ impl SimpleWindow {
         );
 
         text_widget.set_origin(20, 20);
-        text_widget.set_size(400, 48);
+        text_widget.set_size(400, 40);
         text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
         text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
 
@@ -75,7 +75,7 @@ impl SimpleWindow {
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),
             "Randomize".to_string(),
-            24,
+            18,
             TextJustify::Center,
         );
         button1.set_origin(30, 236);
@@ -86,7 +86,7 @@ impl SimpleWindow {
             // This code does not work, and I have no idea why.
             // I believe this will be a major change to the application to get this working.
 
-            self.do_something();
+//            self.do_something();
         }));
 
         self.pushrod
@@ -116,7 +116,7 @@ impl SimpleWindow {
             TextJustify::Left,
         );
         text_widget2.set_origin(265, 100);
-        text_widget2.set_size(170, 30);
+        text_widget2.set_size(170, 32);
         text_widget2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()
@@ -130,7 +130,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
         text_widget3.set_origin(265, 166);
-        text_widget3.set_size(170, 30);
+        text_widget3.set_size(170, 32);
         text_widget3.set_text_color([0.0, 0.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()
@@ -144,7 +144,7 @@ impl SimpleWindow {
             TextJustify::Right,
         );
         text_widget4.set_origin(265, 230);
-        text_widget4.set_size(170, 30);
+        text_widget4.set_size(170, 32);
         text_widget4.set_text_color([0.0, 0.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()

@@ -22,7 +22,7 @@ use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-pub type MutableBlankCallback<'a> = Box<FnMut() -> () + 'a>;
+pub type MutableBlankCallback = Box<FnMut() -> ()>;
 
 /// This is the `PushButtonWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
@@ -56,16 +56,16 @@ pub type MutableBlankCallback<'a> = Box<FnMut() -> () + 'a>;
 ///    button_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
 /// # }
 /// ```
-pub struct PushButtonWidget<'a> {
+pub struct PushButtonWidget {
     config: Configurable,
     callbacks: CallbackStore,
     base_widget: BoxWidget,
     text_widget: TextWidget,
-    on_clicked_callback: MutableBlankCallback<'a>,
+    on_clicked_callback: MutableBlankCallback,
 }
 
 /// Implementation of the constructor for the `PushButtonWidget`.
-impl<'a> PushButtonWidget<'a> {
+impl PushButtonWidget {
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -139,7 +139,7 @@ impl<'a> PushButtonWidget<'a> {
 
     /// This is the callback that is triggered when a mouse triggers the `button_up_inside` event
     /// of the main `PushButtonWidget`.
-    pub fn on_clicked(&mut self, callback: MutableBlankCallback<'a>) {
+    pub fn on_clicked(&mut self, callback: MutableBlankCallback) {
         self.on_clicked_callback = callback;
     }
 
@@ -153,7 +153,7 @@ impl<'a> PushButtonWidget<'a> {
 /// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
 /// responds to the button down/up callbacks internally, and generates an `on_clicked` callback
 /// when appropriate.
-impl<'a> Widget for PushButtonWidget<'a> {
+impl Widget for PushButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }

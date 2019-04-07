@@ -8,6 +8,7 @@
 - Modified PushButtonWidget so that only the left mouse button triggers a click
 - Made `add_widget` function reference widget_store internally, making it easier to add widgets.
 - Modified example code so that it's in its own struct/impl (#78)
+- Modified `TextWidget` so that text is vertically centered.
 
 ## 0.2.1
 
