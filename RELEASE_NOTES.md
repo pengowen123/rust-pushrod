@@ -4,7 +4,8 @@
 
 - Added PushButtonWidget. (#24)
 - Fixed BoxWidget so that it returns the defaults in border_color and border_thickness as documented
-- Added PushButtonWidget to the example.
+- Added PushButtonWidget to the example
+- Modified PushButtonWidget so that only the left mouse button triggers a click
 
 ## 0.2.1
 
