@@ -61,7 +61,6 @@ pub const CALLBACK_BUTTON_UP_OUTSIDE: u32 = 10;
 
 /// Callback type that takes no input.
 pub type BlankCallback = Box<Fn() -> ()>;
-pub type MutableBlankCallback = Box<FnMut() -> ()>;
 
 /// Callback type that accepts a widget ID.
 pub type SingleCallback = Box<Fn(i32) -> ()>;

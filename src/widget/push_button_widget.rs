@@ -22,6 +22,8 @@ use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
+pub type MutableBlankCallback = Box<FnMut() -> ()>;
+
 /// This is the `PushButtonWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
 ///
