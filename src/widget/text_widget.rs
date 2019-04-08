@@ -188,6 +188,9 @@ impl TextWidget {
             TextJustify::Right => (size.w - self.desired_size.0) as f64,
         };
 
+        // Vertically justify the text as default.
+        let start_y = (self.font_size - 2 + size.h as u32) / 2 - 1;
+
         // And draw the remaining text based on the starting point adjusted by the text justification.
         //
         // IMPORTANT NOTE:
@@ -200,7 +203,7 @@ impl TextWidget {
                 &self.text,
                 &mut self.font_cache,
                 clip,
-                c.transform.trans(start_x, self.font_size as f64),
+                c.transform.trans(start_x, start_y as f64),
                 g,
             )
             .unwrap();

@@ -28,16 +28,19 @@
 //! To use the crate in your project, add the following dependencies:
 //! ```ignore
 //! [dependencies]
-//! rust-pushrod = "^0.1"
+//! rust-pushrod = "^0.2"
 //! ```
 //!
 //! # Core Components
 //! `pushrod::core` is the _core_ library components, representing the main run loop, the callback
 //! store mechanism, and the widget store.
 //!
-//! `pushrod::event` is the event system, reserved for 0.2.x.
+//! `pushrod::event` is the event system, in the works for 0.2.x.
 //!
 //! `pushrod::widget` is the core `Widget` library.
+//!
+//! # Events
+//! Coming soon.
 //!
 //! # Callbacks
 //! Callbacks are introduced in the `Widget` libraries as a way to action upon an event that

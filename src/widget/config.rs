@@ -56,24 +56,31 @@ macro_rules! impl_configurable {
 }
 
 /// Existence of this object indicates that a `Widget` needs to be redrawn.
+#[derive(Clone, Debug)]
 pub struct Invalidate;
 
 /// Origin `Point` at which a `Widget` exists on the display window.
+#[derive(Clone, Debug)]
 pub struct Origin(pub Point);
 
 /// Physical size of the `Widget`.
+#[derive(Clone, Debug)]
 pub struct BodySize(pub Size);
 
 /// Color of the body of the `Widget`.
+#[derive(Clone, Debug)]
 pub struct MainColor(pub Color);
 
 /// Color of the border for the `BoxWidget` and any `Widget` objects that contain a border.
+#[derive(Clone, Debug)]
 pub struct BorderColor(pub Color);
 
 /// Width (in pixels) of the border for the `BoxWidget` or any `Widget` objects that contain a border.
+#[derive(Clone, Debug)]
 pub struct BorderWidth(pub u8);
 
 /// `Color` of text to be displayed in a `TextWidget`.
+#[derive(Clone, Debug)]
 pub struct TextColor(pub Color);
 
 /// This macro implements the availability of configuration items.  The first value is the name

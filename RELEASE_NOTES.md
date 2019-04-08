@@ -1,5 +1,16 @@
 # Pushrod Releases
 
+## 0.2.2
+
+- Added PushButtonWidget. (#24)
+- Fixed BoxWidget so that it returns the defaults in border_color and border_thickness as documented
+- Added PushButtonWidget to the example
+- Modified PushButtonWidget so that only the left mouse button triggers a click
+- Made `add_widget` function reference widget_store internally, making it easier to add widgets.
+- Modified example code so that it's in its own struct/impl (#78)
+- Modified `TextWidget` so that text is vertically centered.
+- Added buttons to hide related widgets
+
 ## 0.2.1
 
 - Added TextHelper to TextWidget to help determine rendering size when drawing text.
