@@ -95,7 +95,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.set_origin(20, 290);
+        button2.set_origin(20, 280);
         button2.set_size(200, 32);
         button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
@@ -169,7 +169,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.set_origin(250, 290);
+        button2.set_origin(250, 280);
         button2.set_size(200, 32);
         button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
@@ -231,7 +231,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button.set_origin(480, 290);
+        button.set_origin(480, 280);
         button.set_size(200, 32);
         button.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button.set_border([0.0, 0.0, 0.0, 1.0], 2);
