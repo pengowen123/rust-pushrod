@@ -254,7 +254,7 @@ impl SimpleWindow {
     fn add_progress(&mut self) {
         let mut progress_widget = ProgressWidget::new();
 
-        progress_widget.set_origin(20, 340);
+        progress_widget.set_origin(20, 360);
         progress_widget.set_size(300, 32);
         progress_widget.set_color([1.0, 1.0, 1.0, 1.0]);
         progress_widget.set_secondary_color([0.5, 0.5, 0.5, 1.0]);
@@ -271,7 +271,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button1.set_origin(340, 340);
+        button1.set_origin(340, 360);
         button1.set_size(160, 32);
         button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
@@ -288,7 +288,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.set_origin(520, 340);
+        button2.set_origin(520, 360);
         button2.set_size(160, 32);
         button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
