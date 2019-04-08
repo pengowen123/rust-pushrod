@@ -30,8 +30,10 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 /// Example usage:
 /// ```no_run
 /// # use piston_window::*;
+/// # use pushrod::core::main::*;
 /// # use pushrod::core::point::*;
 /// # use pushrod::widget::widget::*;
+/// # use pushrod::widget::text_widget::*;
 /// # use pushrod::widget::push_button_widget::*;
 /// # fn main() {
 /// #    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
@@ -44,7 +46,8 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 ///        "OpenSans-Regular.ttf".to_string(),
 ///        "Button".to_string(),
 ///        20,
-///        TextJustify::Center);
+///        TextJustify::Center,
+///    );
 ///
 ///    button_widget.set_origin(100, 100);
 ///    button_widget.set_size(200, 200);
