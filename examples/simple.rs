@@ -83,6 +83,9 @@ impl SimpleWindow {
         button1.set_size(180, 32);
         button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+        button1.on_clicked(Box::new(|| {
+            self.do_something();
+        }));
 
         self.pushrod
             .borrow_mut()
