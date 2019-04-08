@@ -9,6 +9,7 @@
 - Made `add_widget` function reference widget_store internally, making it easier to add widgets.
 - Modified example code so that it's in its own struct/impl (#78)
 - Modified `TextWidget` so that text is vertically centered.
+- Added buttons to hide related widgets
 
 ## 0.2.1
 

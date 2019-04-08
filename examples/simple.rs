@@ -74,7 +74,7 @@ impl SimpleWindow {
         let mut button1 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),
-            "Randomize".to_string(),
+            "Random Color".to_string(),
             18,
             TextJustify::Center,
         );
@@ -82,16 +82,27 @@ impl SimpleWindow {
         button1.set_size(180, 32);
         button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
-        button1.on_clicked(Box::new(|| {
-            // This code does not work, and I have no idea why.
-            // I believe this will be a major change to the application to get this working.
-
-//            self.do_something();
-        }));
 
         self.pushrod
             .borrow_mut()
             .add_widget_to_parent(Box::new(button1), base_widget_id);
+
+        let mut button2 = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Hide".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button2.set_origin(20, 290);
+        button2.set_size(200, 32);
+        button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(button2));
     }
 
     fn add_box_widgets(&mut self) {
@@ -150,6 +161,23 @@ impl SimpleWindow {
             .borrow_mut()
             .add_widget_to_parent(Box::new(text_widget4), box_widget_id);
 
+        let mut button2 = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Hide".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button2.set_origin(250, 290);
+        button2.set_size(200, 32);
+        button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(button2));
+
         let mut box_1 = BoxWidget::new();
         box_1.set_origin(480, 80);
         box_1.set_size(200, 200);
@@ -194,6 +222,23 @@ impl SimpleWindow {
         self.pushrod
             .borrow_mut()
             .add_widget_to_parent(Box::new(inner_box_4), box_1_id);
+
+        let mut button = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Hide".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button.set_origin(480, 290);
+        button.set_size(200, 32);
+        button.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button.set_border([0.0, 0.0, 0.0, 1.0], 2);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(button));
     }
 
     fn add_powered_by(&mut self) {
