@@ -53,6 +53,9 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 ///    button_widget.set_size(200, 200);
 ///    button_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
 ///    button_widget.set_border_thickness(3);
+///    button_widget.on_clicked(Box::new(|| {
+///        eprintln!("Button Widget Clicked!");
+///    }));
 ///
 ///    // (OR)
 ///
