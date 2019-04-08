@@ -28,7 +28,7 @@ pub mod text_widget;
 /// Image component: draws an image on the screen in `png`, `jpg` or `gif` formats.
 pub mod image_widget;
 
-/// Push Button component: draws a clickable box ont he screen, triggering an `on_clicked` callback
+/// Push Button component: draws a clickable box on the screen, triggering an `on_clicked` callback
 /// when appropriate.
 pub mod push_button_widget;
 
