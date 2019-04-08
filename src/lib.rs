@@ -82,6 +82,9 @@
 //! direction you desired (Left, Center, Right)  It produces an `on_clicked` callback when a
 //! click is detected (with the left mouse button) inside the bounds of the widget (ie. it
 //! overrides the mouse button click inside event.)
+//!
+//! `ProgressWidget` draws a progress bar on the screen, with a `BoxWidget` as its base.  The
+//! color of the progress bar and its background can be changed at any time.
 
 /// Main module containing the run loop for the UI components, containers for windows and
 /// `Widget` trait objects, and so on.  Contains the core elements required to build
@@ -104,4 +107,5 @@ pub mod event;
 /// - Timer Widget (for performing timer operations)
 /// - Image Widget (for drawing images)
 /// - Push Button Widget (for creating an interactive button that can be clicked)
+/// - Progress Widget (for displaying progress of an operation)
 pub mod widget;

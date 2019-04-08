@@ -1,5 +1,11 @@
 # Pushrod Releases
 
+## 0.2.3
+
+- Modified simple test, increased spacing of Hide buttons.
+- Implemented ProgressWidget (#32)
+- Added `SecondaryColor` config to allow for progress widget color to be adjusted.
+
 ## 0.2.2
 
 - Added PushButtonWidget. (#24)

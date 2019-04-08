@@ -153,6 +153,21 @@ pub trait Widget {
             .0
     }
 
+    /// Sets the secondary color for this widget.  Invalidates the widget afterward.
+    fn set_secondary_color(&mut self, color: types::Color) {
+        self.config().set(SecondaryColor(color));
+        self.invalidate();
+    }
+
+    /// Retrieves the secondary color of this widget.
+    /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
+    fn get_secondary_color(&mut self) -> types::Color {
+        self.config()
+            .get::<SecondaryColor>()
+            .unwrap_or(&SecondaryColor([1.0; 4]))
+            .0
+    }
+
     // Callbacks
 
     /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the

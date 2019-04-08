@@ -24,6 +24,7 @@ use pushrod::widget::image_widget::*;
 use pushrod::widget::push_button_widget::PushButtonWidget;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
+use pushrod::widget::progress_widget::*;
 use pushrod::widget::widget::*;
 
 pub struct SimpleWindow {
@@ -95,7 +96,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.set_origin(20, 280);
+        button2.set_origin(20, 290);
         button2.set_size(200, 32);
         button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
@@ -169,7 +170,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.set_origin(250, 280);
+        button2.set_origin(250, 290);
         button2.set_size(200, 32);
         button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
@@ -231,7 +232,7 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button.set_origin(480, 280);
+        button.set_origin(480, 290);
         button.set_size(200, 32);
         button.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button.set_border([0.0, 0.0, 0.0, 1.0], 2);
@@ -250,6 +251,53 @@ impl SimpleWindow {
             .add_widget(Box::new(image_widget));
     }
 
+    fn add_progress(&mut self) {
+        let mut progress_widget = ProgressWidget::new();
+
+        progress_widget.set_origin(20, 340);
+        progress_widget.set_size(300, 32);
+        progress_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+        progress_widget.set_secondary_color([0.5, 0.5, 0.5, 1.0]);
+        progress_widget.set_progress(50);
+        self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(progress_widget));
+
+        let mut button1 = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Animate".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button1.set_origin(340, 340);
+        button1.set_size(160, 32);
+        button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(button1));
+
+        let mut button2 = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Randomize".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button2.set_origin(520, 340);
+        button2.set_size(160, 32);
+        button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget(Box::new(button2));
+    }
+
     fn add_timer(&mut self) {
         let mut timer = TimerWidget::new();
         timer.set_timeout(10000);
@@ -265,6 +313,7 @@ impl SimpleWindow {
         self.add_base_widget();
         self.add_box_widgets();
         self.add_powered_by();
+        self.add_progress();
         self.add_timer();
     }
 
