@@ -83,6 +83,10 @@
 //! click is detected (with the left mouse button) inside the bounds of the widget (ie. it
 //! overrides the mouse button click inside event.)
 //!
+//! `ToggleButtonWidget` operates the same as a `PushButtonWidget`, but offers the ability to toggle
+//! selected state.  `on_selected` is the callback that is triggered with the selected state
+//! returned.
+//!
 //! `ProgressWidget` draws a progress bar on the screen, with a `BoxWidget` as its base.  The
 //! color of the progress bar and its background can be changed at any time.
 
@@ -107,5 +111,6 @@ pub mod event;
 /// - Timer Widget (for performing timer operations)
 /// - Image Widget (for drawing images)
 /// - Push Button Widget (for creating an interactive button that can be clicked)
+/// - Toggle Button Widget (for creating an on/off button that can be toggled)
 /// - Progress Widget (for displaying progress of an operation)
 pub mod widget;

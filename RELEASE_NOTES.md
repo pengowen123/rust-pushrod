@@ -5,6 +5,7 @@
 - Modified simple test, increased spacing of Hide buttons.
 - Implemented ProgressWidget (#32)
 - Added `SecondaryColor` config to allow for progress widget color to be adjusted.
+- Added `ToggleButtonWidget` (#31)
 
 ## 0.2.2
 

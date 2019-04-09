@@ -32,6 +32,10 @@ pub mod image_widget;
 /// when appropriate.
 pub mod push_button_widget;
 
+/// Toggle Button component: draws a clickable box on the screen, triggering an `on_selected` callback
+/// where appropriate.
+pub mod toggle_button_widget;
+
 /// Progress component: draws a progress meter widget.
 pub mod progress_widget;
 

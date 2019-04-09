@@ -22,21 +22,20 @@ use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
-use pushrod::widget::push_button_widget::PushButtonWidget;
+use pushrod::widget::push_button_widget::*;
+use pushrod::widget::toggle_button_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
 
 pub struct SimpleWindow {
     pushrod: RefCell<Pushrod>,
-    base_widget_id: i32,
 }
 
 impl SimpleWindow {
     fn new(prod: Pushrod) -> Self {
         Self {
             pushrod: RefCell::new(prod),
-            base_widget_id: 0,
         }
     }
 
@@ -65,8 +64,6 @@ impl SimpleWindow {
         base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 
         let base_widget_id = self.pushrod.borrow_mut().add_widget(Box::new(base_widget));
-
-        self.base_widget_id = base_widget_id;
 
         let mut button1 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
@@ -253,7 +250,7 @@ impl SimpleWindow {
             .borrow_mut()
             .add_widget(Box::new(progress_widget));
 
-        let mut button1 = PushButtonWidget::new(
+        let mut button1 = ToggleButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),
             "Animate".to_string(),
@@ -265,6 +262,9 @@ impl SimpleWindow {
         button1.set_size(160, 32);
         button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+        button1.on_selected(Box::new(|selected| {
+            eprintln!("Selected state: {}", selected);
+        }));
 
         self.pushrod.borrow_mut().add_widget(Box::new(button1));
 
