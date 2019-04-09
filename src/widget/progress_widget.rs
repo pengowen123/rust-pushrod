@@ -17,9 +17,9 @@ use piston_window::*;
 
 use crate::core::callbacks::*;
 use crate::core::point::*;
+use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
-use crate::widget::box_widget::*;
 
 /// This is the `ProgressWidget`, which is used for showing a progress bar.
 ///
@@ -50,7 +50,7 @@ pub struct ProgressWidget {
     config: Configurable,
     callbacks: CallbackStore,
     base_widget: BoxWidget,
-    progress: u16
+    progress: u16,
 }
 
 /// Implementation of the constructor for the `ProgressWidget`.
