@@ -141,7 +141,7 @@ impl ToggleButtonWidget {
 
     /// Returns the selected state of this button.  `true` indicates the button is selected,
     /// `false` otherwise.
-    pub fn get_selected(&mut self) -> bool {
+    pub fn get_selected(&self) -> bool {
         self.selected_state
     }
 
