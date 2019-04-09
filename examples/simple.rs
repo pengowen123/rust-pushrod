@@ -21,7 +21,9 @@ use piston_window::*;
 use pushrod::core::main::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::image_widget::*;
-use pushrod::widget::push_button_widget::PushButtonWidget;
+use pushrod::widget::progress_widget::*;
+use pushrod::widget::push_button_widget::*;
+use pushrod::widget::toggle_button_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::widget::*;
@@ -35,10 +37,6 @@ impl SimpleWindow {
         Self {
             pushrod: RefCell::new(prod),
         }
-    }
-
-    pub fn do_something(&mut self) {
-        eprintln!("Do something.");
     }
 
     fn add_hello_world(&mut self) {
@@ -55,9 +53,7 @@ impl SimpleWindow {
         text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
         text_widget.set_text_color([0.75, 0.25, 1.0, 1.0]);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(text_widget));
+        self.pushrod.borrow_mut().add_widget(Box::new(text_widget));
     }
 
     fn add_base_widget(&mut self) {
@@ -67,9 +63,7 @@ impl SimpleWindow {
         base_widget.set_size(200, 200);
         base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
 
-        let base_widget_id = self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(base_widget));
+        let base_widget_id = self.pushrod.borrow_mut().add_widget(Box::new(base_widget));
 
         let mut button1 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
@@ -82,6 +76,9 @@ impl SimpleWindow {
         button1.set_size(180, 32);
         button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+        button1.on_clicked(Box::new(|| {
+            // Until this is working, this library will not move forward.
+        }));
 
         self.pushrod
             .borrow_mut()
@@ -100,9 +97,7 @@ impl SimpleWindow {
         button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(button2));
+        self.pushrod.borrow_mut().add_widget(Box::new(button2));
     }
 
     fn add_box_widgets(&mut self) {
@@ -115,9 +110,7 @@ impl SimpleWindow {
         box_widget.on_key_pressed(Box::new(|_, key, state| {
             eprintln!("Key {:?}; State {:?}", key, state);
         }));
-        let box_widget_id = self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(box_widget));
+        let box_widget_id = self.pushrod.borrow_mut().add_widget(Box::new(box_widget));
 
         let mut text_widget2 = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
@@ -174,18 +167,14 @@ impl SimpleWindow {
         button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(button2));
+        self.pushrod.borrow_mut().add_widget(Box::new(button2));
 
         let mut box_1 = BoxWidget::new();
         box_1.set_origin(480, 80);
         box_1.set_size(200, 200);
         box_1.set_color([0.5, 0.5, 1.0, 1.0]);
         box_1.set_border([0.0, 0.0, 1.0, 1.0], 2);
-        let box_1_id = self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(box_1));
+        let box_1_id = self.pushrod.borrow_mut().add_widget(Box::new(box_1));
 
         let mut inner_box_1 = BoxWidget::new();
         inner_box_1.set_origin(505, 105);
@@ -236,18 +225,63 @@ impl SimpleWindow {
         button.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button.set_border([0.0, 0.0, 0.0, 1.0], 2);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(button));
+        self.pushrod.borrow_mut().add_widget(Box::new(button));
     }
 
     fn add_powered_by(&mut self) {
-        let mut image_widget = ImageWidget::new(self.pushrod.borrow_mut().get_factory(), "rust-512x512.jpg".to_string());
+        let mut image_widget = ImageWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "rust-512x512.jpg".to_string(),
+        );
         image_widget.set_origin(740, 540);
         image_widget.set_size(48, 48);
+        self.pushrod.borrow_mut().add_widget(Box::new(image_widget));
+    }
+
+    fn add_progress(&mut self) {
+        let mut progress_widget = ProgressWidget::new();
+
+        progress_widget.set_origin(20, 360);
+        progress_widget.set_size(300, 32);
+        progress_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+        progress_widget.set_secondary_color([0.5, 0.5, 0.5, 1.0]);
+        progress_widget.set_progress(50);
         self.pushrod
             .borrow_mut()
-            .add_widget(Box::new(image_widget));
+            .add_widget(Box::new(progress_widget));
+
+        let mut button1 = ToggleButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Animate".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button1.set_origin(340, 360);
+        button1.set_size(160, 32);
+        button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
+        button1.on_selected(Box::new(|selected| {
+            eprintln!("Selected state: {}", selected);
+        }));
+
+        self.pushrod.borrow_mut().add_widget(Box::new(button1));
+
+        let mut button2 = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Randomize".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button2.set_origin(520, 360);
+        button2.set_size(160, 32);
+        button2.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        button2.set_border([0.0, 0.0, 0.0, 1.0], 2);
+
+        self.pushrod.borrow_mut().add_widget(Box::new(button2));
     }
 
     fn add_timer(&mut self) {
@@ -255,9 +289,7 @@ impl SimpleWindow {
         timer.set_timeout(10000);
         timer.set_enabled(true);
         timer.on_timeout(Box::new(|| eprintln!("Timer triggered after 10 seconds.")));
-        self.pushrod
-            .borrow_mut()
-            .add_widget(Box::new(timer));
+        self.pushrod.borrow_mut().add_widget(Box::new(timer));
     }
 
     fn build(&mut self) {
@@ -265,6 +297,7 @@ impl SimpleWindow {
         self.add_base_widget();
         self.add_box_widgets();
         self.add_powered_by();
+        self.add_progress();
         self.add_timer();
     }
 

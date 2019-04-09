@@ -83,6 +83,10 @@ pub struct BorderWidth(pub u8);
 #[derive(Clone, Debug)]
 pub struct TextColor(pub Color);
 
+/// `Color` of a secondary object to be drawn within a `Widget`.
+#[derive(Clone, Debug)]
+pub struct SecondaryColor(pub Color);
+
 /// This macro implements the availability of configuration items.  The first value is the name
 /// of the `struct` that the configuration object applies, and the second value is the name of the
 /// private inner trait that is responsible for setting and getting values for that `struct`
@@ -94,6 +98,7 @@ impl_configurable! {
     BorderColor => border_color,
     BorderWidth => border_width,
     TextColor => text_color,
+    SecondaryColor => secondary_color,
 }
 
 /// Implementation of the default `Configurable` object.

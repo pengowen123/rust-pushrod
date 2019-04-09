@@ -1,5 +1,5 @@
-// Push Button Widget
-// Extensible widget for the widget library - handles a push button object.
+// Toggle Button Widget
+// Extensible widget for the widget library - handles a toggleable button object.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-pub type MutableBlankCallback = Box<FnMut() -> ()>;
+pub type MutableSelectedCallback = Box<FnMut(bool) -> ()>;
 
-/// This is the `PushButtonWidget`, which contains a top-level widget for display, overriding the
+/// This is the `ToggleButtonWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
@@ -34,7 +34,7 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 /// # use pushrod::core::point::*;
 /// # use pushrod::widget::widget::*;
 /// # use pushrod::widget::text_widget::*;
-/// # use pushrod::widget::push_button_widget::*;
+/// # use pushrod::widget::toggle_button_widget::*;
 /// # fn main() {
 /// #    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
 /// #       .opengl(OpenGL::V3_2)
@@ -42,7 +42,7 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 /// #       .build()
 /// #       .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
 /// #   let mut prod: Pushrod = Pushrod::new(window);
-///    let mut button_widget = PushButtonWidget::new(prod.get_factory(),
+///    let mut button_widget = ToggleButtonWidget::new(prod.get_factory(),
 ///        "OpenSans-Regular.ttf".to_string(),
 ///        "Button".to_string(),
 ///        20,
@@ -53,8 +53,8 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 ///    button_widget.set_size(200, 200);
 ///    button_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
 ///    button_widget.set_border_thickness(3);
-///    button_widget.on_clicked(Box::new(|| {
-///        eprintln!("Button Widget Clicked!");
+///    button_widget.on_selected(Box::new(|selected_flag| {
+///        eprintln!("Selected: {:?}", selected_flag);
 ///    }));
 ///
 ///    // (OR)
@@ -62,16 +62,17 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 ///    button_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
 /// # }
 /// ```
-pub struct PushButtonWidget {
+pub struct ToggleButtonWidget {
     config: Configurable,
     callbacks: CallbackStore,
     base_widget: BoxWidget,
     text_widget: TextWidget,
-    on_clicked_callback: MutableBlankCallback,
+    selected_state: bool,
+    on_selected_callback: MutableSelectedCallback,
 }
 
-/// Implementation of the constructor for the `PushButtonWidget`.
-impl PushButtonWidget {
+/// Implementation of the constructor for the `ToggleButtonWidget`.
+impl ToggleButtonWidget {
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -90,7 +91,8 @@ impl PushButtonWidget {
                 font_size,
                 justify,
             ),
-            on_clicked_callback: Box::new(|| {}),
+            selected_state: false,
+            on_selected_callback: Box::new(|_| {}),
         }
     }
 
@@ -137,6 +139,12 @@ impl PushButtonWidget {
         self.base_widget.get_border_thickness()
     }
 
+    /// Returns the selected state of this button.  `true` indicates the button is selected,
+    /// `false` otherwise.
+    pub fn get_selected(&mut self) -> bool {
+        self.selected_state
+    }
+
     /// Helper function that sets both the color of the border and the thickness at the same time.
     pub fn set_border(&mut self, color: types::Color, thickness: u8) {
         self.set_border_color(color);
@@ -144,14 +152,15 @@ impl PushButtonWidget {
     }
 
     /// This is the callback that is triggered when a mouse triggers the `button_up_inside` event
-    /// of the main `PushButtonWidget`.
-    pub fn on_clicked(&mut self, callback: MutableBlankCallback) {
-        self.on_clicked_callback = callback;
+    /// of the main `ToggleButtonWidget`.
+    pub fn on_selected(&mut self, callback: MutableSelectedCallback) {
+        self.on_selected_callback = callback;
     }
 
     /// Internal function that calls the `on_clicked_callback` callback.
-    fn call_on_clicked(&mut self) {
-        (self.on_clicked_callback)();
+    fn call_on_selected(&mut self) {
+        self.selected_state = !self.selected_state;
+        (self.on_selected_callback)(self.selected_state);
     }
 }
 
@@ -159,7 +168,7 @@ impl PushButtonWidget {
 /// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
 /// responds to the button down/up callbacks internally, and generates an `on_clicked` callback
 /// when appropriate.
-impl Widget for PushButtonWidget {
+impl Widget for ToggleButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }
@@ -210,22 +219,33 @@ impl Widget for PushButtonWidget {
         match button {
             Button::Mouse(mouse_button) => {
                 if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-                    self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+                    if self.selected_state {
+                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                    } else {
+                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+                    }
                 }
             }
             _ => (),
         }
     }
 
-    /// Overrides button up inside, triggering an `on_clicked` callback.
+    /// Overrides button up inside, triggering an `on_selected` callback.
     fn button_up_inside(&mut self, _: i32, button: Button) {
         match button {
             Button::Mouse(mouse_button) => {
                 if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-                    self.call_on_clicked();
+                    self.call_on_selected();
+
+                    if self.selected_state {
+                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+                    } else {
+                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                    }
                 }
             }
             _ => (),
@@ -237,8 +257,13 @@ impl Widget for PushButtonWidget {
         match button {
             Button::Mouse(mouse_button) => {
                 if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                    if self.selected_state {
+                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+                    } else {
+                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                    }
                 }
             }
             _ => (),
