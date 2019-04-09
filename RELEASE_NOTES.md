@@ -1,5 +1,7 @@
 # Pushrod Releases
 
+## 0.2.4
+
 ## 0.2.3
 
 - Modified simple test, increased spacing of Hide buttons.
