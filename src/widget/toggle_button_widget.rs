@@ -34,7 +34,7 @@ pub type MutableSelectedCallback = Box<FnMut(bool) -> ()>;
 /// # use pushrod::core::point::*;
 /// # use pushrod::widget::widget::*;
 /// # use pushrod::widget::text_widget::*;
-/// # use pushrod::widget::push_button_widget::*;
+/// # use pushrod::widget::toggle_button_widget::*;
 /// # fn main() {
 /// #    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
 /// #       .opengl(OpenGL::V3_2)
