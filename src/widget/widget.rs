@@ -14,7 +14,6 @@
 
 use piston_window::*;
 
-use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 
@@ -63,16 +62,11 @@ pub trait Widget {
     /// # use pushrod::core::point::Point;
     /// struct MyWidget {
     ///   config: Configurable,
-    ///   callbacks: CallbackStore,
     /// }
     ///
     /// impl Widget for MyWidget {
     ///   fn config(&mut self) -> &mut Configurable {
     ///     &mut self.config
-    ///   }
-    ///
-    ///   fn callbacks(&mut self) -> &mut CallbackStore {
-    ///     &mut self.callbacks
     ///   }
     ///
     ///   // Not necessary below, but here for illustration if you want to override these calls.
@@ -85,10 +79,6 @@ pub trait Widget {
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
     fn config(&mut self) -> &mut Configurable;
-
-    /// Returns the `CallbackStore` for this `Widget`.  This contains a set of callbacks that only
-    /// apply to this `Widget`.
-    fn callbacks(&mut self) -> &mut CallbackStore;
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
@@ -168,226 +158,6 @@ pub trait Widget {
             .0
     }
 
-    // Callbacks
-
-    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
-    /// `CallbackTypes::SingleCallback` enum type.  If the callback does not exist, or is not
-    /// defined properly, it will be silently dropped and ignored.
-    fn perform_single_callback(&mut self, callback_id: u32, widget_id: i32) {
-        match self.callbacks().get(callback_id) {
-            CallbackTypes::SingleCallback { callback } => callback(widget_id),
-            _ => (),
-        }
-    }
-
-    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
-    /// `CallbackTypes::BoolCallback` enum type.  If the callback does not exist, or is not
-    /// defined properly, it will be silently dropped and ignored.
-    fn perform_bool_callback(&mut self, callback_id: u32, widget_id: i32, flag: bool) {
-        match self.callbacks().get(callback_id) {
-            CallbackTypes::BoolCallback { callback } => callback(widget_id, flag),
-            _ => (),
-        }
-    }
-
-    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
-    /// `CallbackTypes::PointCallback` enum type.  If the callback does not exist, or is not
-    /// defined properly, it will be silently dropped and ignored.
-    fn perform_point_callback(&mut self, callback_id: u32, widget_id: i32, point: Point) {
-        match self.callbacks().get(callback_id) {
-            CallbackTypes::PointCallback { callback } => callback(widget_id, point.clone()),
-            _ => (),
-        }
-    }
-
-    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
-    /// `CallbackTypes::SizeCallback` enum type.  If the callback does not exist, or is not
-    /// defined properly, it will be silently dropped and ignored.
-    fn perform_size_callback(
-        &mut self,
-        callback_id: u32,
-        widget_id: i32,
-        size: crate::core::point::Size,
-    ) {
-        match self.callbacks().get(callback_id) {
-            CallbackTypes::SizeCallback { callback } => callback(widget_id, size.clone()),
-            _ => (),
-        }
-    }
-
-    fn perform_button_callback(&mut self, callback_id: u32, widget_id: i32, button: Button) {
-        match self.callbacks().get(callback_id) {
-            CallbackTypes::ButtonCallback { callback } => callback(widget_id, button),
-            _ => (),
-        }
-    }
-
-    /// Performs a callback stored in the `CallbackStore` for this `Widget`, but only for the
-    /// `CallbackTypes::KeyCallback` enum type.  If the callback does not exist, or is not
-    /// defined properly, it will be silently dropped and ignored.
-    fn perform_key_callback(
-        &mut self,
-        callback_id: u32,
-        widget_id: i32,
-        key: Key,
-        state: ButtonState,
-    ) {
-        match self.callbacks().get(callback_id) {
-            CallbackTypes::KeyCallback { callback } => {
-                callback(widget_id, key.clone(), state.clone())
-            }
-            _ => (),
-        }
-    }
-
-    // Callback Triggers
-
-    /// Called when a keyboard event takes place within the bounds of a widget.  Includes the widget
-    /// ID, the key code that was affected, and its state - pressed or released.
-    fn key_pressed(&mut self, widget_id: i32, key: &Key, state: &ButtonState) {
-        self.perform_key_callback(CALLBACK_KEY_PRESSED, widget_id, key.clone(), state.clone());
-    }
-
-    /// Called when a mouse enters the bounds of the widget.  Includes the widget ID.  Only override
-    /// if you want to signal a mouse enter event.
-    fn mouse_entered(&mut self, widget_id: i32) {
-        self.perform_single_callback(CALLBACK_MOUSE_ENTERED, widget_id);
-    }
-
-    /// Called when a mouse exits the bounds of the widget.  Includes the widget ID.  Only override
-    /// if you want to signal a mouse exit event.
-    fn mouse_exited(&mut self, widget_id: i32) {
-        self.perform_single_callback(CALLBACK_MOUSE_EXITED, widget_id);
-    }
-
-    /// Called when a scroll event is called within the bounds of the widget.  Includes the widget ID.
-    /// Only override if you want to signal a mouse scroll event.
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {
-        self.perform_point_callback(CALLBACK_MOUSE_SCROLLED, widget_id, point.clone());
-    }
-
-    /// Called when the mouse pointer is moved inside a widget.  Includes the widget ID and point.
-    /// Only override if you want to track mouse movement.
-    fn mouse_moved(&mut self, widget_id: i32, point: Point) {
-        self.perform_point_callback(CALLBACK_MOUSE_MOVED, widget_id, point.clone());
-    }
-
-    /// Called when the main window is resized.  Includes the widget ID and the new window size.
-    /// Only override if you want to respond to a window resize (and if the window is resizable.)
-    fn window_resized(&mut self, widget_id: i32, size: crate::core::point::Size) {
-        self.perform_size_callback(CALLBACK_WINDOW_RESIZED, widget_id, size.clone());
-    }
-
-    /// Called when a window focus state changes.  Includes the widget ID and a focus flag: `true`
-    /// when window gains focus, `false` otherwise.  Only override if you want to signal a window
-    /// focus event.
-    fn window_focused(&mut self, widget_id: i32, focused: bool) {
-        self.perform_bool_callback(CALLBACK_WINDOW_FOCUSED, widget_id, focused);
-    }
-
-    /// Called when a mouse button is clicked down.  Includes the widget ID and the button code.
-    /// Only override if you want to respond to a mouse click.
-    fn button_down(&mut self, widget_id: i32, button: Button) {
-        self.perform_button_callback(CALLBACK_BUTTON_DOWN, widget_id, button);
-    }
-
-    /// Called when a mouse button is released inside the same `Widget` that it was clicked inside.
-    /// Includes the widget ID and the button code.  Only override if you want to respond to a mouse
-    /// button release.
-    fn button_up_inside(&mut self, widget_id: i32, button: Button) {
-        self.perform_button_callback(CALLBACK_BUTTON_UP_INSIDE, widget_id, button);
-    }
-
-    /// Called when a mouse button is released outside the same `Widget` that it was clicked inside.
-    /// Includes the widget ID and the button code.  Only override if you want to respond to a mouse
-    /// button release.
-    fn button_up_outside(&mut self, widget_id: i32, button: Button) {
-        self.perform_button_callback(CALLBACK_BUTTON_UP_OUTSIDE, widget_id, button);
-    }
-
-    // Callback Setters
-    fn on_key_pressed(&mut self, callback: KeyCallback) {
-        self.callbacks().put(
-            CALLBACK_KEY_PRESSED,
-            CallbackTypes::KeyCallback { callback },
-        );
-    }
-
-    /// Sets the closure action to be performed when a mouse enters a `Widget`.
-    fn on_mouse_entered(&mut self, callback: SingleCallback) {
-        self.callbacks().put(
-            CALLBACK_MOUSE_ENTERED,
-            CallbackTypes::SingleCallback { callback },
-        );
-    }
-
-    /// Sets the closure action to be performed when a mouse exits a `Widget`.
-    fn on_mouse_exited(&mut self, callback: SingleCallback) {
-        self.callbacks().put(
-            CALLBACK_MOUSE_EXITED,
-            CallbackTypes::SingleCallback { callback },
-        );
-    }
-
-    /// Sets the closure action to be performed when a mouse scrolls inside a `Widget`.
-    fn on_mouse_scrolled(&mut self, callback: PointCallback) {
-        self.callbacks().put(
-            CALLBACK_MOUSE_SCROLLED,
-            CallbackTypes::PointCallback { callback },
-        );
-    }
-
-    /// Sets the closure action to be performed when a mouse moves within a `Widget`.  The mouse
-    /// point is based on the position within the `Widget`, not its `Point` relative to the window.
-    fn on_mouse_moved(&mut self, callback: PointCallback) {
-        self.callbacks().put(
-            CALLBACK_MOUSE_MOVED,
-            CallbackTypes::PointCallback { callback },
-        );
-    }
-
-    /// Sets the window resize action to be performed when the window is resized.
-    fn on_window_resized(&mut self, callback: SizeCallback) {
-        self.callbacks().put(
-            CALLBACK_WINDOW_RESIZED,
-            CallbackTypes::SizeCallback { callback },
-        );
-    }
-
-    /// Sets the window focused action to be performed when the window is (un)focused.
-    fn on_focused(&mut self, callback: BoolCallback) {
-        self.callbacks().put(
-            CALLBACK_WINDOW_FOCUSED,
-            CallbackTypes::BoolCallback { callback },
-        );
-    }
-
-    /// Sets the button click action to be performed when a mouse button is clicked.
-    fn on_button_down(&mut self, callback: ButtonCallback) {
-        self.callbacks().put(
-            CALLBACK_BUTTON_DOWN,
-            CallbackTypes::ButtonCallback { callback },
-        )
-    }
-
-    /// Sets the callback to be performed when a mouse button is released within the same `Widget`
-    /// that it was pressed down inside.
-    fn on_button_up_inside(&mut self, callback: ButtonCallback) {
-        self.callbacks().put(
-            CALLBACK_BUTTON_UP_INSIDE,
-            CallbackTypes::ButtonCallback { callback },
-        )
-    }
-
-    /// Sets the callback to be performed when a mouse button is released outside of the same `Widget`
-    /// that it was pressed down inside.
-    fn on_button_up_outside(&mut self, callback: ButtonCallback) {
-        self.callbacks().put(
-            CALLBACK_BUTTON_UP_OUTSIDE,
-            CallbackTypes::ButtonCallback { callback },
-        )
-    }
-
     // Draw routines
 
     /// Draws the contents of the widget, provided a `piston2d` `Context` and `G2d` object.
@@ -448,7 +218,6 @@ pub trait Widget {
 /// ```
 pub struct CanvasWidget {
     config: Configurable,
-    callbacks: CallbackStore,
 }
 
 /// Implementation of the constructor for the `CanvasWidget`.  Creates a new base widget
@@ -457,7 +226,6 @@ impl CanvasWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
         }
     }
 }
@@ -468,9 +236,5 @@ impl CanvasWidget {
 impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
-    }
-
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
     }
 }

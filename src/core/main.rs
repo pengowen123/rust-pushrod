@@ -15,9 +15,11 @@
 
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::cell::RefCell;
 
 use crate::core::point::*;
 use crate::core::widget_store::*;
+use crate::core::callbacks::*;
 use crate::widget::widget::*;
 
 use piston_window::*;
@@ -31,7 +33,7 @@ use piston_window::*;
 /// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
     window: PistonWindow,
-    pub widget_store: WidgetStore,
+    pub widget_store: RefCell<WidgetStore>,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
@@ -58,7 +60,7 @@ impl Pushrod {
     pub fn new(window: PistonWindow) -> Self {
         Self {
             window,
-            widget_store: WidgetStore::new(),
+            widget_store: RefCell::new(WidgetStore::new()),
         }
     }
 
@@ -70,18 +72,18 @@ impl Pushrod {
     /// Helper method that adds a `Widget` to the `WidgetStore`, returning the ID of the `Widget`
     /// after it has been added.
     pub fn add_widget(&mut self, widget: Box<dyn Widget>) -> i32 {
-        self.widget_store.add_widget(widget)
+        self.widget_store.borrow_mut().add_widget(widget)
     }
 
     /// Helper method that adds a `Widget` to the `WidgetStore`, specifying the `parent_id` as the
     /// parent of which to add this object to.  Returns the new ID of the `Widget` after it has
     /// been added.
     pub fn add_widget_to_parent(&mut self, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
-        self.widget_store.add_widget_to_parent(widget, parent_id)
+        self.widget_store.borrow_mut().add_widget_to_parent(widget, parent_id)
     }
 
     fn handle_draw(&mut self, event: &Event) {
-        let widgets = &mut self.widget_store;
+        let widgets = &mut self.widget_store.borrow_mut();
 
         self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
     }
@@ -104,7 +106,7 @@ impl Pushrod {
     /// This event is handled window-by-window.  Once a window has processed all of its pending
     /// events, the next window is then processed.  No particular window takes precidence - any
     /// window that has events to process gets handled in order.
-    pub fn run(&mut self) {
+    pub fn run(&mut self, event_handler: &mut PushrodCallbackEvents) {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
         let mut button_map: HashMap<i32, HashSet<Button>> = HashMap::new();
@@ -120,32 +122,39 @@ impl Pushrod {
 
                     let current_widget_id = self
                         .widget_store
+                        .borrow_mut()
                         .get_widget_id_for_point(mouse_point.clone());
                     let current_parent_for_widget =
-                        self.widget_store.get_parent_of(current_widget_id);
+                        self.widget_store.borrow_mut().get_parent_of(current_widget_id);
 
                     // Handles the mouse move callback.
                     if current_widget_id != -1 {
-                        self.widget_store
-                            .mouse_moved_for_id(current_widget_id, mouse_point.clone());
+                        event_handler.handle_event(CallbackEvent::MouseMoved {
+                            widget_id: current_widget_id,
+                            point: mouse_point.clone(),
+                        }, &mut self.widget_store.borrow_mut());
                     }
 
                     if current_widget_id != last_widget_id {
                         if last_widget_id != -1 {
-                            self.widget_store.mouse_exited_for_id(last_widget_id);
+                            event_handler.handle_event(CallbackEvent::MouseExited {
+                                widget_id: last_widget_id,
+                            }, &mut self.widget_store.borrow_mut());
                         }
 
                         last_widget_id = current_widget_id;
 
                         if last_widget_id != -1 {
-                            self.widget_store.mouse_entered_for_id(last_widget_id);
+                            event_handler.handle_event(CallbackEvent::MouseEntered {
+                                widget_id: last_widget_id,
+                            }, &mut self.widget_store.borrow_mut());
                         }
 
                         eprintln!(
                             "Widget IDs: current={} parent={} children={:?}",
                             current_widget_id,
                             current_parent_for_widget,
-                            self.widget_store.get_children_of(current_widget_id)
+                            self.widget_store.borrow_mut().get_children_of(current_widget_id)
                         );
                     }
                 }
@@ -155,8 +164,10 @@ impl Pushrod {
                 let mouse_point = make_point_f64(x, y);
 
                 if last_widget_id != -1 {
-                    self.widget_store
-                        .mouse_scrolled_for_id(last_widget_id, mouse_point.clone());
+                    event_handler.handle_event(CallbackEvent::MouseScrolled {
+                        widget_id: last_widget_id,
+                        point: mouse_point.clone(),
+                    }, &mut self.widget_store.borrow_mut());
                 }
             });
 
@@ -167,36 +178,46 @@ impl Pushrod {
                         .or_insert(HashSet::new())
                         .insert(args.button);
 
-                    self.widget_store.button_down(last_widget_id, args.button);
+                    event_handler.handle_event(CallbackEvent::MouseButtonDown {
+                        widget_id: last_widget_id,
+                        button: args.button,
+                    }, &mut self.widget_store.borrow_mut());
                 }
                 ButtonState::Release => {
                     let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
 
                     if button_set.contains(&args.button) {
                         button_set.remove(&args.button);
-                        self.widget_store
-                            .button_up_inside(last_widget_id, args.button);
+
+                        event_handler.handle_event(CallbackEvent::MouseButtonUpInside {
+                            widget_id: last_widget_id,
+                            button: args.button,
+                        }, &mut self.widget_store.borrow_mut());
                     } else {
                         for (widget_id, button_set) in button_map.iter_mut() {
                             if button_set.contains(&args.button) {
-                                self.widget_store.button_up_outside(*widget_id, args.button);
+                                event_handler.handle_event(CallbackEvent::MouseButtonUpOutside {
+                                    widget_id: *widget_id,
+                                    button: args.button,
+                                }, &mut self.widget_store.borrow_mut());
+
                                 button_set.remove(&args.button);
                             }
                         }
-                        // Find the button that was set for button down in the button map
-                        // search each set, and check for the args.button
-                        // The hash_map that matches that ID should be called with a
-                        // button_up_outside callback.
                     }
                 }
             });
 
             event.resize(|w, h| {
-                self.widget_store.handle_resize(w as u32, h as u32);
+                event_handler.handle_event(CallbackEvent::WindowResized {
+                    size: crate::core::point::Size { w: w as i32, h: h as i32 },
+                }, &mut self.widget_store.borrow_mut());
             });
 
             event.focus(|focused| {
-                self.widget_store.handle_focus(focused);
+                event_handler.handle_event(CallbackEvent::WindowFocused {
+                    flag: focused,
+                }, &mut self.widget_store.borrow_mut());
             });
 
             match event {
@@ -205,21 +226,24 @@ impl Pushrod {
                     button: Button::Keyboard(key),
                     scancode: _,
                 })) => {
-                    self.widget_store
-                        .keypress_for_id(last_widget_id, &key, &state);
+                    event_handler.handle_event(CallbackEvent::KeyPressed {
+                        widget_id: last_widget_id,
+                        key: *key,
+                        state: *state,
+                    }, &mut self.widget_store.borrow_mut());
                 }
                 _ => {}
             };
 
             event.resize(|_, _| {
-                self.widget_store.invalidate_all_widgets();
+                self.widget_store.borrow_mut().invalidate_all_widgets();
             });
 
             // FPS loop handling
 
             event.render(|_| {
                 self.handle_draw(&event);
-                self.widget_store.invalidate_all_widgets();
+                self.widget_store.borrow_mut().invalidate_all_widgets();
             });
         }
     }

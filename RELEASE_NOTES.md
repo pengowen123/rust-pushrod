@@ -3,6 +3,7 @@
 ## 0.2.4
 
 - Changed mutability of get_selected state in ToggleButtonWidget.
+- Added PushrodCallbackEvents class to handle callback events.
 
 ## 0.2.3
 

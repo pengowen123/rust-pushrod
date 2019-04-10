@@ -16,7 +16,6 @@
 use piston_window::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -42,7 +41,6 @@ pub const CALLBACK_TIMER: u32 = 100;
 /// ```
 pub struct TimerWidget {
     config: Configurable,
-    callbacks: CallbackStore,
     enabled: bool,
     initiated: u64,
     timeout: u64,
@@ -71,27 +69,26 @@ impl TimerWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
             enabled: true,
             initiated: time_ms(),
             timeout: 0,
         }
     }
 
-    // Called to check the time since initiation, and call the timeout function when a timer has
-    // been triggered.
-    fn tick(&mut self) {
-        if !self.enabled {
-            return;
-        }
-
-        let elapsed = time_ms() - self.initiated;
-
-        if elapsed > self.timeout {
-            self.initiated = time_ms();
-            self.timeout();
-        }
-    }
+//    // Called to check the time since initiation, and call the timeout function when a timer has
+//    // been triggered.
+//    fn tick(&mut self) {
+//        if !self.enabled {
+//            return;
+//        }
+//
+//        let elapsed = time_ms() - self.initiated;
+//
+//        if elapsed > self.timeout {
+//            self.initiated = time_ms();
+//            self.timeout();
+//        }
+//    }
 
     /// Enables or disables the timer.  When disabled, the timer will not initiate the callback
     /// function.  When re-enabled, the initiation time resets, so the timer will reset back to
@@ -101,20 +98,20 @@ impl TimerWidget {
         self.initiated = time_ms();
     }
 
-    /// Sets the closure function for the timer when a timeout has been triggered.  This closure
-    /// needs to be `Boxed`.
-    pub fn on_timeout(&mut self, callback: BlankCallback) {
-        self.callbacks()
-            .put(CALLBACK_TIMER, CallbackTypes::BlankCallback { callback });
-    }
-
-    /// Calls the timeout function.
-    fn timeout(&mut self) {
-        match self.callbacks().get(CALLBACK_TIMER) {
-            CallbackTypes::BlankCallback { callback } => callback(),
-            _ => (),
-        }
-    }
+//    /// Sets the closure function for the timer when a timeout has been triggered.  This closure
+//    /// needs to be `Boxed`.
+//    pub fn on_timeout(&mut self, callback: BlankCallback) {
+//        self.callbacks()
+//            .put(CALLBACK_TIMER, CallbackTypes::BlankCallback { callback });
+//    }
+//
+//    /// Calls the timeout function.
+//    fn timeout(&mut self) {
+//        match self.callbacks().get(CALLBACK_TIMER) {
+//            CallbackTypes::BlankCallback { callback } => callback(),
+//            _ => (),
+//        }
+//    }
 
     /// Sets the timeout in milliseconds for this timer.  Will trigger a call to the function
     /// set in `on_timeout` when triggered, and will continue to call that function until this
@@ -128,10 +125,6 @@ impl TimerWidget {
 impl Widget for TimerWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
-    }
-
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
     }
 
     /// Timer is always invalidated, this way, the tick function is always called on each
@@ -153,6 +146,6 @@ impl Widget for TimerWidget {
     /// Does not draw anything - only calls the timer `tick()` function to increment the
     /// timer.
     fn draw(&mut self, _context: Context, _graphics: &mut G2d, _clip: &DrawState) {
-        self.tick();
+//        self.tick();
     }
 }

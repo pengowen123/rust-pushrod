@@ -19,6 +19,8 @@ use std::cell::RefCell;
 
 use piston_window::*;
 use pushrod::core::main::*;
+use pushrod::core::widget_store::*;
+use pushrod::core::callbacks::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
@@ -30,6 +32,21 @@ use pushrod::widget::widget::*;
 
 pub struct SimpleWindow {
     pushrod: RefCell<Pushrod>,
+}
+
+pub struct SimpleWindowEventHandler { }
+
+impl PushrodCallbackEvents for SimpleWindowEventHandler {
+    fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
+        eprintln!("Handle event: {:?}", event);
+//        widget_store.get_widget_for_id(event.widget_id);
+    }
+}
+
+impl SimpleWindowEventHandler {
+    fn new() -> Self {
+        SimpleWindowEventHandler { }
+    }
 }
 
 impl SimpleWindow {
@@ -76,9 +93,6 @@ impl SimpleWindow {
         button1.set_size(180, 32);
         button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
-        button1.on_clicked(Box::new(|| {
-            // Until this is working, this library will not move forward.
-        }));
 
         self.pushrod
             .borrow_mut()
@@ -107,9 +121,6 @@ impl SimpleWindow {
         box_widget.set_size(200, 200);
         box_widget.set_color([0.0, 1.0, 0.0, 1.0]);
         box_widget.set_border([1.0, 0.0, 0.0, 1.0], 4);
-        box_widget.on_key_pressed(Box::new(|_, key, state| {
-            eprintln!("Key {:?}; State {:?}", key, state);
-        }));
         let box_widget_id = self.pushrod.borrow_mut().add_widget(Box::new(box_widget));
 
         let mut text_widget2 = TextWidget::new(
@@ -262,9 +273,6 @@ impl SimpleWindow {
         button1.set_size(160, 32);
         button1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         button1.set_border([0.0, 0.0, 0.0, 1.0], 2);
-        button1.on_selected(Box::new(|selected| {
-            eprintln!("Selected state: {}", selected);
-        }));
 
         self.pushrod.borrow_mut().add_widget(Box::new(button1));
 
@@ -288,7 +296,6 @@ impl SimpleWindow {
         let mut timer = TimerWidget::new();
         timer.set_timeout(10000);
         timer.set_enabled(true);
-        timer.on_timeout(Box::new(|| eprintln!("Timer triggered after 10 seconds.")));
         self.pushrod.borrow_mut().add_widget(Box::new(timer));
     }
 
@@ -306,8 +313,10 @@ impl SimpleWindow {
     }
 
     pub fn run(&mut self) {
+        let mut handler = SimpleWindowEventHandler::new();
+
         self.build();
-        self.get_pushrod().run();
+        self.get_pushrod().run(&mut handler);
     }
 }
 

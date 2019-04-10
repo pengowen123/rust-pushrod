@@ -15,7 +15,6 @@
 
 use piston_window::*;
 
-use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
@@ -48,7 +47,6 @@ use crate::widget::widget::*;
 /// ```
 pub struct ProgressWidget {
     config: Configurable,
-    callbacks: CallbackStore,
     base_widget: BoxWidget,
     progress: u16,
 }
@@ -63,7 +61,6 @@ impl ProgressWidget {
 
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
             base_widget: base,
             progress: 0,
         }
@@ -89,10 +86,6 @@ impl ProgressWidget {
 impl Widget for ProgressWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
-    }
-
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
     }
 
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y

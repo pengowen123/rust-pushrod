@@ -15,7 +15,6 @@
 
 use piston_window::*;
 
-use crate::core::callbacks::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -105,7 +104,6 @@ pub enum TextJustify {
 /// ```
 pub struct TextWidget {
     config: Configurable,
-    callbacks: CallbackStore,
     font_cache: Glyphs,
     text: String,
     font_size: u32,
@@ -135,7 +133,6 @@ impl TextWidget {
 
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
             font_cache: glyphs,
             text,
             font_size,
@@ -214,10 +211,6 @@ impl TextWidget {
 impl Widget for TextWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
-    }
-
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
     }
 
     /// Draws the contents of the widget.

@@ -15,7 +15,6 @@
 
 use piston_window::*;
 
-use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
@@ -64,7 +63,6 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 /// ```
 pub struct PushButtonWidget {
     config: Configurable,
-    callbacks: CallbackStore,
     base_widget: BoxWidget,
     text_widget: TextWidget,
     on_clicked_callback: MutableBlankCallback,
@@ -81,7 +79,6 @@ impl PushButtonWidget {
     ) -> Self {
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
             base_widget: BoxWidget::new(),
             text_widget: TextWidget::new(
                 factory,
@@ -164,10 +161,6 @@ impl Widget for PushButtonWidget {
         &mut self.config
     }
 
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
-    }
-
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
     /// coordinates.  Invalidates the widget afterward.
     fn set_origin(&mut self, x: i32, y: i32) {
@@ -205,45 +198,45 @@ impl Widget for PushButtonWidget {
         self.base_widget.get_color()
     }
 
-    /// Overrides button down.
-    fn button_down(&mut self, _: i32, button: Button) {
-        match button {
-            Button::Mouse(mouse_button) => {
-                if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-                    self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-                }
-            }
-            _ => (),
-        }
-    }
-
-    /// Overrides button up inside, triggering an `on_clicked` callback.
-    fn button_up_inside(&mut self, _: i32, button: Button) {
-        match button {
-            Button::Mouse(mouse_button) => {
-                if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-                    self.call_on_clicked();
-                }
-            }
-            _ => (),
-        }
-    }
-
-    /// Overrides button up outside.
-    fn button_up_outside(&mut self, _: i32, button: Button) {
-        match button {
-            Button::Mouse(mouse_button) => {
-                if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-                }
-            }
-            _ => (),
-        }
-    }
+//    /// Overrides button down.
+//    fn button_down(&mut self, _: i32, button: Button) {
+//        match button {
+//            Button::Mouse(mouse_button) => {
+//                if mouse_button == MouseButton::Left {
+//                    self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+//                    self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+//                }
+//            }
+//            _ => (),
+//        }
+//    }
+//
+//    /// Overrides button up inside, triggering an `on_clicked` callback.
+//    fn button_up_inside(&mut self, _: i32, button: Button) {
+//        match button {
+//            Button::Mouse(mouse_button) => {
+//                if mouse_button == MouseButton::Left {
+//                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+//                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+//                    self.call_on_clicked();
+//                }
+//            }
+//            _ => (),
+//        }
+//    }
+//
+//    /// Overrides button up outside.
+//    fn button_up_outside(&mut self, _: i32, button: Button) {
+//        match button {
+//            Button::Mouse(mouse_button) => {
+//                if mouse_button == MouseButton::Left {
+//                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+//                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+//                }
+//            }
+//            _ => (),
+//        }
+//    }
 
     /// Draws the contents of the widget in this order:
     ///
