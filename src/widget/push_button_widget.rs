@@ -16,10 +16,12 @@
 use piston_window::*;
 
 use crate::core::point::*;
+use crate::core::callbacks::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
+use crate::core::callbacks::CallbackEvent::WidgetClicked;
 
 pub type MutableBlankCallback = Box<FnMut() -> ()>;
 
@@ -198,45 +200,54 @@ impl Widget for PushButtonWidget {
         self.base_widget.get_color()
     }
 
-    //    /// Overrides button down.
-    //    fn button_down(&mut self, _: i32, button: Button) {
-    //        match button {
-    //            Button::Mouse(mouse_button) => {
-    //                if mouse_button == MouseButton::Left {
-    //                    self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-    //                    self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-    //                }
-    //            }
-    //            _ => (),
-    //        }
-    //    }
-    //
-    //    /// Overrides button up inside, triggering an `on_clicked` callback.
-    //    fn button_up_inside(&mut self, _: i32, button: Button) {
-    //        match button {
-    //            Button::Mouse(mouse_button) => {
-    //                if mouse_button == MouseButton::Left {
-    //                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-    //                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    //                    self.call_on_clicked();
-    //                }
-    //            }
-    //            _ => (),
-    //        }
-    //    }
-    //
-    //    /// Overrides button up outside.
-    //    fn button_up_outside(&mut self, _: i32, button: Button) {
-    //        match button {
-    //            Button::Mouse(mouse_button) => {
-    //                if mouse_button == MouseButton::Left {
-    //                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-    //                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    //                }
-    //            }
-    //            _ => (),
-    //        }
-    //    }
+    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
+        match event {
+            CallbackEvent::MouseButtonDown {
+                widget_id, button
+            } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget.set_text_color([1.0; 4]);
+                    }
+                }
+                _ => (),
+            },
+
+            CallbackEvent::MouseButtonUpInside {
+                widget_id, button
+            } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        self.base_widget.set_color([1.0; 4]);
+                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+
+                        return Some(WidgetClicked {
+                            widget_id,
+                            button
+                        });
+                    }
+                },
+                _ => (),
+            },
+
+            CallbackEvent::MouseButtonUpOutside {
+                widget_id, button
+            } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        self.base_widget.set_color([1.0; 4]);
+                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                    }
+                },
+                _ => (),
+            },
+
+            _ => (),
+        }
+
+        None
+    }
 
     /// Draws the contents of the widget in this order:
     ///

@@ -24,4 +24,5 @@ path = "src/lib.rs"
 
 [dependencies]
 piston_window = "^0.89"
+rand = "0.3"
 find_folder = "^0.3"

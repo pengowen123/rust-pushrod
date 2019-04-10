@@ -13,10 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use piston_window::*;
+
+use std::cell::RefCell;
+
 use crate::core::point::*;
 use crate::widget::widget::*;
-
-use piston_window::*;
 use crate::core::callbacks::CallbackEvent;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
@@ -25,7 +27,7 @@ use crate::core::callbacks::CallbackEvent;
 /// itself, indicates that the parent is self.
 pub struct WidgetContainer {
     /// The `Widget` trait object being stored.
-    pub widget: Box<dyn Widget>,
+    pub widget: RefCell<Box<dyn Widget>>,
 
     /// This `Widget`'s assigned ID.  These IDs are auto-assigned.
     widget_id: i32,
@@ -50,7 +52,7 @@ impl WidgetStore {
 
         base_widget.set_size(800, 600);
         widgets_list.push(WidgetContainer {
-            widget: Box::new(base_widget),
+            widget: RefCell::new(Box::new(base_widget)),
             widget_id: 0,
             parent_id: 0,
         });
@@ -64,7 +66,7 @@ impl WidgetStore {
     /// window's contents, usually based on a timer expiration, or a window resize.  Use with
     /// care, as this is an expensive operation.
     pub fn invalidate_all_widgets(&mut self) {
-        self.widgets.iter_mut().for_each(|x| x.widget.invalidate());
+        self.widgets.iter_mut().for_each(|x| x.widget.borrow_mut().invalidate());
     }
 
     /// Indicates whether or not any `Widget`s in the `WidgetStore` have been invalidated and need
@@ -72,7 +74,7 @@ impl WidgetStore {
     pub fn needs_repaint(&mut self) -> bool {
         self.widgets
             .iter_mut()
-            .map(|x| x.widget.is_invalidated())
+            .map(|x| x.widget.borrow_mut().is_invalidated())
             .find(|x| x == &true)
             .unwrap_or(false)
     }
@@ -86,7 +88,7 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
 
         self.widgets.push(WidgetContainer {
-            widget,
+            widget: RefCell::new(widget),
             widget_id: widget_size,
             parent_id: 0,
         });
@@ -103,7 +105,7 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
 
         self.widgets.push(WidgetContainer {
-            widget,
+            widget: RefCell::new(widget),
             widget_id: widget_size,
             parent_id,
         });
@@ -137,8 +139,8 @@ impl WidgetStore {
         let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
-            let widget_point = &obj.widget.get_origin();
-            let widget_size: crate::core::point::Size = obj.widget.get_size();
+            let widget_point = &obj.widget.borrow_mut().get_origin();
+            let widget_size: crate::core::point::Size = obj.widget.borrow_mut().get_size();
 
             // Skip over item widgets that have a width and height of 0.
             if widget_size.w > 0 && widget_size.h > 0 {
@@ -159,7 +161,15 @@ impl WidgetStore {
     pub fn handle_event(&mut self, widget_id: i32, event: CallbackEvent) -> Option<CallbackEvent> {
         self.widgets[widget_id as usize]
             .widget
+            .borrow_mut()
             .handle_event(event)
+    }
+
+    pub fn set_color(&mut self, widget_id: i32, color: types::Color) {
+        self.widgets[widget_id as usize]
+            .widget
+            .borrow_mut()
+            .set_color(color);
     }
 
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not
@@ -180,9 +190,9 @@ impl WidgetStore {
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
 
-            if &paint_widget.widget.is_invalidated() == &true {
-                let origin: Point = paint_widget.widget.get_origin().clone();
-                let size: crate::core::point::Size = paint_widget.widget.get_size().clone();
+            if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
+                let origin: Point = paint_widget.widget.borrow_mut().get_origin().clone();
+                let size: crate::core::point::Size = paint_widget.widget.borrow_mut().get_size().clone();
 
                 let new_context: Context = Context {
                     viewport: c.viewport,
@@ -198,7 +208,7 @@ impl WidgetStore {
                     size.h as u32 * 2,
                 ]);
 
-                &paint_widget.widget.draw(new_context, g, &clip);
+                &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
             }
 
             if parents_of_widget[pos] != widget_id {
@@ -208,7 +218,7 @@ impl WidgetStore {
     }
 
     /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
-    pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn Widget> {
+    pub fn get_widget_for_id(&mut self, id: i32) -> &RefCell<Box<dyn Widget>> {
         &self.widgets[id as usize].widget
     }
 }

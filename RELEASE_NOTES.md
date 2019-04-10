@@ -5,6 +5,10 @@
 - Changed mutability of get_selected state in ToggleButtonWidget.
 - Added PushrodCallbackEvents class to handle callback events.
 - Modified Widget so that it now has its own handle_event function, returns an event to inject if desired.
+- Fixed PushButtonWidget to use handle_event properly, injecting an event where appropriate.
+- Added callback for random color button.
+- Fixed callbacks so that they work appropriately via an event system. (#88)
+- Changed mutability of widget_store, get_widget_for_id now returns a RefCell so widgets can be accessed directly.
 
 ## 0.2.3
 

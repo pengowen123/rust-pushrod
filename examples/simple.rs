@@ -39,7 +39,31 @@ pub struct SimpleWindowEventHandler {}
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
         eprintln!("Handle event: {:?}", event);
-        //        widget_store.get_widget_for_id(event.widget_id);
+
+        match event {
+            CallbackEvent::WidgetClicked {
+                widget_id,
+                button
+            } => if widget_id == 3 {
+                match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            widget_store
+                                .get_widget_for_id(2)
+                                .borrow_mut()
+                                .set_color([
+                                (rand::random::<u8>() as f32 / 255.0),
+                                (rand::random::<u8>() as f32 / 255.0),
+                                (rand::random::<u8>() as f32 / 255.0), 1.0
+                            ]);
+                        }
+                    },
+                    _ => (),
+                }
+            },
+
+            _ => (),
+        }
     }
 }
 
