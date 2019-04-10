@@ -15,13 +15,13 @@
 
 use piston_window::*;
 
-use crate::core::point::*;
+use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
+use crate::core::point::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
-use crate::core::callbacks::CallbackEvent::WidgetClicked;
 
 pub type MutableBlankCallback = Box<FnMut() -> ()>;
 
@@ -202,9 +202,7 @@ impl Widget for PushButtonWidget {
 
     fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
         match event {
-            CallbackEvent::MouseButtonDown {
-                widget_id, button
-            } => match button {
+            CallbackEvent::MouseButtonDown { widget_id, button } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
@@ -214,32 +212,25 @@ impl Widget for PushButtonWidget {
                 _ => (),
             },
 
-            CallbackEvent::MouseButtonUpInside {
-                widget_id, button
-            } => match button {
+            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         self.base_widget.set_color([1.0; 4]);
                         self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
 
-                        return Some(WidgetClicked {
-                            widget_id,
-                            button
-                        });
+                        return Some(WidgetClicked { widget_id, button });
                     }
-                },
+                }
                 _ => (),
             },
 
-            CallbackEvent::MouseButtonUpOutside {
-                widget_id, button
-            } => match button {
+            CallbackEvent::MouseButtonUpOutside { widget_id, button } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         self.base_widget.set_color([1.0; 4]);
                         self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
                     }
-                },
+                }
                 _ => (),
             },
 

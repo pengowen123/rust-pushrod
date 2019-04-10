@@ -41,26 +41,23 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         eprintln!("Handle event: {:?}", event);
 
         match event {
-            CallbackEvent::WidgetClicked {
-                widget_id,
-                button
-            } => if widget_id == 3 {
-                match button {
-                    Button::Mouse(mouse_button) => {
-                        if mouse_button == MouseButton::Left {
-                            widget_store
-                                .get_widget_for_id(2)
-                                .borrow_mut()
-                                .set_color([
-                                (rand::random::<u8>() as f32 / 255.0),
-                                (rand::random::<u8>() as f32 / 255.0),
-                                (rand::random::<u8>() as f32 / 255.0), 1.0
-                            ]);
+            CallbackEvent::WidgetClicked { widget_id, button } => {
+                if widget_id == 3 {
+                    match button {
+                        Button::Mouse(mouse_button) => {
+                            if mouse_button == MouseButton::Left {
+                                widget_store.get_widget_for_id(2).borrow_mut().set_color([
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    1.0,
+                                ]);
+                            }
                         }
-                    },
-                    _ => (),
+                        _ => (),
+                    }
                 }
-            },
+            }
 
             _ => (),
         }

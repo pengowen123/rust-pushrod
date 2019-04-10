@@ -90,25 +90,27 @@ impl Pushrod {
         self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
     }
 
-    fn handle_event(&mut self, widget_id: i32, event_handler: &mut PushrodCallbackEvents, event: CallbackEvent) {
+    fn handle_event(
+        &mut self,
+        widget_id: i32,
+        event_handler: &mut PushrodCallbackEvents,
+        event: CallbackEvent,
+    ) {
         if widget_id == -1 {
             return;
         }
 
-        let injectable_event = self.widget_store
+        let injectable_event = self
+            .widget_store
             .borrow_mut()
             .handle_event(widget_id, event.clone());
 
-        event_handler.handle_event(
-            event.clone(),
-            &mut self.widget_store.borrow_mut(),
-        );
+        event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
 
         match injectable_event {
-            Some(new_event) => event_handler.handle_event(
-                new_event.clone(),
-                &mut self.widget_store.borrow_mut(),
-            ),
+            Some(new_event) => {
+                event_handler.handle_event(new_event.clone(), &mut self.widget_store.borrow_mut())
+            }
             None => (),
         }
     }
@@ -162,7 +164,7 @@ impl Pushrod {
                             CallbackEvent::MouseMoved {
                                 widget_id: current_widget_id,
                                 point: mouse_point.clone(),
-                            }
+                            },
                         );
                     }
 
@@ -173,7 +175,7 @@ impl Pushrod {
                                 event_handler,
                                 CallbackEvent::MouseExited {
                                     widget_id: last_widget_id,
-                                }
+                                },
                             );
                         }
 
@@ -185,7 +187,7 @@ impl Pushrod {
                                 event_handler,
                                 CallbackEvent::MouseEntered {
                                     widget_id: last_widget_id,
-                                }
+                                },
                             );
                         }
 
@@ -211,7 +213,7 @@ impl Pushrod {
                         CallbackEvent::MouseScrolled {
                             widget_id: last_widget_id,
                             point: mouse_point.clone(),
-                        }
+                        },
                     );
                 }
             });
@@ -229,7 +231,7 @@ impl Pushrod {
                         CallbackEvent::MouseButtonDown {
                             widget_id: last_widget_id,
                             button: args.button,
-                        }
+                        },
                     );
                 }
                 ButtonState::Release => {
@@ -244,7 +246,7 @@ impl Pushrod {
                             CallbackEvent::MouseButtonUpInside {
                                 widget_id: last_widget_id,
                                 button: args.button,
-                            }
+                            },
                         );
                     } else {
                         for (widget_id, button_set) in button_map.iter_mut() {
@@ -255,7 +257,7 @@ impl Pushrod {
                                     CallbackEvent::MouseButtonUpOutside {
                                         widget_id: *widget_id,
                                         button: args.button,
-                                    }
+                                    },
                                 );
 
                                 button_set.remove(&args.button);
@@ -281,9 +283,7 @@ impl Pushrod {
                 self.handle_event(
                     last_widget_id,
                     event_handler,
-                    CallbackEvent::WindowFocused {
-                        flag: focused
-                    }
+                    CallbackEvent::WindowFocused { flag: focused },
                 );
             });
 
@@ -300,7 +300,7 @@ impl Pushrod {
                             widget_id: last_widget_id,
                             key: *key,
                             state: *state,
-                        }
+                        },
                     );
                 }
                 _ => {}

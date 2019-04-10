@@ -17,9 +17,9 @@ use piston_window::*;
 
 use std::cell::RefCell;
 
+use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
 use crate::widget::widget::*;
-use crate::core::callbacks::CallbackEvent;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
 /// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
@@ -66,7 +66,9 @@ impl WidgetStore {
     /// window's contents, usually based on a timer expiration, or a window resize.  Use with
     /// care, as this is an expensive operation.
     pub fn invalidate_all_widgets(&mut self) {
-        self.widgets.iter_mut().for_each(|x| x.widget.borrow_mut().invalidate());
+        self.widgets
+            .iter_mut()
+            .for_each(|x| x.widget.borrow_mut().invalidate());
     }
 
     /// Indicates whether or not any `Widget`s in the `WidgetStore` have been invalidated and need
@@ -192,7 +194,8 @@ impl WidgetStore {
 
             if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
                 let origin: Point = paint_widget.widget.borrow_mut().get_origin().clone();
-                let size: crate::core::point::Size = paint_widget.widget.borrow_mut().get_size().clone();
+                let size: crate::core::point::Size =
+                    paint_widget.widget.borrow_mut().get_size().clone();
 
                 let new_context: Context = Context {
                     viewport: c.viewport,
