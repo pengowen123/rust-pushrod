@@ -28,14 +28,41 @@ pub trait PushrodCallbackEvents {
 /// should be extended in this enum definition.
 #[derive(Clone, Debug)]
 pub enum CallbackEvent {
-    MouseEntered { widget_id: i32, },
-    MouseExited { widget_id: i32, },
-    MouseScrolled { widget_id: i32, point: Point, },
-    MouseMoved { widget_id: i32, point: Point, },
-    KeyPressed { widget_id: i32, key: Key, state: ButtonState, },
-    WindowResized { size: crate::core::point::Size, },
-    WindowFocused { flag: bool, },
-    MouseButtonDown { widget_id: i32, button: Button, },
-    MouseButtonUpInside { widget_id: i32, button: Button, },
-    MouseButtonUpOutside { widget_id: i32, button: Button, },
+    MouseEntered {
+        widget_id: i32,
+    },
+    MouseExited {
+        widget_id: i32,
+    },
+    MouseScrolled {
+        widget_id: i32,
+        point: Point,
+    },
+    MouseMoved {
+        widget_id: i32,
+        point: Point,
+    },
+    KeyPressed {
+        widget_id: i32,
+        key: Key,
+        state: ButtonState,
+    },
+    WindowResized {
+        size: crate::core::point::Size,
+    },
+    WindowFocused {
+        flag: bool,
+    },
+    MouseButtonDown {
+        widget_id: i32,
+        button: Button,
+    },
+    MouseButtonUpInside {
+        widget_id: i32,
+        button: Button,
+    },
+    MouseButtonUpOutside {
+        widget_id: i32,
+        button: Button,
+    },
 }

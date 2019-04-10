@@ -207,61 +207,61 @@ impl Widget for ToggleButtonWidget {
         self.base_widget.get_color()
     }
 
-//    /// Overrides button down.
-//    fn button_down(&mut self, _: i32, button: Button) {
-//        match button {
-//            Button::Mouse(mouse_button) => {
-//                if mouse_button == MouseButton::Left {
-//                    if self.selected_state {
-//                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-//                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-//                    } else {
-//                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-//                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-//                    }
-//                }
-//            }
-//            _ => (),
-//        }
-//    }
-//
-//    /// Overrides button up inside, triggering an `on_selected` callback.
-//    fn button_up_inside(&mut self, _: i32, button: Button) {
-//        match button {
-//            Button::Mouse(mouse_button) => {
-//                if mouse_button == MouseButton::Left {
-//                    self.call_on_selected();
-//
-//                    if self.selected_state {
-//                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-//                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-//                    } else {
-//                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-//                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-//                    }
-//                }
-//            }
-//            _ => (),
-//        }
-//    }
-//
-//    /// Overrides button up outside.
-//    fn button_up_outside(&mut self, _: i32, button: Button) {
-//        match button {
-//            Button::Mouse(mouse_button) => {
-//                if mouse_button == MouseButton::Left {
-//                    if self.selected_state {
-//                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-//                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-//                    } else {
-//                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-//                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-//                    }
-//                }
-//            }
-//            _ => (),
-//        }
-//    }
+    //    /// Overrides button down.
+    //    fn button_down(&mut self, _: i32, button: Button) {
+    //        match button {
+    //            Button::Mouse(mouse_button) => {
+    //                if mouse_button == MouseButton::Left {
+    //                    if self.selected_state {
+    //                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+    //                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    //                    } else {
+    //                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+    //                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+    //                    }
+    //                }
+    //            }
+    //            _ => (),
+    //        }
+    //    }
+    //
+    //    /// Overrides button up inside, triggering an `on_selected` callback.
+    //    fn button_up_inside(&mut self, _: i32, button: Button) {
+    //        match button {
+    //            Button::Mouse(mouse_button) => {
+    //                if mouse_button == MouseButton::Left {
+    //                    self.call_on_selected();
+    //
+    //                    if self.selected_state {
+    //                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+    //                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+    //                    } else {
+    //                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+    //                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    //                    }
+    //                }
+    //            }
+    //            _ => (),
+    //        }
+    //    }
+    //
+    //    /// Overrides button up outside.
+    //    fn button_up_outside(&mut self, _: i32, button: Button) {
+    //        match button {
+    //            Button::Mouse(mouse_button) => {
+    //                if mouse_button == MouseButton::Left {
+    //                    if self.selected_state {
+    //                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+    //                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+    //                    } else {
+    //                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
+    //                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+    //                    }
+    //                }
+    //            }
+    //            _ => (),
+    //        }
+    //    }
 
     /// Draws the contents of the widget in this order:
     ///

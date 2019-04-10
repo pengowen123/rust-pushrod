@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::collections::HashSet;
-use std::cell::RefCell;
 
+use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::core::widget_store::*;
-use crate::core::callbacks::*;
 use crate::widget::widget::*;
 
 use piston_window::*;
@@ -79,7 +79,9 @@ impl Pushrod {
     /// parent of which to add this object to.  Returns the new ID of the `Widget` after it has
     /// been added.
     pub fn add_widget_to_parent(&mut self, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
-        self.widget_store.borrow_mut().add_widget_to_parent(widget, parent_id)
+        self.widget_store
+            .borrow_mut()
+            .add_widget_to_parent(widget, parent_id)
     }
 
     fn handle_draw(&mut self, event: &Event) {
@@ -124,37 +126,50 @@ impl Pushrod {
                         .widget_store
                         .borrow_mut()
                         .get_widget_id_for_point(mouse_point.clone());
-                    let current_parent_for_widget =
-                        self.widget_store.borrow_mut().get_parent_of(current_widget_id);
+                    let current_parent_for_widget = self
+                        .widget_store
+                        .borrow_mut()
+                        .get_parent_of(current_widget_id);
 
                     // Handles the mouse move callback.
                     if current_widget_id != -1 {
-                        event_handler.handle_event(CallbackEvent::MouseMoved {
-                            widget_id: current_widget_id,
-                            point: mouse_point.clone(),
-                        }, &mut self.widget_store.borrow_mut());
+                        event_handler.handle_event(
+                            CallbackEvent::MouseMoved {
+                                widget_id: current_widget_id,
+                                point: mouse_point.clone(),
+                            },
+                            &mut self.widget_store.borrow_mut(),
+                        );
                     }
 
                     if current_widget_id != last_widget_id {
                         if last_widget_id != -1 {
-                            event_handler.handle_event(CallbackEvent::MouseExited {
-                                widget_id: last_widget_id,
-                            }, &mut self.widget_store.borrow_mut());
+                            event_handler.handle_event(
+                                CallbackEvent::MouseExited {
+                                    widget_id: last_widget_id,
+                                },
+                                &mut self.widget_store.borrow_mut(),
+                            );
                         }
 
                         last_widget_id = current_widget_id;
 
                         if last_widget_id != -1 {
-                            event_handler.handle_event(CallbackEvent::MouseEntered {
-                                widget_id: last_widget_id,
-                            }, &mut self.widget_store.borrow_mut());
+                            event_handler.handle_event(
+                                CallbackEvent::MouseEntered {
+                                    widget_id: last_widget_id,
+                                },
+                                &mut self.widget_store.borrow_mut(),
+                            );
                         }
 
                         eprintln!(
                             "Widget IDs: current={} parent={} children={:?}",
                             current_widget_id,
                             current_parent_for_widget,
-                            self.widget_store.borrow_mut().get_children_of(current_widget_id)
+                            self.widget_store
+                                .borrow_mut()
+                                .get_children_of(current_widget_id)
                         );
                     }
                 }
@@ -164,10 +179,13 @@ impl Pushrod {
                 let mouse_point = make_point_f64(x, y);
 
                 if last_widget_id != -1 {
-                    event_handler.handle_event(CallbackEvent::MouseScrolled {
-                        widget_id: last_widget_id,
-                        point: mouse_point.clone(),
-                    }, &mut self.widget_store.borrow_mut());
+                    event_handler.handle_event(
+                        CallbackEvent::MouseScrolled {
+                            widget_id: last_widget_id,
+                            point: mouse_point.clone(),
+                        },
+                        &mut self.widget_store.borrow_mut(),
+                    );
                 }
             });
 
@@ -178,10 +196,13 @@ impl Pushrod {
                         .or_insert(HashSet::new())
                         .insert(args.button);
 
-                    event_handler.handle_event(CallbackEvent::MouseButtonDown {
-                        widget_id: last_widget_id,
-                        button: args.button,
-                    }, &mut self.widget_store.borrow_mut());
+                    event_handler.handle_event(
+                        CallbackEvent::MouseButtonDown {
+                            widget_id: last_widget_id,
+                            button: args.button,
+                        },
+                        &mut self.widget_store.borrow_mut(),
+                    );
                 }
                 ButtonState::Release => {
                     let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
@@ -189,17 +210,23 @@ impl Pushrod {
                     if button_set.contains(&args.button) {
                         button_set.remove(&args.button);
 
-                        event_handler.handle_event(CallbackEvent::MouseButtonUpInside {
-                            widget_id: last_widget_id,
-                            button: args.button,
-                        }, &mut self.widget_store.borrow_mut());
+                        event_handler.handle_event(
+                            CallbackEvent::MouseButtonUpInside {
+                                widget_id: last_widget_id,
+                                button: args.button,
+                            },
+                            &mut self.widget_store.borrow_mut(),
+                        );
                     } else {
                         for (widget_id, button_set) in button_map.iter_mut() {
                             if button_set.contains(&args.button) {
-                                event_handler.handle_event(CallbackEvent::MouseButtonUpOutside {
-                                    widget_id: *widget_id,
-                                    button: args.button,
-                                }, &mut self.widget_store.borrow_mut());
+                                event_handler.handle_event(
+                                    CallbackEvent::MouseButtonUpOutside {
+                                        widget_id: *widget_id,
+                                        button: args.button,
+                                    },
+                                    &mut self.widget_store.borrow_mut(),
+                                );
 
                                 button_set.remove(&args.button);
                             }
@@ -209,15 +236,22 @@ impl Pushrod {
             });
 
             event.resize(|w, h| {
-                event_handler.handle_event(CallbackEvent::WindowResized {
-                    size: crate::core::point::Size { w: w as i32, h: h as i32 },
-                }, &mut self.widget_store.borrow_mut());
+                event_handler.handle_event(
+                    CallbackEvent::WindowResized {
+                        size: crate::core::point::Size {
+                            w: w as i32,
+                            h: h as i32,
+                        },
+                    },
+                    &mut self.widget_store.borrow_mut(),
+                );
             });
 
             event.focus(|focused| {
-                event_handler.handle_event(CallbackEvent::WindowFocused {
-                    flag: focused,
-                }, &mut self.widget_store.borrow_mut());
+                event_handler.handle_event(
+                    CallbackEvent::WindowFocused { flag: focused },
+                    &mut self.widget_store.borrow_mut(),
+                );
             });
 
             match event {
@@ -226,11 +260,14 @@ impl Pushrod {
                     button: Button::Keyboard(key),
                     scancode: _,
                 })) => {
-                    event_handler.handle_event(CallbackEvent::KeyPressed {
-                        widget_id: last_widget_id,
-                        key: *key,
-                        state: *state,
-                    }, &mut self.widget_store.borrow_mut());
+                    event_handler.handle_event(
+                        CallbackEvent::KeyPressed {
+                            widget_id: last_widget_id,
+                            key: *key,
+                            state: *state,
+                        },
+                        &mut self.widget_store.borrow_mut(),
+                    );
                 }
                 _ => {}
             };

@@ -18,34 +18,34 @@ extern crate pushrod;
 use std::cell::RefCell;
 
 use piston_window::*;
+use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
-use pushrod::core::callbacks::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
-use pushrod::widget::toggle_button_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
+use pushrod::widget::toggle_button_widget::*;
 use pushrod::widget::widget::*;
 
 pub struct SimpleWindow {
     pushrod: RefCell<Pushrod>,
 }
 
-pub struct SimpleWindowEventHandler { }
+pub struct SimpleWindowEventHandler {}
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
         eprintln!("Handle event: {:?}", event);
-//        widget_store.get_widget_for_id(event.widget_id);
+        //        widget_store.get_widget_for_id(event.widget_id);
     }
 }
 
 impl SimpleWindowEventHandler {
     fn new() -> Self {
-        SimpleWindowEventHandler { }
+        SimpleWindowEventHandler {}
     }
 }
 

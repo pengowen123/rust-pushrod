@@ -75,20 +75,20 @@ impl TimerWidget {
         }
     }
 
-//    // Called to check the time since initiation, and call the timeout function when a timer has
-//    // been triggered.
-//    fn tick(&mut self) {
-//        if !self.enabled {
-//            return;
-//        }
-//
-//        let elapsed = time_ms() - self.initiated;
-//
-//        if elapsed > self.timeout {
-//            self.initiated = time_ms();
-//            self.timeout();
-//        }
-//    }
+    //    // Called to check the time since initiation, and call the timeout function when a timer has
+    //    // been triggered.
+    //    fn tick(&mut self) {
+    //        if !self.enabled {
+    //            return;
+    //        }
+    //
+    //        let elapsed = time_ms() - self.initiated;
+    //
+    //        if elapsed > self.timeout {
+    //            self.initiated = time_ms();
+    //            self.timeout();
+    //        }
+    //    }
 
     /// Enables or disables the timer.  When disabled, the timer will not initiate the callback
     /// function.  When re-enabled, the initiation time resets, so the timer will reset back to
@@ -98,20 +98,20 @@ impl TimerWidget {
         self.initiated = time_ms();
     }
 
-//    /// Sets the closure function for the timer when a timeout has been triggered.  This closure
-//    /// needs to be `Boxed`.
-//    pub fn on_timeout(&mut self, callback: BlankCallback) {
-//        self.callbacks()
-//            .put(CALLBACK_TIMER, CallbackTypes::BlankCallback { callback });
-//    }
-//
-//    /// Calls the timeout function.
-//    fn timeout(&mut self) {
-//        match self.callbacks().get(CALLBACK_TIMER) {
-//            CallbackTypes::BlankCallback { callback } => callback(),
-//            _ => (),
-//        }
-//    }
+    //    /// Sets the closure function for the timer when a timeout has been triggered.  This closure
+    //    /// needs to be `Boxed`.
+    //    pub fn on_timeout(&mut self, callback: BlankCallback) {
+    //        self.callbacks()
+    //            .put(CALLBACK_TIMER, CallbackTypes::BlankCallback { callback });
+    //    }
+    //
+    //    /// Calls the timeout function.
+    //    fn timeout(&mut self) {
+    //        match self.callbacks().get(CALLBACK_TIMER) {
+    //            CallbackTypes::BlankCallback { callback } => callback(),
+    //            _ => (),
+    //        }
+    //    }
 
     /// Sets the timeout in milliseconds for this timer.  Will trigger a call to the function
     /// set in `on_timeout` when triggered, and will continue to call that function until this
@@ -146,6 +146,6 @@ impl Widget for TimerWidget {
     /// Does not draw anything - only calls the timer `tick()` function to increment the
     /// timer.
     fn draw(&mut self, _context: Context, _graphics: &mut G2d, _clip: &DrawState) {
-//        self.tick();
+        //        self.tick();
     }
 }

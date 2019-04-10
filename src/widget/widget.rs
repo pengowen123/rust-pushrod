@@ -14,6 +14,7 @@
 
 use piston_window::*;
 
+use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 
@@ -156,6 +157,16 @@ pub trait Widget {
             .get::<SecondaryColor>()
             .unwrap_or(&SecondaryColor([1.0; 4]))
             .0
+    }
+
+    /// Handles an event that was sent by the event loop.  It is up to the `Widget` to handle the
+    /// event, or to ignore it.  If this function is _not_ overridden, the event will be ignored,
+    /// and no event will be returned as a result.  This function _returns_ an `Option<CallbackEvent>`,
+    /// which can be injected into the run loop.  This can be things for `Widget` interaction that
+    /// may generate an event that the application needs to respond to, like a button click, or
+    /// a drag start/end event.
+    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
+        None
     }
 
     // Draw routines
