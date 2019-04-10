@@ -34,11 +34,13 @@ pub struct SimpleWindow {
     pushrod: RefCell<Pushrod>,
 }
 
-pub struct SimpleWindowEventHandler {}
+pub struct SimpleWindowEventHandler {
+    animated: bool,
+}
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
-        eprintln!("Handle event: {:?}", event);
+//        eprintln!("Handle event: {:?}", event);
 
         match event {
             CallbackEvent::WidgetClicked { widget_id, button } => {
@@ -66,7 +68,9 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
 impl SimpleWindowEventHandler {
     fn new() -> Self {
-        SimpleWindowEventHandler {}
+        SimpleWindowEventHandler {
+            animated: false,
+        }
     }
 }
 
