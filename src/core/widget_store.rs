@@ -17,6 +17,7 @@ use crate::core::point::*;
 use crate::widget::widget::*;
 
 use piston_window::*;
+use crate::core::callbacks::CallbackEvent;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
 /// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
@@ -152,6 +153,13 @@ impl WidgetStore {
         }
 
         found_id
+    }
+
+    /// Handles event messages, returning an event if provided by the `Widget`.
+    pub fn handle_event(&mut self, widget_id: i32, event: CallbackEvent) -> Option<CallbackEvent> {
+        self.widgets[widget_id as usize]
+            .widget
+            .handle_event(event)
     }
 
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not

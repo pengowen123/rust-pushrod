@@ -90,6 +90,29 @@ impl Pushrod {
         self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
     }
 
+    fn handle_event(&mut self, widget_id: i32, event_handler: &mut PushrodCallbackEvents, event: CallbackEvent) {
+        if widget_id == -1 {
+            return;
+        }
+
+        let injectable_event = self.widget_store
+            .borrow_mut()
+            .handle_event(widget_id, event.clone());
+
+        event_handler.handle_event(
+            event.clone(),
+            &mut self.widget_store.borrow_mut(),
+        );
+
+        match injectable_event {
+            Some(new_event) => event_handler.handle_event(
+                new_event.clone(),
+                &mut self.widget_store.borrow_mut(),
+            ),
+            None => (),
+        }
+    }
+
     /// This is the main run loop that is called to process all UI events.  This loop is responsible
     /// for handling events from the OS, converting them to workable objects, and passing them off
     /// to quick callback dispatchers.
@@ -133,33 +156,36 @@ impl Pushrod {
 
                     // Handles the mouse move callback.
                     if current_widget_id != -1 {
-                        event_handler.handle_event(
+                        self.handle_event(
+                            current_widget_id,
+                            event_handler,
                             CallbackEvent::MouseMoved {
                                 widget_id: current_widget_id,
                                 point: mouse_point.clone(),
-                            },
-                            &mut self.widget_store.borrow_mut(),
+                            }
                         );
                     }
 
                     if current_widget_id != last_widget_id {
                         if last_widget_id != -1 {
-                            event_handler.handle_event(
+                            self.handle_event(
+                                last_widget_id,
+                                event_handler,
                                 CallbackEvent::MouseExited {
                                     widget_id: last_widget_id,
-                                },
-                                &mut self.widget_store.borrow_mut(),
+                                }
                             );
                         }
 
                         last_widget_id = current_widget_id;
 
                         if last_widget_id != -1 {
-                            event_handler.handle_event(
+                            self.handle_event(
+                                last_widget_id,
+                                event_handler,
                                 CallbackEvent::MouseEntered {
                                     widget_id: last_widget_id,
-                                },
-                                &mut self.widget_store.borrow_mut(),
+                                }
                             );
                         }
 
@@ -179,12 +205,13 @@ impl Pushrod {
                 let mouse_point = make_point_f64(x, y);
 
                 if last_widget_id != -1 {
-                    event_handler.handle_event(
+                    self.handle_event(
+                        last_widget_id,
+                        event_handler,
                         CallbackEvent::MouseScrolled {
                             widget_id: last_widget_id,
                             point: mouse_point.clone(),
-                        },
-                        &mut self.widget_store.borrow_mut(),
+                        }
                     );
                 }
             });
@@ -196,12 +223,13 @@ impl Pushrod {
                         .or_insert(HashSet::new())
                         .insert(args.button);
 
-                    event_handler.handle_event(
+                    self.handle_event(
+                        last_widget_id,
+                        event_handler,
                         CallbackEvent::MouseButtonDown {
                             widget_id: last_widget_id,
                             button: args.button,
-                        },
-                        &mut self.widget_store.borrow_mut(),
+                        }
                     );
                 }
                 ButtonState::Release => {
@@ -210,22 +238,24 @@ impl Pushrod {
                     if button_set.contains(&args.button) {
                         button_set.remove(&args.button);
 
-                        event_handler.handle_event(
+                        self.handle_event(
+                            last_widget_id,
+                            event_handler,
                             CallbackEvent::MouseButtonUpInside {
                                 widget_id: last_widget_id,
                                 button: args.button,
-                            },
-                            &mut self.widget_store.borrow_mut(),
+                            }
                         );
                     } else {
                         for (widget_id, button_set) in button_map.iter_mut() {
                             if button_set.contains(&args.button) {
-                                event_handler.handle_event(
+                                self.handle_event(
+                                    *widget_id,
+                                    event_handler,
                                     CallbackEvent::MouseButtonUpOutside {
                                         widget_id: *widget_id,
                                         button: args.button,
-                                    },
-                                    &mut self.widget_store.borrow_mut(),
+                                    }
                                 );
 
                                 button_set.remove(&args.button);
@@ -248,9 +278,12 @@ impl Pushrod {
             });
 
             event.focus(|focused| {
-                event_handler.handle_event(
-                    CallbackEvent::WindowFocused { flag: focused },
-                    &mut self.widget_store.borrow_mut(),
+                self.handle_event(
+                    last_widget_id,
+                    event_handler,
+                    CallbackEvent::WindowFocused {
+                        flag: focused
+                    }
                 );
             });
 
@@ -260,13 +293,14 @@ impl Pushrod {
                     button: Button::Keyboard(key),
                     scancode: _,
                 })) => {
-                    event_handler.handle_event(
+                    self.handle_event(
+                        last_widget_id,
+                        event_handler,
                         CallbackEvent::KeyPressed {
                             widget_id: last_widget_id,
                             key: *key,
                             state: *state,
-                        },
-                        &mut self.widget_store.borrow_mut(),
+                        }
                     );
                 }
                 _ => {}
