@@ -15,7 +15,6 @@
 
 use piston_window::*;
 
-use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -45,7 +44,6 @@ use crate::widget::widget::*;
 /// ```
 pub struct BoxWidget {
     config: Configurable,
-    callbacks: CallbackStore,
     base_widget: CanvasWidget,
 }
 
@@ -54,7 +52,6 @@ impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
             base_widget: CanvasWidget::new(),
         }
     }
@@ -156,10 +153,6 @@ impl BoxWidget {
 impl Widget for BoxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
-    }
-
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
     }
 
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y

@@ -1,5 +1,19 @@
 # Pushrod Releases
 
+## 0.2.4
+
+- Changed mutability of get_selected state in ToggleButtonWidget.
+- Added PushrodCallbackEvents class to handle callback events.
+- Modified Widget so that it now has its own handle_event function, returns an event to inject if desired.
+- Fixed PushButtonWidget to use handle_event properly, injecting an event where appropriate.
+- Added callback for random color button.
+- Fixed callbacks so that they work appropriately via an event system. (#88)
+- Changed mutability of widget_store, get_widget_for_id now returns a RefCell so widgets can be accessed directly.
+- Added ability to look up a widget by name. (#94)
+- Added ability to add a widget, and a widget with parent with an assigned name.
+- Internally used "_WidgetStoreBase" as the internal first, or base widget.  Updated docs to reflect this.
+- Added randomize button that randomizes color of progress widget.
+
 ## 0.2.3
 
 - Modified simple test, increased spacing of Hide buttons.

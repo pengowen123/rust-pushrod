@@ -13,10 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use piston_window::*;
+
+use std::cell::RefCell;
+
+use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
 use crate::widget::widget::*;
-
-use piston_window::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
 /// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
@@ -24,7 +27,11 @@ use piston_window::*;
 /// itself, indicates that the parent is self.
 pub struct WidgetContainer {
     /// The `Widget` trait object being stored.
-    pub widget: Box<dyn Widget>,
+    pub widget: RefCell<Box<dyn Widget>>,
+
+    /// This is the `Widget`'s assigned name.  These IDs are assigned at the time they are added
+    /// to the `WidgetStore`.
+    widget_name: String,
 
     /// This `Widget`'s assigned ID.  These IDs are auto-assigned.
     widget_id: i32,
@@ -49,7 +56,8 @@ impl WidgetStore {
 
         base_widget.set_size(800, 600);
         widgets_list.push(WidgetContainer {
-            widget: Box::new(base_widget),
+            widget: RefCell::new(Box::new(base_widget)),
+            widget_name: String::from("_WidgetStoreBase"),
             widget_id: 0,
             parent_id: 0,
         });
@@ -59,29 +67,13 @@ impl WidgetStore {
         }
     }
 
-    /// Handles the resizing of the texture buffer after the window resize has taken place.  The
-    /// behavior should be processed before drawing is rendered, so the sequence of events should
-    /// be `event` -> `handle_resize` -> `invalidate` -> `draw`.  This is mainly handled by the
-    /// `pushrod::core::main` loop, but it can be handled programmatically if required.
-    pub fn handle_resize(&mut self, width: u32, height: u32) {
-        self.widgets[0].widget.set_size(width as i32, height as i32);
-
-        for pos in 0..self.widgets.len() {
-            self.window_resized_for_id(
-                pos as i32,
-                crate::core::point::Size {
-                    w: width as i32,
-                    h: height as i32,
-                },
-            );
-        }
-    }
-
     /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
     /// window's contents, usually based on a timer expiration, or a window resize.  Use with
     /// care, as this is an expensive operation.
     pub fn invalidate_all_widgets(&mut self) {
-        self.widgets.iter_mut().for_each(|x| x.widget.invalidate());
+        self.widgets
+            .iter_mut()
+            .for_each(|x| x.widget.borrow_mut().invalidate());
     }
 
     /// Indicates whether or not any `Widget`s in the `WidgetStore` have been invalidated and need
@@ -89,7 +81,7 @@ impl WidgetStore {
     pub fn needs_repaint(&mut self) -> bool {
         self.widgets
             .iter_mut()
-            .map(|x| x.widget.is_invalidated())
+            .map(|x| x.widget.borrow_mut().is_invalidated())
             .find(|x| x == &true)
             .unwrap_or(false)
     }
@@ -99,11 +91,12 @@ impl WidgetStore {
     /// invalidated.
     ///
     /// After adding a widget, the ID of the widget is returned.
-    pub fn add_widget(&mut self, widget: Box<dyn Widget>) -> i32 {
+    pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         let widget_size = self.widgets.len() as i32;
 
         self.widgets.push(WidgetContainer {
-            widget,
+            widget: RefCell::new(widget),
+            widget_name: String::from(name),
             widget_id: widget_size,
             parent_id: 0,
         });
@@ -115,12 +108,13 @@ impl WidgetStore {
     /// must be an object that already exists in the stack.
     ///
     /// After adding a widget, the ID of the widget is returned.
-    pub fn add_widget_to_parent(&mut self, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
+    pub fn add_widget_to_parent(&mut self, name: &str, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
         self.widgets.push(WidgetContainer {
-            widget,
+            widget: RefCell::new(widget),
+            widget_name: String::from(name),
             widget_id: widget_size,
             parent_id,
         });
@@ -154,8 +148,8 @@ impl WidgetStore {
         let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
-            let widget_point = &obj.widget.get_origin();
-            let widget_size: crate::core::point::Size = obj.widget.get_size();
+            let widget_point = &obj.widget.borrow_mut().get_origin();
+            let widget_size: crate::core::point::Size = obj.widget.borrow_mut().get_size();
 
             // Skip over item widgets that have a width and height of 0.
             if widget_size.w > 0 && widget_size.h > 0 {
@@ -170,6 +164,28 @@ impl WidgetStore {
         }
 
         found_id
+    }
+
+    /// Returns the name of the widget by its ID.
+    pub fn get_name_for_widget_id(&mut self, widget_id: i32) -> &str {
+        self.widgets[widget_id as usize]
+            .widget_name
+            .as_str()
+    }
+
+    /// Handles event messages, returning an event if provided by the `Widget`.
+    pub fn handle_event(&mut self, widget_id: i32, event: CallbackEvent) -> Option<CallbackEvent> {
+        self.widgets[widget_id as usize]
+            .widget
+            .borrow_mut()
+            .handle_event(event)
+    }
+
+    pub fn set_color(&mut self, widget_id: i32, color: types::Color) {
+        self.widgets[widget_id as usize]
+            .widget
+            .borrow_mut()
+            .set_color(color);
     }
 
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not
@@ -190,9 +206,10 @@ impl WidgetStore {
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
 
-            if &paint_widget.widget.is_invalidated() == &true {
-                let origin: Point = paint_widget.widget.get_origin().clone();
-                let size: crate::core::point::Size = paint_widget.widget.get_size().clone();
+            if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
+                let origin: Point = paint_widget.widget.borrow_mut().get_origin().clone();
+                let size: crate::core::point::Size =
+                    paint_widget.widget.borrow_mut().get_size().clone();
 
                 let new_context: Context = Context {
                     viewport: c.viewport,
@@ -208,7 +225,7 @@ impl WidgetStore {
                     size.h as u32 * 2,
                 ]);
 
-                &paint_widget.widget.draw(new_context, g, &clip);
+                &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
             }
 
             if parents_of_widget[pos] != widget_id {
@@ -217,72 +234,22 @@ impl WidgetStore {
         }
     }
 
-    /// Callback to `key_pressed` for a `Widget` by ID with its corresponding key, and button
-    /// state (pressed or released)
-    pub fn keypress_for_id(&mut self, id: i32, key: &Key, state: &ButtonState) {
-        &self.widgets[id as usize].widget.key_pressed(id, key, state);
-    }
-
-    /// Callback to `mouse_entered` for a `Widget` by ID.
-    pub fn mouse_entered_for_id(&mut self, id: i32) {
-        &self.widgets[id as usize].widget.mouse_entered(id);
-    }
-
-    /// Callback to `mouse_exited` for a `Widget` by ID.
-    pub fn mouse_exited_for_id(&mut self, id: i32) {
-        &self.widgets[id as usize].widget.mouse_exited(id);
-    }
-
-    /// Callback to `mouse_scrolled` for a `Widget` by ID, with the mouse scroll `Point`.
-    pub fn mouse_scrolled_for_id(&mut self, id: i32, point: Point) {
-        &self.widgets[id as usize].widget.mouse_scrolled(id, point);
-    }
-
-    /// Callback to `mouse_moved` for a `Widget` by ID, with the mouse position at `Point`.  The
-    /// mouse point is relative to the `Widget` itself, not its position on the screen.
-    pub fn mouse_moved_for_id(&mut self, id: i32, point: Point) {
-        let origin = &self.widgets[id as usize].widget.get_origin();
-        let new_point = Point {
-            x: point.x - origin.x,
-            y: point.y - origin.y,
+    /// Retrieves a widget by the name when the widget was added.  To get the very top-level
+    /// widget, refer to `_WidgetStoreBase`.
+    pub fn get_widget_for_name(&mut self, name: &str) -> &RefCell<Box<dyn Widget>> {
+        let widget_id = match self.widgets
+            .iter_mut()
+            .find(|x| x.widget_name == String::from(name)) {
+            Some(x) => x.widget_id,
+            None => 0,
         };
 
-        &self.widgets[id as usize].widget.mouse_moved(id, new_point);
+        self.get_widget_for_id(widget_id)
     }
 
-    /// Callback to `window_resized` for a `Widget` by ID, with the new `Size` of the window.
-    pub fn window_resized_for_id(&mut self, id: i32, size: crate::core::point::Size) {
-        &self.widgets[id as usize].widget.window_resized(id, size);
-    }
-
-    /// Callback to `focused` for a `Widget` by ID.
-    pub fn handle_focus(&mut self, focus: bool) {
-        for id in 0..self.widgets.len() as i32 {
-            &self.widgets[id as usize].widget.window_focused(id, focus);
-        }
-    }
-
-    /// Callback to `button_down` for a `Widget` by ID, with the button code.
-    pub fn button_down(&mut self, id: i32, button: Button) {
-        &self.widgets[id as usize].widget.button_down(id, button);
-    }
-
-    /// Callback to `button_up_inside` for a `Widget` by ID, with the button code.
-    pub fn button_up_inside(&mut self, id: i32, button: Button) {
-        &self.widgets[id as usize]
-            .widget
-            .button_up_inside(id, button);
-    }
-
-    /// Callback to `button_up_outside` for a `Widget` by ID, with the button code.
-    pub fn button_up_outside(&mut self, id: i32, button: Button) {
-        &self.widgets[id as usize]
-            .widget
-            .button_up_outside(id, button);
-    }
-
-    /// Retrieves a reference to the `Box`ed `Widget` object by its ID.
-    pub fn get_widget_for_id(&mut self, id: i32) -> &Box<dyn Widget> {
+    /// Retrieves a reference to the `Box`ed `Widget` object by its ID.  To get the very top-level
+    /// widget, specify ID 0.
+    pub fn get_widget_for_id(&mut self, id: i32) -> &RefCell<Box<dyn Widget>> {
         &self.widgets[id as usize].widget
     }
 }

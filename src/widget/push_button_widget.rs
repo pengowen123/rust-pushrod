@@ -15,6 +15,7 @@
 
 use piston_window::*;
 
+use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::box_widget::*;
@@ -28,46 +29,11 @@ pub type MutableBlankCallback = Box<FnMut() -> ()>;
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::main::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::text_widget::*;
-/// # use pushrod::widget::push_button_widget::*;
-/// # fn main() {
-/// #    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
-/// #       .opengl(OpenGL::V3_2)
-/// #       .resizable(true)
-/// #       .build()
-/// #       .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-/// #   let mut prod: Pushrod = Pushrod::new(window);
-///    let mut button_widget = PushButtonWidget::new(prod.get_factory(),
-///        "OpenSans-Regular.ttf".to_string(),
-///        "Button".to_string(),
-///        20,
-///        TextJustify::Center,
-///    );
-///
-///    button_widget.set_origin(100, 100);
-///    button_widget.set_size(200, 200);
-///    button_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
-///    button_widget.set_border_thickness(3);
-///    button_widget.on_clicked(Box::new(|| {
-///        eprintln!("Button Widget Clicked!");
-///    }));
-///
-///    // (OR)
-///
-///    button_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
-/// # }
-/// ```
+/// IN PROGRESS
 pub struct PushButtonWidget {
     config: Configurable,
-    callbacks: CallbackStore,
     base_widget: BoxWidget,
     text_widget: TextWidget,
-    on_clicked_callback: MutableBlankCallback,
 }
 
 /// Implementation of the constructor for the `PushButtonWidget`.
@@ -81,7 +47,6 @@ impl PushButtonWidget {
     ) -> Self {
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
             base_widget: BoxWidget::new(),
             text_widget: TextWidget::new(
                 factory,
@@ -90,7 +55,6 @@ impl PushButtonWidget {
                 font_size,
                 justify,
             ),
-            on_clicked_callback: Box::new(|| {}),
         }
     }
 
@@ -142,17 +106,6 @@ impl PushButtonWidget {
         self.set_border_color(color);
         self.set_border_thickness(thickness);
     }
-
-    /// This is the callback that is triggered when a mouse triggers the `button_up_inside` event
-    /// of the main `PushButtonWidget`.
-    pub fn on_clicked(&mut self, callback: MutableBlankCallback) {
-        self.on_clicked_callback = callback;
-    }
-
-    /// Internal function that calls the `on_clicked_callback` callback.
-    fn call_on_clicked(&mut self) {
-        (self.on_clicked_callback)();
-    }
 }
 
 /// Implementation of the `PushButtonWidget` object with the `Widget` traits implemented.
@@ -162,10 +115,6 @@ impl PushButtonWidget {
 impl Widget for PushButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
-    }
-
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
     }
 
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
@@ -205,44 +154,44 @@ impl Widget for PushButtonWidget {
         self.base_widget.get_color()
     }
 
-    /// Overrides button down.
-    fn button_down(&mut self, _: i32, button: Button) {
-        match button {
-            Button::Mouse(mouse_button) => {
-                if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-                    self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
+    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
+        match event {
+            CallbackEvent::MouseButtonDown { widget_id: _, button } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget.set_text_color([1.0; 4]);
+                    }
                 }
-            }
-            _ => (),
-        }
-    }
+                _ => (),
+            },
 
-    /// Overrides button up inside, triggering an `on_clicked` callback.
-    fn button_up_inside(&mut self, _: i32, button: Button) {
-        match button {
-            Button::Mouse(mouse_button) => {
-                if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-                    self.call_on_clicked();
-                }
-            }
-            _ => (),
-        }
-    }
+            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        self.base_widget.set_color([1.0; 4]);
+                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
 
-    /// Overrides button up outside.
-    fn button_up_outside(&mut self, _: i32, button: Button) {
-        match button {
-            Button::Mouse(mouse_button) => {
-                if mouse_button == MouseButton::Left {
-                    self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-                    self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                        return Some(WidgetClicked { widget_id, button });
+                    }
                 }
-            }
+                _ => (),
+            },
+
+            CallbackEvent::MouseButtonUpOutside { widget_id: _, button } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        self.base_widget.set_color([1.0; 4]);
+                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                    }
+                }
+                _ => (),
+            },
+
             _ => (),
         }
+
+        None
     }
 
     /// Draws the contents of the widget in this order:

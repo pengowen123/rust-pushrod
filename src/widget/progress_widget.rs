@@ -15,7 +15,6 @@
 
 use piston_window::*;
 
-use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
@@ -24,31 +23,9 @@ use crate::widget::widget::*;
 /// This is the `ProgressWidget`, which is used for showing a progress bar.
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::main::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::progress_widget::*;
-/// # fn main() {
-/// #    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
-/// #       .opengl(OpenGL::V3_2)
-/// #       .resizable(true)
-/// #       .build()
-/// #       .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-/// #   let mut prod: Pushrod = Pushrod::new(window);
-///    let mut progress_widget = ProgressWidget::new();
-///
-///    progress_widget.set_color([1.0; 4]);
-///    progress_widget.set_secondary_color([0.25, 0.75, 0.50, 1.0]);
-///    progress_widget.set_origin(100, 100);
-///    progress_widget.set_size(200, 32);
-///    progress_widget.set_progress(50);
-/// # }
-/// ```
+/// IN PROGRESS
 pub struct ProgressWidget {
     config: Configurable,
-    callbacks: CallbackStore,
     base_widget: BoxWidget,
     progress: u16,
 }
@@ -63,7 +40,6 @@ impl ProgressWidget {
 
         Self {
             config: Configurable::new(),
-            callbacks: CallbackStore::new(),
             base_widget: base,
             progress: 0,
         }
@@ -89,10 +65,6 @@ impl ProgressWidget {
 impl Widget for ProgressWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
-    }
-
-    fn callbacks(&mut self) -> &mut CallbackStore {
-        &mut self.callbacks
     }
 
     /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
