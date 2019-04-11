@@ -73,35 +73,7 @@ pub enum TextJustify {
 /// no accessable objects, they are all internal to `TextWidget`'s implementation.
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::core::main::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::text_widget::*;
-/// # fn main() {
-/// let mut window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
-///       .opengl(OpenGL::V3_2)
-///       .resizable(false)
-///       .build()
-///       .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-///    let factory: GfxFactory = window.factory.clone();
-///    let mut prod: Pushrod = Pushrod::new(window);
-///    let mut text_widget = TextWidget::new(
-///       prod.get_factory(),
-///       "OpenSans-Regular.ttf".to_string(),
-///       "Hello, World!".to_string(),
-///       32,
-///       TextJustify::Center,
-///    );
-///
-///    text_widget.set_origin(8, 8);
-///    text_widget.set_size(400, 48);
-///    text_widget.set_color([0.75, 0.75, 1.0, 1.0]);
-///    text_widget.set_text_color([0.0, 0.0, 1.0, 1.0]);
-///    prod.widget_store.add_widget(Box::new(text_widget));
-/// # }
-/// ```
+/// IN PROGRESS
 pub struct TextWidget {
     config: Configurable,
     font_cache: Glyphs,

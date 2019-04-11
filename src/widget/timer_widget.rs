@@ -26,19 +26,7 @@ pub const CALLBACK_TIMER: u32 = 100;
 /// time,
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::timer_widget::*;
-/// # fn main() {
-///    let mut timer_widget = TimerWidget::new();
-///
-///    timer_widget.set_timeout(60000);
-///    timer_widget.on_timeout(Box::new( || eprintln!("Timer triggered.") ));
-///    timer_widget.set_enabled(true);
-/// # }
-/// ```
+/// IN PROGRESS
 pub struct TimerWidget {
     config: Configurable,
     enabled: bool,

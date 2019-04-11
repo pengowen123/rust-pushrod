@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::cell::RefCell;
+
 /// Base component and UI Components (Widget) library.  These components are used for on-screen interactions
 /// between the user and the application.
 pub mod widget;
@@ -41,3 +43,14 @@ pub mod progress_widget;
 
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;
+
+pub enum Widgets {
+    CanvasWidget(RefCell<crate::widget::widget::CanvasWidget>),
+    BoxWidget(RefCell<crate::widget::box_widget::BoxWidget>),
+    TimerWidget(RefCell<crate::widget::timer_widget::TimerWidget>),
+    TextWidget(RefCell<crate::widget::text_widget::TextWidget>),
+    ImageWidget(RefCell<crate::widget::image_widget::ImageWidget>),
+    PushButtonWidget(RefCell<crate::widget::push_button_widget::PushButtonWidget>),
+    ToggleButtonWidget(RefCell<crate::widget::toggle_button_widget::ToggleButtonWidget>),
+    ProgressWidget(RefCell<crate::widget::progress_widget::ProgressWidget>),
+}

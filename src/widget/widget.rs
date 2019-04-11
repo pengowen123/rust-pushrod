@@ -38,44 +38,11 @@ pub trait Widget {
     ///
     /// To implement this, the following code could be used in your object's structure:
     ///
-    /// ```
-    /// # use pushrod::widget::widget::*;
-    /// # use pushrod::widget::config::*;
-    /// struct MyWidget {
-    ///   config: Configurable,
-    /// }
-    ///
-    /// impl MyWidget {
-    ///   fn new() -> Self {
-    ///     Self {
-    ///       config: Configurable::new(),
-    ///     }
-    ///   }
-    /// }
-    /// ```
+    /// IN PROGRESS
     ///
     /// And in the overridden function for get_config in your implementation, use:
     ///
-    /// ```
-    /// # use pushrod::widget::widget::*;
-    /// # use pushrod::widget::config::*;
-    /// # use pushrod::core::callbacks::*;
-    /// # use pushrod::core::point::Point;
-    /// struct MyWidget {
-    ///   config: Configurable,
-    /// }
-    ///
-    /// impl Widget for MyWidget {
-    ///   fn config(&mut self) -> &mut Configurable {
-    ///     &mut self.config
-    ///   }
-    ///
-    ///   // Not necessary below, but here for illustration if you want to override these calls.
-    ///   fn mouse_entered(&mut self, widget_id: i32) {}
-    ///   fn mouse_exited(&mut self, widget_id: i32) {}
-    ///   fn mouse_scrolled(&mut self, widget_id: i32, point: Point) {}
-    /// }
-    /// ```
+    /// IN PROGRESS
     ///
     /// This uses a `RefCell`, since configurations require a mutable reference to the HashMap
     /// that stores the configs.
@@ -165,7 +132,7 @@ pub trait Widget {
     /// which can be injected into the run loop.  This can be things for `Widget` interaction that
     /// may generate an event that the application needs to respond to, like a button click, or
     /// a drag start/end event.
-    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, _event: CallbackEvent) -> Option<CallbackEvent> {
         None
     }
 
@@ -194,39 +161,7 @@ pub trait Widget {
 /// not contain any special logic other than being a base for a display layer.
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::core::main::*;
-/// # use pushrod::widget::widget::*;
-/// # fn main() {
-/// #   let mut prod: Pushrod = Pushrod::new(
-/// #       WindowSettings::new("Pushrod Window", [640, 480])
-/// #           .opengl(OpenGL::V3_2)
-/// #           .build()
-/// #           .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
-/// #
-///    let mut base_widget = CanvasWidget::new();
-///
-///    base_widget.set_origin(100, 100);
-///    base_widget.set_size(200, 200);
-///    base_widget.set_color([0.5, 0.5, 0.5, 1.0]);
-///
-///    // Widgets must be boxed, as they are trait objects.
-///    let widget_id = prod.widget_store.add_widget(Box::new(base_widget));
-///
-///    eprintln!("Added widget: ID={}", widget_id);
-///
-///    let mut base_widget_2 = CanvasWidget::new();
-///
-///    base_widget_2.set_origin(125, 125);
-///    base_widget_2.set_size(100, 100);
-///    base_widget_2.set_color([0.75, 0.75, 0.75, 1.0]);
-///
-///    // Add the second widget to the top level base widget.
-///    let widget_id_2 = prod.widget_store.add_widget_to_parent(Box::new(base_widget_2), widget_id);
-/// # }
-/// ```
+/// IN PROGRESS
 pub struct CanvasWidget {
     config: Configurable,
 }

@@ -27,46 +27,12 @@ pub type MutableSelectedCallback = Box<FnMut(bool) -> ()>;
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::main::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::text_widget::*;
-/// # use pushrod::widget::toggle_button_widget::*;
-/// # fn main() {
-/// #    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
-/// #       .opengl(OpenGL::V3_2)
-/// #       .resizable(true)
-/// #       .build()
-/// #       .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
-/// #   let mut prod: Pushrod = Pushrod::new(window);
-///    let mut button_widget = ToggleButtonWidget::new(prod.get_factory(),
-///        "OpenSans-Regular.ttf".to_string(),
-///        "Button".to_string(),
-///        20,
-///        TextJustify::Center,
-///    );
-///
-///    button_widget.set_origin(100, 100);
-///    button_widget.set_size(200, 200);
-///    button_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
-///    button_widget.set_border_thickness(3);
-///    button_widget.on_selected(Box::new(|selected_flag| {
-///        eprintln!("Selected: {:?}", selected_flag);
-///    }));
-///
-///    // (OR)
-///
-///    button_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
-/// # }
-/// ```
+/// IN PROGRESS
 pub struct ToggleButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
     text_widget: TextWidget,
     selected_state: bool,
-    on_selected_callback: MutableSelectedCallback,
 }
 
 /// Implementation of the constructor for the `ToggleButtonWidget`.
@@ -89,7 +55,6 @@ impl ToggleButtonWidget {
                 justify,
             ),
             selected_state: false,
-            on_selected_callback: Box::new(|_| {}),
         }
     }
 
@@ -146,18 +111,6 @@ impl ToggleButtonWidget {
     pub fn set_border(&mut self, color: types::Color, thickness: u8) {
         self.set_border_color(color);
         self.set_border_thickness(thickness);
-    }
-
-    /// This is the callback that is triggered when a mouse triggers the `button_up_inside` event
-    /// of the main `ToggleButtonWidget`.
-    pub fn on_selected(&mut self, callback: MutableSelectedCallback) {
-        self.on_selected_callback = callback;
-    }
-
-    /// Internal function that calls the `on_clicked_callback` callback.
-    fn call_on_selected(&mut self) {
-        self.selected_state = !self.selected_state;
-        (self.on_selected_callback)(self.selected_state);
     }
 }
 

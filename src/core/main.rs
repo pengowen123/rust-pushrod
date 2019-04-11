@@ -40,21 +40,7 @@ pub struct Pushrod {
 /// main loop.  Only one of these should be set for the entire application runtime.
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::main::*;
-/// # fn main() {
-///     // Create a PushrodWindow container to store the PistonWindow
-///     let mut prod: Pushrod = Pushrod::new(
-///         WindowSettings::new("Pushrod Window", [640, 480])
-///             .opengl(OpenGL::V3_2)
-///             .build()
-///             .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error)));
-///
-///     // Initiate the run loop.
-///     prod.run();
-/// # }
-/// ```
+/// IN PROGRESS
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
     pub fn new(window: PistonWindow) -> Self {
