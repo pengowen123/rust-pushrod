@@ -4,6 +4,7 @@
 
 - Added ability to modify Widget text (using set_text and get_text)
 - Modified example application to show the widget that the mouse is currently inside, its name, and dimensions
+- Re-added timer widget, added inject widget function
 
 ## 0.2.4
 

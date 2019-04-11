@@ -156,7 +156,10 @@ impl Widget for PushButtonWidget {
 
     fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
         match event {
-            CallbackEvent::MouseButtonDown { widget_id: _, button } => match button {
+            CallbackEvent::MouseButtonDown {
+                widget_id: _,
+                button,
+            } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
@@ -178,7 +181,10 @@ impl Widget for PushButtonWidget {
                 _ => (),
             },
 
-            CallbackEvent::MouseButtonUpOutside { widget_id: _, button } => match button {
+            CallbackEvent::MouseButtonUpOutside {
+                widget_id: _,
+                button,
+            } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         self.base_widget.set_color([1.0; 4]);

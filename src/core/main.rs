@@ -64,7 +64,12 @@ impl Pushrod {
     /// Helper method that adds a `Widget` to the `WidgetStore`, specifying the `parent_id` as the
     /// parent of which to add this object to.  Returns the new ID of the `Widget` after it has
     /// been added.
-    pub fn add_widget_to_parent(&mut self, name: &str, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
+    pub fn add_widget_to_parent(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        parent_id: i32,
+    ) -> i32 {
         self.widget_store
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)

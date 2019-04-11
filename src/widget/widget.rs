@@ -152,6 +152,19 @@ pub trait Widget {
         None
     }
 
+    /// Injects an event into the run loop, but only if `injects_events` returns `true`.
+    fn inject_event(&mut self) -> Option<CallbackEvent> {
+        None
+    }
+
+    /// When set to true, this will check only the `Widget` that is set to inject events at the
+    /// time the run loop starts.  This cannot be toggled on/off by the `Widget`, as the run loop
+    /// checks for `Widget` objects that inject events before the loop starts.  This is to use
+    /// less overhead during the run loop.
+    fn injects_events(&mut self) -> bool {
+        false
+    }
+
     // Draw routines
 
     /// Draws the contents of the widget, provided a `piston2d` `Context` and `G2d` object.

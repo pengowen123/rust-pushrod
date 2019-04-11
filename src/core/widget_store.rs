@@ -108,7 +108,12 @@ impl WidgetStore {
     /// must be an object that already exists in the stack.
     ///
     /// After adding a widget, the ID of the widget is returned.
-    pub fn add_widget_to_parent(&mut self, name: &str, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
+    pub fn add_widget_to_parent(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        parent_id: i32,
+    ) -> i32 {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
@@ -168,9 +173,7 @@ impl WidgetStore {
 
     /// Returns the name of the widget by its ID.
     pub fn get_name_for_widget_id(&mut self, widget_id: i32) -> &str {
-        self.widgets[widget_id as usize]
-            .widget_name
-            .as_str()
+        self.widgets[widget_id as usize].widget_name.as_str()
     }
 
     /// Handles event messages, returning an event if provided by the `Widget`.
@@ -237,9 +240,11 @@ impl WidgetStore {
     /// Retrieves a widget by the name when the widget was added.  To get the very top-level
     /// widget, refer to `_WidgetStoreBase`.
     pub fn get_widget_for_name(&mut self, name: &str) -> &RefCell<Box<dyn Widget>> {
-        let widget_id = match self.widgets
+        let widget_id = match self
+            .widgets
             .iter_mut()
-            .find(|x| x.widget_name == String::from(name)) {
+            .find(|x| x.widget_name == String::from(name))
+        {
             Some(x) => x.widget_id,
             None => 0,
         };

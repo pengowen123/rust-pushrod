@@ -72,5 +72,5 @@ pub enum CallbackEvent {
     },
     TimerTriggered {
         widget_id: i32,
-    }
+    },
 }
