@@ -41,6 +41,12 @@ pub struct SimpleWindowEventHandler {
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
         match event {
+            CallbackEvent::MouseEntered { widget_id } => {
+                // When a mouse enters a widget, the ID will get modified; modify the debug widget
+                // with the ID that was specified.
+                eprintln!("Mouse Entered: {}", widget_id);
+            },
+
             CallbackEvent::WidgetClicked { widget_id, button } => {
                 match widget_store.get_name_for_widget_id(widget_id) {
                     "RandomColorButton1" => match button {
@@ -340,6 +346,22 @@ impl SimpleWindow {
         self.pushrod.borrow_mut().add_widget("TimerWidget1", Box::new(timer));
     }
 
+    fn add_debugging(&mut self) {
+        let mut text_widget1 = TextWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Current Widget: 0".to_string(),
+            20,
+            TextJustify::Left,
+        );
+        text_widget1.set_origin(20, 560);
+        text_widget1.set_size(400, 28);
+        text_widget1.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("DebugText1", Box::new(text_widget1));
+    }
+
     fn build(&mut self) {
         self.add_hello_world();
         self.add_base_widget();
@@ -347,6 +369,7 @@ impl SimpleWindow {
         self.add_powered_by();
         self.add_progress();
         self.add_timer();
+        self.add_debugging();
     }
 
     fn get_pushrod(&mut self) -> &mut Pushrod {
