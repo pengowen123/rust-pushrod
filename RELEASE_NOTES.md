@@ -12,6 +12,7 @@
 - Added ability to look up a widget by name. (#94)
 - Added ability to add a widget, and a widget with parent with an assigned name.
 - Internally used "_WidgetStoreBase" as the internal first, or base widget.  Updated docs to reflect this.
+- Added randomize button that randomizes color of progress widget.
 
 ## 0.2.3
 

@@ -53,9 +53,25 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                     1.0,
                                 ]);
                             }
-                        }
+                        },
                         _ => (),
                     },
+
+                    "RandomColorButton2" => match button {
+                        Button::Mouse(mouse_button) => {
+                            if mouse_button == MouseButton::Left {
+                                widget_store.get_widget_for_name("ProgressWidget")
+                                    .borrow_mut()
+                                    .set_secondary_color([
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    1.0,
+                                ]);
+                            }
+                        },
+                        _ => (),
+                    }
 
                     x => eprintln!("Widget clicked: {}", x),
                 }
