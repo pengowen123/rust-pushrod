@@ -87,6 +87,10 @@ pub struct TextColor(pub Color);
 #[derive(Clone, Debug)]
 pub struct SecondaryColor(pub Color);
 
+/// `String` of the text on a `Widget`.
+#[derive(Clone, Debug)]
+pub struct DisplayText(pub String);
+
 /// This macro implements the availability of configuration items.  The first value is the name
 /// of the `struct` that the configuration object applies, and the second value is the name of the
 /// private inner trait that is responsible for setting and getting values for that `struct`
@@ -99,6 +103,7 @@ impl_configurable! {
     BorderWidth => border_width,
     TextColor => text_color,
     SecondaryColor => secondary_color,
+    DisplayText => display_text,
 }
 
 /// Implementation of the default `Configurable` object.

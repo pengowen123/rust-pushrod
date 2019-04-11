@@ -44,7 +44,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
             CallbackEvent::MouseEntered { widget_id } => {
                 // When a mouse enters a widget, the ID will get modified; modify the debug widget
                 // with the ID that was specified.
-                eprintln!("Mouse Entered: {}", widget_id);
+
+                widget_store.get_widget_for_name("DebugText1").borrow_mut().set_text(format!("Current Widget: {}", widget_id).as_str());
             },
 
             CallbackEvent::WidgetClicked { widget_id, button } => {

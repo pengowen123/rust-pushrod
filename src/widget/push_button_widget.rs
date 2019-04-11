@@ -58,12 +58,6 @@ impl PushButtonWidget {
         }
     }
 
-    /// Sets the border color for this widget.
-    pub fn set_text(&mut self, text: String) {
-        self.text_widget.set_text(text);
-        self.invalidate();
-    }
-
     /// Sets the color of the text for this `Widget`.
     pub fn set_text_color(&mut self, color: types::Color) {
         self.text_widget.set_text_color(color);
@@ -152,6 +146,12 @@ impl Widget for PushButtonWidget {
     /// Defaults to white color `[1.0; 4]` if not set.
     fn get_color(&mut self) -> types::Color {
         self.base_widget.get_color()
+    }
+
+    /// Sets the border color for this widget.
+    fn set_text(&mut self, text: &str) {
+        self.text_widget.set_text(text);
+        self.invalidate();
     }
 
     fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {

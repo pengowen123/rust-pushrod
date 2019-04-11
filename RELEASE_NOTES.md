@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.2.5
+
+- Added ability to modify Widget text (using set_text and get_text)
+
 ## 0.2.4
 
 - Changed mutability of get_selected state in ToggleButtonWidget.

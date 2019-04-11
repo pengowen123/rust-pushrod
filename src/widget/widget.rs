@@ -126,6 +126,22 @@ pub trait Widget {
             .0
     }
 
+    /// Sets the displayable text in a `Widget`, if applicable.
+    fn set_text(&mut self, text: &str) {
+        self.config().set(DisplayText(String::from(text)));
+        self.invalidate();
+    }
+
+    /// Retrieves a copy of the text that is set for the `Widget`.  If no text is set,
+    /// defaults to a blank string.
+    fn get_text(&mut self) -> String {
+        self.config()
+            .get::<DisplayText>()
+            .unwrap_or(&DisplayText(String::from("")))
+            .0
+            .clone()
+    }
+
     /// Handles an event that was sent by the event loop.  It is up to the `Widget` to handle the
     /// event, or to ignore it.  If this function is _not_ overridden, the event will be ignored,
     /// and no event will be returned as a result.  This function _returns_ an `Option<CallbackEvent>`,

@@ -77,7 +77,6 @@ pub enum TextJustify {
 pub struct TextWidget {
     config: Configurable,
     font_cache: Glyphs,
-    text: String,
     font_size: u32,
     justify: TextJustify,
     desired_size: (i32, i32),
@@ -102,11 +101,13 @@ impl TextWidget {
             .unwrap();
         let ref font = assets.join(font_name.clone());
         let glyphs = Glyphs::new(font, factory.clone(), TextureSettings::new()).unwrap();
+        let mut configurable = Configurable::new();
+
+        configurable.set(DisplayText(text.clone()));
 
         Self {
-            config: Configurable::new(),
+            config: configurable,
             font_cache: glyphs,
-            text,
             font_size,
             justify,
             desired_size: (0, 0),
@@ -125,13 +126,6 @@ impl TextWidget {
         self.config().get::<TextColor>().unwrap().0
     }
 
-    /// Changes the text, recalculates the desired draw size, and redraws after change.
-    pub fn set_text(&mut self, text: String) {
-        self.text = text.clone();
-        self.desired_size = (0, 0);
-        self.invalidate();
-    }
-
     /// Function to draw the text.  Generates a context transformation to display the text based on
     /// the point of origin's X and Y coordinates.  Since the text is drawn upwards from the point
     /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
@@ -143,7 +137,7 @@ impl TextWidget {
         // to occur once.
         if self.desired_size.0 == 0 {
             self.desired_size = private::TextHelper::new(self.font_size)
-                .determine_size(&self.text, &mut self.font_cache, g)
+                .determine_size(self.get_text().as_str(), &mut self.font_cache, g)
                 .unwrap();
 
             eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
@@ -169,7 +163,7 @@ impl TextWidget {
         // add the size of the font (in pixels), which adjusts the baseline to the desired area.
         Text::new_color(self.get_text_color(), self.font_size)
             .draw(
-                &self.text,
+                self.get_text().as_str(),
                 &mut self.font_cache,
                 clip,
                 c.transform.trans(start_x, start_y as f64),
@@ -183,6 +177,13 @@ impl TextWidget {
 impl Widget for TextWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    /// Changes the text, recalculates the desired draw size, and redraws after change.
+    fn set_text(&mut self, text: &str) {
+        self.desired_size = (0, 0);
+        self.config().set(DisplayText(String::from(text)));
+        self.invalidate();
     }
 
     /// Draws the contents of the widget.
