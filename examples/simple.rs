@@ -44,8 +44,13 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
             CallbackEvent::MouseEntered { widget_id } => {
                 // When a mouse enters a widget, the ID will get modified; modify the debug widget
                 // with the ID that was specified.
+                let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
+                let widget_point = widget_store.get_widget_for_id(widget_id).borrow_mut().get_origin();
+                let widget_size = widget_store.get_widget_for_id(widget_id).borrow_mut().get_size();
 
-                widget_store.get_widget_for_name("DebugText1").borrow_mut().set_text(format!("Current Widget: {}", widget_id).as_str());
+                widget_store.get_widget_for_name("DebugText1").borrow_mut().set_text(format!("Current Widget: {} ({})", widget_id, widget_name).as_str());
+                widget_store.get_widget_for_name("DebugText2").borrow_mut().set_text(format!("Dimensions: x={} y={} w={} h={}",
+                    widget_point.x, widget_point.y, widget_size.w, widget_size.h).as_str());
             },
 
             CallbackEvent::WidgetClicked { widget_id, button } => {
@@ -355,12 +360,26 @@ impl SimpleWindow {
             20,
             TextJustify::Left,
         );
-        text_widget1.set_origin(20, 560);
+        text_widget1.set_origin(20, 530);
         text_widget1.set_size(400, 28);
         text_widget1.set_text_color([0.0, 0.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()
             .add_widget("DebugText1", Box::new(text_widget1));
+
+        let mut text_widget2 = TextWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "".to_string(),
+            20,
+            TextJustify::Left,
+        );
+        text_widget2.set_origin(20, 560);
+        text_widget2.set_size(400, 28);
+        text_widget2.set_text_color([0.0, 0.0, 0.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("DebugText2", Box::new(text_widget2));
     }
 
     fn build(&mut self) {
