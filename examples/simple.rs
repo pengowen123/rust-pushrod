@@ -44,8 +44,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
         match event {
             CallbackEvent::WidgetClicked { widget_id, button } => {
-                if widget_id == 3 {
-                    match button {
+                match widget_id {
+                    3 => match button {
                         Button::Mouse(mouse_button) => {
                             if mouse_button == MouseButton::Left {
                                 widget_store.get_widget_for_id(2).borrow_mut().set_color([
@@ -57,7 +57,9 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                             }
                         }
                         _ => (),
-                    }
+                    },
+
+                    x => eprintln!("Widget clicked: {}", x),
                 }
             }
 
