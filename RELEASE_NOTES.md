@@ -7,6 +7,8 @@
 - Re-added timer widget, added inject widget function
 - Added ability to inject an event. (#97)
 - Updated TimerWidget so that it injects a TimerEvent when triggered properly. (#96)
+- Reimplemented ToggleButton code, generates WidgetSelected event on click. (#95)
+- Added animate button, now enables/disables the timer callback on click.
 
 ## 0.2.4
 

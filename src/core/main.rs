@@ -128,7 +128,8 @@ impl Pushrod {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
         let mut button_map: HashMap<i32, HashSet<Button>> = HashMap::new();
-        let injectable_map: Vec<i32> = self.widget_store
+        let injectable_map: Vec<i32> = self
+            .widget_store
             .borrow_mut()
             .widgets
             .iter()
@@ -313,23 +314,19 @@ impl Pushrod {
             // FPS loop handling
 
             event.render(|_| {
-                injectable_map.iter()
-                    .for_each(|widget_id| {
-                        let injectable_event = self.widget_store
-                            .borrow_mut()
-                            .get_widget_for_id(*widget_id)
-                            .borrow_mut()
-                            .inject_event();
+                injectable_map.iter().for_each(|widget_id| {
+                    let injectable_event = self
+                        .widget_store
+                        .borrow_mut()
+                        .get_widget_for_id(*widget_id)
+                        .borrow_mut()
+                        .inject_event();
 
-                        match injectable_event {
-                            Some(x) => self.handle_event(
-                                *widget_id,
-                                event_handler,
-                                x.clone()
-                            ),
-                            None => (),
-                        }
-                    });
+                    match injectable_event {
+                        Some(x) => self.handle_event(*widget_id, event_handler, x.clone()),
+                        None => (),
+                    }
+                });
 
                 self.handle_draw(&event);
                 self.widget_store.borrow_mut().invalidate_all_widgets();

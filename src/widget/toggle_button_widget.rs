@@ -1,5 +1,5 @@
-// Toggle Button Widget
-// Extensible widget for the widget library - handles a toggleable button object.
+// Push Button Widget
+// Extensible widget for the widget library - handles a push button object.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
 
 use piston_window::*;
 
+use crate::core::callbacks::CallbackEvent::WidgetSelected;
+use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
-
-pub type MutableSelectedCallback = Box<FnMut(bool) -> ()>;
 
 /// This is the `ToggleButtonWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
@@ -32,7 +32,7 @@ pub struct ToggleButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
     text_widget: TextWidget,
-    selected_state: bool,
+    selected: bool,
 }
 
 /// Implementation of the constructor for the `ToggleButtonWidget`.
@@ -43,6 +43,7 @@ impl ToggleButtonWidget {
         text: String,
         font_size: u32,
         justify: TextJustify,
+        selected: bool,
     ) -> Self {
         Self {
             config: Configurable::new(),
@@ -54,7 +55,7 @@ impl ToggleButtonWidget {
                 font_size,
                 justify,
             ),
-            selected_state: false,
+            selected,
         }
     }
 
@@ -95,12 +96,6 @@ impl ToggleButtonWidget {
         self.base_widget.get_border_thickness()
     }
 
-    /// Returns the selected state of this button.  `true` indicates the button is selected,
-    /// `false` otherwise.
-    pub fn get_selected(&self) -> bool {
-        self.selected_state
-    }
-
     /// Helper function that sets both the color of the border and the thickness at the same time.
     pub fn set_border(&mut self, color: types::Color, thickness: u8) {
         self.set_border_color(color);
@@ -108,10 +103,9 @@ impl ToggleButtonWidget {
     }
 }
 
-/// Implementation of the `PushButtonWidget` object with the `Widget` traits implemented.
+/// Implementation of the `ToggleButtonWidget` object with the `Widget` traits implemented.
 /// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
-/// responds to the button down/up callbacks internally, and generates an `on_clicked` callback
-/// when appropriate.
+/// responds to the button down/up callbacks internally.
 impl Widget for ToggleButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -160,61 +154,72 @@ impl Widget for ToggleButtonWidget {
         self.invalidate();
     }
 
-    //    /// Overrides button down.
-    //    fn button_down(&mut self, _: i32, button: Button) {
-    //        match button {
-    //            Button::Mouse(mouse_button) => {
-    //                if mouse_button == MouseButton::Left {
-    //                    if self.selected_state {
-    //                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-    //                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    //                    } else {
-    //                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-    //                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-    //                    }
-    //                }
-    //            }
-    //            _ => (),
-    //        }
-    //    }
-    //
-    //    /// Overrides button up inside, triggering an `on_selected` callback.
-    //    fn button_up_inside(&mut self, _: i32, button: Button) {
-    //        match button {
-    //            Button::Mouse(mouse_button) => {
-    //                if mouse_button == MouseButton::Left {
-    //                    self.call_on_selected();
-    //
-    //                    if self.selected_state {
-    //                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-    //                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-    //                    } else {
-    //                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-    //                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    //                    }
-    //                }
-    //            }
-    //            _ => (),
-    //        }
-    //    }
-    //
-    //    /// Overrides button up outside.
-    //    fn button_up_outside(&mut self, _: i32, button: Button) {
-    //        match button {
-    //            Button::Mouse(mouse_button) => {
-    //                if mouse_button == MouseButton::Left {
-    //                    if self.selected_state {
-    //                        self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
-    //                        self.text_widget.set_text_color([1.0, 1.0, 1.0, 1.0]);
-    //                    } else {
-    //                        self.base_widget.set_color([1.0, 1.0, 1.0, 1.0]);
-    //                        self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
-    //                    }
-    //                }
-    //            }
-    //            _ => (),
-    //        }
-    //    }
+    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
+        match event {
+            CallbackEvent::MouseButtonDown {
+                widget_id: _,
+                button,
+            } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        if !self.selected {
+                            self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                            self.text_widget.set_text_color([1.0; 4]);
+                        } else {
+                            self.base_widget.set_color([1.0; 4]);
+                            self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                        }
+                    }
+                }
+                _ => (),
+            },
+
+            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        self.selected = !self.selected;
+
+                        if self.selected {
+                            self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                            self.text_widget.set_text_color([1.0; 4]);
+                        } else {
+                            self.base_widget.set_color([1.0; 4]);
+                            self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                        }
+
+                        return Some(WidgetSelected {
+                            widget_id,
+                            button,
+                            selected: self.selected,
+                        });
+                    }
+                }
+                _ => (),
+            },
+
+            CallbackEvent::MouseButtonUpOutside {
+                widget_id: _,
+                button,
+            } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        if !self.selected {
+                            self.base_widget.set_color([1.0; 4]);
+                            self.text_widget.set_text_color([0.0, 0.0, 0.0, 1.0]);
+                        } else {
+                            self.base_widget.set_color([0.0, 0.0, 0.0, 1.0]);
+                            self.text_widget.set_text_color([1.0; 4]);
+                        }
+                    }
+                }
+                _ => (),
+            },
+
+            _ => (),
+        }
+
+        None
+    }
 
     /// Draws the contents of the widget in this order:
     ///

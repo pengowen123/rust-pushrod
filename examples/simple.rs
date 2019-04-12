@@ -36,6 +36,7 @@ pub struct SimpleWindow {
 
 pub struct SimpleWindowEventHandler {
     animated: bool,
+    progress: u16,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
@@ -111,8 +112,27 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 }
             }
 
+            CallbackEvent::WidgetSelected {
+                widget_id,
+                button: _,
+                selected,
+            } => match widget_store.get_name_for_widget_id(widget_id) {
+                "AnimateButton1" => {
+                    self.animated = selected;
+                }
+                _ => (),
+            },
+
             CallbackEvent::TimerTriggered { widget_id: _ } => {
-                eprintln!("Timer triggered (10 seconds)");
+                if self.animated {
+                    self.progress += 1;
+
+                    if self.progress > 100 {
+                        self.progress = 0;
+                    }
+
+                    eprintln!("Progress: {}", self.progress);
+                }
             }
 
             _ => (),
@@ -122,7 +142,10 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
 impl SimpleWindowEventHandler {
     fn new() -> Self {
-        SimpleWindowEventHandler { animated: false }
+        SimpleWindowEventHandler {
+            animated: false,
+            progress: 50,
+        }
     }
 }
 
@@ -371,6 +394,7 @@ impl SimpleWindow {
             "Animate".to_string(),
             18,
             TextJustify::Center,
+            false,
         );
 
         button1.set_origin(340, 360);
@@ -402,7 +426,7 @@ impl SimpleWindow {
 
     fn add_timer(&mut self) {
         let mut timer = TimerWidget::new();
-        timer.set_timeout(10000);
+        timer.set_timeout(100);
         timer.set_enabled(true);
         self.pushrod
             .borrow_mut()
