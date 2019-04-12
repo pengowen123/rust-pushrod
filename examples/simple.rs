@@ -58,6 +58,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .get_widget_for_name("DebugText1")
                     .borrow_mut()
                     .set_text(format!("Current Widget: {} ({})", widget_id, widget_name).as_str());
+
                 widget_store
                     .get_widget_for_name("DebugText2")
                     .borrow_mut()
@@ -110,7 +111,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 }
             }
 
-            CallbackEvent::TimerTriggered { widget_id } => {
+            CallbackEvent::TimerTriggered { widget_id: _ } => {
                 eprintln!("Timer triggered (10 seconds)");
             }
 

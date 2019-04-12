@@ -136,6 +136,8 @@ impl Pushrod {
             .map(|x| x.widget_id)
             .collect();
 
+        eprintln!("Injectable widget IDs: {:?}", injectable_map);
+
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
                 let mouse_point = make_point_f64(x, y);
@@ -313,7 +315,7 @@ impl Pushrod {
             event.render(|_| {
                 injectable_map.iter()
                     .for_each(|widget_id| {
-                        let mut injectable_event = self.widget_store
+                        let injectable_event = self.widget_store
                             .borrow_mut()
                             .get_widget_for_id(*widget_id)
                             .borrow_mut()
