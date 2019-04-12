@@ -34,7 +34,7 @@ pub struct WidgetContainer {
     widget_name: String,
 
     /// This `Widget`'s assigned ID.  These IDs are auto-assigned.
-    widget_id: i32,
+    pub widget_id: i32,
 
     /// The parent ID.
     parent_id: i32,
