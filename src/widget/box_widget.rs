@@ -22,25 +22,7 @@ use crate::widget::widget::*;
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
-/// ```no_run
-/// # use piston_window::*;
-/// # use pushrod::core::point::*;
-/// # use pushrod::widget::widget::*;
-/// # use pushrod::widget::box_widget::*;
-/// # fn main() {
-///    let mut box_widget = BoxWidget::new();
-///
-///    box_widget.set_origin(100, 100);
-///    box_widget.set_size(200, 200);
-///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
-///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
-///    box_widget.set_border_thickness(3);
-///
-///    // (OR)
-///
-///    box_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
-/// # }
-/// ```
+/// IN PROGRESS
 pub struct BoxWidget {
     config: Configurable,
     base_widget: CanvasWidget,
