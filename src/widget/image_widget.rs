@@ -67,7 +67,7 @@ impl Widget for ImageWidget {
 
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
-        let size = self.get_size();
+        let size = self.config().get_size(CONFIG_BODY_SIZE);
         let transform = c.transform.scale(
             size.w as f64 / self.image_size.w as f64,
             size.h as f64 / self.image_size.h as f64,

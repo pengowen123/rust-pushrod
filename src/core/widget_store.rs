@@ -20,6 +20,7 @@ use std::cell::RefCell;
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
 use crate::widget::widget::*;
+use crate::widget::config::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
 /// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
@@ -54,7 +55,7 @@ impl WidgetStore {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = CanvasWidget::new();
 
-        base_widget.set_size(800, 600);
+        base_widget.config().set(CONFIG_BODY_SIZE, Config::Size(crate::core::point::Size { w: 800, h: 600 }));
         widgets_list.push(WidgetContainer {
             widget: RefCell::new(Box::new(base_widget)),
             widget_name: String::from("_WidgetStoreBase"),
@@ -153,8 +154,8 @@ impl WidgetStore {
         let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
-            let widget_point = &obj.widget.borrow_mut().get_origin();
-            let widget_size: crate::core::point::Size = obj.widget.borrow_mut().get_size();
+            let widget_point = &obj.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
+            let widget_size: crate::core::point::Size = obj.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
 
             // Skip over item widgets that have a width and height of 0.
             if widget_size.w > 0 && widget_size.h > 0 {
@@ -184,13 +185,6 @@ impl WidgetStore {
             .handle_event(event)
     }
 
-    pub fn set_color(&mut self, widget_id: i32, color: types::Color) {
-        self.widgets[widget_id as usize]
-            .widget
-            .borrow_mut()
-            .set_color(color);
-    }
-
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not
     /// account for object depth, but it is implied that objects' parents are displayed in stacking
     /// order.  Therefore, the parent is drawn first, then sibling, and other siblings.  This draw
@@ -210,9 +204,9 @@ impl WidgetStore {
             let paint_widget = &mut self.widgets[paint_id as usize];
 
             if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
-                let origin: Point = paint_widget.widget.borrow_mut().get_origin().clone();
+                let origin: Point = paint_widget.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
                 let size: crate::core::point::Size =
-                    paint_widget.widget.borrow_mut().get_size().clone();
+                    paint_widget.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
 
                 let new_context: Context = Context {
                     viewport: c.viewport,

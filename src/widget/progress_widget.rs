@@ -15,10 +15,9 @@
 
 use piston_window::*;
 
-use crate::core::point::*;
 use crate::widget::box_widget::*;
-use crate::widget::config::*;
 use crate::widget::widget::*;
+use crate::widget::config::*;
 
 /// This is the `ProgressWidget`, which is used for showing a progress bar.
 ///
@@ -27,7 +26,6 @@ use crate::widget::widget::*;
 pub struct ProgressWidget {
     config: Configurable,
     base_widget: BoxWidget,
-    progress: u16,
 }
 
 /// Implementation of the constructor for the `ProgressWidget`.
@@ -35,26 +33,15 @@ impl ProgressWidget {
     pub fn new() -> Self {
         let mut base = BoxWidget::new();
 
-        base.set_border_thickness(1);
-        base.set_border_color([0.0, 0.0, 0.0, 1.0]);
+        base.config().set(CONFIG_BORDER_WIDTH, Config::Numeric(1));
+        base.config().set(CONFIG_BORDER_COLOR, Config::Color([0.0, 0.0, 0.0, 1.0]));
+
+        // Configurable set: set progress.
 
         Self {
             config: Configurable::new(),
             base_widget: base,
-            progress: 0,
         }
-    }
-
-    /// Sets the progress to be indicated.  This is a number between 0 and 100.  (Anything over 100
-    /// will just fill the box.)
-    pub fn set_progress(&mut self, progress: u16) {
-        self.progress = progress;
-        self.invalidate();
-    }
-
-    /// Returns the current progress shown.
-    pub fn get_progress(&mut self) -> u16 {
-        self.progress
     }
 }
 
@@ -67,38 +54,22 @@ impl Widget for ProgressWidget {
         &mut self.config
     }
 
-    /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
-    /// coordinates.  Invalidates the widget afterward.
-    fn set_origin(&mut self, x: i32, y: i32) {
-        self.config().set(Origin(Point { x, y }));
-        self.base_widget.set_origin(x, y);
-        self.invalidate();
-    }
-
-    /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
-    fn set_size(&mut self, w: i32, h: i32) {
-        self.config()
-            .set(BodySize(crate::core::point::Size { w, h }));
-        self.base_widget.set_size(w, h);
-        self.invalidate();
-    }
-
-    /// Sets the color for this widget.  Invalidates the widget afterward.
-    fn set_color(&mut self, color: types::Color) {
-        self.base_widget.set_color(color);
+    fn set_config(&mut self, config: u8, config_value: Config) {
+        self.config().set(config, config_value.clone());
+        self.base_widget.config().set(config, config_value.clone());
         self.invalidate();
     }
 
     /// Draws the widget.  The progress bar is the secondary color.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
-        let size: crate::core::point::Size = self.get_size();
+        let size = self.config().get_size(CONFIG_BODY_SIZE);
 
         self.base_widget.draw(c, g, clip);
 
-        let draw_width = (size.w as f64 * (self.progress as f64 / 100.0)) as f64;
+        let draw_width = (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64;
 
         // Paint the secondary color to display the progress color.
-        Rectangle::new(self.get_secondary_color()).draw(
+        Rectangle::new(self.config().get_color(CONFIG_SECONDARY_COLOR)).draw(
             [1.0 as f64, 1.0 as f64, draw_width, (size.h - 2) as f64],
             clip,
             c.transform,

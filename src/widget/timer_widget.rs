@@ -17,7 +17,6 @@ use piston_window::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::callbacks::CallbackEvent;
-use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -81,20 +80,20 @@ impl TimerWidget {
         }
     }
 
-    /// Enables or disables the timer.  When disabled, the timer will not initiate the callback
-    /// function.  When re-enabled, the initiation time resets, so the timer will reset back to
-    /// zero, effectively resetting the entire timer.
-    pub fn set_enabled(&mut self, enabled: bool) {
-        self.enabled = enabled;
-        self.initiated = time_ms();
-    }
-
-    /// Sets the timeout in milliseconds for this timer.  Will trigger a call to the function
-    /// set in `on_timeout` when triggered, and will continue to call that function until this
-    /// timer is disabled by using `self.set_enabled(false)`.
-    pub fn set_timeout(&mut self, timeout: u64) {
-        self.timeout = timeout;
-    }
+//    /// Enables or disables the timer.  When disabled, the timer will not initiate the callback
+//    /// function.  When re-enabled, the initiation time resets, so the timer will reset back to
+//    /// zero, effectively resetting the entire timer.
+//    pub fn set_enabled(&mut self, enabled: bool) {
+//        self.enabled = enabled;
+//        self.initiated = time_ms();
+//    }
+//
+//    /// Sets the timeout in milliseconds for this timer.  Will trigger a call to the function
+//    /// set in `on_timeout` when triggered, and will continue to call that function until this
+//    /// timer is disabled by using `self.set_enabled(false)`.
+//    pub fn set_timeout(&mut self, timeout: u64) {
+//        self.timeout = timeout;
+//    }
 }
 
 /// Implementation of the `TimerWidget` object with the `Widget` traits implemented.
@@ -109,15 +108,15 @@ impl Widget for TimerWidget {
         true
     }
 
-    /// Origin is always set to X/Y at points 0x0.
-    fn get_origin(&mut self) -> Point {
-        make_origin_point()
-    }
-
-    /// Size is always unsized, as timers are invisible.
-    fn get_size(&mut self) -> crate::core::point::Size {
-        make_unsized()
-    }
+//    /// Origin is always set to X/Y at points 0x0.
+//    fn get_origin(&mut self) -> Point {
+//        make_origin_point()
+//    }
+//
+//    /// Size is always unsized, as timers are invisible.
+//    fn get_size(&mut self) -> crate::core::point::Size {
+//        make_unsized()
+//    }
 
     /// This function injects events, as a timeout event only occurs once.
     fn injects_events(&mut self) -> bool {

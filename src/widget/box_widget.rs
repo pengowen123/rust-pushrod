@@ -15,7 +15,6 @@
 
 use piston_window::*;
 
-use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -56,49 +55,13 @@ impl BoxWidget {
         }
     }
 
-    /// Sets the border color for this widget.
-    pub fn set_border_color(&mut self, color: types::Color) {
-        self.config().set(BorderColor(color));
-        self.invalidate();
-    }
-
-    /// Retrieves the border color of this widget.
-    /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
-    pub fn get_border_color(&mut self) -> types::Color {
-        self.config()
-            .get::<BorderColor>()
-            .unwrap_or(&BorderColor([0.0, 0.0, 0.0, 1.0]))
-            .0
-    }
-
-    /// Sets the thickness of the border for this widget.
-    pub fn set_border_thickness(&mut self, thickness: u8) {
-        self.config().set(BorderWidth(thickness));
-        self.invalidate();
-    }
-
-    /// Retrieves the border thickness of this widget.
-    /// Defaults to 1 if not set.
-    pub fn get_border_thickness(&mut self) -> u8 {
-        self.config()
-            .get::<BorderWidth>()
-            .unwrap_or(&BorderWidth(1))
-            .0
-    }
-
-    /// Helper function that sets both the color of the border and the thickness at the same time.
-    pub fn set_border(&mut self, color: types::Color, thickness: u8) {
-        self.set_border_color(color);
-        self.set_border_thickness(thickness);
-    }
-
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
     fn draw_box(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
-        let size: crate::core::point::Size = self.get_size();
-        let border: f64 = self.get_border_thickness() as f64;
-        let color: types::Color = self.get_border_color();
+        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
+        let border: f64 = self.config().get_numeric(CONFIG_BORDER_WIDTH) as f64;
+        let color: types::Color = self.config().get_color(CONFIG_BORDER_COLOR);
 
         // Upper left to upper right
         Line::new(color, border).draw(
@@ -155,33 +118,10 @@ impl Widget for BoxWidget {
         &mut self.config
     }
 
-    /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
-    /// coordinates.  Invalidates the widget afterward.
-    fn set_origin(&mut self, x: i32, y: i32) {
-        self.config().set(Origin(Point { x, y }));
-        self.base_widget.set_origin(x, y);
+    fn set_config(&mut self, config: u8, config_value: Config) {
+        self.config().set(config, config_value.clone());
+        self.base_widget.config().set(config, config_value.clone());
         self.invalidate();
-    }
-
-    /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
-    fn set_size(&mut self, w: i32, h: i32) {
-        self.config()
-            .set(BodySize(crate::core::point::Size { w, h }));
-        self.base_widget.set_size(w, h);
-        self.invalidate();
-    }
-
-    /// Sets the color for this widget.  Invalidates the widget afterward.
-    fn set_color(&mut self, color: types::Color) {
-        self.config().set(MainColor(color));
-        self.base_widget.set_color(color);
-        self.invalidate();
-    }
-
-    /// Retrieves the color of this widget.
-    /// Defaults to white color `[1.0; 4]` if not set.
-    fn get_color(&mut self) -> types::Color {
-        self.base_widget.get_color()
     }
 
     /// Draws the contents of the widget in this order:
