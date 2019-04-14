@@ -139,7 +139,10 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                         self.progress = 0;
                     }
 
-                    eprintln!("Progress: {}", self.progress);
+                    widget_store
+                        .get_widget_for_name("ProgressWidget")
+                        .borrow_mut()
+                        .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
                 }
             }
 

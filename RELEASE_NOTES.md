@@ -11,6 +11,7 @@
 - Added animate button, now enables/disables the timer callback on click.
 - Updated configs to use get/set with enumerations. (#100)
 - Moved config settings to Widget.
+- Made the progress animate button work properly.
 
 ## 0.2.4
 
