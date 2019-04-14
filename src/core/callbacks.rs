@@ -65,7 +65,6 @@ pub enum CallbackEvent {
         widget_id: i32,
         button: Button,
     },
-
     WidgetClicked {
         widget_id: i32,
         button: Button,

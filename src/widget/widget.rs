@@ -190,7 +190,7 @@ pub trait Widget {
     }
 
     /// Injects an event into the run loop, but only if `injects_events` returns `true`.
-    fn inject_event(&mut self) -> Option<CallbackEvent> {
+    fn inject_event(&mut self, _widget_id: i32) -> Option<CallbackEvent> {
         None
     }
 

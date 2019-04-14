@@ -127,18 +127,20 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 _ => (),
             },
 
-            CallbackEvent::TimerTriggered { widget_id: _ } => {
-                if self.animated {
-                    self.progress += 1;
+            CallbackEvent::TimerTriggered { widget_id: widget_id } => {
+                if widget_store.get_name_for_widget_id(widget_id) == "TimerWidget1" {
+                    if self.animated {
+                        self.progress += 1;
 
-                    if self.progress > 100 {
-                        self.progress = 0;
+                        if self.progress > 100 {
+                            self.progress = 0;
+                        }
+
+                        widget_store
+                            .get_widget_for_name("ProgressWidget")
+                            .borrow_mut()
+                            .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
                     }
-
-                    widget_store
-                        .get_widget_for_name("ProgressWidget")
-                        .borrow_mut()
-                        .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
                 }
             }
 

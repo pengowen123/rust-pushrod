@@ -1,5 +1,11 @@
 # Pushrod Releases
 
+## 0.2.6
+
+- Includes widget_id when inject_event is called. (#102)
+- Fixed timer widget to include widget_id when triggered.
+
+
 ## 0.2.5
 
 - Added ability to modify Widget text (using set_text and get_text)
