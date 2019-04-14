@@ -112,6 +112,35 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                         _ => (),
                     },
 
+                    "HideButton1" => match button {
+                        Button::Mouse(mouse_button) => {
+                            if mouse_button == MouseButton::Left {
+                                let state = widget_store.get_widget_for_name("BaseWidget1")
+                                    .borrow_mut()
+                                    .config()
+                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+                                let mut button_text = if state == true {
+                                    String::from("Hide")
+                                } else {
+                                    String::from("Show")
+                                };
+
+                                widget_store
+                                    .get_widget_for_name("HideButton1")
+                                    .borrow_mut()
+                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+                                widget_store.get_widget_for_name("RandomColorButton1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store.get_widget_for_name("BaseWidget1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                            }
+                        }
+                        _ => (),
+                    },
+
                     x => eprintln!("Widget clicked: {}", x),
                 }
             }
