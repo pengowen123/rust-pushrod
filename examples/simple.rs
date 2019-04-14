@@ -236,11 +236,11 @@ impl SimpleWindow {
     fn add_box_widgets(&mut self) {
         let mut box_widget = BoxWidget::new();
 
-        box_widget.config().set_point(CONFIG_ORIGIN, 250, 80);
-        box_widget.config().set_size(CONFIG_BODY_SIZE, 200, 200);
-        box_widget.config().set_color(CONFIG_MAIN_COLOR, [0.0, 1.0, 0.0, 1.0]);
-        box_widget.config().set_numeric(CONFIG_BORDER_WIDTH, 4);
-        box_widget.config().set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
+        box_widget.set_point(CONFIG_ORIGIN, 250, 80);
+        box_widget.set_size(CONFIG_BODY_SIZE, 200, 200);
+        box_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 1.0, 0.0, 1.0]);
+        box_widget.set_numeric(CONFIG_BORDER_WIDTH, 4);
+        box_widget.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
         let box_widget_id = self
             .pushrod
             .borrow_mut()
@@ -253,9 +253,9 @@ impl SimpleWindow {
             24,
             TextJustify::Left,
         );
-        text_widget2.config().set_point(CONFIG_ORIGIN, 265, 100);
-        text_widget2.config().set_size(CONFIG_BODY_SIZE, 170, 32);
-        text_widget2.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget2.set_point(CONFIG_ORIGIN, 265, 100);
+        text_widget2.set_size(CONFIG_BODY_SIZE, 170, 32);
+        text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.pushrod.borrow_mut().add_widget_to_parent(
             "LeftJustifiedText",
             Box::new(text_widget2),
@@ -269,9 +269,9 @@ impl SimpleWindow {
             24,
             TextJustify::Center,
         );
-        text_widget3.config().set_point(CONFIG_ORIGIN, 265, 166);
-        text_widget3.config().set_size(CONFIG_BODY_SIZE, 170, 32);
-        text_widget3.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget3.set_point(CONFIG_ORIGIN, 265, 166);
+        text_widget3.set_size(CONFIG_BODY_SIZE, 170, 32);
+        text_widget3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.pushrod.borrow_mut().add_widget_to_parent(
             "CenterJustifiedText",
             Box::new(text_widget3),
@@ -285,9 +285,9 @@ impl SimpleWindow {
             24,
             TextJustify::Right,
         );
-        text_widget4.config().set_point(CONFIG_ORIGIN, 265, 230);
-        text_widget4.config().set_size(CONFIG_BODY_SIZE, 170, 32);
-        text_widget4.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget4.set_point(CONFIG_ORIGIN, 265, 230);
+        text_widget4.set_size(CONFIG_BODY_SIZE, 170, 32);
+        text_widget4.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.pushrod.borrow_mut().add_widget_to_parent(
             "RightJustifiedText",
             Box::new(text_widget4),
@@ -313,52 +313,52 @@ impl SimpleWindow {
             .add_widget("HideButton2", Box::new(button2));
 
         let mut box_1 = BoxWidget::new();
-        box_1.config().set_point(CONFIG_ORIGIN, 480, 80);
-        box_1.config().set_size(CONFIG_BODY_SIZE, 200, 200);
-        box_1.config().set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
-        box_1.config().set_numeric(CONFIG_BORDER_WIDTH, 2);
-        box_1.config().set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
+        box_1.set_point(CONFIG_ORIGIN, 480, 80);
+        box_1.set_size(CONFIG_BODY_SIZE, 200, 200);
+        box_1.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
+        box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
         let box_1_id = self
             .pushrod
             .borrow_mut()
             .add_widget("Box1", Box::new(box_1));
 
         let mut inner_box_1 = BoxWidget::new();
-        inner_box_1.config().set_point(CONFIG_ORIGIN, 505, 105);
-        inner_box_1.config().set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_1.config().set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
-        inner_box_1.config().set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_1.config().set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 1.0, 1.0]);
+        inner_box_1.set_point(CONFIG_ORIGIN, 505, 105);
+        inner_box_1.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_1.set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
+        inner_box_1.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_1.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 1.0, 1.0]);
         self.pushrod
             .borrow_mut()
             .add_widget_to_parent("Box2", Box::new(inner_box_1), box_1_id);
 
         let mut inner_box_2 = BoxWidget::new();
-        inner_box_2.config().set_point(CONFIG_ORIGIN, 585, 105);
-        inner_box_2.config().set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_2.config().set_color(CONFIG_MAIN_COLOR, [0.75, 0.25, 1.0, 1.0]);
-        inner_box_2.config().set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_2.config().set_color(CONFIG_BORDER_COLOR, [1.0, 1.0, 0.0, 1.0]);
+        inner_box_2.set_point(CONFIG_ORIGIN, 585, 105);
+        inner_box_2.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_2.set_color(CONFIG_MAIN_COLOR, [0.75, 0.25, 1.0, 1.0]);
+        inner_box_2.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_2.set_color(CONFIG_BORDER_COLOR, [1.0, 1.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()
             .add_widget_to_parent("Box3", Box::new(inner_box_2), box_1_id);
 
         let mut inner_box_3 = BoxWidget::new();
-        inner_box_3.config().set_point(CONFIG_ORIGIN, 505, 190);
-        inner_box_3.config().set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_3.config().set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
-        inner_box_3.config().set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_3.config().set_color(CONFIG_BORDER_COLOR, [1.0, 0.50, 1.0, 1.0]);
+        inner_box_3.set_point(CONFIG_ORIGIN, 505, 190);
+        inner_box_3.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_3.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
+        inner_box_3.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_3.set_color(CONFIG_BORDER_COLOR, [1.0, 0.50, 1.0, 1.0]);
         self.pushrod
             .borrow_mut()
             .add_widget_to_parent("Box4", Box::new(inner_box_3), box_1_id);
 
         let mut inner_box_4 = BoxWidget::new();
-        inner_box_4.config().set_point(CONFIG_ORIGIN, 585, 190);
-        inner_box_4.config().set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_4.config().set_color(CONFIG_MAIN_COLOR, [0.75, 0.50, 0.0, 1.0]);
-        inner_box_4.config().set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_4.config().set_color(CONFIG_BORDER_COLOR, [0.50, 0.0, 0.25, 1.0]);
+        inner_box_4.set_point(CONFIG_ORIGIN, 585, 190);
+        inner_box_4.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_4.set_color(CONFIG_MAIN_COLOR, [0.75, 0.50, 0.0, 1.0]);
+        inner_box_4.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_4.set_color(CONFIG_BORDER_COLOR, [0.50, 0.0, 0.25, 1.0]);
         self.pushrod
             .borrow_mut()
             .add_widget_to_parent("Box5", Box::new(inner_box_4), box_1_id);
@@ -371,11 +371,11 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button.config().set_point(CONFIG_ORIGIN, 480, 290);
-        button.config().set_size(CONFIG_BODY_SIZE, 200, 32);
-        button.config().set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button.config().set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button.config().set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button.set_point(CONFIG_ORIGIN, 480, 290);
+        button.set_size(CONFIG_BODY_SIZE, 200, 32);
+        button.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
         self.pushrod
             .borrow_mut()
