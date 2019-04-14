@@ -9,6 +9,7 @@
 - Updated TimerWidget so that it injects a TimerEvent when triggered properly. (#96)
 - Reimplemented ToggleButton code, generates WidgetSelected event on click. (#95)
 - Added animate button, now enables/disables the timer callback on click.
+- Updated configs to use get/set with enumerations. (#100)
 
 ## 0.2.4
 
