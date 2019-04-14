@@ -57,49 +57,6 @@ impl ToggleButtonWidget {
             selected,
         }
     }
-
-//    /// Sets the color of the text for this `Widget`.
-//    pub fn set_text_color(&mut self, color: types::Color) {
-//        self.text_widget.set_text_color(color);
-//    }
-//
-//    /// Retrieves the color of the text for this `Widget`.
-//    /// Defaults to black if not set.
-//    pub fn get_text_color(&mut self) -> types::Color {
-//        self.text_widget.get_text_color()
-//    }
-//
-//    /// Sets the border color for this widget.
-//    pub fn set_border_color(&mut self, color: types::Color) {
-//        self.base_widget.set_border_color(color);
-//        self.text_widget.invalidate();
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the border color of this widget.
-//    /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
-//    pub fn get_border_color(&mut self) -> types::Color {
-//        self.base_widget.get_border_color()
-//    }
-//
-//    /// Sets the thickness of the border for this widget.
-//    pub fn set_border_thickness(&mut self, thickness: u8) {
-//        self.base_widget.set_border_thickness(thickness);
-//        self.text_widget.invalidate();
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the border thickness of this widget.
-//    /// Defaults to 1 if not set.
-//    pub fn get_border_thickness(&mut self) -> u8 {
-//        self.base_widget.get_border_thickness()
-//    }
-//
-//    /// Helper function that sets both the color of the border and the thickness at the same time.
-//    pub fn set_border(&mut self, color: types::Color, thickness: u8) {
-//        self.set_border_color(color);
-//        self.set_border_thickness(thickness);
-//    }
 }
 
 /// Implementation of the `ToggleButtonWidget` object with the `Widget` traits implemented.
@@ -115,49 +72,6 @@ impl Widget for ToggleButtonWidget {
         self.base_widget.set_config(config, config_value.clone());
         self.text_widget.set_config(config, config_value.clone());
     }
-
-//    /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
-//    /// coordinates.  Invalidates the widget afterward.
-//    fn set_origin(&mut self, x: i32, y: i32) {
-//        let border_size = self.base_widget.get_border_thickness();
-//
-//        self.config().set(Origin(Point { x, y }));
-//        self.base_widget.set_origin(x, y);
-//        self.text_widget
-//            .set_origin(x + border_size as i32, y + border_size as i32);
-//        self.invalidate();
-//    }
-//
-//    /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
-//    fn set_size(&mut self, w: i32, h: i32) {
-//        let border_size = self.base_widget.get_border_thickness();
-//
-//        self.config()
-//            .set(BodySize(crate::core::point::Size { w, h }));
-//        self.base_widget.set_size(w, h);
-//        self.text_widget
-//            .set_size(w - (border_size as i32 * 2), h - (border_size as i32 * 2));
-//        self.invalidate();
-//    }
-//
-//    /// Sets the color for this widget.  Invalidates the widget afterward.
-//    fn set_color(&mut self, color: types::Color) {
-//        self.config().set(MainColor(color));
-//        self.base_widget.set_color(color);
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the color of this widget.
-//    /// Defaults to white color `[1.0; 4]` if not set.
-//    fn get_color(&mut self) -> types::Color {
-//        self.base_widget.get_color()
-//    }
-//
-//    /// Sets the border color for this widget.
-//    fn set_text(&mut self, text: &str) {
-//        self.text_widget.set_text(text);
-//        self.invalidate();
-//    }
 
     fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
         match event {

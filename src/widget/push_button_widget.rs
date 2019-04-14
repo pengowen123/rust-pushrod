@@ -71,49 +71,6 @@ impl Widget for PushButtonWidget {
         self.text_widget.set_config(config, config_value.clone());
     }
 
-//    /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
-//    /// coordinates.  Invalidates the widget afterward.
-//    fn set_origin(&mut self, x: i32, y: i32) {
-//        let border_size = self.base_widget.get_border_thickness();
-//
-//        self.config().set(Origin(Point { x, y }));
-//        self.base_widget.set_origin(x, y);
-//        self.text_widget
-//            .set_origin(x + border_size as i32, y + border_size as i32);
-//        self.invalidate();
-//    }
-//
-//    /// Sets the `Size` for this widget and the base widget, given width and height.  Invalidates the widget afterward.
-//    fn set_size(&mut self, w: i32, h: i32) {
-//        let border_size = self.base_widget.get_border_thickness();
-//
-//        self.config()
-//            .set(BodySize(crate::core::point::Size { w, h }));
-//        self.base_widget.set_size(w, h);
-//        self.text_widget
-//            .set_size(w - (border_size as i32 * 2), h - (border_size as i32 * 2));
-//        self.invalidate();
-//    }
-//
-//    /// Sets the color for this widget.  Invalidates the widget afterward.
-//    fn set_color(&mut self, color: types::Color) {
-//        self.config().set(MainColor(color));
-//        self.base_widget.set_color(color);
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the color of this widget.
-//    /// Defaults to white color `[1.0; 4]` if not set.
-//    fn get_color(&mut self) -> types::Color {
-//        self.base_widget.get_color()
-//    }
-//
-//    /// Sets the border color for this widget.
-//    fn set_text(&mut self, text: &str) {
-//        self.text_widget.set_text(text);
-//        self.invalidate();
-//    }
-
     fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
         match event {
             CallbackEvent::MouseButtonDown {
