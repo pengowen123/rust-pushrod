@@ -387,8 +387,8 @@ impl SimpleWindow {
             self.pushrod.borrow_mut().get_factory(),
             "rust-512x512.jpg".to_string(),
         );
-        image_widget.config().set_point(CONFIG_ORIGIN, 740, 540);
-        image_widget.config().set_size(CONFIG_BODY_SIZE, 48, 48);
+        image_widget.set_point(CONFIG_ORIGIN, 740, 540);
+        image_widget.set_size(CONFIG_BODY_SIZE, 48, 48);
         self.pushrod
             .borrow_mut()
             .add_widget("RustImage", Box::new(image_widget));
@@ -397,11 +397,11 @@ impl SimpleWindow {
     fn add_progress(&mut self) {
         let mut progress_widget = ProgressWidget::new();
 
-        progress_widget.config().set_point(CONFIG_ORIGIN, 20, 360);
-        progress_widget.config().set_size(CONFIG_BODY_SIZE, 300, 32);
-        progress_widget.config().set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
-        progress_widget.config().set_color(CONFIG_SECONDARY_COLOR, [0.5, 0.5, 0.5, 1.0]);
-        progress_widget.config().set_numeric(CONFIG_PROGRESS, 50);
+        progress_widget.set_point(CONFIG_ORIGIN, 20, 360);
+        progress_widget.set_size(CONFIG_BODY_SIZE, 300, 32);
+        progress_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+        progress_widget.set_color(CONFIG_SECONDARY_COLOR, [0.5, 0.5, 0.5, 1.0]);
+        progress_widget.set_numeric(CONFIG_PROGRESS, 50);
         self.pushrod
             .borrow_mut()
             .add_widget("ProgressWidget", Box::new(progress_widget));
@@ -415,11 +415,11 @@ impl SimpleWindow {
             false,
         );
 
-        button1.config().set_point(CONFIG_ORIGIN, 340, 360);
-        button1.config().set_size(CONFIG_BODY_SIZE, 160, 32);
-        button1.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button1.config().set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button1.config().set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_point(CONFIG_ORIGIN, 340, 360);
+        button1.set_size(CONFIG_BODY_SIZE, 160, 32);
+        button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
         self.pushrod
             .borrow_mut()
@@ -433,11 +433,11 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.config().set_point(CONFIG_ORIGIN, 520, 360);
-        button2.config().set_size(CONFIG_BODY_SIZE, 160, 32);
-        button2.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button2.config().set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button2.config().set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.set_point(CONFIG_ORIGIN, 520, 360);
+        button2.set_size(CONFIG_BODY_SIZE, 160, 32);
+        button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
         self.pushrod
             .borrow_mut()
@@ -447,8 +447,8 @@ impl SimpleWindow {
     fn add_timer(&mut self) {
         let mut timer = TimerWidget::new();
 
-        timer.config().set_numeric(CONFIG_TIMER_TIMEOUT, 100);
-        timer.config().set_toggle(CONFIG_TIMER_ENABLED, true);
+        timer.set_numeric(CONFIG_TIMER_TIMEOUT, 100);
+        timer.set_toggle(CONFIG_TIMER_ENABLED, true);
         self.pushrod
             .borrow_mut()
             .add_widget("TimerWidget1", Box::new(timer));
@@ -462,9 +462,9 @@ impl SimpleWindow {
             20,
             TextJustify::Left,
         );
-        text_widget1.config().set_point(CONFIG_ORIGIN, 20, 530);
-        text_widget1.config().set_size(CONFIG_BODY_SIZE, 400, 28);
-        text_widget1.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget1.set_point(CONFIG_ORIGIN, 20, 530);
+        text_widget1.set_size(CONFIG_BODY_SIZE, 400, 28);
+        text_widget1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()
             .add_widget("DebugText1", Box::new(text_widget1));
@@ -476,9 +476,9 @@ impl SimpleWindow {
             20,
             TextJustify::Left,
         );
-        text_widget2.config().set_point(CONFIG_ORIGIN, 20, 560);
-        text_widget2.config().set_size(CONFIG_BODY_SIZE, 400, 28);
-        text_widget2.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget2.set_point(CONFIG_ORIGIN, 20, 560);
+        text_widget2.set_size(CONFIG_BODY_SIZE, 400, 28);
+        text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()
             .add_widget("DebugText2", Box::new(text_widget2));
