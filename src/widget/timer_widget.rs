@@ -31,7 +31,6 @@ pub struct TimerWidget {
     config: Configurable,
     enabled: bool,
     initiated: u64,
-    timeout: u64,
     event: Option<CallbackEvent>,
 }
 
@@ -60,7 +59,6 @@ impl TimerWidget {
             config: Configurable::new(),
             enabled: true,
             initiated: time_ms(),
-            timeout: 0,
             event: None,
         }
     }
@@ -74,7 +72,7 @@ impl TimerWidget {
 
         let elapsed = time_ms() - self.initiated;
 
-        if elapsed > self.timeout {
+        if elapsed > self.config().get_numeric(CONFIG_TIMER_TIMEOUT) {
             self.initiated = time_ms();
             self.event = Some(CallbackEvent::TimerTriggered { widget_id: 0 });
         }

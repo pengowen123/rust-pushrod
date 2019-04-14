@@ -168,7 +168,6 @@ impl Widget for TextWidget {
     }
 
     fn set_config(&mut self, config: u8, config_value: Config) {
-        self.desired_size = (0, 0);
         self.config().set(config, config_value.clone());
         self.invalidate();
     }
