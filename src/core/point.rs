@@ -14,7 +14,7 @@
 
 /// Structure identifying a point on the screen by X and Y coordinates.  X and Y coordinates
 /// are represented from the upper left-hand corner of the base object.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
@@ -23,7 +23,7 @@ pub struct Point {
 /// Structure identifying a size of an object by W (width) and H (height), respectively.
 /// Other systems may use "width" and "height" as nomenclature, however, we wanted to keep
 /// naming consistent.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Size {
     pub w: i32,
     pub h: i32,

@@ -15,130 +15,128 @@
 
 use piston_window::types::Color;
 
+use std::collections::HashMap;
+
 use crate::core::point::Point;
 use crate::core::point::Size;
 
-/// Powerful macro that automatically creates a configuration object from a specified struct.
-/// Each struct has its own getter, setter, removal of a key (by its value), and checking to see
-/// if a key exists (by its value.)
-macro_rules! impl_configurable {
-    ($($name:ty => $field:ident,)*) => {
-        pub trait ConfigKey: private::ConfigKeyInner {}
-        $( impl ConfigKey for $name {} )*
-
-        mod private {
-            use super::*;
-
-            pub trait ConfigKeyInner: Sized {
-                fn field(config: &Configurable) -> &Option<Self>;
-                fn field_mut(config: &mut Configurable) -> &mut Option<Self>;
-            }
-
-            $(
-            impl ConfigKeyInner for $name {
-                fn field(config: &Configurable) -> &Option<Self> {
-                    &config.$field
-                }
-                fn field_mut(config: &mut Configurable) -> &mut Option<Self> {
-                    &mut config.$field
-                }
-            }
-            )*
-        }
-
-        /// Default Configurable object, created for each struct represented in the
-        /// `impl_configurable!` macro.
-        #[derive(Default)]
-        pub struct Configurable {
-            $( $field: Option<$name>, )*
-        }
-    }
+#[derive(Clone, Debug)]
+pub enum Config {
+    Point(Point),
+    Size(Size),
+    Color(Color),
+    Numeric(u64),
+    Text(String),
+    Toggle(bool),
 }
 
-/// Existence of this object indicates that a `Widget` needs to be redrawn.
-#[derive(Clone, Debug)]
-pub struct Invalidate;
+pub const CONFIG_INVALIDATE: u8 = 1;
+pub const CONFIG_ORIGIN: u8 = 2;
+pub const CONFIG_BODY_SIZE: u8 = 3;
+pub const CONFIG_MAIN_COLOR: u8 = 4;
+pub const CONFIG_BORDER_COLOR: u8 = 5;
+pub const CONFIG_TEXT_COLOR: u8 = 6;
+pub const CONFIG_SECONDARY_COLOR: u8 = 7;
+pub const CONFIG_BORDER_WIDTH: u8 = 8;
+pub const CONFIG_DISPLAY_TEXT: u8 = 9;
+pub const CONFIG_PROGRESS: u8 = 10;
+pub const CONFIG_TIMER_ENABLED: u8 = 11;
+pub const CONFIG_TIMER_TIMEOUT: u8 = 12;
 
-/// Origin `Point` at which a `Widget` exists on the display window.
-#[derive(Clone, Debug)]
-pub struct Origin(pub Point);
-
-/// Physical size of the `Widget`.
-#[derive(Clone, Debug)]
-pub struct BodySize(pub Size);
-
-/// Color of the body of the `Widget`.
-#[derive(Clone, Debug)]
-pub struct MainColor(pub Color);
-
-/// Color of the border for the `BoxWidget` and any `Widget` objects that contain a border.
-#[derive(Clone, Debug)]
-pub struct BorderColor(pub Color);
-
-/// Width (in pixels) of the border for the `BoxWidget` or any `Widget` objects that contain a border.
-#[derive(Clone, Debug)]
-pub struct BorderWidth(pub u8);
-
-/// `Color` of text to be displayed in a `TextWidget`.
-#[derive(Clone, Debug)]
-pub struct TextColor(pub Color);
-
-/// `Color` of a secondary object to be drawn within a `Widget`.
-#[derive(Clone, Debug)]
-pub struct SecondaryColor(pub Color);
-
-/// This macro implements the availability of configuration items.  The first value is the name
-/// of the `struct` that the configuration object applies, and the second value is the name of the
-/// private inner trait that is responsible for setting and getting values for that `struct`
-impl_configurable! {
-    Invalidate => invalidate,
-    Origin => origin,
-    BodySize => body_size,
-    MainColor => main_color,
-    BorderColor => border_color,
-    BorderWidth => border_width,
-    TextColor => text_color,
-    SecondaryColor => secondary_color,
+pub struct Configurable {
+    configs: HashMap<u8, Config>,
 }
 
 /// Implementation of the default `Configurable` object.
 ///
 /// There are two ways in which configuration objects can be used:
-/// ```
-/// # use pushrod::widget::config::*;
-/// # use pushrod::core::point::Point;
-/// # use pushrod::core::point::Size;
-/// fn main() {
-///   let mut config: Configurable = Configurable::new();
-///
-///   config.set(Origin(Point { x: 0, y: 100 }));
-///   config.set(BodySize(Size { w: 150, h: 150 }));
-///
-///   // To get the value of the Origin, you can use type inference:
-///   let main_origin: &Origin = config.get().unwrap();
-///
-///   // Or you can use declared types with ::<> as such:
-///   let body_size = &config.get::<BodySize>().unwrap().0;
-/// }
-/// ```
+/// NEEDS_DOCS
 impl Configurable {
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            configs: HashMap::new(),
+        }
     }
 
-    pub fn set<T: ConfigKey>(&mut self, value: T) {
-        *T::field_mut(self) = Some(value);
+    pub fn set(&mut self, config: u8, config_value: Config) {
+        self.configs.insert(config, config_value.clone());
     }
 
-    pub fn get<T: ConfigKey>(&self) -> Option<&T> {
-        T::field(self).as_ref()
+    pub fn remove(&mut self, config: u8) {
+        self.configs.remove(&config);
     }
 
-    pub fn remove<T: ConfigKey>(&mut self) {
-        *T::field_mut(self) = None;
+    pub fn contains(&mut self, config: u8) -> bool {
+        self.configs.contains_key(&config)
     }
 
-    pub fn contains_key<T: ConfigKey>(&self) -> bool {
-        T::field(self).is_some()
+    pub fn get(&mut self, config: u8) -> Option<&Config> {
+        self.configs.get(&config)
+    }
+
+    pub fn set_point(&mut self, config: u8, x: i32, y: i32) {
+        self.set(config, Config::Point( Point { x, y } ));
+    }
+
+    pub fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set(config, Config::Size( Size { w, h } ));
+    }
+
+    pub fn set_color(&mut self, config: u8, color: Color) {
+        self.set(config, Config::Color(color));
+    }
+
+    pub fn set_numeric(&mut self, config: u8, value: u64) {
+        self.set(config, Config::Numeric(value));
+    }
+
+    pub fn set_text(&mut self, config: u8, text: String) {
+        self.set(config, Config::Text(text.clone()));
+    }
+
+    pub fn set_toggle(&mut self, config: u8, flag: bool) {
+        self.set(config, Config::Toggle(flag));
+    }
+
+    pub fn get_point(&mut self, config: u8) -> Point {
+        match self.configs.get(&config) {
+            Some(Config::Point(point)) => point.clone(),
+            _ => Point::default(),
+        }
+    }
+
+    pub fn get_size(&mut self, config: u8) -> crate::core::point::Size {
+        match self.configs.get(&config) {
+            Some(Config::Size(size)) => size.clone(),
+            _ => Size::default(),
+        }
+    }
+
+    pub fn get_color(&mut self, config: u8) -> Color {
+        match self.configs.get(&config) {
+            Some(Config::Color(color)) => *color,
+            _ => [1.0; 4],
+        }
+    }
+
+    pub fn get_numeric(&mut self, config: u8) -> u64 {
+        match self.configs.get(&config) {
+            Some(Config::Numeric(numeric)) => *numeric,
+            _ => 0,
+        }
+    }
+
+    pub fn get_text(&mut self, config: u8) -> String {
+        match self.configs.get(&config) {
+            Some(Config::Text(text)) => text.clone(),
+            _ => String::from(""),
+        }
+    }
+
+    pub fn get_toggle(&mut self, config: u8) -> bool {
+        match self.configs.get(&config) {
+            Some(Config::Toggle(toggle)) => *toggle,
+            _ => false,
+        }
     }
 }

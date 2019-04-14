@@ -15,7 +15,7 @@
 use piston_window::*;
 
 use crate::core::callbacks::*;
-use crate::core::point::*;
+use crate::core::point::{Point, Size};
 use crate::widget::config::*;
 
 /// Implementable trait that is used by every `Widget`.  These are the public methods,
@@ -50,81 +50,134 @@ pub trait Widget {
 
     /// Indicates that a widget needs to be redrawn/refreshed.
     fn invalidate(&mut self) {
-        self.config().set(Invalidate);
+        if !self.is_invalidated() {
+            self.set_config(CONFIG_INVALIDATE, Config::Toggle(true));
+        }
     }
 
     /// Clears the invalidation flag.
     fn clear_invalidate(&mut self) {
-        self.config().remove::<Invalidate>();
+        self.config().remove(CONFIG_INVALIDATE);
     }
 
     /// Checks to see whether or not the widget needs to be redrawn/refreshed.
     fn is_invalidated(&mut self) -> bool {
-        self.config().contains_key::<Invalidate>()
+        self.config().contains(CONFIG_INVALIDATE)
     }
 
-    /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
-    fn set_origin(&mut self, x: i32, y: i32) {
-        self.config().set(Origin(Point { x, y }));
+    fn set_config(&mut self, config: u8, config_value: Config) {
+        self.config().set(config, config_value.clone());
         self.invalidate();
     }
 
-    /// Retrieves the `Point` of origin for this object.
-    /// Defaults to origin (0, 0) if not set.
-    fn get_origin(&mut self) -> Point {
-        self.config()
-            .get::<Origin>()
-            .unwrap_or(&Origin(Point { x: 0, y: 0 }))
-            .0
-            .clone()
+    fn get_config(&mut self, config: u8) -> Option<&Config> {
+        self.config().get(config)
     }
 
-    /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
-    fn set_size(&mut self, w: i32, h: i32) {
-        self.config()
-            .set(BodySize(crate::core::point::Size { w, h }));
-        self.invalidate();
+    // Property setters
+
+    fn set_point(&mut self, config: u8, x: i32, y: i32) {
+        self.set_config(config, Config::Point( Point { x, y } ));
     }
 
-    /// Retrieves the `Size` bounds for this widget.
-    /// Defaults to size (0, 0) if not set.
-    fn get_size(&mut self) -> crate::core::point::Size {
-        self.config()
-            .get::<BodySize>()
-            .unwrap_or(&BodySize(crate::core::point::Size { w: 0, h: 0 }))
-            .0
-            .clone()
+    fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set_config(config, Config::Size( Size { w, h } ));
     }
 
-    /// Sets the color for this widget.  Invalidates the widget afterward.
-    fn set_color(&mut self, color: types::Color) {
-        self.config().set(MainColor(color));
-        self.invalidate();
+    fn set_color(&mut self, config: u8, color: types::Color) {
+        self.set_config(config, Config::Color(color));
     }
 
-    /// Retrieves the color of this widget.
-    /// Defaults to white color `[1.0; 4]` if not set.
-    fn get_color(&mut self) -> types::Color {
-        self.config()
-            .get::<MainColor>()
-            .unwrap_or(&MainColor([1.0; 4]))
-            .0
+    fn set_numeric(&mut self, config: u8, value: u64) {
+        self.set_config(config, Config::Numeric(value));
     }
 
-    /// Sets the secondary color for this widget.  Invalidates the widget afterward.
-    fn set_secondary_color(&mut self, color: types::Color) {
-        self.config().set(SecondaryColor(color));
-        self.invalidate();
+    fn set_text(&mut self, config: u8, text: String) {
+        self.set_config(config, Config::Text(text.clone()));
     }
 
-    /// Retrieves the secondary color of this widget.
-    /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
-    fn get_secondary_color(&mut self) -> types::Color {
-        self.config()
-            .get::<SecondaryColor>()
-            .unwrap_or(&SecondaryColor([1.0; 4]))
-            .0
+    fn set_toggle(&mut self, config: u8, flag: bool) {
+        self.set_config(config, Config::Toggle(flag));
     }
+
+//    /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
+//    fn set_origin(&mut self, x: i32, y: i32) {
+//        self.config().set(Origin(Point { x, y }));
+//        self.invalidate();
+//    }
+//
+//    /// Retrieves the `Point` of origin for this object.
+//    /// Defaults to origin (0, 0) if not set.
+//    fn get_origin(&mut self) -> Point {
+//        self.config()
+//            .get::<Origin>()
+//            .unwrap_or(&Origin(Point { x: 0, y: 0 }))
+//            .0
+//            .clone()
+//    }
+//
+//    /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
+//    fn set_size(&mut self, w: i32, h: i32) {
+//        self.config()
+//            .set(BodySize(crate::core::point::Size { w, h }));
+//        self.invalidate();
+//    }
+//
+//    /// Retrieves the `Size` bounds for this widget.
+//    /// Defaults to size (0, 0) if not set.
+//    fn get_size(&mut self) -> crate::core::point::Size {
+//        self.config()
+//            .get::<BodySize>()
+//            .unwrap_or(&BodySize(crate::core::point::Size { w: 0, h: 0 }))
+//            .0
+//            .clone()
+//    }
+//
+//    /// Sets the color for this widget.  Invalidates the widget afterward.
+//    fn set_color(&mut self, color: types::Color) {
+//        self.config().set(MainColor(color));
+//        self.invalidate();
+//    }
+//
+//    /// Retrieves the color of this widget.
+//    /// Defaults to white color `[1.0; 4]` if not set.
+//    fn get_color(&mut self) -> types::Color {
+//        self.config()
+//            .get::<MainColor>()
+//            .unwrap_or(&MainColor([1.0; 4]))
+//            .0
+//    }
+//
+//    /// Sets the secondary color for this widget.  Invalidates the widget afterward.
+//    fn set_secondary_color(&mut self, color: types::Color) {
+//        self.config().set(SecondaryColor(color));
+//        self.invalidate();
+//    }
+//
+//    /// Retrieves the secondary color of this widget.
+//    /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
+//    fn get_secondary_color(&mut self) -> types::Color {
+//        self.config()
+//            .get::<SecondaryColor>()
+//            .unwrap_or(&SecondaryColor([1.0; 4]))
+//            .0
+//    }
+//
+//    /// Sets the displayable text in a `Widget`, if applicable.
+//    fn set_text(&mut self, text: &str) {
+//        self.config().set(DisplayText(String::from(text)));
+//        self.invalidate();
+//    }
+//
+//    /// Retrieves a copy of the text that is set for the `Widget`.  If no text is set,
+//    /// defaults to a blank string.
+//    fn get_text(&mut self) -> String {
+//        self.config()
+//            .get::<DisplayText>()
+//            .unwrap_or(&DisplayText(String::from("")))
+//            .0
+//            .clone()
+//    }
 
     /// Handles an event that was sent by the event loop.  It is up to the `Widget` to handle the
     /// event, or to ignore it.  If this function is _not_ overridden, the event will be ignored,
@@ -136,6 +189,19 @@ pub trait Widget {
         None
     }
 
+    /// Injects an event into the run loop, but only if `injects_events` returns `true`.
+    fn inject_event(&mut self) -> Option<CallbackEvent> {
+        None
+    }
+
+    /// When set to true, this will check only the `Widget` that is set to inject events at the
+    /// time the run loop starts.  This cannot be toggled on/off by the `Widget`, as the run loop
+    /// checks for `Widget` objects that inject events before the loop starts.  This is to use
+    /// less overhead during the run loop.
+    fn injects_events(&mut self) -> bool {
+        false
+    }
+
     // Draw routines
 
     /// Draws the contents of the widget, provided a `piston2d` `Context` and `G2d` object.
@@ -144,9 +210,9 @@ pub trait Widget {
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
     /// behavior.)
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
-        let size: crate::core::point::Size = self.get_size();
+        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
-        Rectangle::new(self.get_color()).draw(
+        Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)).draw(
             [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
             clip,
             c.transform,

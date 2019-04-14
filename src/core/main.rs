@@ -64,7 +64,12 @@ impl Pushrod {
     /// Helper method that adds a `Widget` to the `WidgetStore`, specifying the `parent_id` as the
     /// parent of which to add this object to.  Returns the new ID of the `Widget` after it has
     /// been added.
-    pub fn add_widget_to_parent(&mut self, name: &str, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
+    pub fn add_widget_to_parent(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        parent_id: i32,
+    ) -> i32 {
         self.widget_store
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)
@@ -123,6 +128,16 @@ impl Pushrod {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
         let mut button_map: HashMap<i32, HashSet<Button>> = HashMap::new();
+        let injectable_map: Vec<i32> = self
+            .widget_store
+            .borrow_mut()
+            .widgets
+            .iter()
+            .filter(|x| x.widget.borrow_mut().injects_events())
+            .map(|x| x.widget_id)
+            .collect();
+
+        eprintln!("Injectable widget IDs: {:?}", injectable_map);
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -299,6 +314,20 @@ impl Pushrod {
             // FPS loop handling
 
             event.render(|_| {
+                injectable_map.iter().for_each(|widget_id| {
+                    let injectable_event = self
+                        .widget_store
+                        .borrow_mut()
+                        .get_widget_for_id(*widget_id)
+                        .borrow_mut()
+                        .inject_event();
+
+                    match injectable_event {
+                        Some(x) => self.handle_event(*widget_id, event_handler, x.clone()),
+                        None => (),
+                    }
+                });
+
                 self.handle_draw(&event);
                 self.widget_store.borrow_mut().invalidate_all_widgets();
             });

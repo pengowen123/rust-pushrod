@@ -20,6 +20,7 @@ use std::cell::RefCell;
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
 use crate::widget::widget::*;
+use crate::widget::config::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
 /// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
@@ -34,7 +35,7 @@ pub struct WidgetContainer {
     widget_name: String,
 
     /// This `Widget`'s assigned ID.  These IDs are auto-assigned.
-    widget_id: i32,
+    pub widget_id: i32,
 
     /// The parent ID.
     parent_id: i32,
@@ -54,7 +55,7 @@ impl WidgetStore {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = CanvasWidget::new();
 
-        base_widget.set_size(800, 600);
+        base_widget.config().set(CONFIG_BODY_SIZE, Config::Size(crate::core::point::Size { w: 800, h: 600 }));
         widgets_list.push(WidgetContainer {
             widget: RefCell::new(Box::new(base_widget)),
             widget_name: String::from("_WidgetStoreBase"),
@@ -108,7 +109,12 @@ impl WidgetStore {
     /// must be an object that already exists in the stack.
     ///
     /// After adding a widget, the ID of the widget is returned.
-    pub fn add_widget_to_parent(&mut self, name: &str, widget: Box<dyn Widget>, parent_id: i32) -> i32 {
+    pub fn add_widget_to_parent(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        parent_id: i32,
+    ) -> i32 {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
 
@@ -148,8 +154,8 @@ impl WidgetStore {
         let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
-            let widget_point = &obj.widget.borrow_mut().get_origin();
-            let widget_size: crate::core::point::Size = obj.widget.borrow_mut().get_size();
+            let widget_point = &obj.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
+            let widget_size: crate::core::point::Size = obj.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
 
             // Skip over item widgets that have a width and height of 0.
             if widget_size.w > 0 && widget_size.h > 0 {
@@ -168,9 +174,7 @@ impl WidgetStore {
 
     /// Returns the name of the widget by its ID.
     pub fn get_name_for_widget_id(&mut self, widget_id: i32) -> &str {
-        self.widgets[widget_id as usize]
-            .widget_name
-            .as_str()
+        self.widgets[widget_id as usize].widget_name.as_str()
     }
 
     /// Handles event messages, returning an event if provided by the `Widget`.
@@ -179,13 +183,6 @@ impl WidgetStore {
             .widget
             .borrow_mut()
             .handle_event(event)
-    }
-
-    pub fn set_color(&mut self, widget_id: i32, color: types::Color) {
-        self.widgets[widget_id as usize]
-            .widget
-            .borrow_mut()
-            .set_color(color);
     }
 
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not
@@ -207,9 +204,9 @@ impl WidgetStore {
             let paint_widget = &mut self.widgets[paint_id as usize];
 
             if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
-                let origin: Point = paint_widget.widget.borrow_mut().get_origin().clone();
+                let origin: Point = paint_widget.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
                 let size: crate::core::point::Size =
-                    paint_widget.widget.borrow_mut().get_size().clone();
+                    paint_widget.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
 
                 let new_context: Context = Context {
                     viewport: c.viewport,
@@ -237,9 +234,11 @@ impl WidgetStore {
     /// Retrieves a widget by the name when the widget was added.  To get the very top-level
     /// widget, refer to `_WidgetStoreBase`.
     pub fn get_widget_for_name(&mut self, name: &str) -> &RefCell<Box<dyn Widget>> {
-        let widget_id = match self.widgets
+        let widget_id = match self
+            .widgets
             .iter_mut()
-            .find(|x| x.widget_name == String::from(name)) {
+            .find(|x| x.widget_name == String::from(name))
+        {
             Some(x) => x.widget_id,
             None => 0,
         };

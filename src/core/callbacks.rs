@@ -70,7 +70,12 @@ pub enum CallbackEvent {
         widget_id: i32,
         button: Button,
     },
+    WidgetSelected {
+        widget_id: i32,
+        button: Button,
+        selected: bool,
+    },
     TimerTriggered {
         widget_id: i32,
-    }
+    },
 }
