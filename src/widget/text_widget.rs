@@ -172,13 +172,6 @@ impl Widget for TextWidget {
         self.invalidate();
     }
 
-//    /// Changes the text, recalculates the desired draw size, and redraws after change.
-//    fn set_text(&mut self, text: &str) {
-//        self.desired_size = (0, 0);
-//        self.config().set(DisplayText(String::from(text)));
-//        self.invalidate();
-//    }
-
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Draw the text.
