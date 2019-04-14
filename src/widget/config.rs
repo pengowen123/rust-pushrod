@@ -41,6 +41,7 @@ pub const CONFIG_BORDER_WIDTH: u8 = 8;
 pub const CONFIG_DISPLAY_TEXT: u8 = 9;
 pub const CONFIG_PROGRESS: u8 = 10;
 pub const CONFIG_TIMER_ENABLED: u8 = 11;
+pub const CONFIG_TIMER_TIMEOUT: u8 = 12;
 
 pub struct Configurable {
     configs: HashMap<u8, Config>,
@@ -71,6 +72,30 @@ impl Configurable {
 
     pub fn get(&mut self, config: u8) -> Option<&Config> {
         self.configs.get(&config)
+    }
+
+    pub fn set_point(&mut self, config: u8, x: i32, y: i32) {
+        self.set(config, Config::Point( Point { x, y } ));
+    }
+
+    pub fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set(config, Config::Size( Size { w, h } ));
+    }
+
+    pub fn set_color(&mut self, config: u8, color: Color) {
+        self.set(config, Config::Color(color));
+    }
+
+    pub fn set_numeric(&mut self, config: u8, value: u64) {
+        self.set(config, Config::Numeric(value));
+    }
+
+    pub fn set_text(&mut self, config: u8, text: String) {
+        self.set(config, Config::Text(text.clone()));
+    }
+
+    pub fn set_toggle(&mut self, config: u8, flag: bool) {
+        self.set(config, Config::Toggle(flag));
     }
 
     pub fn get_point(&mut self, config: u8) -> Point {
