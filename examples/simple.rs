@@ -173,10 +173,10 @@ impl SimpleWindow {
             TextJustify::Left,
         );
 
-        text_widget.config().set_point(CONFIG_ORIGIN, 20, 20);
-        text_widget.config().set_size(CONFIG_BODY_SIZE, 400, 40);
-        text_widget.config().set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
-        text_widget.config().set_color(CONFIG_TEXT_COLOR, [0.75, 0.25, 1.0, 1.0]);
+        text_widget.set_point(CONFIG_ORIGIN, 20, 20);
+        text_widget.set_size(CONFIG_BODY_SIZE, 400, 40);
+        text_widget.set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
+        text_widget.set_color(CONFIG_TEXT_COLOR, [0.75, 0.25, 1.0, 1.0]);
 
         self.pushrod
             .borrow_mut()
@@ -186,9 +186,9 @@ impl SimpleWindow {
     fn add_base_widget(&mut self) {
         let mut base_widget = CanvasWidget::new();
 
-        base_widget.config().set_point(CONFIG_ORIGIN, 20, 80);
-        base_widget.config().set_size(CONFIG_BODY_SIZE, 200, 200);
-        base_widget.config().set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 0.5, 1.0]);
+        base_widget.set_point(CONFIG_ORIGIN, 20, 80);
+        base_widget.set_size(CONFIG_BODY_SIZE, 200, 200);
+        base_widget.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 0.5, 1.0]);
 
         let base_widget_id = self
             .pushrod
@@ -202,11 +202,11 @@ impl SimpleWindow {
             18,
             TextJustify::Center,
         );
-        button1.config().set_point(CONFIG_ORIGIN, 30, 236);
-        button1.config().set_size(CONFIG_BODY_SIZE, 180, 32);
-        button1.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button1.config().set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button1.config().set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_point(CONFIG_ORIGIN, 30, 236);
+        button1.set_size(CONFIG_BODY_SIZE, 180, 32);
+        button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
         self.pushrod.borrow_mut().add_widget_to_parent(
             "RandomColorButton1",
@@ -222,11 +222,11 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.config().set_point(CONFIG_ORIGIN, 20, 290);
-        button2.config().set_size(CONFIG_BODY_SIZE, 200, 32);
-        button2.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button2.config().set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button2.config().set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.set_point(CONFIG_ORIGIN, 20, 290);
+        button2.set_size(CONFIG_BODY_SIZE, 200, 32);
+        button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
         self.pushrod
             .borrow_mut()
@@ -302,11 +302,11 @@ impl SimpleWindow {
             TextJustify::Center,
         );
 
-        button2.config().set_point(CONFIG_ORIGIN, 250, 290);
-        button2.config().set_size(CONFIG_BODY_SIZE, 200, 32);
-        button2.config().set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button2.config().set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button2.config().set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.set_point(CONFIG_ORIGIN, 250, 290);
+        button2.set_size(CONFIG_BODY_SIZE, 200, 32);
+        button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
         self.pushrod
             .borrow_mut()

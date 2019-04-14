@@ -10,6 +10,7 @@
 - Reimplemented ToggleButton code, generates WidgetSelected event on click. (#95)
 - Added animate button, now enables/disables the timer callback on click.
 - Updated configs to use get/set with enumerations. (#100)
+- Moved config settings to Widget.
 
 ## 0.2.4
 

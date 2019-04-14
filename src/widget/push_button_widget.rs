@@ -67,9 +67,8 @@ impl Widget for PushButtonWidget {
 
     fn set_config(&mut self, config: u8, config_value: Config) {
         self.config().set(config, config_value.clone());
-        self.base_widget.config().set(config, config_value.clone());
-        self.text_widget.config().set(config, config_value.clone());
-        self.invalidate();
+        self.base_widget.set_config(config, config_value.clone());
+        self.text_widget.set_config(config, config_value.clone());
     }
 
 //    /// Sets the `Point` of origin for this widget and the base widget, given the X and Y
@@ -123,8 +122,8 @@ impl Widget for PushButtonWidget {
             } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
-                        self.base_widget.config().set(CONFIG_MAIN_COLOR, Config::Color([0.0, 0.0, 0.0, 1.0]));
-                        self.text_widget.config().set(CONFIG_TEXT_COLOR, Config::Color([1.0; 4]));
+                        self.base_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
                     }
                 }
                 _ => (),
@@ -133,8 +132,8 @@ impl Widget for PushButtonWidget {
             CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
-                        self.base_widget.config().set(CONFIG_MAIN_COLOR, Config::Color([1.0; 4]));
-                        self.text_widget.config().set(CONFIG_TEXT_COLOR, Config::Color([0.0, 0.0, 0.0, 1.0]));
+                        self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+                        self.text_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
                         return Some(WidgetClicked { widget_id, button });
                     }
@@ -148,8 +147,8 @@ impl Widget for PushButtonWidget {
             } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
-                        self.base_widget.config().set(CONFIG_MAIN_COLOR, Config::Color([1.0; 4]));
-                        self.text_widget.config().set(CONFIG_TEXT_COLOR, Config::Color([0.0, 0.0, 0.0, 1.0]));
+                        self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+                        self.text_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
                     }
                 }
                 _ => (),

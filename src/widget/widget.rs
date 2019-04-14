@@ -15,6 +15,7 @@
 use piston_window::*;
 
 use crate::core::callbacks::*;
+use crate::core::point::{Point, Size};
 use crate::widget::config::*;
 
 /// Implementable trait that is used by every `Widget`.  These are the public methods,
@@ -71,6 +72,32 @@ pub trait Widget {
 
     fn get_config(&mut self, config: u8) -> Option<&Config> {
         self.config().get(config)
+    }
+
+    // Property setters
+
+    fn set_point(&mut self, config: u8, x: i32, y: i32) {
+        self.set_config(config, Config::Point( Point { x, y } ));
+    }
+
+    fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set_config(config, Config::Size( Size { w, h } ));
+    }
+
+    fn set_color(&mut self, config: u8, color: types::Color) {
+        self.set_config(config, Config::Color(color));
+    }
+
+    fn set_numeric(&mut self, config: u8, value: u64) {
+        self.set_config(config, Config::Numeric(value));
+    }
+
+    fn set_text(&mut self, config: u8, text: String) {
+        self.set_config(config, Config::Text(text.clone()));
+    }
+
+    fn set_toggle(&mut self, config: u8, flag: bool) {
+        self.set_config(config, Config::Toggle(flag));
     }
 
 //    /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
