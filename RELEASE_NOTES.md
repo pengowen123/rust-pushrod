@@ -1,6 +1,6 @@
 # Pushrod Releases
 
-## 0.2.4
+## 0.2.5
 
 - Changed mutability of get_selected state in ToggleButtonWidget.
 - Added PushrodCallbackEvents class to handle callback events.
