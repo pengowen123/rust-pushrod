@@ -62,15 +62,13 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 widget_store
                     .get_widget_for_name("DebugText1")
                     .borrow_mut()
-                    .config()
-                    .set(CONFIG_DISPLAY_TEXT,
+                    .set_config(CONFIG_DISPLAY_TEXT,
                          Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name)).clone());
 
                 widget_store
                     .get_widget_for_name("DebugText2")
                     .borrow_mut()
-                    .config()
-                    .set(CONFIG_DISPLAY_TEXT,
+                    .set_config(CONFIG_DISPLAY_TEXT,
                         Config::Text(format!(
                             "Dimensions: x={} y={} w={} h={}",
                             widget_point.x, widget_point.y, widget_size.w, widget_size.h
@@ -86,8 +84,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                 widget_store
                                     .get_widget_for_name("BaseWidget1")
                                     .borrow_mut()
-                                    .config()
-                                    .set(CONFIG_MAIN_COLOR, Config::Color([
+                                    .set_config(CONFIG_MAIN_COLOR, Config::Color([
                                         (rand::random::<u8>() as f32 / 255.0),
                                         (rand::random::<u8>() as f32 / 255.0),
                                         (rand::random::<u8>() as f32 / 255.0),
@@ -104,8 +101,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                 widget_store
                                     .get_widget_for_name("ProgressWidget")
                                     .borrow_mut()
-                                    .config()
-                                    .set(CONFIG_SECONDARY_COLOR, Config::Color([
+                                    .set_config(CONFIG_SECONDARY_COLOR, Config::Color([
                                         (rand::random::<u8>() as f32 / 255.0),
                                         (rand::random::<u8>() as f32 / 255.0),
                                         (rand::random::<u8>() as f32 / 255.0),
