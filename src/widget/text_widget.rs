@@ -128,7 +128,9 @@ impl TextWidget {
                 .determine_size(self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(), &mut self.font_cache, g)
                 .unwrap();
 
-            eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
+            if self.desired_size.0 != 0 || self.desired_size.1 != 0 {
+                eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
+            }
         }
 
         // Modify transform here based on the width of the text being drawn, which is element 0 of
@@ -171,13 +173,6 @@ impl Widget for TextWidget {
         self.config().set(config, config_value.clone());
         self.invalidate();
     }
-
-//    /// Changes the text, recalculates the desired draw size, and redraws after change.
-//    fn set_text(&mut self, text: &str) {
-//        self.desired_size = (0, 0);
-//        self.config().set(DisplayText(String::from(text)));
-//        self.invalidate();
-//    }
 
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {

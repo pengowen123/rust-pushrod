@@ -320,7 +320,7 @@ impl Pushrod {
                         .borrow_mut()
                         .get_widget_for_id(*widget_id)
                         .borrow_mut()
-                        .inject_event();
+                        .inject_event(*widget_id);
 
                     match injectable_event {
                         Some(x) => self.handle_event(*widget_id, event_handler, x.clone()),

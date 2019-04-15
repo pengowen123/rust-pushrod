@@ -100,85 +100,6 @@ pub trait Widget {
         self.set_config(config, Config::Toggle(flag));
     }
 
-//    /// Sets the `Point` of origin for this widget, given the X and Y origin points.  Invalidates the widget afterward.
-//    fn set_origin(&mut self, x: i32, y: i32) {
-//        self.config().set(Origin(Point { x, y }));
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the `Point` of origin for this object.
-//    /// Defaults to origin (0, 0) if not set.
-//    fn get_origin(&mut self) -> Point {
-//        self.config()
-//            .get::<Origin>()
-//            .unwrap_or(&Origin(Point { x: 0, y: 0 }))
-//            .0
-//            .clone()
-//    }
-//
-//    /// Sets the `Size` for this widget, given a width and height.  Invalidates the widget afterward.
-//    fn set_size(&mut self, w: i32, h: i32) {
-//        self.config()
-//            .set(BodySize(crate::core::point::Size { w, h }));
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the `Size` bounds for this widget.
-//    /// Defaults to size (0, 0) if not set.
-//    fn get_size(&mut self) -> crate::core::point::Size {
-//        self.config()
-//            .get::<BodySize>()
-//            .unwrap_or(&BodySize(crate::core::point::Size { w: 0, h: 0 }))
-//            .0
-//            .clone()
-//    }
-//
-//    /// Sets the color for this widget.  Invalidates the widget afterward.
-//    fn set_color(&mut self, color: types::Color) {
-//        self.config().set(MainColor(color));
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the color of this widget.
-//    /// Defaults to white color `[1.0; 4]` if not set.
-//    fn get_color(&mut self) -> types::Color {
-//        self.config()
-//            .get::<MainColor>()
-//            .unwrap_or(&MainColor([1.0; 4]))
-//            .0
-//    }
-//
-//    /// Sets the secondary color for this widget.  Invalidates the widget afterward.
-//    fn set_secondary_color(&mut self, color: types::Color) {
-//        self.config().set(SecondaryColor(color));
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves the secondary color of this widget.
-//    /// Defaults to black color `[0.0, 0.0, 0.0, 1.0]` if not set.
-//    fn get_secondary_color(&mut self) -> types::Color {
-//        self.config()
-//            .get::<SecondaryColor>()
-//            .unwrap_or(&SecondaryColor([1.0; 4]))
-//            .0
-//    }
-//
-//    /// Sets the displayable text in a `Widget`, if applicable.
-//    fn set_text(&mut self, text: &str) {
-//        self.config().set(DisplayText(String::from(text)));
-//        self.invalidate();
-//    }
-//
-//    /// Retrieves a copy of the text that is set for the `Widget`.  If no text is set,
-//    /// defaults to a blank string.
-//    fn get_text(&mut self) -> String {
-//        self.config()
-//            .get::<DisplayText>()
-//            .unwrap_or(&DisplayText(String::from("")))
-//            .0
-//            .clone()
-//    }
-
     /// Handles an event that was sent by the event loop.  It is up to the `Widget` to handle the
     /// event, or to ignore it.  If this function is _not_ overridden, the event will be ignored,
     /// and no event will be returned as a result.  This function _returns_ an `Option<CallbackEvent>`,
@@ -190,7 +111,7 @@ pub trait Widget {
     }
 
     /// Injects an event into the run loop, but only if `injects_events` returns `true`.
-    fn inject_event(&mut self) -> Option<CallbackEvent> {
+    fn inject_event(&mut self, _widget_id: i32) -> Option<CallbackEvent> {
         None
     }
 

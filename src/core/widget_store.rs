@@ -203,26 +203,28 @@ impl WidgetStore {
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
 
-            if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
-                let origin: Point = paint_widget.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
-                let size: crate::core::point::Size =
-                    paint_widget.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
+            if !paint_widget.widget.borrow_mut().config().get_toggle(CONFIG_WIDGET_HIDDEN) {
+                if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
+                    let origin: Point = paint_widget.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
+                    let size: crate::core::point::Size =
+                        paint_widget.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
 
-                let new_context: Context = Context {
-                    viewport: c.viewport,
-                    view: c.view,
-                    transform: c.transform.trans(origin.x as f64, origin.y as f64),
-                    draw_state: c.draw_state,
-                };
+                    let new_context: Context = Context {
+                        viewport: c.viewport,
+                        view: c.view,
+                        transform: c.transform.trans(origin.x as f64, origin.y as f64),
+                        draw_state: c.draw_state,
+                    };
 
-                let clip: DrawState = c.draw_state.scissor([
-                    origin.x as u32 * 2,
-                    origin.y as u32 * 2,
-                    size.w as u32 * 2,
-                    size.h as u32 * 2,
-                ]);
+                    let clip: DrawState = c.draw_state.scissor([
+                        origin.x as u32 * 2,
+                        origin.y as u32 * 2,
+                        size.w as u32 * 2,
+                        size.h as u32 * 2,
+                    ]);
 
-                &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+                }
             }
 
             if parents_of_widget[pos] != widget_id {

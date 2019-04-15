@@ -21,7 +21,6 @@ use piston_window::*;
 use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
-use pushrod::core::point::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
@@ -112,6 +111,35 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                         _ => (),
                     },
 
+                    "HideButton1" => match button {
+                        Button::Mouse(mouse_button) => {
+                            if mouse_button == MouseButton::Left {
+                                let state = widget_store.get_widget_for_name("BaseWidget1")
+                                    .borrow_mut()
+                                    .config()
+                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+                                let button_text = if state == true {
+                                    String::from("Hide")
+                                } else {
+                                    String::from("Show")
+                                };
+
+                                widget_store
+                                    .get_widget_for_name("HideButton1")
+                                    .borrow_mut()
+                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+                                widget_store.get_widget_for_name("RandomColorButton1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store.get_widget_for_name("BaseWidget1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                            }
+                        }
+                        _ => (),
+                    },
+
                     x => eprintln!("Widget clicked: {}", x),
                 }
             }
@@ -127,18 +155,25 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 _ => (),
             },
 
-            CallbackEvent::TimerTriggered { widget_id: _ } => {
-                if self.animated {
-                    self.progress += 1;
+            CallbackEvent::TimerTriggered { widget_id } => {
+                if widget_store.get_name_for_widget_id(widget_id) == "TimerWidget1" {
+                    if self.animated {
+                        self.progress += 1;
 
-                    if self.progress > 100 {
-                        self.progress = 0;
+                        if self.progress > 100 {
+                            self.progress = 0;
+                        }
+
+                        widget_store
+                            .get_widget_for_name("ProgressWidget")
+                            .borrow_mut()
+                            .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
+
+                        widget_store
+                            .get_widget_for_name("ProgressText1")
+                            .borrow_mut()
+                            .set_text(CONFIG_DISPLAY_TEXT, format!("{} %", self.progress));
                     }
-
-                    widget_store
-                        .get_widget_for_name("ProgressWidget")
-                        .borrow_mut()
-                        .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
                 }
             }
 
@@ -397,13 +432,28 @@ impl SimpleWindow {
         let mut progress_widget = ProgressWidget::new();
 
         progress_widget.set_point(CONFIG_ORIGIN, 20, 360);
-        progress_widget.set_size(CONFIG_BODY_SIZE, 300, 32);
+        progress_widget.set_size(CONFIG_BODY_SIZE, 230, 32);
         progress_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
         progress_widget.set_color(CONFIG_SECONDARY_COLOR, [0.5, 0.5, 0.5, 1.0]);
         progress_widget.set_numeric(CONFIG_PROGRESS, 50);
         self.pushrod
             .borrow_mut()
             .add_widget("ProgressWidget", Box::new(progress_widget));
+
+        let mut progress_text = TextWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "50%".to_string(),
+            18,
+            TextJustify::Left,
+        );
+
+        progress_text.set_point(CONFIG_ORIGIN, 260, 360);
+        progress_text.set_size(CONFIG_BODY_SIZE, 50, 32);
+        progress_text.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("ProgressText1", Box::new(progress_text));
 
         let mut button1 = ToggleButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),

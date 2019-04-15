@@ -31,7 +31,7 @@ pub struct TimerWidget {
     config: Configurable,
     enabled: bool,
     initiated: u64,
-    event: Option<CallbackEvent>,
+    triggered: bool,
 }
 
 /// Helper function that returns the current time in milliseconds since the `UNIX_EPOCH`.  This
@@ -59,7 +59,7 @@ impl TimerWidget {
             config: Configurable::new(),
             enabled: true,
             initiated: time_ms(),
-            event: None,
+            triggered: false,
         }
     }
 
@@ -74,24 +74,9 @@ impl TimerWidget {
 
         if elapsed > self.config().get_numeric(CONFIG_TIMER_TIMEOUT) {
             self.initiated = time_ms();
-            self.event = Some(CallbackEvent::TimerTriggered { widget_id: 0 });
+            self.triggered = true;
         }
     }
-
-//    /// Enables or disables the timer.  When disabled, the timer will not initiate the callback
-//    /// function.  When re-enabled, the initiation time resets, so the timer will reset back to
-//    /// zero, effectively resetting the entire timer.
-//    pub fn set_enabled(&mut self, enabled: bool) {
-//        self.enabled = enabled;
-//        self.initiated = time_ms();
-//    }
-//
-//    /// Sets the timeout in milliseconds for this timer.  Will trigger a call to the function
-//    /// set in `on_timeout` when triggered, and will continue to call that function until this
-//    /// timer is disabled by using `self.set_enabled(false)`.
-//    pub fn set_timeout(&mut self, timeout: u64) {
-//        self.timeout = timeout;
-//    }
 }
 
 /// Implementation of the `TimerWidget` object with the `Widget` traits implemented.
@@ -106,27 +91,19 @@ impl Widget for TimerWidget {
         true
     }
 
-//    /// Origin is always set to X/Y at points 0x0.
-//    fn get_origin(&mut self) -> Point {
-//        make_origin_point()
-//    }
-//
-//    /// Size is always unsized, as timers are invisible.
-//    fn get_size(&mut self) -> crate::core::point::Size {
-//        make_unsized()
-//    }
-
     /// This function injects events, as a timeout event only occurs once.
     fn injects_events(&mut self) -> bool {
         true
     }
 
     /// Returns an injected event where appropriate.
-    fn inject_event(&mut self) -> Option<CallbackEvent> {
-        let return_obj = self.event.clone();
-
-        self.event = None;
-        return return_obj;
+    fn inject_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
+        if self.triggered {
+            self.triggered = false;
+            Some(CallbackEvent::TimerTriggered { widget_id })
+        } else {
+            None
+        }
     }
 
     /// Does not draw anything - only calls the timer `tick()` function to increment the
