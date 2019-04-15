@@ -1,5 +1,12 @@
 # Pushrod Releases
 
+## 0.2.7
+
+- Adjusted mutability of getters in Config.
+- Added hide/show button operations to the sample app.
+- Removed event handling for widgets that are not visible (#103)
+- Enable/Disable state on Widget implemented (#39)
+
 ## 0.2.6
 
 - Includes widget_id when inject_event is called. (#102)

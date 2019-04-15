@@ -77,11 +77,11 @@ pub trait Widget {
     // Property setters
 
     fn set_point(&mut self, config: u8, x: i32, y: i32) {
-        self.set_config(config, Config::Point( Point { x, y } ));
+        self.set_config(config, Config::Point(Point { x, y }));
     }
 
     fn set_size(&mut self, config: u8, w: i32, h: i32) {
-        self.set_config(config, Config::Size( Size { w, h } ));
+        self.set_config(config, Config::Size(Size { w, h }));
     }
 
     fn set_color(&mut self, config: u8, color: types::Color) {

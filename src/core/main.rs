@@ -137,8 +137,6 @@ impl Pushrod {
             .map(|x| x.widget_id)
             .collect();
 
-        eprintln!("Injectable widget IDs: {:?}", injectable_map);
-
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
                 let mouse_point = make_point_f64(x, y);
@@ -235,6 +233,7 @@ impl Pushrod {
                         },
                     );
                 }
+
                 ButtonState::Release => {
                     let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
 

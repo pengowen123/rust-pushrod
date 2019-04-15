@@ -82,11 +82,13 @@ impl Widget for ToggleButtonWidget {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         if !self.selected {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.base_widget
+                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
                             self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
                         } else {
                             self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.text_widget
+                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
                         }
                     }
                 }
@@ -99,11 +101,13 @@ impl Widget for ToggleButtonWidget {
                         self.selected = !self.selected;
 
                         if self.selected {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.base_widget
+                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
                             self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
                         } else {
                             self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.text_widget
+                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
                         }
 
                         return Some(WidgetSelected {
@@ -124,9 +128,11 @@ impl Widget for ToggleButtonWidget {
                     if mouse_button == MouseButton::Left {
                         if !self.selected {
                             self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.text_widget
+                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
                         } else {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.base_widget
+                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
                             self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
                         }
                     }
