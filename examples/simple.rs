@@ -238,6 +238,38 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                         _ => (),
                     },
 
+                    "DisableButton1" => match button {
+                        Button::Mouse(mouse_button) => {
+                            if mouse_button == MouseButton::Left {
+                                let state = widget_store
+                                    .get_widget_for_name("BaseWidget1")
+                                    .borrow_mut()
+                                    .config()
+                                    .get_toggle(CONFIG_WIDGET_DISABLED);
+                                let button_text = if state == true {
+                                    String::from("Disable")
+                                } else {
+                                    String::from("Enable")
+                                };
+
+                                widget_store
+                                    .get_widget_for_name("DisableButton1")
+                                    .borrow_mut()
+                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+                                widget_store
+                                    .get_widget_for_name("RandomColorButton1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+                                widget_store
+                                    .get_widget_for_name("BaseWidget1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+                            }
+                        }
+                        _ => (),
+                    },
+
                     x => eprintln!("Widget clicked: {}", x),
                 }
             }
@@ -355,7 +387,7 @@ impl SimpleWindow {
         );
 
         button2.set_point(CONFIG_ORIGIN, 20, 290);
-        button2.set_size(CONFIG_BODY_SIZE, 200, 32);
+        button2.set_size(CONFIG_BODY_SIZE, 95, 32);
         button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
@@ -363,6 +395,24 @@ impl SimpleWindow {
         self.pushrod
             .borrow_mut()
             .add_widget("HideButton1", Box::new(button2));
+
+        let mut button3 = PushButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Disable".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button3.set_point(CONFIG_ORIGIN, 125, 290);
+        button3.set_size(CONFIG_BODY_SIZE, 95, 32);
+        button3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button3.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button3.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget("DisableButton1", Box::new(button3));
     }
 
     fn add_box_widgets(&mut self) {

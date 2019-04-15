@@ -157,13 +157,18 @@ impl WidgetStore {
         let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
-            if &obj
+            let hidden = *&obj
                 .widget
                 .borrow_mut()
                 .config()
-                .get_toggle(CONFIG_WIDGET_HIDDEN)
-                != &true
-            {
+                .get_toggle(CONFIG_WIDGET_HIDDEN);
+            let disabled = *&obj
+                .widget
+                .borrow_mut()
+                .config()
+                .get_toggle(CONFIG_WIDGET_DISABLED);
+
+            if !hidden && !disabled {
                 let widget_point = &obj.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
                 let widget_size: crate::core::point::Size =
                     obj.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
@@ -248,6 +253,20 @@ impl WidgetStore {
                     ]);
 
                     &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+
+                    if paint_widget
+                        .widget
+                        .borrow_mut()
+                        .config()
+                        .get_toggle(CONFIG_WIDGET_DISABLED)
+                    {
+                        Rectangle::new([0.0, 0.0, 0.0, 0.8]).draw(
+                            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
+                            &clip,
+                            new_context.transform,
+                            g,
+                        );
+                    }
                 }
             }
 

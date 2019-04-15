@@ -43,6 +43,7 @@ pub const CONFIG_PROGRESS: u8 = 10;
 pub const CONFIG_TIMER_ENABLED: u8 = 11;
 pub const CONFIG_TIMER_TIMEOUT: u8 = 12;
 pub const CONFIG_WIDGET_HIDDEN: u8 = 13;
+pub const CONFIG_WIDGET_DISABLED: u8 = 14;
 
 pub struct Configurable {
     configs: HashMap<u8, Config>,
