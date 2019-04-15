@@ -125,7 +125,11 @@ impl TextWidget {
         // to occur once.
         if self.desired_size.0 == 0 {
             self.desired_size = private::TextHelper::new(self.font_size)
-                .determine_size(self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(), &mut self.font_cache, g)
+                .determine_size(
+                    self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
+                    &mut self.font_cache,
+                    g,
+                )
                 .unwrap();
 
             if self.desired_size.0 != 0 || self.desired_size.1 != 0 {

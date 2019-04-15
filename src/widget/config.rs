@@ -76,11 +76,11 @@ impl Configurable {
     }
 
     pub fn set_point(&mut self, config: u8, x: i32, y: i32) {
-        self.set(config, Config::Point( Point { x, y } ));
+        self.set(config, Config::Point(Point { x, y }));
     }
 
     pub fn set_size(&mut self, config: u8, w: i32, h: i32) {
-        self.set(config, Config::Size( Size { w, h } ));
+        self.set(config, Config::Size(Size { w, h }));
     }
 
     pub fn set_color(&mut self, config: u8, color: Color) {

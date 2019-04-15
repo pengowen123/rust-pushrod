@@ -79,7 +79,8 @@ impl Widget for PushButtonWidget {
             } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
-                        self.base_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                        self.base_widget
+                            .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
                         self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
                     }
                 }
@@ -90,7 +91,8 @@ impl Widget for PushButtonWidget {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                        self.text_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget
+                            .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
                         return Some(WidgetClicked { widget_id, button });
                     }
@@ -105,7 +107,8 @@ impl Widget for PushButtonWidget {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
                         self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                        self.text_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                        self.text_widget
+                            .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
                     }
                 }
                 _ => (),

@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.2.7
+
+
+
 ## 0.2.6
 
 - Includes widget_id when inject_event is called. (#102)

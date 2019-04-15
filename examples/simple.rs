@@ -22,6 +22,7 @@ use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
+use pushrod::widget::config::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
@@ -29,7 +30,6 @@ use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::toggle_button_widget::*;
 use pushrod::widget::widget::*;
-use pushrod::widget::config::*;
 
 pub struct SimpleWindow {
     pushrod: RefCell<Pushrod>,
@@ -61,17 +61,22 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 widget_store
                     .get_widget_for_name("DebugText1")
                     .borrow_mut()
-                    .set_config(CONFIG_DISPLAY_TEXT,
-                         Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name)).clone());
+                    .set_config(
+                        CONFIG_DISPLAY_TEXT,
+                        Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
+                            .clone(),
+                    );
 
                 widget_store
                     .get_widget_for_name("DebugText2")
                     .borrow_mut()
-                    .set_config(CONFIG_DISPLAY_TEXT,
+                    .set_config(
+                        CONFIG_DISPLAY_TEXT,
                         Config::Text(format!(
                             "Dimensions: x={} y={} w={} h={}",
                             widget_point.x, widget_point.y, widget_size.w, widget_size.h
-                        )).clone()
+                        ))
+                        .clone(),
                     );
             }
 
@@ -83,12 +88,15 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                 widget_store
                                     .get_widget_for_name("BaseWidget1")
                                     .borrow_mut()
-                                    .set_config(CONFIG_MAIN_COLOR, Config::Color([
-                                        (rand::random::<u8>() as f32 / 255.0),
-                                        (rand::random::<u8>() as f32 / 255.0),
-                                        (rand::random::<u8>() as f32 / 255.0),
-                                        1.0,
-                                    ]));
+                                    .set_config(
+                                        CONFIG_MAIN_COLOR,
+                                        Config::Color([
+                                            (rand::random::<u8>() as f32 / 255.0),
+                                            (rand::random::<u8>() as f32 / 255.0),
+                                            (rand::random::<u8>() as f32 / 255.0),
+                                            1.0,
+                                        ]),
+                                    );
                             }
                         }
                         _ => (),
@@ -100,12 +108,15 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                 widget_store
                                     .get_widget_for_name("ProgressWidget")
                                     .borrow_mut()
-                                    .set_config(CONFIG_SECONDARY_COLOR, Config::Color([
-                                        (rand::random::<u8>() as f32 / 255.0),
-                                        (rand::random::<u8>() as f32 / 255.0),
-                                        (rand::random::<u8>() as f32 / 255.0),
-                                        1.0,
-                                    ]));
+                                    .set_config(
+                                        CONFIG_SECONDARY_COLOR,
+                                        Config::Color([
+                                            (rand::random::<u8>() as f32 / 255.0),
+                                            (rand::random::<u8>() as f32 / 255.0),
+                                            (rand::random::<u8>() as f32 / 255.0),
+                                            1.0,
+                                        ]),
+                                    );
                             }
                         }
                         _ => (),
@@ -114,7 +125,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     "HideButton1" => match button {
                         Button::Mouse(mouse_button) => {
                             if mouse_button == MouseButton::Left {
-                                let state = widget_store.get_widget_for_name("BaseWidget1")
+                                let state = widget_store
+                                    .get_widget_for_name("BaseWidget1")
                                     .borrow_mut()
                                     .config()
                                     .get_toggle(CONFIG_WIDGET_HIDDEN);
@@ -129,10 +141,12 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                     .borrow_mut()
                                     .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
 
-                                widget_store.get_widget_for_name("RandomColorButton1")
+                                widget_store
+                                    .get_widget_for_name("RandomColorButton1")
                                     .borrow_mut()
                                     .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store.get_widget_for_name("BaseWidget1")
+                                widget_store
+                                    .get_widget_for_name("BaseWidget1")
                                     .borrow_mut()
                                     .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
                             }

@@ -19,8 +19,8 @@ use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
-use crate::widget::widget::*;
 use crate::widget::config::*;
+use crate::widget::widget::*;
 
 /// This is a container object, used for storing the `Widget` trait object, and the parent
 /// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
@@ -55,7 +55,10 @@ impl WidgetStore {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = CanvasWidget::new();
 
-        base_widget.config().set(CONFIG_BODY_SIZE, Config::Size(crate::core::point::Size { w: 800, h: 600 }));
+        base_widget.config().set(
+            CONFIG_BODY_SIZE,
+            Config::Size(crate::core::point::Size { w: 800, h: 600 }),
+        );
         widgets_list.push(WidgetContainer {
             widget: RefCell::new(Box::new(base_widget)),
             widget_name: String::from("_WidgetStoreBase"),
@@ -155,7 +158,8 @@ impl WidgetStore {
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
             let widget_point = &obj.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
-            let widget_size: crate::core::point::Size = obj.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
+            let widget_size: crate::core::point::Size =
+                obj.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
 
             // Skip over item widgets that have a width and height of 0.
             if widget_size.w > 0 && widget_size.h > 0 {
@@ -203,11 +207,23 @@ impl WidgetStore {
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
 
-            if !paint_widget.widget.borrow_mut().config().get_toggle(CONFIG_WIDGET_HIDDEN) {
+            if !paint_widget
+                .widget
+                .borrow_mut()
+                .config()
+                .get_toggle(CONFIG_WIDGET_HIDDEN)
+            {
                 if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
-                    let origin: Point = paint_widget.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
-                    let size: crate::core::point::Size =
-                        paint_widget.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
+                    let origin: Point = paint_widget
+                        .widget
+                        .borrow_mut()
+                        .config()
+                        .get_point(CONFIG_ORIGIN);
+                    let size: crate::core::point::Size = paint_widget
+                        .widget
+                        .borrow_mut()
+                        .config()
+                        .get_size(CONFIG_BODY_SIZE);
 
                     let new_context: Context = Context {
                         viewport: c.viewport,

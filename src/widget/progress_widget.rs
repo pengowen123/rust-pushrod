@@ -16,8 +16,8 @@
 use piston_window::*;
 
 use crate::widget::box_widget::*;
-use crate::widget::widget::*;
 use crate::widget::config::*;
+use crate::widget::widget::*;
 
 /// This is the `ProgressWidget`, which is used for showing a progress bar.
 ///
@@ -34,7 +34,8 @@ impl ProgressWidget {
         let mut base = BoxWidget::new();
 
         base.config().set(CONFIG_BORDER_WIDTH, Config::Numeric(1));
-        base.config().set(CONFIG_BORDER_COLOR, Config::Color([0.0, 0.0, 0.0, 1.0]));
+        base.config()
+            .set(CONFIG_BORDER_COLOR, Config::Color([0.0, 0.0, 0.0, 1.0]));
 
         // Configurable set: set progress.
 
@@ -66,7 +67,8 @@ impl Widget for ProgressWidget {
 
         self.base_widget.draw(c, g, clip);
 
-        let draw_width = (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64;
+        let draw_width =
+            (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64;
 
         // Paint the secondary color to display the progress color.
         Rectangle::new(self.config().get_color(CONFIG_SECONDARY_COLOR)).draw(
