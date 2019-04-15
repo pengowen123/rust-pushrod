@@ -5,6 +5,7 @@
 - Includes widget_id when inject_event is called. (#102)
 - Fixed timer widget to include widget_id when triggered.
 - Added visibility of widget functionality via CONFIG_WIDGET_HIDDEN (#40)
+- Now shows the progress (in percentage) of the progress widget.
 
 ## 0.2.5
 

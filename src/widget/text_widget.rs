@@ -128,7 +128,9 @@ impl TextWidget {
                 .determine_size(self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(), &mut self.font_cache, g)
                 .unwrap();
 
-            eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
+            if self.desired_size.0 != 0 || self.desired_size.1 != 0 {
+                eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
+            }
         }
 
         // Modify transform here based on the width of the text being drawn, which is element 0 of
