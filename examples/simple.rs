@@ -154,6 +154,90 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                         _ => (),
                     },
 
+                    "HideButton2" => match button {
+                        Button::Mouse(mouse_button) => {
+                            if mouse_button == MouseButton::Left {
+                                let state = widget_store
+                                    .get_widget_for_name("BoxWidget1")
+                                    .borrow_mut()
+                                    .config()
+                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+                                let button_text = if state == true {
+                                    String::from("Hide")
+                                } else {
+                                    String::from("Show")
+                                };
+
+                                widget_store
+                                    .get_widget_for_name("HideButton2")
+                                    .borrow_mut()
+                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+                                widget_store
+                                    .get_widget_for_name("BoxWidget1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store
+                                    .get_widget_for_name("LeftJustifiedText")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store
+                                    .get_widget_for_name("CenterJustifiedText")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store
+                                    .get_widget_for_name("RightJustifiedText")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                            }
+                        }
+                        _ => (),
+                    },
+
+                    "HideButton3" => match button {
+                        Button::Mouse(mouse_button) => {
+                            if mouse_button == MouseButton::Left {
+                                let state = widget_store
+                                    .get_widget_for_name("Box1")
+                                    .borrow_mut()
+                                    .config()
+                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+                                let button_text = if state == true {
+                                    String::from("Hide")
+                                } else {
+                                    String::from("Show")
+                                };
+
+                                widget_store
+                                    .get_widget_for_name("HideButton3")
+                                    .borrow_mut()
+                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+                                widget_store
+                                    .get_widget_for_name("Box1")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store
+                                    .get_widget_for_name("Box2")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store
+                                    .get_widget_for_name("Box3")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store
+                                    .get_widget_for_name("Box4")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                                widget_store
+                                    .get_widget_for_name("Box5")
+                                    .borrow_mut()
+                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+                            }
+                        }
+                        _ => (),
+                    },
+
                     x => eprintln!("Widget clicked: {}", x),
                 }
             }

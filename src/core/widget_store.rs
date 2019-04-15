@@ -157,18 +157,26 @@ impl WidgetStore {
         let mut found_id = -1;
 
         for (pos, obj) in self.widgets.iter_mut().enumerate() {
-            let widget_point = &obj.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
-            let widget_size: crate::core::point::Size =
-                obj.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
+            if &obj
+                .widget
+                .borrow_mut()
+                .config()
+                .get_toggle(CONFIG_WIDGET_HIDDEN)
+                != &true
+            {
+                let widget_point = &obj.widget.borrow_mut().config().get_point(CONFIG_ORIGIN);
+                let widget_size: crate::core::point::Size =
+                    obj.widget.borrow_mut().config().get_size(CONFIG_BODY_SIZE);
 
-            // Skip over item widgets that have a width and height of 0.
-            if widget_size.w > 0 && widget_size.h > 0 {
-                if point.x >= widget_point.x
-                    && point.x <= widget_point.x + widget_size.w
-                    && point.y >= widget_point.y
-                    && point.y <= widget_point.y + widget_size.h
-                {
-                    found_id = pos as i32;
+                // Skip over item widgets that have a width and height of 0.
+                if widget_size.w > 0 && widget_size.h > 0 {
+                    if point.x >= widget_point.x
+                        && point.x <= widget_point.x + widget_size.w
+                        && point.y >= widget_point.y
+                        && point.y <= widget_point.y + widget_size.h
+                    {
+                        found_id = pos as i32;
+                    }
                 }
             }
         }

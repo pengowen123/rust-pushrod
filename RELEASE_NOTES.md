@@ -2,7 +2,8 @@
 
 ## 0.2.7
 
-- Adjusted mutability of getters in Config
+- Adjusted mutability of getters in Config.
+- Added hide/show button operations to the sample app.
 
 ## 0.2.6
 
