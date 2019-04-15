@@ -2,7 +2,7 @@
 
 ## 0.2.7
 
-
+- Adjusted mutability of getters in Config
 
 ## 0.2.6
 

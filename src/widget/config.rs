@@ -67,11 +67,11 @@ impl Configurable {
         self.configs.remove(&config);
     }
 
-    pub fn contains(&mut self, config: u8) -> bool {
+    pub fn contains(&self, config: u8) -> bool {
         self.configs.contains_key(&config)
     }
 
-    pub fn get(&mut self, config: u8) -> Option<&Config> {
+    pub fn get(&self, config: u8) -> Option<&Config> {
         self.configs.get(&config)
     }
 
@@ -99,42 +99,42 @@ impl Configurable {
         self.set(config, Config::Toggle(flag));
     }
 
-    pub fn get_point(&mut self, config: u8) -> Point {
+    pub fn get_point(&self, config: u8) -> Point {
         match self.configs.get(&config) {
             Some(Config::Point(point)) => point.clone(),
             _ => Point::default(),
         }
     }
 
-    pub fn get_size(&mut self, config: u8) -> crate::core::point::Size {
+    pub fn get_size(&self, config: u8) -> crate::core::point::Size {
         match self.configs.get(&config) {
             Some(Config::Size(size)) => size.clone(),
             _ => Size::default(),
         }
     }
 
-    pub fn get_color(&mut self, config: u8) -> Color {
+    pub fn get_color(&self, config: u8) -> Color {
         match self.configs.get(&config) {
             Some(Config::Color(color)) => *color,
             _ => [1.0; 4],
         }
     }
 
-    pub fn get_numeric(&mut self, config: u8) -> u64 {
+    pub fn get_numeric(&self, config: u8) -> u64 {
         match self.configs.get(&config) {
             Some(Config::Numeric(numeric)) => *numeric,
             _ => 0,
         }
     }
 
-    pub fn get_text(&mut self, config: u8) -> String {
+    pub fn get_text(&self, config: u8) -> String {
         match self.configs.get(&config) {
             Some(Config::Text(text)) => text.clone(),
             _ => String::from(""),
         }
     }
 
-    pub fn get_toggle(&mut self, config: u8) -> bool {
+    pub fn get_toggle(&self, config: u8) -> bool {
         match self.configs.get(&config) {
             Some(Config::Toggle(toggle)) => *toggle,
             _ => false,
