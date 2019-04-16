@@ -39,5 +39,8 @@ pub mod toggle_button_widget;
 /// Progress component: draws a progress meter widget.
 pub mod progress_widget;
 
+/// Checkbox component: draws a selectable checkbox with text.
+pub mod checkbox_widget;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;
