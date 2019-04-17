@@ -16,7 +16,7 @@
 use piston_window::*;
 
 use crate::core::callbacks::*;
-use crate::core::point::{Point, Size};
+use crate::core::point::Point;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::image_widget::*;
