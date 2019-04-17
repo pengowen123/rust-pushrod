@@ -22,6 +22,7 @@ use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
+use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
@@ -29,7 +30,6 @@ use pushrod::widget::push_button_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::toggle_button_widget::*;
-use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::widget::*;
 
 pub struct SimpleWindow {
@@ -66,8 +66,11 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                         .borrow_mut()
                         .set_config(
                             CONFIG_DISPLAY_TEXT,
-                            Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
-                                .clone(),
+                            Config::Text(format!(
+                                "Current Widget: {} ({})",
+                                widget_id, widget_name
+                            ))
+                            .clone(),
                         );
 
                     widget_store
@@ -79,24 +82,18 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                 "Dimensions: x={} y={} w={} h={}",
                                 widget_point.x, widget_point.y, widget_size.w, widget_size.h
                             ))
-                                .clone(),
+                            .clone(),
                         );
                 } else {
                     widget_store
                         .get_widget_for_name("DebugText1")
                         .borrow_mut()
-                        .set_config(
-                            CONFIG_DISPLAY_TEXT,
-                            Config::Text(String::from("")),
-                        );
+                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
 
                     widget_store
                         .get_widget_for_name("DebugText2")
                         .borrow_mut()
-                        .set_config(
-                            CONFIG_DISPLAY_TEXT,
-                            Config::Text(String::from("")),
-                        );
+                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
                 }
             }
 
@@ -310,19 +307,12 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                         widget_store
                             .get_widget_for_name("DebugText1")
                             .borrow_mut()
-                            .set_config(
-                                CONFIG_DISPLAY_TEXT,
-                                Config::Text(String::from("")),
-                            );
+                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
 
                         widget_store
                             .get_widget_for_name("DebugText2")
                             .borrow_mut()
-                            .set_config(
-                                CONFIG_DISPLAY_TEXT,
-                                Config::Text(String::from("")),
-                            );
-
+                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
                     }
                 }
 
@@ -705,8 +695,8 @@ impl SimpleWindow {
             TextJustify::Left,
             true,
         );
-        check_widget.set_point(CONFIG_ORIGIN, 20, 490);
-        check_widget.set_size(CONFIG_BODY_SIZE, 400, 32);
+        check_widget.set_point(CONFIG_ORIGIN, 20, 500);
+        check_widget.set_size(CONFIG_BODY_SIZE, 400, 28);
         check_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()

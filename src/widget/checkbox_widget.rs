@@ -16,10 +16,11 @@
 use piston_window::*;
 
 use crate::core::callbacks::*;
+use crate::core::point::{Point, Size};
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
-use crate::widget::text_widget::*;
 use crate::widget::image_widget::*;
+use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
 /// This is the `CheckboxWidget`, which contains a top-level widget for display, overriding the
@@ -46,20 +47,13 @@ impl CheckboxWidget {
         justify: TextJustify,
         selected: bool,
     ) -> Self {
-        let mut selected_widget = ImageWidget::new(
-            factory,
-            "checkbox_selected.png".to_string(),
-        );
+        let mut selected_widget = ImageWidget::new(factory, "checkbox_selected.png".to_string());
         selected_widget.set_point(CONFIG_ORIGIN, 2, 2);
-        selected_widget.set_size(CONFIG_BODY_SIZE, 32, 32);
         selected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, true);
 
-        let mut unselected_widget = ImageWidget::new(
-            factory,
-            "checkbox_unselected.png".to_string(),
-        );
+        let mut unselected_widget =
+            ImageWidget::new(factory, "checkbox_unselected.png".to_string());
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
-        unselected_widget.set_size(CONFIG_BODY_SIZE, 32, 32);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
         let mut text_widget = TextWidget::new(
@@ -94,6 +88,24 @@ impl Widget for CheckboxWidget {
         self.config().set(config, config_value.clone());
         self.base_widget.set_config(config, config_value.clone());
         self.text_widget.set_config(config, config_value.clone());
+
+        if config == CONFIG_BODY_SIZE {
+            let size = self.config().get_size(CONFIG_BODY_SIZE);
+
+            if size.h < 32 {
+                self.selected_widget
+                    .set_size(CONFIG_BODY_SIZE, size.h, size.h);
+                self.unselected_widget
+                    .set_size(CONFIG_BODY_SIZE, size.h, size.h);
+            } else {
+                self.selected_widget
+                    .set_point(CONFIG_ORIGIN, 0, (size.h - 32) / 2);
+                self.selected_widget.set_size(CONFIG_BODY_SIZE, 32, 32);
+                self.unselected_widget
+                    .set_point(CONFIG_ORIGIN, 0, (size.h - 32) / 2);
+                self.unselected_widget.set_size(CONFIG_BODY_SIZE, 32, 32);
+            }
+        }
     }
 
     fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
@@ -127,13 +139,17 @@ impl Widget for CheckboxWidget {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);
-        self.text_widget.draw(c.trans(38.0, 0.0), g, &clip);
 
         if self.selected {
-            self.selected_widget.draw(c, g, &clip);
+            self.selected_widget
+                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
         } else {
-            self.unselected_widget.draw(c, g, &clip);
+            self.unselected_widget
+                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
         }
+
+        self.text_widget
+            .draw_with_offset(c, g, &clip, Point { x: 38, y: 0 });
 
         // Then clear invalidation.
         self.clear_invalidate();

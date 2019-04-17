@@ -4,6 +4,7 @@
 
 - Added checkbox widget. (#46)
 - Added checkbox to the main application, enable/disable debugging.
+- Added additional draw function that takes origin point (#106)
 
 ## 0.2.7
 
