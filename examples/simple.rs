@@ -22,6 +22,7 @@ use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
+use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
@@ -38,46 +39,62 @@ pub struct SimpleWindow {
 pub struct SimpleWindowEventHandler {
     animated: bool,
     progress: u16,
+    debugging: bool,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
         match event {
             CallbackEvent::MouseEntered { widget_id } => {
-                // When a mouse enters a widget, the ID will get modified; modify the debug widget
-                // with the ID that was specified.
-                let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
-                let widget_point = widget_store
-                    .get_widget_for_id(widget_id)
-                    .borrow_mut()
-                    .config()
-                    .get_point(CONFIG_ORIGIN);
-                let widget_size = widget_store
-                    .get_widget_for_id(widget_id)
-                    .borrow_mut()
-                    .config()
-                    .get_size(CONFIG_BODY_SIZE);
+                if self.debugging {
+                    // When a mouse enters a widget, the ID will get modified; modify the debug widget
+                    // with the ID that was specified.
+                    let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
+                    let widget_point = widget_store
+                        .get_widget_for_id(widget_id)
+                        .borrow_mut()
+                        .config()
+                        .get_point(CONFIG_ORIGIN);
+                    let widget_size = widget_store
+                        .get_widget_for_id(widget_id)
+                        .borrow_mut()
+                        .config()
+                        .get_size(CONFIG_BODY_SIZE);
 
-                widget_store
-                    .get_widget_for_name("DebugText1")
-                    .borrow_mut()
-                    .set_config(
-                        CONFIG_DISPLAY_TEXT,
-                        Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
+                    widget_store
+                        .get_widget_for_name("DebugText1")
+                        .borrow_mut()
+                        .set_config(
+                            CONFIG_DISPLAY_TEXT,
+                            Config::Text(format!(
+                                "Current Widget: {} ({})",
+                                widget_id, widget_name
+                            ))
                             .clone(),
-                    );
+                        );
 
-                widget_store
-                    .get_widget_for_name("DebugText2")
-                    .borrow_mut()
-                    .set_config(
-                        CONFIG_DISPLAY_TEXT,
-                        Config::Text(format!(
-                            "Dimensions: x={} y={} w={} h={}",
-                            widget_point.x, widget_point.y, widget_size.w, widget_size.h
-                        ))
-                        .clone(),
-                    );
+                    widget_store
+                        .get_widget_for_name("DebugText2")
+                        .borrow_mut()
+                        .set_config(
+                            CONFIG_DISPLAY_TEXT,
+                            Config::Text(format!(
+                                "Dimensions: x={} y={} w={} h={}",
+                                widget_point.x, widget_point.y, widget_size.w, widget_size.h
+                            ))
+                            .clone(),
+                        );
+                } else {
+                    widget_store
+                        .get_widget_for_name("DebugText1")
+                        .borrow_mut()
+                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
+
+                    widget_store
+                        .get_widget_for_name("DebugText2")
+                        .borrow_mut()
+                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
+                }
             }
 
             CallbackEvent::WidgetClicked { widget_id, button } => {
@@ -282,6 +299,23 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 "AnimateButton1" => {
                     self.animated = selected;
                 }
+
+                "DebugCheck1" => {
+                    self.debugging = selected;
+
+                    if !self.debugging {
+                        widget_store
+                            .get_widget_for_name("DebugText1")
+                            .borrow_mut()
+                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
+
+                        widget_store
+                            .get_widget_for_name("DebugText2")
+                            .borrow_mut()
+                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
+                    }
+                }
+
                 _ => (),
             },
 
@@ -317,6 +351,7 @@ impl SimpleWindowEventHandler {
         SimpleWindowEventHandler {
             animated: false,
             progress: 50,
+            debugging: true,
         }
     }
 }
@@ -652,6 +687,21 @@ impl SimpleWindow {
     }
 
     fn add_debugging(&mut self) {
+        let mut check_widget = CheckboxWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Enable Debugging".to_string(),
+            20,
+            TextJustify::Left,
+            true,
+        );
+        check_widget.set_point(CONFIG_ORIGIN, 20, 500);
+        check_widget.set_size(CONFIG_BODY_SIZE, 400, 28);
+        check_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("DebugCheck1", Box::new(check_widget));
+
         let mut text_widget1 = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),

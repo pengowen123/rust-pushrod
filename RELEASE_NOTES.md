@@ -1,5 +1,11 @@
 # Pushrod Releases
 
+## 0.2.8
+
+- Added checkbox widget. (#46)
+- Added checkbox to the main application, enable/disable debugging.
+- Added additional draw function that takes origin point (#106)
+
 ## 0.2.7
 
 - Adjusted mutability of getters in Config.

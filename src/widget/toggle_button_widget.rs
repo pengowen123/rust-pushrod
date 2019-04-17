@@ -1,5 +1,5 @@
-// Push Button Widget
-// Extensible widget for the widget library - handles a push button object.
+// Toggle Button Widget
+// Extensible widget for the widget library - handles a toggleable button object.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
