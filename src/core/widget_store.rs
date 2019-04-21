@@ -207,7 +207,17 @@ impl WidgetStore {
         self.widgets[widget_id as usize]
             .widget
             .borrow_mut()
-            .handle_event(event)
+            .handle_event(false, event)
+    }
+
+    /// Handles an event that was injected by another `Widget`, sending that event to all `Widgets`,
+    /// with the `injected` flag set `true`.
+    pub fn inject_event(&mut self, event: CallbackEvent) {
+        self.widgets
+            .iter_mut()
+            .for_each(|x| {
+                x.widget.borrow_mut().handle_event(true, event.clone());
+            });
     }
 
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not

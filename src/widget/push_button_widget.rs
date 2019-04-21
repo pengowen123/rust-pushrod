@@ -71,50 +71,52 @@ impl Widget for PushButtonWidget {
         self.text_widget.set_config(config, config_value.clone());
     }
 
-    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
-        match event {
-            CallbackEvent::MouseButtonDown {
-                widget_id: _,
-                button,
-            } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        self.base_widget
-                            .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                        self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+        if !injected {
+            match event {
+                CallbackEvent::MouseButtonDown {
+                    widget_id: _,
+                    button,
+                } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            self.base_widget
+                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+                        }
                     }
-                }
-                _ => (),
-            },
+                    _ => (),
+                },
 
-            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                        self.text_widget
-                            .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+                            self.text_widget
+                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
-                        return Some(WidgetClicked { widget_id, button });
+                            return Some(WidgetClicked { widget_id, button });
+                        }
                     }
-                }
-                _ => (),
-            },
+                    _ => (),
+                },
 
-            CallbackEvent::MouseButtonUpOutside {
-                widget_id: _,
-                button,
-            } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                        self.text_widget
-                            .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                CallbackEvent::MouseButtonUpOutside {
+                    widget_id: _,
+                    button,
+                } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+                            self.text_widget
+                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                        }
                     }
-                }
-                _ => (),
-            },
+                    _ => (),
+                },
 
-            _ => (),
+                _ => (),
+            }
         }
 
         None

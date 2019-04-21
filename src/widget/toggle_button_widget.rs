@@ -73,74 +73,76 @@ impl Widget for ToggleButtonWidget {
         self.text_widget.set_config(config, config_value.clone());
     }
 
-    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
-        match event {
-            CallbackEvent::MouseButtonDown {
-                widget_id: _,
-                button,
-            } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        if !self.selected {
-                            self.base_widget
-                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
-                        } else {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget
-                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+        if !injected {
+            match event {
+                CallbackEvent::MouseButtonDown {
+                    widget_id: _,
+                    button,
+                } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            if !self.selected {
+                                self.base_widget
+                                    .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                                self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+                            } else {
+                                self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+                                self.text_widget
+                                    .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            }
                         }
                     }
-                }
-                _ => (),
-            },
+                    _ => (),
+                },
 
-            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        self.selected = !self.selected;
+                CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            self.selected = !self.selected;
 
-                        if self.selected {
-                            self.base_widget
-                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
-                        } else {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget
-                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                        }
+                            if self.selected {
+                                self.base_widget
+                                    .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                                self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+                            } else {
+                                self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+                                self.text_widget
+                                    .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            }
 
-                        return Some(WidgetSelected {
-                            widget_id,
-                            button,
-                            selected: self.selected,
-                        });
-                    }
-                }
-                _ => (),
-            },
-
-            CallbackEvent::MouseButtonUpOutside {
-                widget_id: _,
-                button,
-            } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        if !self.selected {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget
-                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                        } else {
-                            self.base_widget
-                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+                            return Some(WidgetSelected {
+                                widget_id,
+                                button,
+                                selected: self.selected,
+                            });
                         }
                     }
-                }
-                _ => (),
-            },
+                    _ => (),
+                },
 
-            _ => (),
+                CallbackEvent::MouseButtonUpOutside {
+                    widget_id: _,
+                    button,
+                } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            if !self.selected {
+                                self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+                                self.text_widget
+                                    .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            } else {
+                                self.base_widget
+                                    .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                                self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+                            }
+                        }
+                    }
+                    _ => (),
+                },
+
+                _ => (),
+            }
         }
 
         None

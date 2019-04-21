@@ -317,6 +317,23 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     }
                 }
 
+                "Radio1" => {
+                    widget_store
+                        .get_widget_for_name("TimerWidget1")
+                        .borrow_mut()
+                        .config()
+                        .set_numeric(CONFIG_TIMER_TIMEOUT, 100);
+                }
+
+                "Radio2" => {
+                    eprintln!("Setting timer 500");
+                    widget_store
+                        .get_widget_for_name("TimerWidget1")
+                        .borrow_mut()
+                        .config()
+                        .set_numeric(CONFIG_TIMER_TIMEOUT, 500);
+                }
+
                 _ => (),
             },
 

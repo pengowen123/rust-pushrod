@@ -100,6 +100,7 @@ impl Pushrod {
 
         match injectable_event {
             Some(new_event) => {
+                eprintln!("Inject event: {:?}", new_event);
                 event_handler.handle_event(new_event.clone(), &mut self.widget_store.borrow_mut())
             }
             None => (),
@@ -136,6 +137,8 @@ impl Pushrod {
             .filter(|x| x.widget.borrow_mut().injects_events())
             .map(|x| x.widget_id)
             .collect();
+
+        eprintln!("Injectable Map: {:?}", injectable_map);
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -322,7 +325,10 @@ impl Pushrod {
                         .inject_event(*widget_id);
 
                     match injectable_event {
-                        Some(x) => self.handle_event(*widget_id, event_handler, x.clone()),
+                        Some(x) => {
+                            self.handle_event(*widget_id, event_handler, x.clone());
+                            self.widget_store.borrow_mut().inject_event(x.clone());
+                        },
                         None => (),
                     }
                 });

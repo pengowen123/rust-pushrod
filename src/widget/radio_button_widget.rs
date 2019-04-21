@@ -110,33 +110,41 @@ impl Widget for RadioButtonWidget {
         }
     }
 
-    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
-        match event {
-            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        self.selected = true;
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+        if !injected {
+            match event {
+                CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            self.selected = true;
+                            self.inject_event = true;
 
-                        return Some(CallbackEvent::WidgetSelected {
-                            widget_id,
-                            button,
-                            selected: self.selected,
-                        });
+                            return Some(CallbackEvent::WidgetSelected {
+                                widget_id,
+                                button,
+                                selected: self.selected,
+                            });
+                        }
                     }
+
+                    _ => (),
                 }
+
                 _ => (),
             }
-
-            CallbackEvent::UnselectRadioButtons { widget_id, group_id } => {
-                if group_id == self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32 {
-                    if widget_id != self.config().get_numeric(CONFIG_WIDGET_ID) as i32 {
-                        self.selected = false;
-                        eprintln!("Deselected radio group: {}", group_id);
+        } else {
+            match event {
+                CallbackEvent::UnselectRadioButtons { widget_id, group_id } => {
+                    if group_id == self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32 {
+                        if widget_id != self.config().get_numeric(CONFIG_WIDGET_ID) as i32 {
+                            self.selected = false;
+                            eprintln!("Deselected radio group: {}", group_id);
+                        }
                     }
                 }
-            }
 
-            _ => (),
+                _ => (),
+            }
         }
 
         None

@@ -56,7 +56,7 @@ impl CheckboxWidget {
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
-        let mut text_widget = TextWidget::new(
+        let text_widget = TextWidget::new(
             factory,
             font_name.to_string(),
             text.to_string(),
@@ -107,24 +107,26 @@ impl Widget for CheckboxWidget {
         }
     }
 
-    fn handle_event(&mut self, event: CallbackEvent) -> Option<CallbackEvent> {
-        match event {
-            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        self.selected = !self.selected;
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+        if !injected {
+            match event {
+                CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            self.selected = !self.selected;
 
-                        return Some(CallbackEvent::WidgetSelected {
-                            widget_id,
-                            button,
-                            selected: self.selected,
-                        });
+                            return Some(CallbackEvent::WidgetSelected {
+                                widget_id,
+                                button,
+                                selected: self.selected,
+                            });
+                        }
                     }
-                }
-                _ => (),
-            },
+                    _ => (),
+                },
 
-            _ => (),
+                _ => (),
+            }
         }
 
         None
