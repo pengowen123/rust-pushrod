@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.2.9
+
+- Added radio button images.
+- Adding a widget now assigns the widget ID to the configs (#117)
+
 ## 0.2.8
 
 - Added checkbox widget. (#46)

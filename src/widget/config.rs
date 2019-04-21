@@ -30,20 +30,22 @@ pub enum Config {
     Toggle(bool),
 }
 
-pub const CONFIG_INVALIDATE: u8 = 1;
-pub const CONFIG_ORIGIN: u8 = 2;
-pub const CONFIG_BODY_SIZE: u8 = 3;
-pub const CONFIG_MAIN_COLOR: u8 = 4;
-pub const CONFIG_BORDER_COLOR: u8 = 5;
-pub const CONFIG_TEXT_COLOR: u8 = 6;
-pub const CONFIG_SECONDARY_COLOR: u8 = 7;
-pub const CONFIG_BORDER_WIDTH: u8 = 8;
-pub const CONFIG_DISPLAY_TEXT: u8 = 9;
-pub const CONFIG_PROGRESS: u8 = 10;
-pub const CONFIG_TIMER_ENABLED: u8 = 11;
-pub const CONFIG_TIMER_TIMEOUT: u8 = 12;
-pub const CONFIG_WIDGET_HIDDEN: u8 = 13;
-pub const CONFIG_WIDGET_DISABLED: u8 = 14;
+pub const CONFIG_WIDGET_ID: u8 = 1;
+pub const CONFIG_INVALIDATE: u8 = 2;
+pub const CONFIG_ORIGIN: u8 = 3;
+pub const CONFIG_BODY_SIZE: u8 = 4;
+pub const CONFIG_MAIN_COLOR: u8 = 5;
+pub const CONFIG_BORDER_COLOR: u8 = 6;
+pub const CONFIG_TEXT_COLOR: u8 = 7;
+pub const CONFIG_SECONDARY_COLOR: u8 = 8;
+pub const CONFIG_BORDER_WIDTH: u8 = 9;
+pub const CONFIG_DISPLAY_TEXT: u8 = 10;
+pub const CONFIG_PROGRESS: u8 = 11;
+pub const CONFIG_TIMER_ENABLED: u8 = 12;
+pub const CONFIG_TIMER_TIMEOUT: u8 = 13;
+pub const CONFIG_WIDGET_HIDDEN: u8 = 14;
+pub const CONFIG_WIDGET_DISABLED: u8 = 15;
+pub const CONFIG_WIDGET_GROUP_ID: u8 = 16;
 
 pub struct Configurable {
     configs: HashMap<u8, Config>,

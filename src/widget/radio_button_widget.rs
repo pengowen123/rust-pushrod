@@ -23,22 +23,23 @@ use crate::widget::image_widget::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-/// This is the `CheckboxWidget`, which contains a top-level widget for display, overriding the
+/// This is the `RadioButtonWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
 /// IN PROGRESS
-pub struct CheckboxWidget {
+pub struct RadioButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
     text_widget: TextWidget,
     selected: bool,
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
+    inject_event: bool,
 }
 
-/// Implementation of the constructor for the `CheckboxWidget`.
-impl CheckboxWidget {
+/// Implementation of the constructor for the `RadioButtonWidget`.
+impl RadioButtonWidget {
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -47,12 +48,12 @@ impl CheckboxWidget {
         justify: TextJustify,
         selected: bool,
     ) -> Self {
-        let mut selected_widget = ImageWidget::new(factory, "checkbox_selected.png".to_string());
+        let mut selected_widget = ImageWidget::new(factory, "radio_selected.png".to_string());
         selected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         selected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, true);
 
         let mut unselected_widget =
-            ImageWidget::new(factory, "checkbox_unselected.png".to_string());
+            ImageWidget::new(factory, "radio_unselected.png".to_string());
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
@@ -63,6 +64,7 @@ impl CheckboxWidget {
             font_size,
             justify,
         );
+        text_widget.set_point(CONFIG_ORIGIN, 36, 0);
 
         Self {
             config: Configurable::new(),
@@ -71,14 +73,15 @@ impl CheckboxWidget {
             selected,
             selected_widget,
             unselected_widget,
+            inject_event: false,
         }
     }
 }
 
-/// Implementation of the `CheckboxWidget` object with the `Widget` traits implemented.
+/// Implementation of the `RadioButtonWidget` object with the `Widget` traits implemented.
 /// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
 /// responds to the button down/up callbacks internally.
-impl Widget for CheckboxWidget {
+impl Widget for RadioButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }
@@ -112,7 +115,7 @@ impl Widget for CheckboxWidget {
             CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
                 Button::Mouse(mouse_button) => {
                     if mouse_button == MouseButton::Left {
-                        self.selected = !self.selected;
+                        self.selected = true;
 
                         return Some(CallbackEvent::WidgetSelected {
                             widget_id,
@@ -122,12 +125,41 @@ impl Widget for CheckboxWidget {
                     }
                 }
                 _ => (),
-            },
+            }
+
+            CallbackEvent::UnselectRadioButtons { widget_id, group_id } => {
+                if group_id == self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32 {
+                    if widget_id != self.config().get_numeric(CONFIG_WIDGET_ID) as i32 {
+                        self.selected = false;
+                        eprintln!("Deselected radio group: {}", group_id);
+                    }
+                }
+            }
 
             _ => (),
         }
 
         None
+    }
+
+    /// This function injects events, as other radio buttons need to become invalidated that may
+    /// be part of the same group ID.
+    fn injects_events(&mut self) -> bool {
+        true
+    }
+
+    /// Returns an injected event where appropriate.
+    fn inject_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
+        if self.inject_event {
+            self.inject_event = false;
+
+            Some(CallbackEvent::UnselectRadioButtons {
+                widget_id,
+                group_id: self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32,
+            })
+        } else {
+            None
+        }
     }
 
     /// Draws the contents of the widget in this order:

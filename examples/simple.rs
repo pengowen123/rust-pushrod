@@ -27,6 +27,7 @@ use pushrod::widget::config::*;
 use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
+use pushrod::widget::radio_button_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::toggle_button_widget::*;
@@ -622,6 +623,42 @@ impl SimpleWindow {
         self.pushrod
             .borrow_mut()
             .add_widget("ProgressWidget", Box::new(progress_widget));
+
+        let mut radio_1 = RadioButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Fast".to_string(),
+            20,
+            TextJustify::Left,
+            true,
+        );
+
+        radio_1.set_point(CONFIG_ORIGIN, 20, 400);
+        radio_1.set_size(CONFIG_BODY_SIZE, 115, 32);
+        radio_1.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+        radio_1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        radio_1.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("Radio1", Box::new(radio_1));
+
+        let mut radio_2 = RadioButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Slow".to_string(),
+            20,
+            TextJustify::Left,
+            false,
+        );
+
+        radio_2.set_point(CONFIG_ORIGIN, 136, 400);
+        radio_2.set_size(CONFIG_BODY_SIZE, 115, 32);
+        radio_2.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+        radio_2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        radio_2.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("Radio2", Box::new(radio_2));
 
         let mut progress_text = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),

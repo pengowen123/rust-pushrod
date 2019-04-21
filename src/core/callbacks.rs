@@ -77,4 +77,8 @@ pub enum CallbackEvent {
     TimerTriggered {
         widget_id: i32,
     },
+    UnselectRadioButtons {
+        widget_id: i32,
+        group_id: i32,
+    }
 }
