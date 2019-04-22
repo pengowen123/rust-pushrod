@@ -100,7 +100,6 @@ impl Pushrod {
 
         match injectable_event {
             Some(new_event) => {
-                eprintln!("Inject event: {:?}", new_event);
                 event_handler.handle_event(new_event.clone(), &mut self.widget_store.borrow_mut())
             }
             None => (),
@@ -192,15 +191,6 @@ impl Pushrod {
                                 },
                             );
                         }
-
-                        eprintln!(
-                            "Widget IDs: current={} parent={} children={:?}",
-                            current_widget_id,
-                            current_parent_for_widget,
-                            self.widget_store
-                                .borrow_mut()
-                                .get_children_of(current_widget_id)
-                        );
                     }
                 }
             });
