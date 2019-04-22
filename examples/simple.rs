@@ -40,62 +40,49 @@ pub struct SimpleWindow {
 pub struct SimpleWindowEventHandler {
     animated: bool,
     progress: u16,
-    debugging: bool,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
         match event {
             CallbackEvent::MouseEntered { widget_id } => {
-                if self.debugging {
-                    // When a mouse enters a widget, the ID will get modified; modify the debug widget
-                    // with the ID that was specified.
-                    let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
-                    let widget_point = widget_store
-                        .get_widget_for_id(widget_id)
-                        .borrow_mut()
-                        .config()
-                        .get_point(CONFIG_ORIGIN);
-                    let widget_size = widget_store
-                        .get_widget_for_id(widget_id)
-                        .borrow_mut()
-                        .config()
-                        .get_size(CONFIG_BODY_SIZE);
+                // When a mouse enters a widget, the ID will get modified; modify the debug widget
+                // with the ID that was specified.
+                let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
+                let widget_point = widget_store
+                    .get_widget_for_id(widget_id)
+                    .borrow_mut()
+                    .config()
+                    .get_point(CONFIG_ORIGIN);
+                let widget_size = widget_store
+                    .get_widget_for_id(widget_id)
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
 
-                    widget_store
-                        .get_widget_for_name("DebugText1")
-                        .borrow_mut()
-                        .set_config(
-                            CONFIG_DISPLAY_TEXT,
-                            Config::Text(format!(
-                                "Current Widget: {} ({})",
-                                widget_id, widget_name
-                            ))
-                            .clone(),
-                        );
+                widget_store
+                    .get_widget_for_name("DebugText1")
+                    .borrow_mut()
+                    .set_config(
+                        CONFIG_DISPLAY_TEXT,
+                        Config::Text(format!(
+                            "Current Widget: {} ({})",
+                            widget_id, widget_name
+                        ))
+                        .clone(),
+                    );
 
-                    widget_store
-                        .get_widget_for_name("DebugText2")
-                        .borrow_mut()
-                        .set_config(
-                            CONFIG_DISPLAY_TEXT,
-                            Config::Text(format!(
-                                "Dimensions: x={} y={} w={} h={}",
-                                widget_point.x, widget_point.y, widget_size.w, widget_size.h
-                            ))
-                            .clone(),
-                        );
-                } else {
-                    widget_store
-                        .get_widget_for_name("DebugText1")
-                        .borrow_mut()
-                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-
-                    widget_store
-                        .get_widget_for_name("DebugText2")
-                        .borrow_mut()
-                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-                }
+                widget_store
+                    .get_widget_for_name("DebugText2")
+                    .borrow_mut()
+                    .set_config(
+                        CONFIG_DISPLAY_TEXT,
+                        Config::Text(format!(
+                            "Dimensions: x={} y={} w={} h={}",
+                            widget_point.x, widget_point.y, widget_size.w, widget_size.h
+                        ))
+                        .clone(),
+                    );
             }
 
             CallbackEvent::WidgetClicked { widget_id, button } => {
@@ -302,19 +289,14 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 }
 
                 "DebugCheck1" => {
-                    self.debugging = selected;
-
-                    if !self.debugging {
-                        widget_store
-                            .get_widget_for_name("DebugText1")
-                            .borrow_mut()
-                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-
-                        widget_store
-                            .get_widget_for_name("DebugText2")
-                            .borrow_mut()
-                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-                    }
+                    widget_store
+                        .get_widget_for_name("DebugText1")
+                        .borrow_mut()
+                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
+                    widget_store
+                        .get_widget_for_name("DebugText2")
+                        .borrow_mut()
+                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
                 }
 
                 "Radio1" => {
@@ -369,7 +351,6 @@ impl SimpleWindowEventHandler {
         SimpleWindowEventHandler {
             animated: false,
             progress: 50,
-            debugging: true,
         }
     }
 }
