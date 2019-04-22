@@ -1,5 +1,13 @@
 # Pushrod Releases
 
+## 0.2.9
+
+- Added radio button images.
+- Adding a widget now assigns the widget ID to the configs (#117)
+- Added support for injected events (#115)
+- Added RadioButtonWidget (#45)
+- Added example in the app for fast/slow timer in the progress widget.
+
 ## 0.2.8
 
 - Added checkbox widget. (#46)

@@ -106,7 +106,7 @@ pub trait Widget {
     /// which can be injected into the run loop.  This can be things for `Widget` interaction that
     /// may generate an event that the application needs to respond to, like a button click, or
     /// a drag start/end event.
-    fn handle_event(&mut self, _event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, _injected: bool, _event: CallbackEvent) -> Option<CallbackEvent> {
         None
     }
 

@@ -97,13 +97,17 @@ impl WidgetStore {
     /// After adding a widget, the ID of the widget is returned.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         let widget_size = self.widgets.len() as i32;
-
-        self.widgets.push(WidgetContainer {
+        let container = WidgetContainer {
             widget: RefCell::new(widget),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id: 0,
-        });
+        };
+
+        // #117 - assigns widget ID to itself
+        container.widget.borrow_mut().config().set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
+
+        self.widgets.push(container);
 
         widget_size
     }
@@ -120,13 +124,17 @@ impl WidgetStore {
     ) -> i32 {
         // TODO Validate parent_id
         let widget_size = self.widgets.len() as i32;
-
-        self.widgets.push(WidgetContainer {
+        let container = WidgetContainer {
             widget: RefCell::new(widget),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id,
-        });
+        };
+
+        // #117 - assigns widget ID to itself
+        container.widget.borrow_mut().config().set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
+
+        self.widgets.push(container);
 
         widget_size
     }
@@ -199,7 +207,17 @@ impl WidgetStore {
         self.widgets[widget_id as usize]
             .widget
             .borrow_mut()
-            .handle_event(event)
+            .handle_event(false, event)
+    }
+
+    /// Handles an event that was injected by another `Widget`, sending that event to all `Widgets`,
+    /// with the `injected` flag set `true`.
+    pub fn inject_event(&mut self, event: CallbackEvent) {
+        self.widgets
+            .iter_mut()
+            .for_each(|x| {
+                x.widget.borrow_mut().handle_event(true, event.clone());
+            });
     }
 
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not

@@ -42,5 +42,8 @@ pub mod progress_widget;
 /// Checkbox component: draws a selectable checkbox with text.
 pub mod checkbox_widget;
 
+/// Radio button component: only allows a single item to be selected in a group.
+pub mod radio_button_widget;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;
