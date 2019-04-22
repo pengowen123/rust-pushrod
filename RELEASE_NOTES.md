@@ -4,6 +4,7 @@
 
 - Fixed bug with debugging: when selecting checkbox, now toggles hide/show rather than clearing out text. (#116)
 - Added a third radio button to control speed of progress widget in example.
+- Improved push button sensitivity, highlights when mouse is in bounds, deselects when out. (#119)
 
 ## 0.2.9
 
