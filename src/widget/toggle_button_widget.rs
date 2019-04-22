@@ -32,6 +32,7 @@ pub struct ToggleButtonWidget {
     base_widget: BoxWidget,
     text_widget: TextWidget,
     selected: bool,
+    active: bool,
 }
 
 /// Implementation of the constructor for the `ToggleButtonWidget`.
@@ -55,6 +56,31 @@ impl ToggleButtonWidget {
                 justify,
             ),
             selected,
+            active: false,
+        }
+    }
+
+    fn draw_hovered(&mut self) {
+        if !self.selected {
+            self.base_widget
+                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+            self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+        } else {
+            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+            self.text_widget
+                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        }
+    }
+
+    fn draw_unhovered(&mut self) {
+        if !self.selected {
+            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+            self.text_widget
+                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        } else {
+            self.base_widget
+                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+            self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
         }
     }
 }
@@ -76,21 +102,26 @@ impl Widget for ToggleButtonWidget {
     fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
         if !injected {
             match event {
+                CallbackEvent::MouseEntered { widget_id } => {
+                    if self.active {
+                        self.draw_hovered();
+                    }
+                }
+
+                CallbackEvent::MouseExited { widget_id } => {
+                    if self.active {
+                        self.draw_unhovered();
+                    }
+                }
+
                 CallbackEvent::MouseButtonDown {
                     widget_id: _,
                     button,
                 } => match button {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
-                            if !self.selected {
-                                self.base_widget
-                                    .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                                self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
-                            } else {
-                                self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                                self.text_widget
-                                    .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                            }
+                            self.draw_hovered();
+                            self.active = true;
                         }
                     }
                     _ => (),
@@ -100,16 +131,8 @@ impl Widget for ToggleButtonWidget {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
                             self.selected = !self.selected;
-
-                            if self.selected {
-                                self.base_widget
-                                    .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                                self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
-                            } else {
-                                self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                                self.text_widget
-                                    .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                            }
+                            self.draw_unhovered();
+                            self.active = false;
 
                             return Some(WidgetSelected {
                                 widget_id,
@@ -127,15 +150,8 @@ impl Widget for ToggleButtonWidget {
                 } => match button {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
-                            if !self.selected {
-                                self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                                self.text_widget
-                                    .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                            } else {
-                                self.base_widget
-                                    .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                                self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
-                            }
+                            self.draw_unhovered();
+                            self.active = false;
                         }
                     }
                     _ => (),

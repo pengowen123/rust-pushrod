@@ -131,8 +131,8 @@ impl Widget for PushButtonWidget {
                 } => match button {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
-                            self.active = false;
                             self.draw_unhovered();
+                            self.active = false;
                         }
                     }
                     _ => (),
