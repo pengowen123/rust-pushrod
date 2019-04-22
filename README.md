@@ -10,7 +10,7 @@ Draws inspiration from lots of GUI libraries.
 
 ## (Ever Evolving) Screenshot of Sample
 
-[![](docs/sample-0.2.8.gif)](docs/sample-0.2.8.gif)
+[![](docs/sample-0.2.9.gif)](docs/sample-0.2.9.gif)
 
 ## Philosophy
 
