@@ -308,7 +308,14 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 }
 
                 "Radio2" => {
-                    eprintln!("Setting timer 500");
+                    widget_store
+                        .get_widget_for_name("TimerWidget1")
+                        .borrow_mut()
+                        .config()
+                        .set_numeric(CONFIG_TIMER_TIMEOUT, 300);
+                }
+
+                "Radio3" => {
                     widget_store
                         .get_widget_for_name("TimerWidget1")
                         .borrow_mut()
@@ -625,14 +632,14 @@ impl SimpleWindow {
         let mut radio_1 = RadioButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),
-            "Fast".to_string(),
+            "1".to_string(),
             20,
             TextJustify::Left,
             true,
         );
 
         radio_1.set_point(CONFIG_ORIGIN, 20, 400);
-        radio_1.set_size(CONFIG_BODY_SIZE, 115, 32);
+        radio_1.set_size(CONFIG_BODY_SIZE, 75, 32);
         radio_1.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         radio_1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         radio_1.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
@@ -643,20 +650,38 @@ impl SimpleWindow {
         let mut radio_2 = RadioButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),
-            "Slow".to_string(),
+            "2".to_string(),
             20,
             TextJustify::Left,
             false,
         );
 
-        radio_2.set_point(CONFIG_ORIGIN, 136, 400);
-        radio_2.set_size(CONFIG_BODY_SIZE, 115, 32);
+        radio_2.set_point(CONFIG_ORIGIN, 100, 400);
+        radio_2.set_size(CONFIG_BODY_SIZE, 75, 32);
         radio_2.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         radio_2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         radio_2.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
         self.pushrod
             .borrow_mut()
             .add_widget("Radio2", Box::new(radio_2));
+
+        let mut radio_3 = RadioButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "3".to_string(),
+            20,
+            TextJustify::Left,
+            false,
+        );
+
+        radio_3.set_point(CONFIG_ORIGIN, 180, 400);
+        radio_3.set_size(CONFIG_BODY_SIZE, 75, 32);
+        radio_3.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+        radio_3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        radio_3.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("Radio3", Box::new(radio_3));
 
         let mut progress_text = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),

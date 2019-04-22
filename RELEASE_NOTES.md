@@ -3,6 +3,7 @@
 ## 0.2.10
 
 - Fixed bug with debugging: when selecting checkbox, now toggles hide/show rather than clearing out text. (#116)
+- Added a third radio button to control speed of progress widget in example.
 
 ## 0.2.9
 
