@@ -152,10 +152,6 @@ impl Pushrod {
                         .widget_store
                         .borrow_mut()
                         .get_widget_id_for_point(mouse_point.clone());
-                    let current_parent_for_widget = self
-                        .widget_store
-                        .borrow_mut()
-                        .get_parent_of(current_widget_id);
 
                     // Handles the mouse move callback.
                     if current_widget_id != -1 {

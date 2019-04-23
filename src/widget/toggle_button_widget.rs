@@ -102,13 +102,13 @@ impl Widget for ToggleButtonWidget {
     fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
         if !injected {
             match event {
-                CallbackEvent::MouseEntered { widget_id } => {
+                CallbackEvent::MouseEntered { widget_id: _ } => {
                     if self.active {
                         self.draw_hovered();
                     }
                 }
 
-                CallbackEvent::MouseExited { widget_id } => {
+                CallbackEvent::MouseExited { widget_id: _ } => {
                     if self.active {
                         self.draw_unhovered();
                     }
