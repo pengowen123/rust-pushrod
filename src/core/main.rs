@@ -16,6 +16,7 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::time::Duration;
 
 use crate::core::callbacks::*;
 use crate::core::point::*;
@@ -23,6 +24,7 @@ use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
 use piston_window::*;
+use sdl2_window::Sdl2Window;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
@@ -32,7 +34,7 @@ use piston_window::*;
 /// The objects contained within this structure are used by the `Pushrod` run loop, and
 /// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
-    window: PistonWindow,
+    window: PistonWindow<Sdl2Window>,
     pub widget_store: RefCell<WidgetStore>,
 }
 
@@ -43,7 +45,7 @@ pub struct Pushrod {
 /// IN PROGRESS
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
-    pub fn new(window: PistonWindow) -> Self {
+    pub fn new(window: PistonWindow<Sdl2Window>) -> Self {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
@@ -141,189 +143,201 @@ impl Pushrod {
 
         eprintln!("Injectable Map: {:?}", injectable_map);
 
-        while let Some(ref event) = &self.window.next() {
-            event.mouse_cursor(|x, y| {
-                let mouse_point = make_point_f64(x, y);
-
-                if mouse_point.x != previous_mouse_position.x
-                    || mouse_point.y != previous_mouse_position.y
-                {
-                    previous_mouse_position = mouse_point.clone();
-
-                    let current_widget_id = self
-                        .widget_store
-                        .borrow_mut()
-                        .get_widget_id_for_point(mouse_point.clone());
-
-                    // Handles the mouse move callback.
-                    if current_widget_id != -1 {
-                        self.handle_event(
-                            current_widget_id,
-                            event_handler,
-                            CallbackEvent::MouseMoved {
-                                widget_id: current_widget_id,
-                                point: mouse_point.clone(),
-                            },
-                        );
-                    }
-
-                    if current_widget_id != last_widget_id {
-                        if last_widget_id != -1 {
-                            self.handle_event(
-                                last_widget_id,
-                                event_handler,
-                                CallbackEvent::MouseExited {
-                                    widget_id: last_widget_id,
-                                },
-                            );
-                        }
-
-                        last_widget_id = current_widget_id;
-
-                        if last_widget_id != -1 {
-                            self.handle_event(
-                                last_widget_id,
-                                event_handler,
-                                CallbackEvent::MouseEntered {
-                                    widget_id: last_widget_id,
-                                },
-                            );
-                        }
-                    }
-                }
-            });
-
-            event.mouse_scroll(|x, y| {
-                let mouse_point = make_point_f64(x, y);
-
-                if last_widget_id != -1 {
-                    self.handle_event(
-                        last_widget_id,
-                        event_handler,
-                        CallbackEvent::MouseScrolled {
-                            widget_id: last_widget_id,
-                            point: mouse_point.clone(),
-                        },
-                    );
-                }
-            });
-
-            event.button(|args| match args.state {
-                ButtonState::Press => {
-                    button_map
-                        .entry(last_widget_id)
-                        .or_insert(HashSet::new())
-                        .insert(args.button);
-
-                    self.handle_event(
-                        last_widget_id,
-                        event_handler,
-                        CallbackEvent::MouseButtonDown {
-                            widget_id: last_widget_id,
-                            button: args.button,
-                        },
-                    );
-                }
-
-                ButtonState::Release => {
-                    let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
-
-                    if button_set.contains(&args.button) {
-                        button_set.remove(&args.button);
-
-                        self.handle_event(
-                            last_widget_id,
-                            event_handler,
-                            CallbackEvent::MouseButtonUpInside {
-                                widget_id: last_widget_id,
-                                button: args.button,
-                            },
-                        );
-                    } else {
-                        for (widget_id, button_set) in button_map.iter_mut() {
-                            if button_set.contains(&args.button) {
-                                self.handle_event(
-                                    *widget_id,
-                                    event_handler,
-                                    CallbackEvent::MouseButtonUpOutside {
-                                        widget_id: *widget_id,
-                                        button: args.button,
-                                    },
-                                );
-
-                                button_set.remove(&args.button);
-                            }
-                        }
-                    }
-                }
-            });
-
-            event.resize(|w, h| {
-                event_handler.handle_event(
-                    CallbackEvent::WindowResized {
-                        size: crate::core::point::Size {
-                            w: w as i32,
-                            h: h as i32,
-                        },
-                    },
-                    &mut self.widget_store.borrow_mut(),
-                );
-            });
-
-            event.focus(|focused| {
-                self.handle_event(
-                    last_widget_id,
-                    event_handler,
-                    CallbackEvent::WindowFocused { flag: focused },
-                );
-            });
-
+        while let ref event = &self.window.wait_event_timeout(Duration::from_millis(50)) {
             match event {
-                Event::Input(Input::Button(ButtonArgs {
-                    state,
-                    button: Button::Keyboard(key),
-                    scancode: _,
-                })) => {
-                    self.handle_event(
-                        last_widget_id,
-                        event_handler,
-                        CallbackEvent::KeyPressed {
-                            widget_id: last_widget_id,
-                            key: *key,
-                            state: *state,
-                        },
-                    );
-                }
-                _ => {}
-            };
+                Some(Input::Move(Motion::MouseCursor(x, y))) => {
+                    let mouse_point = make_point_f64(x, y);
+                    
+                    eprintln!("Mouse cursor moved: {} {}", x, y);
+                },
 
-            event.resize(|_, _| {
-                self.widget_store.borrow_mut().invalidate_all_widgets();
-            });
+                None => eprintln!("None."),
 
-            // FPS loop handling
+                _ => eprintln!("{:?}", event),
+            }
 
-            event.render(|_| {
-                injectable_map.iter().for_each(|widget_id| {
-                    let injectable_event = self
-                        .widget_store
-                        .borrow_mut()
-                        .get_widget_for_id(*widget_id)
-                        .borrow_mut()
-                        .inject_event(*widget_id);
-
-                    match injectable_event {
-                        Some(x) => {
-                            self.handle_event(*widget_id, event_handler, x.clone());
-                            self.widget_store.borrow_mut().inject_event(x.clone());
-                        },
-                        None => (),
-                    }
-                });
-
-                self.handle_draw(&event);
-                self.widget_store.borrow_mut().invalidate_all_widgets();
-            });
+//            event.mouse_cursor(|x, y| {
+//                let mouse_point = make_point_f64(x, y);
+//
+//                if mouse_point.x != previous_mouse_position.x
+//                    || mouse_point.y != previous_mouse_position.y
+//                {
+//                    previous_mouse_position = mouse_point.clone();
+//
+//                    let current_widget_id = self
+//                        .widget_store
+//                        .borrow_mut()
+//                        .get_widget_id_for_point(mouse_point.clone());
+//
+//                    // Handles the mouse move callback.
+//                    if current_widget_id != -1 {
+//                        self.handle_event(
+//                            current_widget_id,
+//                            event_handler,
+//                            CallbackEvent::MouseMoved {
+//                                widget_id: current_widget_id,
+//                                point: mouse_point.clone(),
+//                            },
+//                        );
+//                    }
+//
+//                    if current_widget_id != last_widget_id {
+//                        if last_widget_id != -1 {
+//                            self.handle_event(
+//                                last_widget_id,
+//                                event_handler,
+//                                CallbackEvent::MouseExited {
+//                                    widget_id: last_widget_id,
+//                                },
+//                            );
+//                        }
+//
+//                        last_widget_id = current_widget_id;
+//
+//                        if last_widget_id != -1 {
+//                            self.handle_event(
+//                                last_widget_id,
+//                                event_handler,
+//                                CallbackEvent::MouseEntered {
+//                                    widget_id: last_widget_id,
+//                                },
+//                            );
+//                        }
+//                    }
+//                }
+//            });
+//
+//            event.mouse_scroll(|x, y| {
+//                let mouse_point = make_point_f64(x, y);
+//
+//                if last_widget_id != -1 {
+//                    self.handle_event(
+//                        last_widget_id,
+//                        event_handler,
+//                        CallbackEvent::MouseScrolled {
+//                            widget_id: last_widget_id,
+//                            point: mouse_point.clone(),
+//                        },
+//                    );
+//                }
+//            });
+//
+//            event.button(|args| match args.state {
+//                ButtonState::Press => {
+//                    button_map
+//                        .entry(last_widget_id)
+//                        .or_insert(HashSet::new())
+//                        .insert(args.button);
+//
+//                    self.handle_event(
+//                        last_widget_id,
+//                        event_handler,
+//                        CallbackEvent::MouseButtonDown {
+//                            widget_id: last_widget_id,
+//                            button: args.button,
+//                        },
+//                    );
+//                }
+//
+//                ButtonState::Release => {
+//                    let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
+//
+//                    if button_set.contains(&args.button) {
+//                        button_set.remove(&args.button);
+//
+//                        self.handle_event(
+//                            last_widget_id,
+//                            event_handler,
+//                            CallbackEvent::MouseButtonUpInside {
+//                                widget_id: last_widget_id,
+//                                button: args.button,
+//                            },
+//                        );
+//                    } else {
+//                        for (widget_id, button_set) in button_map.iter_mut() {
+//                            if button_set.contains(&args.button) {
+//                                self.handle_event(
+//                                    *widget_id,
+//                                    event_handler,
+//                                    CallbackEvent::MouseButtonUpOutside {
+//                                        widget_id: *widget_id,
+//                                        button: args.button,
+//                                    },
+//                                );
+//
+//                                button_set.remove(&args.button);
+//                            }
+//                        }
+//                    }
+//                }
+//            });
+//
+//            event.resize(|w, h| {
+//                event_handler.handle_event(
+//                    CallbackEvent::WindowResized {
+//                        size: crate::core::point::Size {
+//                            w: w as i32,
+//                            h: h as i32,
+//                        },
+//                    },
+//                    &mut self.widget_store.borrow_mut(),
+//                );
+//            });
+//
+//            event.focus(|focused| {
+//                self.handle_event(
+//                    last_widget_id,
+//                    event_handler,
+//                    CallbackEvent::WindowFocused { flag: focused },
+//                );
+//            });
+//
+//            match event {
+//                Event::Input(Input::Button(ButtonArgs {
+//                    state,
+//                    button: Button::Keyboard(key),
+//                    scancode: _,
+//                })) => {
+//                    self.handle_event(
+//                        last_widget_id,
+//                        event_handler,
+//                        CallbackEvent::KeyPressed {
+//                            widget_id: last_widget_id,
+//                            key: *key,
+//                            state: *state,
+//                        },
+//                    );
+//                }
+//                _ => {}
+//            };
+//
+//            event.resize(|_, _| {
+//                self.widget_store.borrow_mut().invalidate_all_widgets();
+//            });
+//
+//            // FPS loop handling
+//
+//            event.render(|_| {
+//                injectable_map.iter().for_each(|widget_id| {
+//                    let injectable_event = self
+//                        .widget_store
+//                        .borrow_mut()
+//                        .get_widget_for_id(*widget_id)
+//                        .borrow_mut()
+//                        .inject_event(*widget_id);
+//
+//                    match injectable_event {
+//                        Some(x) => {
+//                            self.handle_event(*widget_id, event_handler, x.clone());
+//                            self.widget_store.borrow_mut().inject_event(x.clone());
+//                        },
+//                        None => (),
+//                    }
+//                });
+//
+//                self.handle_draw(&event);
+//                self.widget_store.borrow_mut().invalidate_all_widgets();
+//            });
         }
     }
 }

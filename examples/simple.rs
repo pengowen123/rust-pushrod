@@ -14,10 +14,13 @@
 // limitations under the License.
 
 extern crate pushrod;
+extern crate sdl2_window;
 
 use std::cell::RefCell;
 
 use piston_window::*;
+use sdl2_window::Sdl2Window;
+
 use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
@@ -814,7 +817,7 @@ impl SimpleWindow {
 }
 
 fn main() {
-    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow<Sdl2Window> = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(true)
         .build()
