@@ -7,7 +7,7 @@
 - Improved push button sensitivity, highlights when mouse is in bounds, deselects when out. (#119)
 - Improved toggle button behavior, similar to push button. (#120)
 - Just bought a huge improvement with set_lazy in the window event loop; need to modify timers.
-- Modifying code so that SDL2Window is now a requirement, as it has implemented window polling with timeout properly.
+- Modifying code so that GlfwWindow is now a requirement, as it has implemented window polling with timeout properly.
 
 ## 0.2.9
 
