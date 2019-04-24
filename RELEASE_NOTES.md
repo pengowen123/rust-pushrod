@@ -6,6 +6,7 @@
 - Added a third radio button to control speed of progress widget in example.
 - Improved push button sensitivity, highlights when mouse is in bounds, deselects when out. (#119)
 - Improved toggle button behavior, similar to push button. (#120)
+- Just bought a huge improvement with set_lazy in the window event loop; need to modify timers.
 
 ## 0.2.9
 

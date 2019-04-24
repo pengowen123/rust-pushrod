@@ -137,6 +137,8 @@ impl Pushrod {
             .map(|x| x.widget_id)
             .collect();
 
+        self.window.set_lazy(true);
+
         eprintln!("Injectable Map: {:?}", injectable_map);
 
         while let Some(ref event) = &self.window.next() {
