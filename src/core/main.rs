@@ -144,7 +144,12 @@ impl Pushrod {
         eprintln!("Injectable Map: {:?}", injectable_map);
 
         while let ref event = &self.window.wait_event_timeout(Duration::from_millis(50)) {
+//            self.window.draw_2d(&event, |ctx, gl| {
+//                eprintln!("Draw");
+//            });
+
             match event {
+                // Mouse movement
                 Some(Input::Move(Motion::MouseCursor(ref x, ref y))) => {
                     let mouse_point = make_point_f64(*x, *y);
 
@@ -193,6 +198,23 @@ impl Pushrod {
                     }
                 },
 
+                // Mouse scroll wheel
+                Some(Input::Move(Motion::MouseScroll(ref x, ref y))) => {
+                    let mouse_point = make_point_f64(*x, *y);
+
+                    if last_widget_id != -1 {
+                        self.handle_event(
+                            last_widget_id,
+                            event_handler,
+                            CallbackEvent::MouseScrolled {
+                                widget_id: last_widget_id,
+                                point: mouse_point.clone(),
+                            },
+                        );
+                    }
+                },
+
+                // Keyboard input
                 Some(Input::Button(ButtonArgs {
                     state,
                     button: Button::Keyboard(key),
@@ -209,26 +231,35 @@ impl Pushrod {
                     );
                 },
 
+                // Window focus
+                Some(Input::Focus(ref focused)) => {
+                    self.handle_event(
+                        last_widget_id,
+                        event_handler,
+                        CallbackEvent::WindowFocused { flag: *focused },
+                    )
+                },
+
+                // Window resize
+                Some(Input::Resize(ref w, ref h)) => {
+                    event_handler.handle_event(
+                        CallbackEvent::WindowResized {
+                            size: crate::core::point::Size {
+                                w: *w as i32,
+                                h: *h as i32,
+                            },
+                        },
+                        &mut self.widget_store.borrow_mut(),
+                    );
+
+                    self.widget_store.borrow_mut().invalidate_all_widgets();
+                }
+
                 None => eprintln!("None."),
 
-                _ => eprintln!("{:?}", event),
+                _ => eprintln!("Event: {:?}", event),
             }
 
-//            event.mouse_scroll(|x, y| {
-//                let mouse_point = make_point_f64(x, y);
-//
-//                if last_widget_id != -1 {
-//                    self.handle_event(
-//                        last_widget_id,
-//                        event_handler,
-//                        CallbackEvent::MouseScrolled {
-//                            widget_id: last_widget_id,
-//                            point: mouse_point.clone(),
-//                        },
-//                    );
-//                }
-//            });
-//
 //            event.button(|args| match args.state {
 //                ButtonState::Press => {
 //                    button_map
@@ -277,30 +308,6 @@ impl Pushrod {
 //                        }
 //                    }
 //                }
-//            });
-//
-//            event.resize(|w, h| {
-//                event_handler.handle_event(
-//                    CallbackEvent::WindowResized {
-//                        size: crate::core::point::Size {
-//                            w: w as i32,
-//                            h: h as i32,
-//                        },
-//                    },
-//                    &mut self.widget_store.borrow_mut(),
-//                );
-//            });
-//
-//            event.focus(|focused| {
-//                self.handle_event(
-//                    last_widget_id,
-//                    event_handler,
-//                    CallbackEvent::WindowFocused { flag: focused },
-//                );
-//            });
-//
-//            event.resize(|_, _| {
-//                self.widget_store.borrow_mut().invalidate_all_widgets();
 //            });
 //
 //            // FPS loop handling
