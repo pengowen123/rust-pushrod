@@ -124,7 +124,7 @@ impl Pushrod {
     ///   - Swap display buffers if required
     ///
     /// This event is handled window-by-window.  Once a window has processed all of its pending
-    /// events, the next window is then processed.  No particular window takes precidence - any
+    /// events, the next window is then processed.  No particular window takes precedence - any
     /// window that has events to process gets handled in order.
     pub fn run(&mut self, event_handler: &mut PushrodCallbackEvents) {
         let mut last_widget_id = -1;
@@ -144,9 +144,9 @@ impl Pushrod {
         eprintln!("Injectable Map: {:?}", injectable_map);
 
         while let ref event = &self.window.wait_event_timeout(Duration::from_millis(50)) {
-//            self.window.draw_2d(&event, |ctx, gl| {
-//                eprintln!("Draw");
-//            });
+            self.window.draw_2d(&event, |ctx, gl| {
+                eprintln!("Draw");
+            });
 
             match event {
                 // Mouse movement
