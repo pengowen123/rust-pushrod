@@ -139,6 +139,8 @@ impl Pushrod {
             .collect();
 
         eprintln!("Injectable Map: {:?}", injectable_map);
+        eprintln!("Window Size: {:?}", self.window.size());
+        eprintln!("Draw Size: {:?}", self.window.window.draw_size());
 
         self.window.set_max_fps(30);
 
