@@ -80,5 +80,5 @@ pub enum CallbackEvent {
     UnselectRadioButtons {
         widget_id: i32,
         group_id: i32,
-    }
+    },
 }

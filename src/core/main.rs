@@ -22,8 +22,8 @@ use crate::core::point::*;
 use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
-use piston_window::*;
 use glfw_window::GlfwWindow;
+use piston_window::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
@@ -319,7 +319,7 @@ impl Pushrod {
                         Some(x) => {
                             self.handle_event(*widget_id, event_handler, x.clone());
                             self.widget_store.borrow_mut().inject_event(x.clone());
-                        },
+                        }
                         None => (),
                     }
                 });

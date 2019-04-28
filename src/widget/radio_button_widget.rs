@@ -52,8 +52,7 @@ impl RadioButtonWidget {
         selected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         selected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, true);
 
-        let mut unselected_widget =
-            ImageWidget::new(factory, "radio_unselected.png".to_string());
+        let mut unselected_widget = ImageWidget::new(factory, "radio_unselected.png".to_string());
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
@@ -128,13 +127,16 @@ impl Widget for RadioButtonWidget {
                     }
 
                     _ => (),
-                }
+                },
 
                 _ => (),
             }
         } else {
             match event {
-                CallbackEvent::UnselectRadioButtons { widget_id, group_id } => {
+                CallbackEvent::UnselectRadioButtons {
+                    widget_id,
+                    group_id,
+                } => {
                     if group_id == self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32 {
                         if widget_id != self.config().get_numeric(CONFIG_WIDGET_ID) as i32 {
                             self.selected = false;

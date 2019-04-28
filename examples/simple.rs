@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-extern crate pushrod;
 extern crate glfw_window;
+extern crate pushrod;
 
 use std::cell::RefCell;
 
-use piston_window::*;
 use glfw_window::GlfwWindow;
+use piston_window::*;
 
 use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
@@ -68,11 +68,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_config(
                         CONFIG_DISPLAY_TEXT,
-                        Config::Text(format!(
-                            "Current Widget: {} ({})",
-                            widget_id, widget_name
-                        ))
-                        .clone(),
+                        Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
+                            .clone(),
                     );
 
                 widget_store
