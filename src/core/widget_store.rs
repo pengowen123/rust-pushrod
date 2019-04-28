@@ -264,10 +264,10 @@ impl WidgetStore {
                     };
 
                     let clip: DrawState = c.draw_state.scissor([
-                        origin.x as u32 * 2,
-                        origin.y as u32 * 2,
-                        size.w as u32 * 2,
-                        size.h as u32 * 2,
+                        origin.x as u32,
+                        origin.y as u32,
+                        size.w as u32,
+                        size.h as u32,
                     ]);
 
                     &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);

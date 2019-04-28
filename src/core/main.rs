@@ -23,6 +23,7 @@ use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
 use piston_window::*;
+use glfw_window::GlfwWindow;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
@@ -32,7 +33,7 @@ use piston_window::*;
 /// The objects contained within this structure are used by the `Pushrod` run loop, and
 /// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
-    window: PistonWindow,
+    window: PistonWindow<GlfwWindow>,
     pub widget_store: RefCell<WidgetStore>,
 }
 
@@ -43,7 +44,7 @@ pub struct Pushrod {
 /// IN PROGRESS
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
-    pub fn new(window: PistonWindow) -> Self {
+    pub fn new(window: PistonWindow<GlfwWindow>) -> Self {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
@@ -100,7 +101,6 @@ impl Pushrod {
 
         match injectable_event {
             Some(new_event) => {
-                eprintln!("Inject event: {:?}", new_event);
                 event_handler.handle_event(new_event.clone(), &mut self.widget_store.borrow_mut())
             }
             None => (),
@@ -139,6 +139,10 @@ impl Pushrod {
             .collect();
 
         eprintln!("Injectable Map: {:?}", injectable_map);
+        eprintln!("Window Size: {:?}", self.window.size());
+        eprintln!("Draw Size: {:?}", self.window.window.draw_size());
+
+        self.window.set_max_fps(30);
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -153,10 +157,6 @@ impl Pushrod {
                         .widget_store
                         .borrow_mut()
                         .get_widget_id_for_point(mouse_point.clone());
-                    let current_parent_for_widget = self
-                        .widget_store
-                        .borrow_mut()
-                        .get_parent_of(current_widget_id);
 
                     // Handles the mouse move callback.
                     if current_widget_id != -1 {
@@ -192,15 +192,6 @@ impl Pushrod {
                                 },
                             );
                         }
-
-                        eprintln!(
-                            "Widget IDs: current={} parent={} children={:?}",
-                            current_widget_id,
-                            current_parent_for_widget,
-                            self.widget_store
-                                .borrow_mut()
-                                .get_children_of(current_widget_id)
-                        );
                     }
                 }
             });

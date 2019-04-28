@@ -1,5 +1,16 @@
 # Pushrod Releases
 
+## 0.2.10
+
+- Fixed bug with debugging: when selecting checkbox, now toggles hide/show rather than clearing out text. (#116)
+- Added a third radio button to control speed of progress widget in example.
+- Improved push button sensitivity, highlights when mouse is in bounds, deselects when out. (#119)
+- Improved toggle button behavior, similar to push button. (#120)
+- Just bought a huge improvement with set_lazy in the window event loop; need to modify timers.
+- Modifying code so that GlfwWindow is now a requirement, as it has implemented window polling with timeout properly.
+- Lessened load on the draw routines; switched max FPS to 30.
+- Fixed drawing functionality on all platforms; issue with doubling clip, which is no longer necessary.
+
 ## 0.2.9
 
 - Added radio button images.

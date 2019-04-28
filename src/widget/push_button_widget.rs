@@ -31,6 +31,7 @@ pub struct PushButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
     text_widget: TextWidget,
+    active: bool,
 }
 
 /// Implementation of the constructor for the `PushButtonWidget`.
@@ -52,7 +53,20 @@ impl PushButtonWidget {
                 font_size,
                 justify,
             ),
+            active: false,
         }
+    }
+
+    fn draw_hovered(&mut self) {
+        self.base_widget
+            .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+    }
+
+    fn draw_unhovered(&mut self) {
+        self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+        self.text_widget
+            .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
     }
 }
 
@@ -74,15 +88,26 @@ impl Widget for PushButtonWidget {
     fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
         if !injected {
             match event {
+                CallbackEvent::MouseEntered { widget_id: _ } => {
+                    if self.active {
+                        self.draw_hovered();
+                    }
+                }
+
+                CallbackEvent::MouseExited { widget_id: _ } => {
+                    if self.active {
+                        self.draw_unhovered();
+                    }
+                }
+
                 CallbackEvent::MouseButtonDown {
                     widget_id: _,
                     button,
                 } => match button {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
-                            self.base_widget
-                                .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
-                            self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+                            self.draw_hovered();
+                            self.active = true;
                         }
                     }
                     _ => (),
@@ -91,9 +116,8 @@ impl Widget for PushButtonWidget {
                 CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget
-                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.draw_unhovered();
+                            self.active = false;
 
                             return Some(WidgetClicked { widget_id, button });
                         }
@@ -107,9 +131,8 @@ impl Widget for PushButtonWidget {
                 } => match button {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
-                            self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
-                            self.text_widget
-                                .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+                            self.draw_unhovered();
+                            self.active = false;
                         }
                     }
                     _ => (),

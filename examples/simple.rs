@@ -14,10 +14,13 @@
 // limitations under the License.
 
 extern crate pushrod;
+extern crate glfw_window;
 
 use std::cell::RefCell;
 
 use piston_window::*;
+use glfw_window::GlfwWindow;
+
 use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
@@ -40,62 +43,49 @@ pub struct SimpleWindow {
 pub struct SimpleWindowEventHandler {
     animated: bool,
     progress: u16,
-    debugging: bool,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
         match event {
             CallbackEvent::MouseEntered { widget_id } => {
-                if self.debugging {
-                    // When a mouse enters a widget, the ID will get modified; modify the debug widget
-                    // with the ID that was specified.
-                    let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
-                    let widget_point = widget_store
-                        .get_widget_for_id(widget_id)
-                        .borrow_mut()
-                        .config()
-                        .get_point(CONFIG_ORIGIN);
-                    let widget_size = widget_store
-                        .get_widget_for_id(widget_id)
-                        .borrow_mut()
-                        .config()
-                        .get_size(CONFIG_BODY_SIZE);
+                // When a mouse enters a widget, the ID will get modified; modify the debug widget
+                // with the ID that was specified.
+                let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
+                let widget_point = widget_store
+                    .get_widget_for_id(widget_id)
+                    .borrow_mut()
+                    .config()
+                    .get_point(CONFIG_ORIGIN);
+                let widget_size = widget_store
+                    .get_widget_for_id(widget_id)
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
 
-                    widget_store
-                        .get_widget_for_name("DebugText1")
-                        .borrow_mut()
-                        .set_config(
-                            CONFIG_DISPLAY_TEXT,
-                            Config::Text(format!(
-                                "Current Widget: {} ({})",
-                                widget_id, widget_name
-                            ))
-                            .clone(),
-                        );
+                widget_store
+                    .get_widget_for_name("DebugText1")
+                    .borrow_mut()
+                    .set_config(
+                        CONFIG_DISPLAY_TEXT,
+                        Config::Text(format!(
+                            "Current Widget: {} ({})",
+                            widget_id, widget_name
+                        ))
+                        .clone(),
+                    );
 
-                    widget_store
-                        .get_widget_for_name("DebugText2")
-                        .borrow_mut()
-                        .set_config(
-                            CONFIG_DISPLAY_TEXT,
-                            Config::Text(format!(
-                                "Dimensions: x={} y={} w={} h={}",
-                                widget_point.x, widget_point.y, widget_size.w, widget_size.h
-                            ))
-                            .clone(),
-                        );
-                } else {
-                    widget_store
-                        .get_widget_for_name("DebugText1")
-                        .borrow_mut()
-                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-
-                    widget_store
-                        .get_widget_for_name("DebugText2")
-                        .borrow_mut()
-                        .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-                }
+                widget_store
+                    .get_widget_for_name("DebugText2")
+                    .borrow_mut()
+                    .set_config(
+                        CONFIG_DISPLAY_TEXT,
+                        Config::Text(format!(
+                            "Dimensions: x={} y={} w={} h={}",
+                            widget_point.x, widget_point.y, widget_size.w, widget_size.h
+                        ))
+                        .clone(),
+                    );
             }
 
             CallbackEvent::WidgetClicked { widget_id, button } => {
@@ -302,19 +292,14 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 }
 
                 "DebugCheck1" => {
-                    self.debugging = selected;
-
-                    if !self.debugging {
-                        widget_store
-                            .get_widget_for_name("DebugText1")
-                            .borrow_mut()
-                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-
-                        widget_store
-                            .get_widget_for_name("DebugText2")
-                            .borrow_mut()
-                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(String::from("")));
-                    }
+                    widget_store
+                        .get_widget_for_name("DebugText1")
+                        .borrow_mut()
+                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
+                    widget_store
+                        .get_widget_for_name("DebugText2")
+                        .borrow_mut()
+                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
                 }
 
                 "Radio1" => {
@@ -326,7 +311,14 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 }
 
                 "Radio2" => {
-                    eprintln!("Setting timer 500");
+                    widget_store
+                        .get_widget_for_name("TimerWidget1")
+                        .borrow_mut()
+                        .config()
+                        .set_numeric(CONFIG_TIMER_TIMEOUT, 300);
+                }
+
+                "Radio3" => {
                     widget_store
                         .get_widget_for_name("TimerWidget1")
                         .borrow_mut()
@@ -369,7 +361,6 @@ impl SimpleWindowEventHandler {
         SimpleWindowEventHandler {
             animated: false,
             progress: 50,
-            debugging: true,
         }
     }
 }
@@ -644,14 +635,14 @@ impl SimpleWindow {
         let mut radio_1 = RadioButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),
-            "Fast".to_string(),
+            "1".to_string(),
             20,
             TextJustify::Left,
             true,
         );
 
         radio_1.set_point(CONFIG_ORIGIN, 20, 400);
-        radio_1.set_size(CONFIG_BODY_SIZE, 115, 32);
+        radio_1.set_size(CONFIG_BODY_SIZE, 75, 32);
         radio_1.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         radio_1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         radio_1.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
@@ -662,20 +653,38 @@ impl SimpleWindow {
         let mut radio_2 = RadioButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
             "OpenSans-Regular.ttf".to_string(),
-            "Slow".to_string(),
+            "2".to_string(),
             20,
             TextJustify::Left,
             false,
         );
 
-        radio_2.set_point(CONFIG_ORIGIN, 136, 400);
-        radio_2.set_size(CONFIG_BODY_SIZE, 115, 32);
+        radio_2.set_point(CONFIG_ORIGIN, 100, 400);
+        radio_2.set_size(CONFIG_BODY_SIZE, 75, 32);
         radio_2.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         radio_2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         radio_2.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
         self.pushrod
             .borrow_mut()
             .add_widget("Radio2", Box::new(radio_2));
+
+        let mut radio_3 = RadioButtonWidget::new(
+            self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "3".to_string(),
+            20,
+            TextJustify::Left,
+            false,
+        );
+
+        radio_3.set_point(CONFIG_ORIGIN, 180, 400);
+        radio_3.set_size(CONFIG_BODY_SIZE, 75, 32);
+        radio_3.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
+        radio_3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        radio_3.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("Radio3", Box::new(radio_3));
 
         let mut progress_text = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
@@ -808,7 +817,7 @@ impl SimpleWindow {
 }
 
 fn main() {
-    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow<GlfwWindow> = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(true)
         .build()
