@@ -19,6 +19,7 @@ I wanted to keep these specific design ideas in mind:
 
 - Maintainable with little effort
 - Easily extensible
+- Lightweight enough to run on minimalist hardware
 - **Easy to use and understand**
 
 These design ideas are critical.  **Keep it simple.  Keep it stupid simple.**
@@ -30,6 +31,8 @@ Pushrod requires the following minimum versions:
 | Library | Version |
 | ------- | ------- |
 | piston_window | 0.89 |
+| pistoncore-glfw_window | 0.49 |
+| lazy_static | 1.3 |
 | rust | 2018 |
 
 ## Runnable Examples
