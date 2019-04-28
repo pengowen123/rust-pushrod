@@ -1,5 +1,8 @@
 # Pushrod Releases
 
+## 0.2.11
+
+
 ## 0.2.10
 
 - Fixed bug with debugging: when selecting checkbox, now toggles hide/show rather than clearing out text. (#116)
