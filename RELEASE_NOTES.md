@@ -2,6 +2,8 @@
 
 ## 0.2.11
 
+- Added image button (#80)
+- Changed Rust Image into a Button
 
 ## 0.2.10
 

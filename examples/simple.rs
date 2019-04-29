@@ -27,10 +27,10 @@ use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
-use pushrod::widget::image_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
 use pushrod::widget::radio_button_widget::*;
+use pushrod::widget::image_button_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::toggle_button_widget::*;
@@ -606,15 +606,23 @@ impl SimpleWindow {
     }
 
     fn add_powered_by(&mut self) {
-        let mut image_widget = ImageWidget::new(
+        let mut image_widget = ImageButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Powered By Rust!".to_string(),
             "rust-512x512.jpg".to_string(),
-        );
-        image_widget.set_point(CONFIG_ORIGIN, 740, 540);
-        image_widget.set_size(CONFIG_BODY_SIZE, 48, 48);
+            18,
+            TextJustify::Left);
+
+        image_widget.set_point(CONFIG_ORIGIN, 570, 540);
+        image_widget.set_size(CONFIG_BODY_SIZE, 220, 48);
+        image_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        image_widget.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        image_widget.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
         self.pushrod
             .borrow_mut()
-            .add_widget("RustImage", Box::new(image_widget));
+            .add_widget("RustImageButton", Box::new(image_widget));
     }
 
     fn add_progress(&mut self) {
