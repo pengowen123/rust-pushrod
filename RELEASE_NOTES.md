@@ -4,6 +4,8 @@
 
 - Added image button (#80)
 - Changed Rust Image into a Button
+- Added ability to set button selected state (#89)
+- Modified example application so that it starts the animation on the progress by default
 
 ## 0.2.10
 

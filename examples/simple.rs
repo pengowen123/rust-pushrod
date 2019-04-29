@@ -356,7 +356,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 impl SimpleWindowEventHandler {
     fn new() -> Self {
         SimpleWindowEventHandler {
-            animated: false,
+            animated: true,
             progress: 50,
         }
     }
@@ -712,7 +712,6 @@ impl SimpleWindow {
             "Animate".to_string(),
             18,
             TextJustify::Center,
-            false,
         );
 
         button1.set_point(CONFIG_ORIGIN, 340, 360);
@@ -720,6 +719,7 @@ impl SimpleWindow {
         button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_toggle(CONFIG_SELECTED, true);
 
         self.pushrod
             .borrow_mut()
