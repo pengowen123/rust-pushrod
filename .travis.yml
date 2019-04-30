@@ -5,7 +5,9 @@ os:
   - linux
   - osx
 cache: cargo
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y cmake xorg-dev libglu1-mesa-dev
 script:
-  - sudo apt install cmake xorg-dev libglu1-mesa-dev
   - cargo build --tests
 
