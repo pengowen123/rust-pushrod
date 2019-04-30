@@ -6,6 +6,8 @@
 - Changed Rust Image into a Button
 - Added ability to set button selected state (#89)
 - Modified example application so that it starts the animation on the progress by default
+- Removed debugging from Radio Button.
+- Updated comments in Radio Button.
 
 ## 0.2.10
 

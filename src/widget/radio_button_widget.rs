@@ -1,5 +1,5 @@
-// Checkbox Widget
-// Extensible widget for the widget library - handles a checkbox with text button.
+// Radio Button Widget
+// Extensible widget for the widget library - handles a radio button with text.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -140,7 +140,6 @@ impl Widget for RadioButtonWidget {
                     if group_id == self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32 {
                         if widget_id != self.config().get_numeric(CONFIG_WIDGET_ID) as i32 {
                             self.selected = false;
-                            eprintln!("Deselected radio group: {}", group_id);
                         }
                     }
                 }
