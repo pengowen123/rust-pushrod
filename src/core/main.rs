@@ -23,7 +23,11 @@ use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
 use glfw_window::GlfwWindow;
+
 use piston_window::*;
+use opengl_graphics::{Texture, GlGraphics};
+use graphics::math::scale;
+use gl::types::GLuint;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
@@ -35,6 +39,9 @@ use piston_window::*;
 pub struct Pushrod {
     window: PistonWindow<GlfwWindow>,
     pub widget_store: RefCell<WidgetStore>,
+    texture_buffer: Box<Vec<u8>>,
+    pub texture: Texture,
+    pub fbo: GLuint,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
@@ -48,6 +55,9 @@ impl Pushrod {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
+            texture_buffer: Box::new(vec![0u8; 1]),
+            texture: Texture::empty(&TextureSettings::new()).unwrap(),
+            fbo: 0,
         }
     }
 
@@ -107,6 +117,28 @@ impl Pushrod {
         }
     }
 
+    pub fn handle_resize(&mut self, width: u32, height: u32) {
+        eprintln!("[Resize] W={} H={}", width, height);
+        self.texture_buffer = Box::new(vec![0u8; width as usize * height as usize]);
+        self.texture = Texture::from_memory_alpha(&self.texture_buffer, width, height, &TextureSettings::new()).unwrap();
+
+        unsafe {
+            let mut fbos: [GLuint; 1] = [0];
+
+            gl::GenFramebuffers(1, fbos.as_mut_ptr());
+            self.fbo = fbos[0];
+
+            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
+            gl::FramebufferTexture2D(gl::FRAMEBUFFER, gl::COLOR_ATTACHMENT0, gl::TEXTURE_2D,
+                self.texture.get_id(), 0);
+        }
+    }
+
+    fn prepare_buffers(&mut self) {
+        let draw_size = self.window.draw_size();
+        self.handle_resize(draw_size.width as u32, draw_size.height as u32);
+    }
+
     /// This is the main run loop that is called to process all UI events.  This loop is responsible
     /// for handling events from the OS, converting them to workable objects, and passing them off
     /// to quick callback dispatchers.
@@ -137,12 +169,14 @@ impl Pushrod {
             .filter(|x| x.widget.borrow_mut().injects_events())
             .map(|x| x.widget_id)
             .collect();
+        let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
         eprintln!("Draw Size: {:?}", self.window.window.draw_size());
 
         self.window.set_max_fps(30);
+        self.prepare_buffers();
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -262,6 +296,8 @@ impl Pushrod {
             });
 
             event.resize(|w, h| {
+                self.handle_resize(w as u32, h as u32);
+
                 event_handler.handle_event(
                     CallbackEvent::WindowResized {
                         size: crate::core::point::Size {
@@ -306,7 +342,7 @@ impl Pushrod {
 
             // FPS loop handling
 
-            event.render(|_| {
+            event.render(|args| {
                 injectable_map.iter().for_each(|widget_id| {
                     let injectable_event = self
                         .widget_store
@@ -324,8 +360,29 @@ impl Pushrod {
                     }
                 });
 
-                self.handle_draw(&event);
-                self.widget_store.borrow_mut().invalidate_all_widgets();
+                let widgets = &mut self.widget_store.borrow_mut();
+
+                unsafe {
+                    gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
+                }
+
+//                gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g));
+
+                unsafe {
+                    gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
+                }
+
+                gl.draw(args.viewport(), |c, g| {
+                    clear([1.0, 1.0, 1.0, 0.0], g);
+                    let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
+                    Image::new().draw(&self.texture, &c.draw_state, flipped, g);
+                });
+
+
+//                self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
+
+//                self.handle_draw(&event);
+//                self.widget_store.borrow_mut().invalidate_all_widgets();
             });
         }
     }
