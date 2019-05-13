@@ -27,10 +27,10 @@ use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
+use pushrod::widget::image_button_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
 use pushrod::widget::radio_button_widget::*;
-use pushrod::widget::image_button_widget::*;
 use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::toggle_button_widget::*;
@@ -612,7 +612,8 @@ impl SimpleWindow {
             "Powered By Rust!".to_string(),
             "rust-512x512.jpg".to_string(),
             18,
-            TextJustify::Left);
+            TextJustify::Left,
+        );
 
         image_widget.set_point(CONFIG_ORIGIN, 570, 540);
         image_widget.set_size(CONFIG_BODY_SIZE, 220, 48);
@@ -800,13 +801,13 @@ impl SimpleWindow {
     }
 
     fn build(&mut self) {
-//        self.add_hello_world();
+        //        self.add_hello_world();
         self.add_base_widget();
-//        self.add_box_widgets();
-//        self.add_powered_by();
-//        self.add_progress();
-//        self.add_timer();
-//        self.add_debugging();
+        //        self.add_box_widgets();
+        //        self.add_powered_by();
+        //        self.add_progress();
+        //        self.add_timer();
+        //        self.add_debugging();
     }
 
     fn get_pushrod(&mut self) -> &mut Pushrod {

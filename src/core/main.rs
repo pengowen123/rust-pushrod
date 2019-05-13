@@ -24,10 +24,10 @@ use crate::widget::widget::*;
 
 use glfw_window::GlfwWindow;
 
-use piston_window::*;
-use opengl_graphics::{Texture, GlGraphics};
-use graphics::math::scale;
 use gl::types::GLuint;
+use graphics::math::scale;
+use opengl_graphics::{GlGraphics, Texture};
+use piston_window::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
@@ -86,11 +86,11 @@ impl Pushrod {
             .add_widget_to_parent(name, widget, parent_id)
     }
 
-//    fn handle_draw(&mut self, event: &Event) {
-//        let widgets = &mut self.widget_store.borrow_mut();
-//
-//        self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
-//    }
+    //    fn handle_draw(&mut self, event: &Event) {
+    //        let widgets = &mut self.widget_store.borrow_mut();
+    //
+    //        self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
+    //    }
 
     fn handle_event(
         &mut self,
@@ -120,7 +120,13 @@ impl Pushrod {
     pub fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
         self.texture_buffer = Box::new(vec![0u8; width as usize * height as usize]);
-        self.texture = Texture::from_memory_alpha(&self.texture_buffer, width, height, &TextureSettings::new()).unwrap();
+        self.texture = Texture::from_memory_alpha(
+            &self.texture_buffer,
+            width,
+            height,
+            &TextureSettings::new(),
+        )
+        .unwrap();
 
         unsafe {
             let mut fbos: [GLuint; 1] = [0];
@@ -129,8 +135,13 @@ impl Pushrod {
             self.fbo = fbos[0];
 
             gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-            gl::FramebufferTexture2D(gl::FRAMEBUFFER, gl::COLOR_ATTACHMENT0, gl::TEXTURE_2D,
-                self.texture.get_id(), 0);
+            gl::FramebufferTexture2D(
+                gl::FRAMEBUFFER,
+                gl::COLOR_ATTACHMENT0,
+                gl::TEXTURE_2D,
+                self.texture.get_id(),
+                0,
+            );
         }
     }
 
@@ -363,7 +374,6 @@ impl Pushrod {
                     }
                 });
 
-
                 let widgets = &mut self.widget_store.borrow_mut();
 
                 unsafe {
@@ -382,10 +392,9 @@ impl Pushrod {
                     Image::new().draw(&self.texture, &c.draw_state, flipped, g);
                 });
 
+                //                self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
 
-//                self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
-
-//                self.handle_draw(&event);
+                //                self.handle_draw(&event);
             });
         }
     }

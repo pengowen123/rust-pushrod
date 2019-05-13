@@ -13,16 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
-use crate::core::point::Point;
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
+use crate::core::point::Point;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
-use crate::widget::text_widget::*;
 use crate::widget::image_widget::*;
+use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
 /// This is the `ImageButtonWidget`, which contains a top-level widget for display, overriding the
@@ -48,10 +48,7 @@ impl ImageButtonWidget {
         font_size: u32,
         justify: TextJustify,
     ) -> Self {
-        let mut image_widget = ImageWidget::new(
-            factory,
-            image_name.to_string(),
-        );
+        let mut image_widget = ImageWidget::new(factory, image_name.to_string());
 
         image_widget.set_point(CONFIG_ORIGIN, 2, 2);
 
@@ -170,11 +167,24 @@ impl Widget for ImageButtonWidget {
         let size = self.base_widget.config().get_size(CONFIG_BODY_SIZE);
         let border = (self.base_widget.config().get_numeric(CONFIG_BORDER_WIDTH) * 2) as i32;
 
-        self.image_widget.config().set_size(CONFIG_BODY_SIZE, size.h - border as i32, size.h - (border * 2) as i32);
+        self.image_widget.config().set_size(
+            CONFIG_BODY_SIZE,
+            size.h - border as i32,
+            size.h - (border * 2) as i32,
+        );
 
         self.base_widget.draw(c, g, &clip);
-        self.image_widget.draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
-        self.text_widget.draw_with_offset(c, g, &clip, Point { x: size.h + border + 4, y: 0 });
+        self.image_widget
+            .draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
+        self.text_widget.draw_with_offset(
+            c,
+            g,
+            &clip,
+            Point {
+                x: size.h + border + 4,
+                y: 0,
+            },
+        );
 
         // Then clear invalidation.
         self.clear_invalidate();

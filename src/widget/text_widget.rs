@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -124,47 +124,47 @@ impl TextWidget {
 
         // This prevents the calculation from occurring at every single draw cycle.  It only needs
         // to occur once.
-//        if self.desired_size.0 == 0 {
-//            self.desired_size = private::TextHelper::new(self.font_size)
-//                .determine_size(
-//                    self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
-//                    &mut self.font_cache,
-//                    g,
-//                )
-//                .unwrap();
-//
-//            if self.desired_size.0 != 0 || self.desired_size.1 != 0 {
-//                eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
-//            }
-//        }
-//
-//        // Modify transform here based on the width of the text being drawn, which is element 0 of
-//        // self.desired_size
-//        let start_x = match self.justify {
-//            TextJustify::Left => 0.0,
-//            TextJustify::Center => ((size.w - self.desired_size.0) / 2) as f64,
-//            TextJustify::Right => (size.w - self.desired_size.0) as f64,
-//        };
-//
-//        // Vertically justify the text as default.
-//        let start_y = (self.font_size - 2 + size.h as u32) / 2 - 1;
-//
-//        // And draw the remaining text based on the starting point adjusted by the text justification.
-//        //
-//        // IMPORTANT NOTE:
-//        // The provided transform from the run loop must be modified, as Piston's text drawing
-//        // routines treats the top "y" value specified as the _baseline_ for the image drawing
-//        // start point.  We want to treat the _inside_ of the box as the baseline, so we simply
-//        // add the size of the font (in pixels), which adjusts the baseline to the desired area.
-//        Text::new_color(self.config().get_color(CONFIG_TEXT_COLOR), self.font_size)
-//            .draw(
-//                self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
-//                &mut self.font_cache,
-//                clip,
-//                c.transform.trans(start_x, start_y as f64),
-//                g,
-//            )
-//            .unwrap();
+        //        if self.desired_size.0 == 0 {
+        //            self.desired_size = private::TextHelper::new(self.font_size)
+        //                .determine_size(
+        //                    self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
+        //                    &mut self.font_cache,
+        //                    g,
+        //                )
+        //                .unwrap();
+        //
+        //            if self.desired_size.0 != 0 || self.desired_size.1 != 0 {
+        //                eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
+        //            }
+        //        }
+        //
+        //        // Modify transform here based on the width of the text being drawn, which is element 0 of
+        //        // self.desired_size
+        //        let start_x = match self.justify {
+        //            TextJustify::Left => 0.0,
+        //            TextJustify::Center => ((size.w - self.desired_size.0) / 2) as f64,
+        //            TextJustify::Right => (size.w - self.desired_size.0) as f64,
+        //        };
+        //
+        //        // Vertically justify the text as default.
+        //        let start_y = (self.font_size - 2 + size.h as u32) / 2 - 1;
+        //
+        //        // And draw the remaining text based on the starting point adjusted by the text justification.
+        //        //
+        //        // IMPORTANT NOTE:
+        //        // The provided transform from the run loop must be modified, as Piston's text drawing
+        //        // routines treats the top "y" value specified as the _baseline_ for the image drawing
+        //        // start point.  We want to treat the _inside_ of the box as the baseline, so we simply
+        //        // add the size of the font (in pixels), which adjusts the baseline to the desired area.
+        //        Text::new_color(self.config().get_color(CONFIG_TEXT_COLOR), self.font_size)
+        //            .draw(
+        //                self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
+        //                &mut self.font_cache,
+        //                clip,
+        //                c.transform.trans(start_x, start_y as f64),
+        //                g,
+        //            )
+        //            .unwrap();
     }
 }
 

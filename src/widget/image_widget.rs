@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use opengl_graphics::{GlGraphics, Texture};
 use piston_window::*;
-use opengl_graphics::{Texture, GlGraphics};
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -41,9 +41,9 @@ impl ImageWidget {
             .for_folder("assets")
             .unwrap();
         let texture = Texture::from_path(
-//            factory,
+            //            factory,
             &assets.join(image_name),
-//            Flip::None,
+            //            Flip::None,
             &TextureSettings::new(),
         )
         .unwrap();
@@ -76,7 +76,7 @@ impl Widget for ImageWidget {
             size.h as f64 / self.image_size.h as f64,
         );
 
-//        Image::new().draw(&self.texture, &c.draw_state, flipped, g);
+        //        Image::new().draw(&self.texture, &c.draw_state, flipped, g);
 
         Image::new().draw(&*self.image, clip, transform, g);
 

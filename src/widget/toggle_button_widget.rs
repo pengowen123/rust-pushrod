@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use crate::core::callbacks::CallbackEvent::WidgetSelected;
 use crate::core::callbacks::*;

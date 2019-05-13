@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use opengl_graphics::GlGraphics;
 use piston_window::*;
 use std::time::{SystemTime, UNIX_EPOCH};
-use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::widget::config::*;

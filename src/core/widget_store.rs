@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use std::cell::RefCell;
 
@@ -277,8 +277,11 @@ impl WidgetStore {
                         size.h as u32,
                     ]);
 
-//                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
-                    &paint_widget.widget.borrow_mut().draw(new_context, g, &c.draw_state);
+                    //                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+                    &paint_widget
+                        .widget
+                        .borrow_mut()
+                        .draw(new_context, g, &c.draw_state);
 
                     if paint_widget
                         .widget
