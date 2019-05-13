@@ -180,162 +180,162 @@ impl Pushrod {
         self.widget_store.borrow_mut().invalidate_all_widgets();
 
         while let Some(ref event) = &self.window.next() {
-//            event.mouse_cursor(|x, y| {
-//                let mouse_point = make_point_f64(x, y);
-//
-//                if mouse_point.x != previous_mouse_position.x
-//                    || mouse_point.y != previous_mouse_position.y
-//                {
-//                    previous_mouse_position = mouse_point.clone();
-//
-//                    let current_widget_id = self
-//                        .widget_store
-//                        .borrow_mut()
-//                        .get_widget_id_for_point(mouse_point.clone());
-//
-//                    // Handles the mouse move callback.
-//                    if current_widget_id != -1 {
-//                        self.handle_event(
-//                            current_widget_id,
-//                            event_handler,
-//                            CallbackEvent::MouseMoved {
-//                                widget_id: current_widget_id,
-//                                point: mouse_point.clone(),
-//                            },
-//                        );
-//                    }
-//
-//                    if current_widget_id != last_widget_id {
-//                        if last_widget_id != -1 {
-//                            self.handle_event(
-//                                last_widget_id,
-//                                event_handler,
-//                                CallbackEvent::MouseExited {
-//                                    widget_id: last_widget_id,
-//                                },
-//                            );
-//                        }
-//
-//                        last_widget_id = current_widget_id;
-//
-//                        if last_widget_id != -1 {
-//                            self.handle_event(
-//                                last_widget_id,
-//                                event_handler,
-//                                CallbackEvent::MouseEntered {
-//                                    widget_id: last_widget_id,
-//                                },
-//                            );
-//                        }
-//                    }
-//                }
-//            });
-//
-//            event.mouse_scroll(|x, y| {
-//                let mouse_point = make_point_f64(x, y);
-//
-//                if last_widget_id != -1 {
-//                    self.handle_event(
-//                        last_widget_id,
-//                        event_handler,
-//                        CallbackEvent::MouseScrolled {
-//                            widget_id: last_widget_id,
-//                            point: mouse_point.clone(),
-//                        },
-//                    );
-//                }
-//            });
-//
-//            event.button(|args| match args.state {
-//                ButtonState::Press => {
-//                    button_map
-//                        .entry(last_widget_id)
-//                        .or_insert(HashSet::new())
-//                        .insert(args.button);
-//
-//                    self.handle_event(
-//                        last_widget_id,
-//                        event_handler,
-//                        CallbackEvent::MouseButtonDown {
-//                            widget_id: last_widget_id,
-//                            button: args.button,
-//                        },
-//                    );
-//                }
-//
-//                ButtonState::Release => {
-//                    let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
-//
-//                    if button_set.contains(&args.button) {
-//                        button_set.remove(&args.button);
-//
-//                        self.handle_event(
-//                            last_widget_id,
-//                            event_handler,
-//                            CallbackEvent::MouseButtonUpInside {
-//                                widget_id: last_widget_id,
-//                                button: args.button,
-//                            },
-//                        );
-//                    } else {
-//                        for (widget_id, button_set) in button_map.iter_mut() {
-//                            if button_set.contains(&args.button) {
-//                                self.handle_event(
-//                                    *widget_id,
-//                                    event_handler,
-//                                    CallbackEvent::MouseButtonUpOutside {
-//                                        widget_id: *widget_id,
-//                                        button: args.button,
-//                                    },
-//                                );
-//
-//                                button_set.remove(&args.button);
-//                            }
-//                        }
-//                    }
-//                }
-//            });
-//
-//            event.resize(|w, h| {
-//                self.handle_resize(w as u32, h as u32);
-//
-//                event_handler.handle_event(
-//                    CallbackEvent::WindowResized {
-//                        size: crate::core::point::Size {
-//                            w: w as i32,
-//                            h: h as i32,
-//                        },
-//                    },
-//                    &mut self.widget_store.borrow_mut(),
-//                );
-//            });
-//
-//            event.focus(|focused| {
-//                self.handle_event(
-//                    last_widget_id,
-//                    event_handler,
-//                    CallbackEvent::WindowFocused { flag: focused },
-//                );
-//            });
-//
-//            match event {
-//                Event::Input(Input::Button(ButtonArgs {
-//                    state,
-//                    button: Button::Keyboard(key),
-//                    scancode: _,
-//                })) => {
-//                    self.handle_event(
-//                        last_widget_id,
-//                        event_handler,
-//                        CallbackEvent::KeyPressed {
-//                            widget_id: last_widget_id,
-//                            key: *key,
-//                            state: *state,
-//                        },
-//                    );
-//                }
-//                _ => {}
-//            };
+            event.mouse_cursor(|x, y| {
+                let mouse_point = make_point_f64(x, y);
+
+                if mouse_point.x != previous_mouse_position.x
+                    || mouse_point.y != previous_mouse_position.y
+                {
+                    previous_mouse_position = mouse_point.clone();
+
+                    let current_widget_id = self
+                        .widget_store
+                        .borrow_mut()
+                        .get_widget_id_for_point(mouse_point.clone());
+
+                    // Handles the mouse move callback.
+                    if current_widget_id != -1 {
+                        self.handle_event(
+                            current_widget_id,
+                            event_handler,
+                            CallbackEvent::MouseMoved {
+                                widget_id: current_widget_id,
+                                point: mouse_point.clone(),
+                            },
+                        );
+                    }
+
+                    if current_widget_id != last_widget_id {
+                        if last_widget_id != -1 {
+                            self.handle_event(
+                                last_widget_id,
+                                event_handler,
+                                CallbackEvent::MouseExited {
+                                    widget_id: last_widget_id,
+                                },
+                            );
+                        }
+
+                        last_widget_id = current_widget_id;
+
+                        if last_widget_id != -1 {
+                            self.handle_event(
+                                last_widget_id,
+                                event_handler,
+                                CallbackEvent::MouseEntered {
+                                    widget_id: last_widget_id,
+                                },
+                            );
+                        }
+                    }
+                }
+            });
+
+            event.mouse_scroll(|x, y| {
+                let mouse_point = make_point_f64(x, y);
+
+                if last_widget_id != -1 {
+                    self.handle_event(
+                        last_widget_id,
+                        event_handler,
+                        CallbackEvent::MouseScrolled {
+                            widget_id: last_widget_id,
+                            point: mouse_point.clone(),
+                        },
+                    );
+                }
+            });
+
+            event.button(|args| match args.state {
+                ButtonState::Press => {
+                    button_map
+                        .entry(last_widget_id)
+                        .or_insert(HashSet::new())
+                        .insert(args.button);
+
+                    self.handle_event(
+                        last_widget_id,
+                        event_handler,
+                        CallbackEvent::MouseButtonDown {
+                            widget_id: last_widget_id,
+                            button: args.button,
+                        },
+                    );
+                }
+
+                ButtonState::Release => {
+                    let button_set = button_map.entry(last_widget_id).or_insert(HashSet::new());
+
+                    if button_set.contains(&args.button) {
+                        button_set.remove(&args.button);
+
+                        self.handle_event(
+                            last_widget_id,
+                            event_handler,
+                            CallbackEvent::MouseButtonUpInside {
+                                widget_id: last_widget_id,
+                                button: args.button,
+                            },
+                        );
+                    } else {
+                        for (widget_id, button_set) in button_map.iter_mut() {
+                            if button_set.contains(&args.button) {
+                                self.handle_event(
+                                    *widget_id,
+                                    event_handler,
+                                    CallbackEvent::MouseButtonUpOutside {
+                                        widget_id: *widget_id,
+                                        button: args.button,
+                                    },
+                                );
+
+                                button_set.remove(&args.button);
+                            }
+                        }
+                    }
+                }
+            });
+
+            event.resize(|w, h| {
+                self.handle_resize(w as u32, h as u32);
+
+                event_handler.handle_event(
+                    CallbackEvent::WindowResized {
+                        size: crate::core::point::Size {
+                            w: w as i32,
+                            h: h as i32,
+                        },
+                    },
+                    &mut self.widget_store.borrow_mut(),
+                );
+            });
+
+            event.focus(|focused| {
+                self.handle_event(
+                    last_widget_id,
+                    event_handler,
+                    CallbackEvent::WindowFocused { flag: focused },
+                );
+            });
+
+            match event {
+                Event::Input(Input::Button(ButtonArgs {
+                    state,
+                    button: Button::Keyboard(key),
+                    scancode: _,
+                })) => {
+                    self.handle_event(
+                        last_widget_id,
+                        event_handler,
+                        CallbackEvent::KeyPressed {
+                            widget_id: last_widget_id,
+                            key: *key,
+                            state: *state,
+                        },
+                    );
+                }
+                _ => {}
+            };
 
             event.resize(|_, _| {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
@@ -344,6 +344,8 @@ impl Pushrod {
             // FPS loop handling
 
             event.render(|args| {
+                self.widget_store.borrow_mut().invalidate_all_widgets();
+
                 injectable_map.iter().for_each(|widget_id| {
                     let injectable_event = self
                         .widget_store
@@ -384,7 +386,6 @@ impl Pushrod {
 //                self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
 
 //                self.handle_draw(&event);
-//                self.widget_store.borrow_mut().invalidate_all_widgets();
             });
         }
     }

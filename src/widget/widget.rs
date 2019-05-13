@@ -133,13 +133,12 @@ pub trait Widget {
     /// behavior.)
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
+        let origin: Point = self.config().get_point(CONFIG_ORIGIN);
 
-        Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)).draw(
-            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
-            clip,
-            c.transform,
-            g,
-        );
+        g.rectangle(&Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+                    [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+                    clip,
+                    c.transform);
 
         self.clear_invalidate();
     }

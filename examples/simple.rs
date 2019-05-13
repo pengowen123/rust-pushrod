@@ -800,13 +800,13 @@ impl SimpleWindow {
     }
 
     fn build(&mut self) {
-        self.add_hello_world();
+//        self.add_hello_world();
         self.add_base_widget();
-        self.add_box_widgets();
-        self.add_powered_by();
-        self.add_progress();
-        self.add_timer();
-        self.add_debugging();
+//        self.add_box_widgets();
+//        self.add_powered_by();
+//        self.add_progress();
+//        self.add_timer();
+//        self.add_debugging();
     }
 
     fn get_pushrod(&mut self) -> &mut Pushrod {

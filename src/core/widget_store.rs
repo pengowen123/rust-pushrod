@@ -277,7 +277,8 @@ impl WidgetStore {
                         size.h as u32,
                     ]);
 
-                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+//                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+                    &paint_widget.widget.borrow_mut().draw(new_context, g, &c.draw_state);
 
                     if paint_widget
                         .widget
