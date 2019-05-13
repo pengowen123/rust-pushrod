@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use std::cell::RefCell;
 
@@ -231,7 +232,7 @@ impl WidgetStore {
     /// order.  Therefore, the parent is drawn first, then sibling, and other siblings.  This draw
     /// function is used by the `Pushrod` main loop, and is meant to be called in a `draw_2d`
     /// closure.
-    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut G2d) {
+    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics) {
         let parents_of_widget = self.get_children_of(widget_id);
 
         if parents_of_widget.len() == 0 {

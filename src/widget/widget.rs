@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -130,7 +131,7 @@ pub trait Widget {
     /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
     /// behavior.)
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)).draw(
@@ -146,7 +147,7 @@ pub trait Widget {
     /// Sets an alternate context with a drawing offset and size scale, then calls the underlying draw
     /// routine.  If this is _not_ the desired effect, this routine can be overridden, but this
     /// will handle the offset drawing for 90% of the `Widget` draw routines.
-    fn draw_with_offset(&mut self, c: Context, g: &mut G2d, clip: &DrawState, point_offset: Point) {
+    fn draw_with_offset(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState, point_offset: Point) {
         self.draw(
             c.trans(point_offset.x as f64, point_offset.y as f64),
             g,

@@ -15,6 +15,7 @@
 
 use piston_window::*;
 use std::time::{SystemTime, UNIX_EPOCH};
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::widget::config::*;
@@ -108,7 +109,7 @@ impl Widget for TimerWidget {
 
     /// Does not draw anything - only calls the timer `tick()` function to increment the
     /// timer.
-    fn draw(&mut self, _context: Context, _graphics: &mut G2d, _clip: &DrawState) {
+    fn draw(&mut self, _context: Context, _graphics: &mut GlGraphics, _clip: &DrawState) {
         self.tick();
     }
 }

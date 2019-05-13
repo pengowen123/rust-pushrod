@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::{Texture, GlGraphics};
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -25,7 +26,7 @@ use crate::widget::widget::*;
 /// IN PROGRESS
 pub struct ImageWidget {
     config: Configurable,
-    image: Box<G2dTexture>,
+    image: Box<Texture>,
     image_size: crate::core::point::Size,
 }
 
@@ -40,19 +41,21 @@ impl ImageWidget {
             .for_folder("assets")
             .unwrap();
         let texture = Texture::from_path(
-            factory,
+//            factory,
             &assets.join(image_name),
-            Flip::None,
+//            Flip::None,
             &TextureSettings::new(),
         )
         .unwrap();
+        let image_width = texture.get_width() as i32;
+        let image_height = texture.get_height() as i32;
 
         Self {
             config: Configurable::new(),
-            image: Box::new(texture.clone()),
+            image: Box::new(texture),
             image_size: crate::core::point::Size {
-                w: texture.clone().get_size().0 as i32,
-                h: texture.clone().get_size().1 as i32,
+                w: image_width,
+                h: image_height,
             },
         }
     }
@@ -66,12 +69,14 @@ impl Widget for ImageWidget {
     }
 
     /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
         let transform = c.transform.scale(
             size.w as f64 / self.image_size.w as f64,
             size.h as f64 / self.image_size.h as f64,
         );
+
+//        Image::new().draw(&self.texture, &c.draw_state, flipped, g);
 
         Image::new().draw(&*self.image, clip, transform, g);
 

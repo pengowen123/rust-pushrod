@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -40,7 +41,7 @@ impl BoxWidget {
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
-    fn draw_box(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw_box(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
         let border: f64 = self.config().get_numeric(CONFIG_BORDER_WIDTH) as f64;
         let color: types::Color = self.config().get_color(CONFIG_BORDER_COLOR);
@@ -110,7 +111,7 @@ impl Widget for BoxWidget {
     ///
     /// - Base widget first
     /// - Box graphic for the specified width
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);
