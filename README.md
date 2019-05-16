@@ -35,6 +35,16 @@ Pushrod requires the following minimum versions:
 | lazy_static | 1.3 |
 | rust | 2018 |
 
+This library requires the use of `glfw`.  To install this on Ubuntu Linux,
+you will want to run the following commands:
+
+```
+sudo apt install libglfw3 libglfw3-dev xorg-dev
+```
+
+This will install `libglfw`, the development libraries, and all of the
+X11 headers and libraries required to compile `glfw`.
+
 ## Runnable Examples
 
 ```
