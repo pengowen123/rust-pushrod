@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.2.12
+
+- Added use of Rectangle instead of drawing lines multiple times for box.  (#124)
+
 ## 0.2.11
 
 - Added image button (#80)

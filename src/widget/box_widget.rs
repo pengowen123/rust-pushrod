@@ -45,47 +45,9 @@ impl BoxWidget {
         let border: f64 = self.config().get_numeric(CONFIG_BORDER_WIDTH) as f64;
         let color: types::Color = self.config().get_color(CONFIG_BORDER_COLOR);
 
-        // Upper left to upper right
-        Line::new(color, border).draw(
-            [0.0 as f64, border, size.w as f64, border],
-            clip,
-            c.transform,
-            g,
-        );
-
-        // Upper left to lower right
-        Line::new(color, border).draw(
-            [
-                size.w as f64 - border,
-                border,
-                size.w as f64 - border,
-                size.h as f64,
-            ],
-            clip,
-            c.transform,
-            g,
-        );
-
-        // Upper left to lower left
-        Line::new(color, border).draw(
-            [border, border, border, size.h as f64],
-            clip,
-            c.transform,
-            g,
-        );
-
-        // Lower left to lower right
-        Line::new(color, border).draw(
-            [
-                0.0 as f64,
-                size.h as f64 - border,
-                size.w as f64,
-                size.h as f64 - border,
-            ],
-            clip,
-            c.transform,
-            g,
-        );
+        Rectangle::new_border(color, border).draw(
+            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
+            clip, c.transform, g);
     }
 }
 
