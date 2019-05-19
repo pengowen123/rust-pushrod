@@ -10,7 +10,7 @@ Draws inspiration from lots of GUI libraries.
 
 ## (Ever Evolving) Screenshot of Sample
 
-[![](docs/sample-0.2.9.gif)](docs/sample-0.2.9.gif)
+[![](docs/sample-0.2.11.gif)](docs/sample-0.2.11.gif)
 
 ## Philosophy
 
@@ -31,17 +31,6 @@ Pushrod requires the following minimum versions:
 | Library | Version |
 | ------- | ------- |
 | piston_window | 0.89 |
-| pistoncore-glfw_window | 0.59 |
-
-This library requires the use of `glfw`.  To install this on Ubuntu Linux,
-you will want to run the following commands:
-
-```
-sudo apt install libglfw3 libglfw3-dev xorg-dev
-```
-
-This will install `libglfw`, the development libraries, and all of the
-X11 headers and libraries required to compile `glfw`.
 
 ## Runnable Examples
 
