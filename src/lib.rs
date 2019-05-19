@@ -112,5 +112,6 @@ pub mod event;
 /// - Image Widget (for drawing images)
 /// - Push Button Widget (for creating an interactive button that can be clicked)
 /// - Toggle Button Widget (for creating an on/off button that can be toggled)
+/// - Radio Button Widget (for creating a group of buttons where only one item can be selected at a time)
 /// - Progress Widget (for displaying progress of an operation)
 pub mod widget;

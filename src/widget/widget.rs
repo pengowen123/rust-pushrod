@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::*;
@@ -132,12 +133,13 @@ pub trait Widget {
     /// behavior.)
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
+        let origin: Point = self.config().get_point(CONFIG_ORIGIN);
 
-        Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)).draw(
-            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
             clip,
             c.transform,
-            g,
         );
 
         self.clear_invalidate();
@@ -146,7 +148,13 @@ pub trait Widget {
     /// Sets an alternate context with a drawing offset and size scale, then calls the underlying draw
     /// routine.  If this is _not_ the desired effect, this routine can be overridden, but this
     /// will handle the offset drawing for 90% of the `Widget` draw routines.
-    fn draw_with_offset(&mut self, c: Context, g: &mut G2d, clip: &DrawState, point_offset: Point) {
+    fn draw_with_offset(
+        &mut self,
+        c: Context,
+        g: &mut G2d,
+        clip: &DrawState,
+        point_offset: Point,
+    ) {
         self.draw(
             c.trans(point_offset.x as f64, point_offset.y as f64),
             g,

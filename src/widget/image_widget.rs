@@ -45,7 +45,7 @@ impl ImageWidget {
             Flip::None,
             &TextureSettings::new(),
         )
-        .unwrap();
+            .unwrap();
 
         Self {
             config: Configurable::new(),

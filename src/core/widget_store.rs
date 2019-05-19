@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use std::cell::RefCell;
@@ -105,7 +106,11 @@ impl WidgetStore {
         };
 
         // #117 - assigns widget ID to itself
-        container.widget.borrow_mut().config().set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
+        container
+            .widget
+            .borrow_mut()
+            .config()
+            .set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
 
         self.widgets.push(container);
 
@@ -132,7 +137,11 @@ impl WidgetStore {
         };
 
         // #117 - assigns widget ID to itself
-        container.widget.borrow_mut().config().set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
+        container
+            .widget
+            .borrow_mut()
+            .config()
+            .set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
 
         self.widgets.push(container);
 
@@ -213,11 +222,9 @@ impl WidgetStore {
     /// Handles an event that was injected by another `Widget`, sending that event to all `Widgets`,
     /// with the `injected` flag set `true`.
     pub fn inject_event(&mut self, event: CallbackEvent) {
-        self.widgets
-            .iter_mut()
-            .for_each(|x| {
-                x.widget.borrow_mut().handle_event(true, event.clone());
-            });
+        self.widgets.iter_mut().for_each(|x| {
+            x.widget.borrow_mut().handle_event(true, event.clone());
+        });
     }
 
     /// Recursive draw object: paints objects in order of appearance on the screen.  This does not
@@ -270,7 +277,11 @@ impl WidgetStore {
                         size.h as u32,
                     ]);
 
-                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+                    //                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
+                    &paint_widget
+                        .widget
+                        .borrow_mut()
+                        .draw(new_context, g, &c.draw_state);
 
                     if paint_widget
                         .widget

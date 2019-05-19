@@ -14,12 +14,10 @@
 // limitations under the License.
 
 extern crate pushrod;
-extern crate glfw_window;
 
 use std::cell::RefCell;
 
 use piston_window::*;
-use glfw_window::GlfwWindow;
 
 use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
@@ -27,7 +25,7 @@ use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
-use pushrod::widget::image_widget::*;
+use pushrod::widget::image_button_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
 use pushrod::widget::radio_button_widget::*;
@@ -68,11 +66,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_config(
                         CONFIG_DISPLAY_TEXT,
-                        Config::Text(format!(
-                            "Current Widget: {} ({})",
-                            widget_id, widget_name
-                        ))
-                        .clone(),
+                        Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
+                            .clone(),
                     );
 
                 widget_store
@@ -359,7 +354,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 impl SimpleWindowEventHandler {
     fn new() -> Self {
         SimpleWindowEventHandler {
-            animated: false,
+            animated: true,
             progress: 50,
         }
     }
@@ -609,15 +604,24 @@ impl SimpleWindow {
     }
 
     fn add_powered_by(&mut self) {
-        let mut image_widget = ImageWidget::new(
+        let mut image_widget = ImageButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
+            "OpenSans-Regular.ttf".to_string(),
+            "Powered By Rust!".to_string(),
             "rust-512x512.jpg".to_string(),
+            18,
+            TextJustify::Left,
         );
-        image_widget.set_point(CONFIG_ORIGIN, 740, 540);
-        image_widget.set_size(CONFIG_BODY_SIZE, 48, 48);
+
+        image_widget.set_point(CONFIG_ORIGIN, 570, 540);
+        image_widget.set_size(CONFIG_BODY_SIZE, 220, 48);
+        image_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        image_widget.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        image_widget.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
         self.pushrod
             .borrow_mut()
-            .add_widget("RustImage", Box::new(image_widget));
+            .add_widget("RustImageButton", Box::new(image_widget));
     }
 
     fn add_progress(&mut self) {
@@ -707,7 +711,6 @@ impl SimpleWindow {
             "Animate".to_string(),
             18,
             TextJustify::Center,
-            false,
         );
 
         button1.set_point(CONFIG_ORIGIN, 340, 360);
@@ -715,6 +718,7 @@ impl SimpleWindow {
         button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_toggle(CONFIG_SELECTED, true);
 
         self.pushrod
             .borrow_mut()
@@ -817,7 +821,7 @@ impl SimpleWindow {
 }
 
 fn main() {
-    let window: PistonWindow<GlfwWindow> = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(true)
         .build()

@@ -1,5 +1,5 @@
-// Checkbox Widget
-// Extensible widget for the widget library - handles a checkbox with text button.
+// Radio Button Widget
+// Extensible widget for the widget library - handles a radio button with text.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::*;
@@ -52,8 +53,7 @@ impl RadioButtonWidget {
         selected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         selected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, true);
 
-        let mut unselected_widget =
-            ImageWidget::new(factory, "radio_unselected.png".to_string());
+        let mut unselected_widget = ImageWidget::new(factory, "radio_unselected.png".to_string());
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
@@ -128,17 +128,19 @@ impl Widget for RadioButtonWidget {
                     }
 
                     _ => (),
-                }
+                },
 
                 _ => (),
             }
         } else {
             match event {
-                CallbackEvent::UnselectRadioButtons { widget_id, group_id } => {
+                CallbackEvent::UnselectRadioButtons {
+                    widget_id,
+                    group_id,
+                } => {
                     if group_id == self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32 {
                         if widget_id != self.config().get_numeric(CONFIG_WIDGET_ID) as i32 {
                             self.selected = false;
-                            eprintln!("Deselected radio group: {}", group_id);
                         }
                     }
                 }

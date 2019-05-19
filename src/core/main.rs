@@ -22,8 +22,8 @@ use crate::core::point::*;
 use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
+use opengl_graphics::{GlGraphics, Texture};
 use piston_window::*;
-use glfw_window::GlfwWindow;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 /// It stores the OpenGL configuration that is desired for drawing, a list of references
@@ -33,7 +33,7 @@ use glfw_window::GlfwWindow;
 /// The objects contained within this structure are used by the `Pushrod` run loop, and
 /// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
-    window: PistonWindow<GlfwWindow>,
+    window: PistonWindow,
     pub widget_store: RefCell<WidgetStore>,
 }
 
@@ -44,7 +44,7 @@ pub struct Pushrod {
 /// IN PROGRESS
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
-    pub fn new(window: PistonWindow<GlfwWindow>) -> Self {
+    pub fn new(window: PistonWindow) -> Self {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
@@ -107,6 +107,10 @@ impl Pushrod {
         }
     }
 
+    pub fn handle_resize(&mut self, width: u32, height: u32) {
+        eprintln!("[Resize] W={} H={}", width, height);
+    }
+
     /// This is the main run loop that is called to process all UI events.  This loop is responsible
     /// for handling events from the OS, converting them to workable objects, and passing them off
     /// to quick callback dispatchers.
@@ -137,12 +141,14 @@ impl Pushrod {
             .filter(|x| x.widget.borrow_mut().injects_events())
             .map(|x| x.widget_id)
             .collect();
+        let ref mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
         eprintln!("Draw Size: {:?}", self.window.window.draw_size());
 
         self.window.set_max_fps(30);
+        self.widget_store.borrow_mut().invalidate_all_widgets();
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -262,6 +268,8 @@ impl Pushrod {
             });
 
             event.resize(|w, h| {
+                self.handle_resize(w as u32, h as u32);
+
                 event_handler.handle_event(
                     CallbackEvent::WindowResized {
                         size: crate::core::point::Size {
@@ -306,7 +314,9 @@ impl Pushrod {
 
             // FPS loop handling
 
-            event.render(|_| {
+            event.render(|args| {
+                self.widget_store.borrow_mut().invalidate_all_widgets();
+
                 injectable_map.iter().for_each(|widget_id| {
                     let injectable_event = self
                         .widget_store
@@ -319,13 +329,12 @@ impl Pushrod {
                         Some(x) => {
                             self.handle_event(*widget_id, event_handler, x.clone());
                             self.widget_store.borrow_mut().inject_event(x.clone());
-                        },
+                        }
                         None => (),
                     }
                 });
 
                 self.handle_draw(&event);
-                self.widget_store.borrow_mut().invalidate_all_widgets();
             });
         }
     }

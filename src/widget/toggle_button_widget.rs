@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::CallbackEvent::WidgetSelected;
@@ -43,7 +44,6 @@ impl ToggleButtonWidget {
         text: String,
         font_size: u32,
         justify: TextJustify,
-        selected: bool,
     ) -> Self {
         Self {
             config: Configurable::new(),
@@ -55,7 +55,7 @@ impl ToggleButtonWidget {
                 font_size,
                 justify,
             ),
-            selected,
+            selected: false,
             active: false,
         }
     }
@@ -97,6 +97,13 @@ impl Widget for ToggleButtonWidget {
         self.config().set(config, config_value.clone());
         self.base_widget.set_config(config, config_value.clone());
         self.text_widget.set_config(config, config_value.clone());
+
+        if config == CONFIG_SELECTED {
+            if self.config().get_toggle(CONFIG_SELECTED) {
+                self.draw_hovered();
+                self.selected = true;
+            }
+        }
     }
 
     fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {

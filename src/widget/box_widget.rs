@@ -22,7 +22,7 @@ use crate::widget::widget::*;
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
-/// IN PROGRESS
+/// NEEDS_DOCUMENTATION
 pub struct BoxWidget {
     config: Configurable,
     base_widget: CanvasWidget,

@@ -1,5 +1,5 @@
-// Push Button Widget
-// Extensible widget for the widget library - handles a push button object.
+// Image Button Widget
+// Extensible widget for the widget library - handles an image button object.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,32 +18,40 @@ use piston_window::*;
 
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
+use crate::core::point::Point;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
+use crate::widget::image_widget::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-/// This is the `PushButtonWidget`, which contains a top-level widget for display, overriding the
+/// This is the `ImageButtonWidget`, which contains a top-level widget for display, overriding the
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
 /// IN PROGRESS
-pub struct PushButtonWidget {
+pub struct ImageButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
     text_widget: TextWidget,
+    image_widget: ImageWidget,
     active: bool,
 }
 
-/// Implementation of the constructor for the `PushButtonWidget`.
-impl PushButtonWidget {
+/// Implementation of the constructor for the `ImageButtonWidget`.
+impl ImageButtonWidget {
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
         text: String,
+        image_name: String,
         font_size: u32,
         justify: TextJustify,
     ) -> Self {
+        let mut image_widget = ImageWidget::new(factory, image_name.to_string());
+
+        image_widget.set_point(CONFIG_ORIGIN, 2, 2);
+
         Self {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
@@ -54,6 +62,7 @@ impl PushButtonWidget {
                 font_size,
                 justify,
             ),
+            image_widget,
             active: false,
         }
     }
@@ -71,19 +80,21 @@ impl PushButtonWidget {
     }
 }
 
-/// Implementation of the `PushButtonWidget` object with the `Widget` traits implemented.
+/// Implementation of the `ImageButtonWidget` object with the `Widget` traits implemented.
 /// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
 /// responds to the button down/up callbacks internally, and generates an `on_clicked` callback
 /// when appropriate.
-impl Widget for PushButtonWidget {
+impl Widget for ImageButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }
 
     fn set_config(&mut self, config: u8, config_value: Config) {
         self.config().set(config, config_value.clone());
+
         self.base_widget.set_config(config, config_value.clone());
         self.text_widget.set_config(config, config_value.clone());
+        self.image_widget.set_config(config, config_value.clone());
     }
 
     fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
@@ -153,8 +164,27 @@ impl Widget for PushButtonWidget {
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
+        let size = self.base_widget.config().get_size(CONFIG_BODY_SIZE);
+        let border = (self.base_widget.config().get_numeric(CONFIG_BORDER_WIDTH) * 2) as i32;
+
+        self.image_widget.config().set_size(
+            CONFIG_BODY_SIZE,
+            size.h - border as i32,
+            size.h - (border * 2) as i32,
+        );
+
         self.base_widget.draw(c, g, &clip);
-        self.text_widget.draw(c, g, &clip);
+        self.image_widget
+            .draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
+        self.text_widget.draw_with_offset(
+            c,
+            g,
+            &clip,
+            Point {
+                x: size.h + border + 4,
+                y: 0,
+            },
+        );
 
         // Then clear invalidation.
         self.clear_invalidate();
