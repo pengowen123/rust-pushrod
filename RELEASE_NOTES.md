@@ -3,6 +3,7 @@
 ## 0.2.12
 
 - Added use of Rectangle instead of drawing lines multiple times for box.  (#124)
+- Made contribution to piston2d-graphics crate to provide size_hint when text is to be rendered.
 
 ## 0.2.11
 
