@@ -109,7 +109,7 @@ impl Widget for TimerWidget {
 
     /// Does not draw anything - only calls the timer `tick()` function to increment the
     /// timer.
-    fn draw(&mut self, _context: Context, _graphics: &mut GlGraphics, _clip: &DrawState) {
+    fn draw(&mut self, _context: Context, _graphics: &mut G2d, _clip: &DrawState) {
         self.tick();
     }
 }

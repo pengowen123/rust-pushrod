@@ -176,7 +176,7 @@ impl Widget for RadioButtonWidget {
     ///
     /// - Base widget first
     /// - Box graphic for the specified width
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);

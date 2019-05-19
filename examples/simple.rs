@@ -13,12 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-extern crate glfw_window;
 extern crate pushrod;
 
 use std::cell::RefCell;
 
-use glfw_window::GlfwWindow;
 use piston_window::*;
 
 use pushrod::core::callbacks::*;
@@ -801,13 +799,13 @@ impl SimpleWindow {
     }
 
     fn build(&mut self) {
-        //        self.add_hello_world();
+        self.add_hello_world();
         self.add_base_widget();
-        //        self.add_box_widgets();
-        //        self.add_powered_by();
-        //        self.add_progress();
-        //        self.add_timer();
-        //        self.add_debugging();
+        self.add_box_widgets();
+        self.add_powered_by();
+        self.add_progress();
+        self.add_timer();
+        self.add_debugging();
     }
 
     fn get_pushrod(&mut self) -> &mut Pushrod {
@@ -823,7 +821,7 @@ impl SimpleWindow {
 }
 
 fn main() {
-    let window: PistonWindow<GlfwWindow> = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(true)
         .build()

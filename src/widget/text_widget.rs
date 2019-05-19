@@ -119,7 +119,7 @@ impl TextWidget {
     /// the point of origin's X and Y coordinates.  Since the text is drawn upwards from the point
     /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
     /// based on text justification, and other optional padding, once padding is introduced.)
-    pub fn draw_text(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+    pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         // This prevents the calculation from occurring at every single draw cycle.  It only needs
@@ -180,7 +180,7 @@ impl Widget for TextWidget {
     }
 
     /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Draw the text.
         self.draw_text(c, g, &clip);
 

@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use graphics::rectangle::Border;
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::widget::config::*;
@@ -24,9 +22,28 @@ use crate::widget::widget::*;
 /// draw method to draw the base widget and the border for this box.
 ///
 /// Example usage:
-/// IN PROGRESS
+/// ```no_run
+/// # use piston_window::*;
+/// # use pushrod::core::point::*;
+/// # use pushrod::widget::widget::*;
+/// # use pushrod::widget::box_widget::*;
+/// # fn main() {
+///    let mut box_widget = BoxWidget::new();
+///
+///    box_widget.set_origin(100, 100);
+///    box_widget.set_size(200, 200);
+///    box_widget.set_color([0.5, 0.5, 0.5, 1.0]);
+///    box_widget.set_border_color([0.0, 0.0, 0.0, 1.0]);
+///    box_widget.set_border_thickness(3);
+///
+///    // (OR)
+///
+///    box_widget.set_border([0.0, 0.0, 0.0, 1.0], 3);
+/// # }
+/// ```
 pub struct BoxWidget {
     config: Configurable,
+    base_widget: CanvasWidget,
 }
 
 /// Implementation of the constructor for the `BoxWidget`.
@@ -34,25 +51,58 @@ impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            base_widget: CanvasWidget::new(),
         }
     }
 
     /// Function to draw a box for the point and size of this box.  Automatically draws the border
     /// along with the width of the border.  This is automatically determined by the origin, so the
     /// box is automatically drawn for the bounds of the `Widget`.
-    fn draw_box(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+    fn draw_box(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
         let border: f64 = self.config().get_numeric(CONFIG_BORDER_WIDTH) as f64;
         let color: types::Color = self.config().get_color(CONFIG_BORDER_COLOR);
 
-        g.rectangle(
-            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)).border(Border {
-                color,
-                radius: border,
-            }),
-            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+        // Upper left to upper right
+        Line::new(color, border).draw(
+            [0.0 as f64, border, size.w as f64, border],
             clip,
             c.transform,
+            g,
+        );
+
+        // Upper left to lower right
+        Line::new(color, border).draw(
+            [
+                size.w as f64 - border,
+                border,
+                size.w as f64 - border,
+                size.h as f64,
+            ],
+            clip,
+            c.transform,
+            g,
+        );
+
+        // Upper left to lower left
+        Line::new(color, border).draw(
+            [border, border, border, size.h as f64],
+            clip,
+            c.transform,
+            g,
+        );
+
+        // Lower left to lower right
+        Line::new(color, border).draw(
+            [
+                0.0 as f64,
+                size.h as f64 - border,
+                size.w as f64,
+                size.h as f64 - border,
+            ],
+            clip,
+            c.transform,
+            g,
         );
     }
 }
@@ -70,6 +120,7 @@ impl Widget for BoxWidget {
 
     fn set_config(&mut self, config: u8, config_value: Config) {
         self.config().set(config, config_value.clone());
+        self.base_widget.config().set(config, config_value.clone());
         self.invalidate();
     }
 
@@ -77,7 +128,11 @@ impl Widget for BoxWidget {
     ///
     /// - Base widget first
     /// - Box graphic for the specified width
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
+        // Invalidation is controlled by the top level widget (this box).
+        self.base_widget.draw(c, g, &clip);
+
         // Paint the box.
         self.draw_box(c, g, &clip);
 

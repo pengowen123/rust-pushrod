@@ -131,7 +131,7 @@ pub trait Widget {
     /// It is **highly recommended** that you call `clear_invalidate()` after the draw completes,
     /// otherwise, this will continue to be redrawn continuously (unless this is the desired
     /// behavior.)
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
         let origin: Point = self.config().get_point(CONFIG_ORIGIN);
 
@@ -151,7 +151,7 @@ pub trait Widget {
     fn draw_with_offset(
         &mut self,
         c: Context,
-        g: &mut GlGraphics,
+        g: &mut G2d,
         clip: &DrawState,
         point_offset: Point,
     ) {
