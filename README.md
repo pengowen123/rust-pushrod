@@ -31,9 +31,7 @@ Pushrod requires the following minimum versions:
 | Library | Version |
 | ------- | ------- |
 | piston_window | 0.89 |
-| pistoncore-glfw_window | 0.49 |
-| lazy_static | 1.3 |
-| rust | 2018 |
+| pistoncore-glfw_window | 0.59 |
 
 This library requires the use of `glfw`.  To install this on Ubuntu Linux,
 you will want to run the following commands:
