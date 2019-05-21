@@ -277,7 +277,6 @@ impl WidgetStore {
                         size.h as u32,
                     ]);
 
-                    //                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
                     &paint_widget
                         .widget
                         .borrow_mut()
@@ -289,12 +288,10 @@ impl WidgetStore {
                         .config()
                         .get_toggle(CONFIG_WIDGET_DISABLED)
                     {
-                        Rectangle::new([0.0, 0.0, 0.0, 0.8]).draw(
-                            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
-                            &clip,
-                            new_context.transform,
-                            g,
-                        );
+                        &paint_widget
+                            .widget
+                            .borrow_mut()
+                            .draw_disabled(new_context, g, &c.draw_state);
                     }
                 }
             }

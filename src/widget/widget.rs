@@ -145,6 +145,19 @@ pub trait Widget {
         self.clear_invalidate();
     }
 
+    /// Draws a disabled box over the bounds of the current widget, but only if disabled.
+    fn draw_disabled(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
+        let origin: Point = self.config().get_point(CONFIG_ORIGIN);
+
+        g.rectangle(
+            &Rectangle::new([0.0, 0.0, 0.0, 0.8]),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
+    }
+
     /// Sets an alternate context with a drawing offset and size scale, then calls the underlying draw
     /// routine.  If this is _not_ the desired effect, this routine can be overridden, but this
     /// will handle the offset drawing for 90% of the `Widget` draw routines.
