@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::*;
@@ -133,7 +132,6 @@ pub trait Widget {
     /// behavior.)
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
-        let origin: Point = self.config().get_point(CONFIG_ORIGIN);
 
         g.rectangle(
             &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
@@ -148,7 +146,6 @@ pub trait Widget {
     /// Draws a disabled box over the bounds of the current widget, but only if disabled.
     fn draw_disabled(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
-        let origin: Point = self.config().get_point(CONFIG_ORIGIN);
 
         g.rectangle(
             &Rectangle::new([0.0, 0.0, 0.0, 0.8]),

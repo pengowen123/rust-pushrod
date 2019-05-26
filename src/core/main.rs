@@ -22,7 +22,6 @@ use crate::core::point::*;
 use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
-use opengl_graphics::{GlGraphics, Texture};
 use piston_window::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
@@ -141,7 +140,6 @@ impl Pushrod {
             .filter(|x| x.widget.borrow_mut().injects_events())
             .map(|x| x.widget_id)
             .collect();
-        let ref mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
@@ -314,7 +312,7 @@ impl Pushrod {
 
             // FPS loop handling
 
-            event.render(|args| {
+            event.render(|_| {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
 
                 injectable_map.iter().for_each(|widget_id| {

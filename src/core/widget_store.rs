@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use std::cell::RefCell;
@@ -257,11 +256,11 @@ impl WidgetStore {
                         .borrow_mut()
                         .config()
                         .get_point(CONFIG_ORIGIN);
-                    let size: crate::core::point::Size = paint_widget
-                        .widget
-                        .borrow_mut()
-                        .config()
-                        .get_size(CONFIG_BODY_SIZE);
+//                    let size: crate::core::point::Size = paint_widget
+//                        .widget
+//                        .borrow_mut()
+//                        .config()
+//                        .get_size(CONFIG_BODY_SIZE);
 
                     let new_context: Context = Context {
                         viewport: c.viewport,
@@ -270,12 +269,12 @@ impl WidgetStore {
                         draw_state: c.draw_state,
                     };
 
-                    let clip: DrawState = c.draw_state.scissor([
-                        origin.x as u32,
-                        origin.y as u32,
-                        size.w as u32,
-                        size.h as u32,
-                    ]);
+//                    let clip: DrawState = c.draw_state.scissor([
+//                        origin.x as u32,
+//                        origin.y as u32,
+//                        size.w as u32,
+//                        size.h as u32,
+//                    ]);
 
                     &paint_widget
                         .widget

@@ -5,6 +5,8 @@
 - Added use of Rectangle instead of drawing lines multiple times for box.  (#124)
 - Made contribution to piston2d-graphics crate to provide size_hint when text is to be rendered.
 - Now handles disable of objects properly (#127)
+- Removed events code, as this is not in use.
+- Code clean-up, documentation clean-up.
 
 ## 0.2.11
 
