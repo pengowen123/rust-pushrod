@@ -25,22 +25,13 @@ use crate::widget::widget::*;
 use piston_window::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
-/// It stores the OpenGL configuration that is desired for drawing, a list of references
-/// to a managed set of `PushrodWindow` objects, registered `EventListener`s, and
-/// `PushrodEvent` objects that are pending dispatch.
-///
-/// The objects contained within this structure are used by the `Pushrod` run loop, and
-/// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
     window: PistonWindow,
     pub widget_store: RefCell<WidgetStore>,
 }
 
-/// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
+/// Pushrod implementation.  Create a `Pushrod::new( PistonWindow )` object to create a new
 /// main loop.  Only one of these should be set for the entire application runtime.
-///
-/// Example usage:
-/// IN PROGRESS
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
     pub fn new(window: PistonWindow) -> Self {
@@ -50,20 +41,15 @@ impl Pushrod {
         }
     }
 
-    /// Retrieves the window `GfxFactory` factory object for graphics textures.
+    /// Retrieves the window `GfxFactory` factory object for graphics and font textures.
     pub fn get_factory(&mut self) -> &mut GfxFactory {
         &mut self.window.factory
     }
 
-    /// Helper method that adds a `Widget` to the `WidgetStore`, returning the ID of the `Widget`
-    /// after it has been added.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         self.widget_store.borrow_mut().add_widget(name, widget)
     }
 
-    /// Helper method that adds a `Widget` to the `WidgetStore`, specifying the `parent_id` as the
-    /// parent of which to add this object to.  Returns the new ID of the `Widget` after it has
-    /// been added.
     pub fn add_widget_to_parent(
         &mut self,
         name: &str,
@@ -110,24 +96,6 @@ impl Pushrod {
         eprintln!("[Resize] W={} H={}", width, height);
     }
 
-    /// This is the main run loop that is called to process all UI events.  This loop is responsible
-    /// for handling events from the OS, converting them to workable objects, and passing them off
-    /// to quick callback dispatchers.
-    ///
-    /// The run loop handles events in the following order:
-    ///
-    /// - Mouse events
-    ///   - Movement events
-    ///   - Button events
-    ///   - Scroll button events
-    /// - Custom events are then dispatched to any registered event listeners
-    /// - Draw loop
-    ///   - Draw only widgets whose states have become invalidated
-    ///   - Swap display buffers if required
-    ///
-    /// This event is handled window-by-window.  Once a window has processed all of its pending
-    /// events, the next window is then processed.  No particular window takes precidence - any
-    /// window that has events to process gets handled in order.
     pub fn run(&mut self, event_handler: &mut PushrodCallbackEvents) {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();

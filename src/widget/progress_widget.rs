@@ -19,16 +19,11 @@ use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
-/// This is the `ProgressWidget`, which is used for showing a progress bar.
-///
-/// Example usage:
-/// IN PROGRESS
 pub struct ProgressWidget {
     config: Configurable,
     base_widget: BoxWidget,
 }
 
-/// Implementation of the constructor for the `ProgressWidget`.
 impl ProgressWidget {
     pub fn new() -> Self {
         let mut base = BoxWidget::new();
@@ -46,10 +41,6 @@ impl ProgressWidget {
     }
 }
 
-/// Implementation of the `ProgressWidget` object with the `Widget` traits implemented.
-/// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
-/// responds to the button down/up callbacks internally, and generates an `on_clicked` callback
-/// when appropriate.
 impl Widget for ProgressWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -61,7 +52,6 @@ impl Widget for ProgressWidget {
         self.invalidate();
     }
 
-    /// Draws the widget.  The progress bar is the secondary color.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
 

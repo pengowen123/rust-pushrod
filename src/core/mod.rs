@@ -14,17 +14,18 @@
 
 /// Main module for Pushrod, contains the run loop code responsible for translating
 /// OS-level events to well known structures, maintaining a list of active windows and
-/// their widgets, and performing callbacks for events where appropriate.
+/// their widgets, and propagating events where appropriate.
 pub mod main;
 
 /// Contains geometric shape representations: `Point` and `Size`, representing a point on
-/// the screen within a window, and the size of an object.
+/// the screen within a window, and the size of an object.  (This may change to Piston's
+/// representations.)
 pub mod point;
 
 /// This is a cache that is used to store `Widget` objects for a `Pushrod` run loop.  Each
 /// `Pushrod` object that is created contains its own set of `Widget` objects, stored here.
 pub mod widget_store;
 
-/// This is a per-widget callback store that is used to call closures when an event is
+/// This is a per-widget event store that is used to call an event handler when an event is
 /// triggered.
 pub mod callbacks;

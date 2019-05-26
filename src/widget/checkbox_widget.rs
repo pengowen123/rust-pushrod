@@ -23,11 +23,6 @@ use crate::widget::image_widget::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-/// This is the `CheckboxWidget`, which contains a top-level widget for display, overriding the
-/// draw method to draw the base widget and the border for this box.
-///
-/// Example usage:
-/// IN PROGRESS
 pub struct CheckboxWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -37,7 +32,6 @@ pub struct CheckboxWidget {
     unselected_widget: ImageWidget,
 }
 
-/// Implementation of the constructor for the `CheckboxWidget`.
 impl CheckboxWidget {
     pub fn new(
         factory: &mut GfxFactory,
@@ -75,9 +69,6 @@ impl CheckboxWidget {
     }
 }
 
-/// Implementation of the `CheckboxWidget` object with the `Widget` traits implemented.
-/// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
-/// responds to the button down/up callbacks internally.
 impl Widget for CheckboxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -132,10 +123,6 @@ impl Widget for CheckboxWidget {
         None
     }
 
-    /// Draws the contents of the widget in this order:
-    ///
-    /// - Base widget first
-    /// - Box graphic for the specified width
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).

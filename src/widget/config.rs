@@ -52,10 +52,6 @@ pub struct Configurable {
     configs: HashMap<u8, Config>,
 }
 
-/// Implementation of the default `Configurable` object.
-///
-/// There are two ways in which configuration objects can be used:
-/// NEEDS_DOCS
 impl Configurable {
     pub fn new() -> Self {
         Self {
