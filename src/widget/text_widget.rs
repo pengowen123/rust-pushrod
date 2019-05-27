@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::widget::config::*;
@@ -25,17 +24,14 @@ mod private {
     use piston_window::Graphics;
 
     pub struct TextHelper {
-        /// The font size
         pub font_size: FontSize,
     }
 
     impl TextHelper {
-        /// Creates a new text with black color
         pub fn new(font_size: FontSize) -> TextHelper {
             TextHelper { font_size }
         }
 
-        /// Determines draw width and height with a character cache
         pub fn determine_size<C, G>(
             &self,
             text: &str,
@@ -58,7 +54,8 @@ mod private {
     }
 }
 
-/// This `enum` specifies the desired justification of the text to be drawn.
+/// Enumeration identifying the justification of the text to be drawn, as long as the bounds
+/// of the object allow for it.
 pub enum TextJustify {
     /// Left-justified text.
     Left,
@@ -70,11 +67,7 @@ pub enum TextJustify {
     Right,
 }
 
-/// This is the `TextWidget`, which draws a line of text on the screen.  This structure contains
-/// no accessable objects, they are all internal to `TextWidget`'s implementation.
-///
-/// Example usage:
-/// IN PROGRESS
+/// Draws a block of text.
 pub struct TextWidget {
     config: Configurable,
     font_cache: Glyphs,
@@ -83,13 +76,11 @@ pub struct TextWidget {
     desired_size: (i32, i32),
 }
 
-/// Implementation of the constructor for the `TextWidget`.  Creates a new text object to be
-/// displayed on the screen, given a font name, font size, and text message.
 impl TextWidget {
-    /// Creates a new `TextWidget` object, requiring the current `PistonWindow`'s factory object
-    /// (which can be cloned), the name of the font (filename in the `assets` directory), the
-    /// text to display, the font size in which to use, and the desired text justification
-    /// strategy.
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
+    /// directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -115,11 +106,7 @@ impl TextWidget {
         }
     }
 
-    /// Function to draw the text.  Generates a context transformation to display the text based on
-    /// the point of origin's X and Y coordinates.  Since the text is drawn upwards from the point
-    /// of origin, the starting point is the lower left-hand corner of the widget.  (This may change
-    /// based on text justification, and other optional padding, once padding is introduced.)
-    pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         // This prevents the calculation from occurring at every single draw cycle.  It only needs
@@ -168,7 +155,6 @@ impl TextWidget {
     }
 }
 
-/// Implementation of the `TextWidget` object with the `Widget` traits implemented.
 impl Widget for TextWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config

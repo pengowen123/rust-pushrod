@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use std::cell::RefCell;
@@ -23,35 +22,30 @@ use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
-/// This is a container object, used for storing the `Widget` trait object, and the parent
-/// relationship for the added `Widget`.  Only the `widget` is public.  `Widget` objects do not
-/// need to have a child relationship, only parent objects are traversed.  A parent object of 0, or
-/// itself, indicates that the parent is self.
+/// This is a container object that stores a `Widget`, assigns a name, a `Widget` ID, and its
+/// parent.
 pub struct WidgetContainer {
-    /// The `Widget` trait object being stored.
+    /// The `Widget` being stored.
     pub widget: RefCell<Box<dyn Widget>>,
 
-    /// This is the `Widget`'s assigned name.  These IDs are assigned at the time they are added
-    /// to the `WidgetStore`.
     widget_name: String,
 
-    /// This `Widget`'s assigned ID.  These IDs are auto-assigned.
+    /// The `Widget`'s automatically assigned ID.
     pub widget_id: i32,
 
-    /// The parent ID.
     parent_id: i32,
 }
 
-/// This is the `WidgetStore`, which is used to store `Widget` objects for a `Pushrod`
-/// management object.
+/// This is the `WidgetStore`, which contains a list of `Widget` objects for a GUI window.
 pub struct WidgetStore {
-    /// A vector list of `WidgetContainer` objects.
     pub widgets: Vec<WidgetContainer>,
 }
 
-/// Implementation of the `WidgetStore`.
 impl WidgetStore {
-    /// Creates a new `WidgetStore`.
+    /// Constructor, creates a new `WidgetStore`, assigning a top-level `CanvasWidget` as the
+    /// very top-level widget.  All `Widget` objects added will be a parent to this `Widget`,
+    /// which is stored at ID 0.  If this `Widget` object ever becomes invalidated, the entire
+    /// window is force refreshed.
     pub fn new() -> Self {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = CanvasWidget::new();
@@ -72,30 +66,23 @@ impl WidgetStore {
         }
     }
 
-    /// Invalidates all widgets in the window.  This is used to force a complete refresh of the
-    /// window's contents, usually based on a timer expiration, or a window resize.  Use with
-    /// care, as this is an expensive operation.
+    /// Invalidates all `Widget`s in the GUI stack, forcing a redraw.
     pub fn invalidate_all_widgets(&mut self) {
         self.widgets
             .iter_mut()
             .for_each(|x| x.widget.borrow_mut().invalidate());
     }
 
-    /// Indicates whether or not any `Widget`s in the `WidgetStore` have been invalidated and need
-    /// to be repainted.
-    pub fn needs_repaint(&mut self) -> bool {
-        self.widgets
-            .iter_mut()
-            .map(|x| x.widget.borrow_mut().is_invalidated())
-            .find(|x| x == &true)
-            .unwrap_or(false)
-    }
+//  TODO: Refresh this code when in 0.3.x; this will help with redrawing only when necessary.
+//    fn needs_repaint(&mut self) -> bool {
+//        self.widgets
+//            .iter_mut()
+//            .map(|x| x.widget.borrow_mut().is_invalidated())
+//            .find(|x| x == &true)
+//            .unwrap_or(false)
+//    }
 
-    /// Adds a UI `Widget` to this window.  `Widget` objects that are added using this method will
-    /// be part of the base widget (`id = 0`), and will be force-redrawn when the parent is
-    /// invalidated.
-    ///
-    /// After adding a widget, the ID of the widget is returned.
+    /// Adds a `Widget` to the stack by name.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         let widget_size = self.widgets.len() as i32;
         let container = WidgetContainer {
@@ -117,10 +104,7 @@ impl WidgetStore {
         widget_size
     }
 
-    /// Adds a UI `Widget` to the parent of a window, specified by the `parent_id`.  The `parent_id`
-    /// must be an object that already exists in the stack.
-    ///
-    /// After adding a widget, the ID of the widget is returned.
+    /// Adds a `Widget` object to the parent specified by ID.
     pub fn add_widget_to_parent(
         &mut self,
         name: &str,
@@ -148,7 +132,8 @@ impl WidgetStore {
         widget_size
     }
 
-    /// Retrieves the parent of the widget requested.  Parent of 0 or -1 will always return 0.
+    /// Gets the parent of the child `Widget` by ID.  If the child has no assigned parent, the
+    /// top-level `CanvasWidget` is returned (ID 0).
     pub fn get_parent_of(&mut self, widget_id: i32) -> i32 {
         if widget_id <= 0 {
             0
@@ -157,9 +142,8 @@ impl WidgetStore {
         }
     }
 
-    /// Retrieves a list of all of the child IDs that list the `parent_id` as its parent.  This
-    /// can be used recursively to determine the widget ownership tree, or the redraw order in which
-    /// repaint should take place.
+    /// Returns a list of the children that are owned by a parent ID.  Does not return a list of
+    /// siblings, only the first-level children.
     pub fn get_children_of(&self, parent_id: i32) -> Vec<i32> {
         self.widgets
             .iter()
@@ -168,8 +152,9 @@ impl WidgetStore {
             .collect()
     }
 
-    /// Retrieves a `PushrodWidget` ID for a specified `Point`.  If no ID could be found,
-    /// defaults to a -1.
+    /// Gets a `Widget` by ID for a point in the screen.  If the GUI object is hidden or disabled,
+    /// the ID is not returned.  If no widget is found under the point specified, an ID of -1 is
+    /// returned.
     pub fn get_widget_id_for_point(&mut self, point: Point) -> i32 {
         let mut found_id = -1;
 
@@ -206,12 +191,32 @@ impl WidgetStore {
         found_id
     }
 
-    /// Returns the name of the widget by its ID.
+    /// Returns the name of the `Widget` by specified ID.
     pub fn get_name_for_widget_id(&mut self, widget_id: i32) -> &str {
         self.widgets[widget_id as usize].widget_name.as_str()
     }
 
-    /// Handles event messages, returning an event if provided by the `Widget`.
+    /// Retrieves a reference to a `Widget` by its name.  Returns the top-level `CanvasWidget`
+    /// object if not found.
+    pub fn get_widget_for_name(&mut self, name: &str) -> &RefCell<Box<dyn Widget>> {
+        let widget_id = match self
+            .widgets
+            .iter_mut()
+            .find(|x| x.widget_name == String::from(name))
+            {
+                Some(x) => x.widget_id,
+                None => 0,
+            };
+
+        self.get_widget_for_id(widget_id)
+    }
+
+    /// Retrieves a `Widget` by its ID.
+    pub fn get_widget_for_id(&mut self, id: i32) -> &RefCell<Box<dyn Widget>> {
+        &self.widgets[id as usize].widget
+    }
+
+    /// Handles a specific event generated by the OS or the GUI interaction.
     pub fn handle_event(&mut self, widget_id: i32, event: CallbackEvent) -> Option<CallbackEvent> {
         self.widgets[widget_id as usize]
             .widget
@@ -219,19 +224,17 @@ impl WidgetStore {
             .handle_event(false, event)
     }
 
-    /// Handles an event that was injected by another `Widget`, sending that event to all `Widgets`,
-    /// with the `injected` flag set `true`.
+    /// Injects an event to all widgets, allowing them to exhibit custom event handling behavior if
+    /// required.  This is usually used in cases where special triggering needs to take place, like
+    /// an indication of a timeout or transient error.
     pub fn inject_event(&mut self, event: CallbackEvent) {
         self.widgets.iter_mut().for_each(|x| {
             x.widget.borrow_mut().handle_event(true, event.clone());
         });
     }
 
-    /// Recursive draw object: paints objects in order of appearance on the screen.  This does not
-    /// account for object depth, but it is implied that objects' parents are displayed in stacking
-    /// order.  Therefore, the parent is drawn first, then sibling, and other siblings.  This draw
-    /// function is used by the `Pushrod` main loop, and is meant to be called in a `draw_2d`
-    /// closure.
+    /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw
+    /// request from ID 0 will redraw the entire screen.
     pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut G2d) {
         let parents_of_widget = self.get_children_of(widget_id);
 
@@ -257,11 +260,11 @@ impl WidgetStore {
                         .borrow_mut()
                         .config()
                         .get_point(CONFIG_ORIGIN);
-                    let size: crate::core::point::Size = paint_widget
-                        .widget
-                        .borrow_mut()
-                        .config()
-                        .get_size(CONFIG_BODY_SIZE);
+//                    let size: crate::core::point::Size = paint_widget
+//                        .widget
+//                        .borrow_mut()
+//                        .config()
+//                        .get_size(CONFIG_BODY_SIZE);
 
                     let new_context: Context = Context {
                         viewport: c.viewport,
@@ -270,14 +273,13 @@ impl WidgetStore {
                         draw_state: c.draw_state,
                     };
 
-                    let clip: DrawState = c.draw_state.scissor([
-                        origin.x as u32,
-                        origin.y as u32,
-                        size.w as u32,
-                        size.h as u32,
-                    ]);
+//                    let clip: DrawState = c.draw_state.scissor([
+//                        origin.x as u32,
+//                        origin.y as u32,
+//                        size.w as u32,
+//                        size.h as u32,
+//                    ]);
 
-                    //                    &paint_widget.widget.borrow_mut().draw(new_context, g, &clip);
                     &paint_widget
                         .widget
                         .borrow_mut()
@@ -289,12 +291,10 @@ impl WidgetStore {
                         .config()
                         .get_toggle(CONFIG_WIDGET_DISABLED)
                     {
-                        Rectangle::new([0.0, 0.0, 0.0, 0.8]).draw(
-                            [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
-                            &clip,
-                            new_context.transform,
-                            g,
-                        );
+                        &paint_widget
+                            .widget
+                            .borrow_mut()
+                            .draw_disabled(new_context, g, &c.draw_state);
                     }
                 }
             }
@@ -303,26 +303,5 @@ impl WidgetStore {
                 self.draw(paint_id, c, g);
             }
         }
-    }
-
-    /// Retrieves a widget by the name when the widget was added.  To get the very top-level
-    /// widget, refer to `_WidgetStoreBase`.
-    pub fn get_widget_for_name(&mut self, name: &str) -> &RefCell<Box<dyn Widget>> {
-        let widget_id = match self
-            .widgets
-            .iter_mut()
-            .find(|x| x.widget_name == String::from(name))
-        {
-            Some(x) => x.widget_id,
-            None => 0,
-        };
-
-        self.get_widget_for_id(widget_id)
-    }
-
-    /// Retrieves a reference to the `Box`ed `Widget` object by its ID.  To get the very top-level
-    /// widget, specify ID 0.
-    pub fn get_widget_for_id(&mut self, id: i32) -> &RefCell<Box<dyn Widget>> {
-        &self.widgets[id as usize].widget
     }
 }

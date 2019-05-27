@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::*;
@@ -24,11 +23,10 @@ use crate::widget::image_widget::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-/// This is the `RadioButtonWidget`, which contains a top-level widget for display, overriding the
-/// draw method to draw the base widget and the border for this box.
-///
-/// Example usage:
-/// IN PROGRESS
+/// Draws a radio button with only one object that can be selected at any one time within a group.
+/// Generates a `WidgetSelected` event when an object has been selected within the group.  Also
+/// generates an internal `UnselectRadioButtons` event, which should not be handled - this is only
+/// used by `RadioButtonWidget` objects.
 pub struct RadioButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -39,8 +37,11 @@ pub struct RadioButtonWidget {
     inject_event: bool,
 }
 
-/// Implementation of the constructor for the `RadioButtonWidget`.
 impl RadioButtonWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the image name to display, the size of the font,
+    /// the font justification when rendered, and a selected pre-set state.  Images and fonts are
+    /// loaded from the `assets/` directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -78,9 +79,6 @@ impl RadioButtonWidget {
     }
 }
 
-/// Implementation of the `RadioButtonWidget` object with the `Widget` traits implemented.
-/// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
-/// responds to the button down/up callbacks internally.
 impl Widget for RadioButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -152,13 +150,10 @@ impl Widget for RadioButtonWidget {
         None
     }
 
-    /// This function injects events, as other radio buttons need to become invalidated that may
-    /// be part of the same group ID.
     fn injects_events(&mut self) -> bool {
         true
     }
 
-    /// Returns an injected event where appropriate.
     fn inject_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
         if self.inject_event {
             self.inject_event = false;
@@ -172,10 +167,6 @@ impl Widget for RadioButtonWidget {
         }
     }
 
-    /// Draws the contents of the widget in this order:
-    ///
-    /// - Base widget first
-    /// - Box graphic for the specified width
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).

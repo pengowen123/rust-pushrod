@@ -13,24 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
-/// This is the `ProgressWidget`, which is used for showing a progress bar.
-///
-/// Example usage:
-/// IN PROGRESS
+/// Draws a progress bar, with progress being a value from 0 to 100.  Configurable options
+/// are:
+/// * `CONFIG_BORDER_WIDTH` - configures the border width of the progress bar.
+/// * `CONFIG_BORDER_COLOR` - configures the border color of the progress bar.
+/// * `CONFIG_SECONDARY_COLOR` - configures the fill color of the progress bar.
+/// * `CONFIG_PROGRESS` - configures the progress by percentage from 0-100.
 pub struct ProgressWidget {
     config: Configurable,
     base_widget: BoxWidget,
 }
 
-/// Implementation of the constructor for the `ProgressWidget`.
 impl ProgressWidget {
+    ///
     pub fn new() -> Self {
         let mut base = BoxWidget::new();
 
@@ -47,10 +48,6 @@ impl ProgressWidget {
     }
 }
 
-/// Implementation of the `ProgressWidget` object with the `Widget` traits implemented.
-/// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
-/// responds to the button down/up callbacks internally, and generates an `on_clicked` callback
-/// when appropriate.
 impl Widget for ProgressWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -62,7 +59,6 @@ impl Widget for ProgressWidget {
         self.invalidate();
     }
 
-    /// Draws the widget.  The progress bar is the secondary color.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
 

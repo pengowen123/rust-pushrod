@@ -22,26 +22,19 @@ use crate::core::point::*;
 use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
-use opengl_graphics::{GlGraphics, Texture};
 use piston_window::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
-/// It stores the OpenGL configuration that is desired for drawing, a list of references
-/// to a managed set of `PushrodWindow` objects, registered `EventListener`s, and
-/// `PushrodEvent` objects that are pending dispatch.
-///
-/// The objects contained within this structure are used by the `Pushrod` run loop, and
-/// are not intended to be modified except through methods in the `Pushrod` impl.
 pub struct Pushrod {
     window: PistonWindow,
+
+    /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
+    /// display stack.
     pub widget_store: RefCell<WidgetStore>,
 }
 
-/// Pushrod implementation.  Create a `Pushrod::new( OpenGL )` object to create a new
+/// Pushrod implementation.  Create a `Pushrod::new( PistonWindow )` object to create a new
 /// main loop.  Only one of these should be set for the entire application runtime.
-///
-/// Example usage:
-/// IN PROGRESS
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
     pub fn new(window: PistonWindow) -> Self {
@@ -51,20 +44,18 @@ impl Pushrod {
         }
     }
 
-    /// Retrieves the window `GfxFactory` factory object for graphics textures.
+    /// Retrieves the window `GfxFactory` factory object for graphics and font textures.
     pub fn get_factory(&mut self) -> &mut GfxFactory {
         &mut self.window.factory
     }
 
-    /// Helper method that adds a `Widget` to the `WidgetStore`, returning the ID of the `Widget`
-    /// after it has been added.
+    /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         self.widget_store.borrow_mut().add_widget(name, widget)
     }
 
-    /// Helper method that adds a `Widget` to the `WidgetStore`, specifying the `parent_id` as the
-    /// parent of which to add this object to.  Returns the new ID of the `Widget` after it has
-    /// been added.
+    /// Convenience method that adds a `Widget` to a parent by its ID.  This guarantees a refresh
+    /// if the top level parent becomes invalidated.
     pub fn add_widget_to_parent(
         &mut self,
         name: &str,
@@ -107,28 +98,13 @@ impl Pushrod {
         }
     }
 
-    pub fn handle_resize(&mut self, width: u32, height: u32) {
+    fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
     }
 
-    /// This is the main run loop that is called to process all UI events.  This loop is responsible
-    /// for handling events from the OS, converting them to workable objects, and passing them off
-    /// to quick callback dispatchers.
-    ///
-    /// The run loop handles events in the following order:
-    ///
-    /// - Mouse events
-    ///   - Movement events
-    ///   - Button events
-    ///   - Scroll button events
-    /// - Custom events are then dispatched to any registered event listeners
-    /// - Draw loop
-    ///   - Draw only widgets whose states have become invalidated
-    ///   - Swap display buffers if required
-    ///
-    /// This event is handled window-by-window.  Once a window has processed all of its pending
-    /// events, the next window is then processed.  No particular window takes precidence - any
-    /// window that has events to process gets handled in order.
+    /// This is the main run loop for `Pushrod`.  A run loop requires the use of an assigned
+    /// `PushrodCallbackEvents` event handler.  This is how all communications take place when
+    /// an action occurs within the GUI window.
     pub fn run(&mut self, event_handler: &mut PushrodCallbackEvents) {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
@@ -141,7 +117,6 @@ impl Pushrod {
             .filter(|x| x.widget.borrow_mut().injects_events())
             .map(|x| x.widget_id)
             .collect();
-        let ref mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
@@ -312,9 +287,7 @@ impl Pushrod {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
             });
 
-            // FPS loop handling
-
-            event.render(|args| {
+            event.render(|_| {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
 
                 injectable_map.iter().for_each(|widget_id| {

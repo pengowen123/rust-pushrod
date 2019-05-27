@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::*;
@@ -24,11 +23,7 @@ use crate::widget::image_widget::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-/// This is the `CheckboxWidget`, which contains a top-level widget for display, overriding the
-/// draw method to draw the base widget and the border for this box.
-///
-/// Example usage:
-/// IN PROGRESS
+/// Draws a box with a toggleable checkbox, and text next to it.
 pub struct CheckboxWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -38,8 +33,11 @@ pub struct CheckboxWidget {
     unselected_widget: ImageWidget,
 }
 
-/// Implementation of the constructor for the `CheckboxWidget`.
 impl CheckboxWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the image name to display, the size of the font,
+    /// and the font justification when rendered.  Images and fonts are loaded from the
+    /// `assets/` directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -76,9 +74,6 @@ impl CheckboxWidget {
     }
 }
 
-/// Implementation of the `CheckboxWidget` object with the `Widget` traits implemented.
-/// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
-/// responds to the button down/up callbacks internally.
 impl Widget for CheckboxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -133,10 +128,6 @@ impl Widget for CheckboxWidget {
         None
     }
 
-    /// Draws the contents of the widget in this order:
-    ///
-    /// - Base widget first
-    /// - Box graphic for the specified width
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).

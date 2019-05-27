@@ -18,23 +18,17 @@ use piston_window::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
-/// This is the `ImageWidget`, which draws an image on the screen.  The image is loaded into
-/// heap memory (using a `Box`).  This way, larger image objects can be loaded.
-///
-/// Example usage:
-/// IN PROGRESS
+/// Draws an image.
 pub struct ImageWidget {
     config: Configurable,
     image: Box<G2dTexture>,
     image_size: crate::core::point::Size,
 }
 
-/// Implementation of the constructor for the `ImageWidget`.  Creates a new image object to be
-/// displayed on the screen, given the image filename.
 impl ImageWidget {
-    /// Creates a new `ImageWidget` object, requiring the current `PistonWindow`'s factory object
-    /// (which can be cloned), and the name of the image to load.  The image should be in the
-    /// project's local `assets` directory at the top level.
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// and the name of the image to be drawn.  The image is loaded locally from the `assets/`
+    /// directory of your application.
     pub fn new(factory: &mut GfxFactory, image_name: String) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
@@ -58,14 +52,11 @@ impl ImageWidget {
     }
 }
 
-/// Implementation of the `ImageWidget` object.  Draws an image on the screen based on the
-/// image file you specify.
 impl Widget for ImageWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
     }
 
-    /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
         let transform = c.transform.scale(

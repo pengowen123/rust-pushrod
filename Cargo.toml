@@ -1,6 +1,6 @@
 [package]
 name = "rust-pushrod"
-version = "0.2.11"
+version = "0.2.12"
 authors = ["Ken Suenobu <ksuenobu@fastmail.com>"]
 edition = "2018"
 description = "Pushrod UI Library"
@@ -25,6 +25,5 @@ path = "src/lib.rs"
 [dependencies]
 piston_window = "^0.89"
 piston2d-opengl_graphics = "^0.59"
-lazy_static = "^1.3"
 rand = "0.3"
 find_folder = "^0.3"

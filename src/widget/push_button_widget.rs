@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
@@ -23,11 +22,7 @@ use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
-/// This is the `PushButtonWidget`, which contains a top-level widget for display, overriding the
-/// draw method to draw the base widget and the border for this box.
-///
-/// Example usage:
-/// IN PROGRESS
+/// Draws a push button that triggers a `WidgetClicked` event when activated.
 pub struct PushButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -35,8 +30,11 @@ pub struct PushButtonWidget {
     active: bool,
 }
 
-/// Implementation of the constructor for the `PushButtonWidget`.
 impl PushButtonWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
+    /// directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -71,10 +69,6 @@ impl PushButtonWidget {
     }
 }
 
-/// Implementation of the `PushButtonWidget` object with the `Widget` traits implemented.
-/// The base widget is a `BoxWidget`, which overlays a `TextWidget` over the top.  This `Widget`
-/// responds to the button down/up callbacks internally, and generates an `on_clicked` callback
-/// when appropriate.
 impl Widget for PushButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -146,10 +140,6 @@ impl Widget for PushButtonWidget {
         None
     }
 
-    /// Draws the contents of the widget in this order:
-    ///
-    /// - Base widget first
-    /// - Box graphic for the specified width
     fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).

@@ -1,6 +1,6 @@
 # Contributing to rust-pushrod
 
-**Thank you for helping on rust-pushrod!**
+First of all, **thank you for helping on rust-pushrod!**
 
 Here are a few guidelines.
 
@@ -24,6 +24,10 @@ or just see something in the core library that can be improved, please let us kn
 provide a usage pattern if possible.  If you have a design for the `Widget`, please
 take a picture (or a sketch) of what you'd like the `Widget` to look like.  Please keep
 in mind, the `Widget` should be simple.
+
+Please make sure to label as many labels as you can so that it helps categorize the work
+that needs to be done.  Any new ideas should be in the "Backlog" milestone, as the
+developers will determine which milestone to include the change to.
 
 ## Pull requests
 
