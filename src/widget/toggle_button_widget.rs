@@ -22,6 +22,10 @@ use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
+/// Draws a toggleable button on the screen.  The selected state of this object can be set
+/// ahead of time by toggling `CONFIG_SELECTED`.  This `Widget` generates `WidgetSelected`
+/// events when toggled.  The toggle state can be retrieved by reading the `CONFIG_SELECTED`
+/// state of this `Widget`.
 pub struct ToggleButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -31,6 +35,10 @@ pub struct ToggleButtonWidget {
 }
 
 impl ToggleButtonWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
+    /// directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,

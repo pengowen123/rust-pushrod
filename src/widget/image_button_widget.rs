@@ -24,6 +24,7 @@ use crate::widget::image_widget::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
+/// Draws an image in a box with specified `Text` next to it.
 pub struct ImageButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -33,6 +34,10 @@ pub struct ImageButtonWidget {
 }
 
 impl ImageButtonWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the image name to display, the size of the font,
+    /// and the font justification when rendered.  Images and fonts are loaded from the `assets/`
+    /// directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,

@@ -22,6 +22,7 @@ use crate::widget::config::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
+/// Draws a push button that triggers a `WidgetClicked` event when activated.
 pub struct PushButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -30,6 +31,10 @@ pub struct PushButtonWidget {
 }
 
 impl PushButtonWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
+    /// directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,

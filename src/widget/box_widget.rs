@@ -18,12 +18,16 @@ use piston_window::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
+/// A `BoxWidget` is a `CanvasWidget` with a bounding box.  Takes two additional options:
+/// * `CONFIG_BORDER_WIDTH` specifies the width of the border to be drawn in pixels.
+/// * `CONFIG_BORDER_COLOR` specifies the color of the border to be drawn.
 pub struct BoxWidget {
     config: Configurable,
     base_widget: CanvasWidget,
 }
 
 impl BoxWidget {
+    /// Constructor.
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),

@@ -19,12 +19,19 @@ use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
+/// Draws a progress bar, with progress being a value from 0 to 100.  Configurable options
+/// are:
+/// * `CONFIG_BORDER_WIDTH` - configures the border width of the progress bar.
+/// * `CONFIG_BORDER_COLOR` - configures the border color of the progress bar.
+/// * `CONFIG_SECONDARY_COLOR` - configures the fill color of the progress bar.
+/// * `CONFIG_PROGRESS` - configures the progress by percentage from 0-100.
 pub struct ProgressWidget {
     config: Configurable,
     base_widget: BoxWidget,
 }
 
 impl ProgressWidget {
+    ///
     pub fn new() -> Self {
         let mut base = BoxWidget::new();
 

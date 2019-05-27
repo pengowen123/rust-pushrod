@@ -18,6 +18,7 @@ use piston_window::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
+/// Draws an image.
 pub struct ImageWidget {
     config: Configurable,
     image: Box<G2dTexture>,
@@ -25,6 +26,9 @@ pub struct ImageWidget {
 }
 
 impl ImageWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// and the name of the image to be drawn.  The image is loaded locally from the `assets/`
+    /// directory of your application.
     pub fn new(factory: &mut GfxFactory, image_name: String) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")

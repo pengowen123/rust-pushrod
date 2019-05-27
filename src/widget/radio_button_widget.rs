@@ -23,6 +23,10 @@ use crate::widget::image_widget::*;
 use crate::widget::text_widget::*;
 use crate::widget::widget::*;
 
+/// Draws a radio button with only one object that can be selected at any one time within a group.
+/// Generates a `WidgetSelected` event when an object has been selected within the group.  Also
+/// generates an internal `UnselectRadioButtons` event, which should not be handled - this is only
+/// used by `RadioButtonWidget` objects.
 pub struct RadioButtonWidget {
     config: Configurable,
     base_widget: BoxWidget,
@@ -34,6 +38,10 @@ pub struct RadioButtonWidget {
 }
 
 impl RadioButtonWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the image name to display, the size of the font,
+    /// the font justification when rendered, and a selected pre-set state.  Images and fonts are
+    /// loaded from the `assets/` directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,

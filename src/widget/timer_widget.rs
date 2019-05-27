@@ -20,8 +20,13 @@ use crate::core::callbacks::CallbackEvent;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
-pub const CALLBACK_TIMER: u32 = 100;
-
+/// Creates a timer that can be used to generate callbacks based on a timeout.  When a timeout
+/// has been reached, a `TimerTriggered` event is generated.  Set the timer timeout in
+/// milliseconds by setting `CONFIG_TIMER_TIMEOUT` values.
+///
+/// Timer timeouts are triggered on a per-refresh basis, so if the FPS of the screen for the
+/// main window is set to 30 FPS, the timer will only receive a tick every 1/30th of a second.  If
+/// you need higher resolution timers, consider using threads.
 pub struct TimerWidget {
     config: Configurable,
     enabled: bool,
@@ -36,6 +41,7 @@ fn time_ms() -> u64 {
 }
 
 impl TimerWidget {
+    /// Constructor.
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),

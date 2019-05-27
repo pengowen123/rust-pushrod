@@ -54,6 +54,8 @@ mod private {
     }
 }
 
+/// Enumeration identifying the justification of the text to be drawn, as long as the bounds
+/// of the object allow for it.
 pub enum TextJustify {
     /// Left-justified text.
     Left,
@@ -65,6 +67,7 @@ pub enum TextJustify {
     Right,
 }
 
+/// Draws a block of text.
 pub struct TextWidget {
     config: Configurable,
     font_cache: Glyphs,
@@ -74,6 +77,10 @@ pub struct TextWidget {
 }
 
 impl TextWidget {
+    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
+    /// the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
+    /// directory.
     pub fn new(
         factory: &mut GfxFactory,
         font_name: String,
@@ -99,7 +106,7 @@ impl TextWidget {
         }
     }
 
-    pub fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         // This prevents the calculation from occurring at every single draw cycle.  It only needs

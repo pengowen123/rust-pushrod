@@ -27,6 +27,9 @@ use piston_window::*;
 /// This structure is returned when instantiating a new Pushrod main object.
 pub struct Pushrod {
     window: PistonWindow,
+
+    /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
+    /// display stack.
     pub widget_store: RefCell<WidgetStore>,
 }
 
@@ -46,10 +49,13 @@ impl Pushrod {
         &mut self.window.factory
     }
 
+    /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         self.widget_store.borrow_mut().add_widget(name, widget)
     }
 
+    /// Convenience method that adds a `Widget` to a parent by its ID.  This guarantees a refresh
+    /// if the top level parent becomes invalidated.
     pub fn add_widget_to_parent(
         &mut self,
         name: &str,
@@ -92,10 +98,13 @@ impl Pushrod {
         }
     }
 
-    pub fn handle_resize(&mut self, width: u32, height: u32) {
+    fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
     }
 
+    /// This is the main run loop for `Pushrod`.  A run loop requires the use of an assigned
+    /// `PushrodCallbackEvents` event handler.  This is how all communications take place when
+    /// an action occurs within the GUI window.
     pub fn run(&mut self, event_handler: &mut PushrodCallbackEvents) {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
@@ -277,8 +286,6 @@ impl Pushrod {
             event.resize(|_, _| {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
             });
-
-            // FPS loop handling
 
             event.render(|_| {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
