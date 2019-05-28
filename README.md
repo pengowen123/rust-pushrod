@@ -32,6 +32,9 @@ Pushrod requires the following minimum versions:
 | ------- | ------- |
 | piston_window | 0.89 |
 | piston2d-opengl_graphics | 0.59 |
+| piston2d-graphics | * |
+| pistoncore-glfw_window | 0.49 |
+| gl | * |
 
 ## Runnable Examples
 

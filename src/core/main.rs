@@ -79,12 +79,6 @@ impl Pushrod {
             .add_widget_to_parent(name, widget, parent_id)
     }
 
-//    fn handle_draw(&mut self, event: &Event) {
-//        let widgets = &mut self.widget_store.borrow_mut();
-//
-//        self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
-//    }
-
     fn handle_event(
         &mut self,
         widget_id: i32,
@@ -167,7 +161,7 @@ impl Pushrod {
         eprintln!("Window Size: {:?}", self.window.size());
         eprintln!("Draw Size: {:?}", self.window.window.draw_size());
 
-        self.window.set_max_fps(30);
+        self.window.set_max_fps(60);
         self.widget_store.borrow_mut().invalidate_all_widgets();
         self.rebuild_gl_buffers();
 
@@ -370,14 +364,12 @@ impl Pushrod {
                     let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
 
                     // Enable zoom only if the draw size is larger than the window size.
-                    let zoom_factor = ((self.window.size().width + self.window.size().height) /
-                        (self.window.window.draw_size().width + self.window.window.draw_size().height));
+                    let zoom_factor = (self.window.size().width + self.window.size().height) /
+                        (self.window.window.draw_size().width + self.window.window.draw_size().height);
                     let flipped = flipped.zoom(zoom_factor);
 
                     Image::new().draw(&self.texture, &c.draw_state, flipped, g);
                 });
-
-//                self.handle_draw(&event);
             });
         }
     }
