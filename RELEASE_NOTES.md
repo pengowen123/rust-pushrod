@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.3.0
+
+- Reenabled use of OpenGL (using Molten's OpenGLES libraries - which are free.)
+
+
 ## 0.2.12
 
 - Added use of Rectangle instead of drawing lines multiple times for box.  (#124)

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -112,7 +113,7 @@ pub trait Widget {
     /// and a `clip`, which is automatically set to provide a clipping area for the `Widget`.  If
     /// the `Widget` draws outside of the clipped bounds, that will not be drawn on the
     /// screen.
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         g.rectangle(
@@ -128,7 +129,7 @@ pub trait Widget {
     /// Internal method that is used to draw a box around the `Widget` when in disabled state.
     /// You can override this method, should you choose to, so that the disabled state appears
     /// differently in your application.  It is safe to leave this alone.
-    fn draw_disabled(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw_disabled(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         g.rectangle(
@@ -145,7 +146,7 @@ pub trait Widget {
     fn draw_with_offset(
         &mut self,
         c: Context,
-        g: &mut G2d,
+        g: &mut GlGraphics,
         clip: &DrawState,
         point_offset: Point,
     ) {

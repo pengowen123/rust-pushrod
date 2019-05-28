@@ -16,6 +16,7 @@
 use piston_window::*;
 
 use std::cell::RefCell;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
@@ -235,7 +236,7 @@ impl WidgetStore {
 
     /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw
     /// request from ID 0 will redraw the entire screen.
-    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut G2d) {
+    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics) {
         let parents_of_widget = self.get_children_of(widget_id);
 
         if parents_of_widget.len() == 0 {

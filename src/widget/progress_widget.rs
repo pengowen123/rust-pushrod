@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
@@ -59,7 +60,7 @@ impl Widget for ProgressWidget {
         self.invalidate();
     }
 
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
 
         self.base_widget.draw(c, g, clip);

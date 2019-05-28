@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -57,14 +58,14 @@ impl Widget for ImageWidget {
         &mut self.config
     }
 
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
         let transform = c.transform.scale(
             size.w as f64 / self.image_size.w as f64,
             size.h as f64 / self.image_size.h as f64,
         );
 
-        Image::new().draw(&*self.image, clip, transform, g);
+//        Image::new().draw(&*self.image, clip, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();

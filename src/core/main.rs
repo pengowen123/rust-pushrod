@@ -22,25 +22,37 @@ use crate::core::point::*;
 use crate::core::widget_store::*;
 use crate::widget::widget::*;
 
+use glfw_window::GlfwWindow;
+
+use gl::types::GLuint;
+use graphics::math::scale;
+use opengl_graphics::{GlGraphics, Texture};
 use piston_window::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 pub struct Pushrod {
-    window: PistonWindow,
+    window: PistonWindow<GlfwWindow>,
 
     /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
     /// display stack.
     pub widget_store: RefCell<WidgetStore>,
+
+    texture_buffer: Box<Vec<u8>>,
+    pub texture: Texture,
+    pub fbo: GLuint,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( PistonWindow )` object to create a new
 /// main loop.  Only one of these should be set for the entire application runtime.
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
-    pub fn new(window: PistonWindow) -> Self {
+    pub fn new(window: PistonWindow<GlfwWindow>) -> Self {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
+            texture_buffer: Box::new(vec![0u8; 1]),
+            texture: Texture::empty(&TextureSettings::new()).unwrap(),
+            fbo: 0,
         }
     }
 
@@ -67,11 +79,11 @@ impl Pushrod {
             .add_widget_to_parent(name, widget, parent_id)
     }
 
-    fn handle_draw(&mut self, event: &Event) {
-        let widgets = &mut self.widget_store.borrow_mut();
-
-        self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
-    }
+//    fn handle_draw(&mut self, event: &Event) {
+//        let widgets = &mut self.widget_store.borrow_mut();
+//
+//        self.window.draw_2d(event, |c, g| widgets.draw(0, c, g));
+//    }
 
     fn handle_event(
         &mut self,
@@ -100,6 +112,38 @@ impl Pushrod {
 
     fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
+        self.rebuild_gl_buffers();
+    }
+
+    fn rebuild_gl_buffers(&mut self) {
+        let draw_size = self.window.window.draw_size();
+
+        self.texture_buffer = Box::new(vec![0u8; draw_size.width as usize * draw_size.height as usize]);
+        self.texture = Texture::from_memory_alpha(
+            &self.texture_buffer,
+            draw_size.width as u32,
+            draw_size.height as u32,
+            &TextureSettings::new(),
+        )
+            .unwrap();
+
+        unsafe {
+            let mut fbos: [GLuint; 1] = [0];
+
+            gl::GenFramebuffers(1, fbos.as_mut_ptr());
+            self.fbo = fbos[0];
+
+            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
+            gl::FramebufferTexture2D(
+                gl::FRAMEBUFFER,
+                gl::COLOR_ATTACHMENT0,
+                gl::TEXTURE_2D,
+                self.texture.get_id(),
+                0,
+            );
+        }
+
+        eprintln!("Rebuild of OpenGL buffers for rendering complete.");
     }
 
     /// This is the main run loop for `Pushrod`.  A run loop requires the use of an assigned
@@ -117,6 +161,7 @@ impl Pushrod {
             .filter(|x| x.widget.borrow_mut().injects_events())
             .map(|x| x.widget_id)
             .collect();
+        let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
@@ -124,6 +169,7 @@ impl Pushrod {
 
         self.window.set_max_fps(30);
         self.widget_store.borrow_mut().invalidate_all_widgets();
+        self.rebuild_gl_buffers();
 
         while let Some(ref event) = &self.window.next() {
             event.mouse_cursor(|x, y| {
@@ -287,7 +333,7 @@ impl Pushrod {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
             });
 
-            event.render(|_| {
+            event.render(|args| {
                 self.widget_store.borrow_mut().invalidate_all_widgets();
 
                 injectable_map.iter().for_each(|widget_id| {
@@ -307,7 +353,25 @@ impl Pushrod {
                     }
                 });
 
-                self.handle_draw(&event);
+                let widgets = &mut self.widget_store.borrow_mut();
+
+                unsafe {
+                    gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
+                }
+
+                gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g));
+
+                unsafe {
+                    gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
+                }
+
+                gl.draw(args.viewport(), |c, g| {
+                    clear([1.0, 1.0, 1.0, 0.0], g);
+                    let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
+                    Image::new().draw(&self.texture, &c.draw_state, flipped, g);
+                });
+
+//                self.handle_draw(&event);
             });
         }
     }

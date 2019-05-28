@@ -13,10 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+extern crate glfw_window;
 extern crate pushrod;
 
 use std::cell::RefCell;
 
+use glfw_window::GlfwWindow;
 use piston_window::*;
 
 use pushrod::core::callbacks::*;
@@ -821,7 +823,7 @@ impl SimpleWindow {
 }
 
 fn main() {
-    let window: PistonWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: PistonWindow<GlfwWindow> = WindowSettings::new("Pushrod Window", [800, 600])
         .opengl(OpenGL::V3_2)
         .resizable(true)
         .build()

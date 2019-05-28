@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent::WidgetSelected;
 use crate::core::callbacks::*;
@@ -169,7 +170,7 @@ impl Widget for ToggleButtonWidget {
         None
     }
 
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);

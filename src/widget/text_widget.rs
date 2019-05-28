@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -106,24 +107,24 @@ impl TextWidget {
         }
     }
 
-    fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw_text(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
-        // This prevents the calculation from occurring at every single draw cycle.  It only needs
-        // to occur once.
-        if self.desired_size.0 == 0 {
-            self.desired_size = private::TextHelper::new(self.font_size)
-                .determine_size(
-                    self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
-                    &mut self.font_cache,
-                    g,
-                )
-                .unwrap();
-
-            if self.desired_size.0 != 0 || self.desired_size.1 != 0 {
-                eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
-            }
-        }
+//        // This prevents the calculation from occurring at every single draw cycle.  It only needs
+//        // to occur once.
+//        if self.desired_size.0 == 0 {
+//            self.desired_size = private::TextHelper::new(self.font_size)
+//                .determine_size(
+//                    self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
+//                    &mut self.font_cache,
+//                    g,
+//                )
+//                .unwrap();
+//
+//            if self.desired_size.0 != 0 || self.desired_size.1 != 0 {
+//                eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
+//            }
+//        }
 
         // Modify transform here based on the width of the text being drawn, which is element 0 of
         // self.desired_size
@@ -143,15 +144,15 @@ impl TextWidget {
         // routines treats the top "y" value specified as the _baseline_ for the image drawing
         // start point.  We want to treat the _inside_ of the box as the baseline, so we simply
         // add the size of the font (in pixels), which adjusts the baseline to the desired area.
-        Text::new_color(self.config().get_color(CONFIG_TEXT_COLOR), self.font_size)
-            .draw(
-                self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
-                &mut self.font_cache,
-                clip,
-                c.transform.trans(start_x, start_y as f64),
-                g,
-            )
-            .unwrap();
+//        Text::new_color(self.config().get_color(CONFIG_TEXT_COLOR), self.font_size)
+//            .draw(
+//                self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
+//                &mut self.font_cache,
+//                clip,
+//                c.transform.trans(start_x, start_y as f64),
+//                g,
+//            )
+//            .unwrap();
     }
 }
 
@@ -166,7 +167,7 @@ impl Widget for TextWidget {
     }
 
     /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         // Draw the text.
         self.draw_text(c, g, &clip);
 
