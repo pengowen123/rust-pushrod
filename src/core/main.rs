@@ -368,6 +368,12 @@ impl Pushrod {
                 gl.draw(args.viewport(), |c, g| {
                     clear([1.0, 1.0, 1.0, 0.0], g);
                     let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
+
+                    // Enable zoom only if the draw size is larger than the window size.
+                    let zoom_factor = ((self.window.size().width + self.window.size().height) /
+                        (self.window.window.draw_size().width + self.window.window.draw_size().height));
+                    let flipped = flipped.zoom(zoom_factor);
+
                     Image::new().draw(&self.texture, &c.draw_state, flipped, g);
                 });
 

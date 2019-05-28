@@ -3,7 +3,7 @@
 ## 0.3.0
 
 - Reenabled use of OpenGL (using Molten's OpenGLES libraries - which are free.)
-
+- Enabled zoom to handle zoom factor for HiDPI displays when displaying GL texture.
 
 ## 0.2.12
 
