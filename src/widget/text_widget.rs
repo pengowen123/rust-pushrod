@@ -74,7 +74,7 @@ pub enum TextJustify {
 /// Draws a block of text.
 pub struct TextWidget {
     config: Configurable,
-    font_cache: GlyphCache<'static>,
+    font_cache: GlyphCache<'static>,    // YUCK - I do not like this!
     font_size: u32,
     justify: TextJustify,
     desired_size: i32,
