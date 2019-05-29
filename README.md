@@ -36,6 +36,14 @@ Pushrod requires the following minimum versions:
 | pistoncore-glfw_window | 0.49 |
 | gl | * |
 
+## Optimization Note
+
+To see what the CPU usage looked like before and after switching between 2D and 3D rendering engines,
+[here is before](docs/cpu_before.png), and [this is after](docs/cpu_after.png).  These numbers represent the
+current version (0.3.0) before any rendering optimizations have been added.
+
+So, is it worth it to add OpenGL?  I'll let you decide.
+
 ## Runnable Examples
 
 ### Pre-Requisite for Mac OS X
