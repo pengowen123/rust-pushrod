@@ -40,9 +40,13 @@ Pushrod requires the following minimum versions:
 
 ### Pre-Requisite for Mac OS X
 
-You must download and install MoltenGL's distribution of OpenGL ES 2 and copy the `*.dylib` files that are extracted
-to `/usr/local/lib` on your system.  You should also use `brew` on your system.  If you have Homebrew already
-installed, use `brew install glfw` to install the `GLFW` formula.
+You must download and install MoltenGL's distribution of [OpenGL ES 2](https://moltengl.com/downloads/) 
+and copy the `*.dylib` files that are extracted to `/usr/local/lib` on your system.  You should also 
+use `brew` on your system.  If you have Homebrew already installed, use `brew install glfw` to 
+install the `GLFW` formula.
+
+Please note, **do not** install the MoltenGL library - only install the OpenGL ES libraries.  MoltenGL
+requires a runtime license.
 
 ### Pre-requisite for Linux
 
