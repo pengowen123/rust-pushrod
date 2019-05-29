@@ -4,7 +4,7 @@
 [![](https://img.shields.io/crates/d/rust-pushrod.svg)](https://crates.io/crates/rust-pushrod)
 [![docs.rs for rust-pushrod](https://docs.rs/rust-pushrod/badge.svg)](https://docs.rs/rust-pushrod)
 
-**Cross Platform UI Widget Library for Rust.**
+**Cross Platform UI Widget Library for Rust that uses OpenGL as its rendering engine.**
 
 Draws inspiration from lots of GUI libraries.
 
