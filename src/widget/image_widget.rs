@@ -14,7 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
-use opengl_graphics::GlGraphics;
+use opengl_graphics::{GlGraphics, Texture};
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -22,7 +22,7 @@ use crate::widget::widget::*;
 /// Draws an image.
 pub struct ImageWidget {
     config: Configurable,
-    image: Box<G2dTexture>,
+    image: Texture,
     image_size: crate::core::point::Size,
 }
 
@@ -35,19 +35,19 @@ impl ImageWidget {
             .for_folder("assets")
             .unwrap();
         let texture = Texture::from_path(
-            factory,
             &assets.join(image_name),
-            Flip::None,
             &TextureSettings::new(),
         )
             .unwrap();
+        let texture_width = texture.get_width() as i32;
+        let texture_height = texture.get_height() as i32;
 
         Self {
             config: Configurable::new(),
-            image: Box::new(texture.clone()),
+            image: texture,
             image_size: crate::core::point::Size {
-                w: texture.clone().get_size().0 as i32,
-                h: texture.clone().get_size().1 as i32,
+                w: texture_width,
+                h: texture_height,
             },
         }
     }
@@ -65,7 +65,7 @@ impl Widget for ImageWidget {
             size.h as f64 / self.image_size.h as f64,
         );
 
-//        Image::new().draw(&*self.image, clip, transform, g);
+        Image::new().draw(&self.image, clip, transform, g);
 
         // Then clear invalidation.
         self.clear_invalidate();

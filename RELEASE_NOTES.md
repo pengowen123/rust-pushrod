@@ -7,6 +7,7 @@
 - Changed FPS rate back to 60.
 - Converted main graphics drawing routines to use GL drawing instead (#113)
 - Converted text functions to use GlyphCache in GL rather than Piston.
+- Converted images to use Texture instead of G2dTexture objects for GL.
 
 ## 0.2.12
 
