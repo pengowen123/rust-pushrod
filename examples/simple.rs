@@ -372,7 +372,7 @@ impl SimpleWindow {
     fn add_hello_world(&mut self) {
         let mut text_widget = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Welcome to rust-pushrod!".to_string(),
             32,
             TextJustify::Left,
@@ -402,7 +402,7 @@ impl SimpleWindow {
 
         let mut button1 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Random Color".to_string(),
             18,
             TextJustify::Center,
@@ -421,7 +421,7 @@ impl SimpleWindow {
 
         let mut button2 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Hide".to_string(),
             18,
             TextJustify::Center,
@@ -439,7 +439,7 @@ impl SimpleWindow {
 
         let mut button3 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Disable".to_string(),
             18,
             TextJustify::Center,
@@ -471,7 +471,7 @@ impl SimpleWindow {
 
         let mut text_widget2 = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Left".to_string(),
             24,
             TextJustify::Left,
@@ -487,7 +487,7 @@ impl SimpleWindow {
 
         let mut text_widget3 = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Center".to_string(),
             24,
             TextJustify::Center,
@@ -503,7 +503,7 @@ impl SimpleWindow {
 
         let mut text_widget4 = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Right".to_string(),
             24,
             TextJustify::Right,
@@ -519,7 +519,7 @@ impl SimpleWindow {
 
         let mut button2 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Hide".to_string(),
             18,
             TextJustify::Center,
@@ -588,7 +588,7 @@ impl SimpleWindow {
 
         let mut button = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Hide".to_string(),
             18,
             TextJustify::Center,
@@ -608,7 +608,7 @@ impl SimpleWindow {
     fn add_powered_by(&mut self) {
         let mut image_widget = ImageButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Powered By Rust!".to_string(),
             "rust-512x512.jpg".to_string(),
             18,
@@ -640,7 +640,7 @@ impl SimpleWindow {
 
         let mut radio_1 = RadioButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "1".to_string(),
             20,
             TextJustify::Left,
@@ -658,7 +658,7 @@ impl SimpleWindow {
 
         let mut radio_2 = RadioButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "2".to_string(),
             20,
             TextJustify::Left,
@@ -676,7 +676,7 @@ impl SimpleWindow {
 
         let mut radio_3 = RadioButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "3".to_string(),
             20,
             TextJustify::Left,
@@ -694,7 +694,7 @@ impl SimpleWindow {
 
         let mut progress_text = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "50%".to_string(),
             18,
             TextJustify::Left,
@@ -709,7 +709,7 @@ impl SimpleWindow {
 
         let mut button1 = ToggleButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Animate".to_string(),
             18,
             TextJustify::Center,
@@ -728,7 +728,7 @@ impl SimpleWindow {
 
         let mut button2 = PushButtonWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Randomize".to_string(),
             18,
             TextJustify::Center,
@@ -758,7 +758,7 @@ impl SimpleWindow {
     fn add_debugging(&mut self) {
         let mut check_widget = CheckboxWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Enable Debugging".to_string(),
             20,
             TextJustify::Left,
@@ -773,7 +773,7 @@ impl SimpleWindow {
 
         let mut text_widget1 = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "Current Widget: 0".to_string(),
             20,
             TextJustify::Left,
@@ -787,7 +787,7 @@ impl SimpleWindow {
 
         let mut text_widget2 = TextWidget::new(
             self.pushrod.borrow_mut().get_factory(),
-            "OpenSans-Regular.ttf".to_string(),
+            "assets/OpenSans-Regular.ttf".to_string(),
             "".to_string(),
             20,
             TextJustify::Left,

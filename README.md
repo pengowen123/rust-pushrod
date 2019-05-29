@@ -38,10 +38,24 @@ Pushrod requires the following minimum versions:
 
 ## Runnable Examples
 
+### Pre-Requisite for Mac OS X
+
+You must download and install MoltenGL's distribution of OpenGL ES 2 and copy the `*.dylib` files that are extracted
+to ``/usr/local/lib` on your system.  You should also use `brew` on your system.  If you have Homebrew already
+installed, use `brew install glfw` to install the `GLFW` formula.
+
+### Pre-requisite for Linux
+
+... TBD ...
+
+### Pre-requisite for Windows
+
+... TBD ...
+
+## After installing pre-requisites:
+
 ```
 cargo run --example simple
 ```
 
-This will only test window-related events with mouse interaction: mouse enter, mouse exit, mouse click, mouse
-pointer move, and mouse scroll.
-
+This will run the simple application demo.  It's interactive, so have fun!

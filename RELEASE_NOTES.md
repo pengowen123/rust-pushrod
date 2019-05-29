@@ -5,6 +5,8 @@
 - Reenabled use of OpenGL (using Molten's OpenGLES libraries - which are free.)
 - Enabled zoom to handle zoom factor for HiDPI displays when displaying GL texture.
 - Changed FPS rate back to 60.
+- Converted main graphics drawing routines to use GL drawing instead (#113)
+- Converted text functions to use GlyphCache in GL rather than Piston.
 
 ## 0.2.12
 
