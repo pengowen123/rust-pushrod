@@ -10,6 +10,7 @@
 - Uses CharacterCache trait in Piston to determine rendering width. (#129)
 - Code no longer uses get_factory() call, since all textures are done via GL instead of 2D.
 - Touched up documentation, removed the GfxFactory documentation, as this is no longer a requirement.
+- More code clean-up, removal of unused imports, etc.
 
 ## 0.2.12
 

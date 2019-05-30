@@ -69,8 +69,6 @@ impl TextWidget {
     }
 
     fn draw_text(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        use graphics::*;
-
         let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         // Modify transform here based on the width of the text being drawn, which is element 0 of
