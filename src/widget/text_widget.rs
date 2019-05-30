@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-extern crate graphics;
+//extern crate graphics;
 
-use piston_window::{TextureSettings, Context};
+use piston_window::*;
 use opengl_graphics::{GlGraphics, GlyphCache};
 use graphics::character::CharacterCache;
 use graphics::draw_state::DrawState;
