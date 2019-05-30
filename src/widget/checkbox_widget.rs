@@ -35,10 +35,8 @@ pub struct CheckboxWidget {
 }
 
 impl CheckboxWidget {
-    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
-    /// the name of the font, the text to display, the image name to display, the size of the font,
-    /// and the font justification when rendered.  Images and fonts are loaded from the
-    /// `assets/` directory.
+    /// Constructor.  Requires the name of the font, the text to display, the image name to display, the size of the font,
+    /// and the font justification when rendered.  Images are loaded from the `assets/` directory.
     pub fn new(
         font_name: String,
         text: String,

@@ -32,10 +32,8 @@ pub struct PushButtonWidget {
 }
 
 impl PushButtonWidget {
-    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
-    /// the name of the font, the text to display, the size of the font,
-    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
-    /// directory.
+    /// Constructor.  Requires the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.
     pub fn new(
         font_name: String,
         text: String,
