@@ -41,7 +41,6 @@ impl ToggleButtonWidget {
     /// and the font justification when rendered.  Fonts are loaded from the `assets/`
     /// directory.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         font_size: u32,
@@ -51,7 +50,6 @@ impl ToggleButtonWidget {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
             text_widget: TextWidget::new(
-                factory,
                 font_name.to_string(),
                 text.to_string(),
                 font_size,

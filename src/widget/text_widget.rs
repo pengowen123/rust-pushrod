@@ -50,7 +50,6 @@ impl TextWidget {
     /// and the font justification when rendered.  Fonts are loaded from the `assets/`
     /// directory.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         font_size: u32,

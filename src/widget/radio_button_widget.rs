@@ -44,23 +44,21 @@ impl RadioButtonWidget {
     /// the font justification when rendered, and a selected pre-set state.  Images and fonts are
     /// loaded from the `assets/` directory.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         font_size: u32,
         justify: TextJustify,
         selected: bool,
     ) -> Self {
-        let mut selected_widget = ImageWidget::new(factory, "radio_selected.png".to_string());
+        let mut selected_widget = ImageWidget::new("radio_selected.png".to_string());
         selected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         selected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, true);
 
-        let mut unselected_widget = ImageWidget::new(factory, "radio_unselected.png".to_string());
+        let mut unselected_widget = ImageWidget::new("radio_unselected.png".to_string());
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
         let mut text_widget = TextWidget::new(
-            factory,
             font_name.to_string(),
             text.to_string(),
             font_size,

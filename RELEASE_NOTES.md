@@ -8,6 +8,7 @@
 - Converted text functions to use GlyphCache in GL rather than Piston.
 - Converted images to use Texture instead of G2dTexture objects for GL.
 - Uses CharacterCache trait in Piston to determine rendering width. (#129)
+- Code no longer uses get_factory() call, since all textures are done via GL instead of 2D.
 
 ## 0.2.12
 

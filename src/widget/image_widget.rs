@@ -30,7 +30,7 @@ impl ImageWidget {
     /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
     /// and the name of the image to be drawn.  The image is loaded locally from the `assets/`
     /// directory of your application.
-    pub fn new(factory: &mut GfxFactory, image_name: String) -> Self {
+    pub fn new(image_name: String) -> Self {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
             .unwrap();

@@ -56,10 +56,10 @@ impl Pushrod {
         }
     }
 
-    /// Retrieves the window `GfxFactory` factory object for graphics and font textures.
-    pub fn get_factory(&mut self) -> &mut GfxFactory {
-        &mut self.window.factory
-    }
+//    /// Retrieves the window `GfxFactory` factory object for graphics and font textures.
+//    pub fn get_factory(&mut self) -> &mut GfxFactory {
+//        &mut self.window.factory
+//    }
 
     /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {

@@ -40,14 +40,13 @@ impl ImageButtonWidget {
     /// and the font justification when rendered.  Images and fonts are loaded from the `assets/`
     /// directory.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         image_name: String,
         font_size: u32,
         justify: TextJustify,
     ) -> Self {
-        let mut image_widget = ImageWidget::new(factory, image_name.to_string());
+        let mut image_widget = ImageWidget::new(image_name.to_string());
 
         image_widget.set_point(CONFIG_ORIGIN, 2, 2);
 
@@ -55,7 +54,6 @@ impl ImageButtonWidget {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
             text_widget: TextWidget::new(
-                factory,
                 font_name.to_string(),
                 text.to_string(),
                 font_size,
