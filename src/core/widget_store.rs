@@ -74,14 +74,14 @@ impl WidgetStore {
             .for_each(|x| x.widget.borrow_mut().invalidate());
     }
 
-//  TODO: Refresh this code when in 0.3.x; this will help with redrawing only when necessary.
-//    fn needs_repaint(&mut self) -> bool {
-//        self.widgets
-//            .iter_mut()
-//            .map(|x| x.widget.borrow_mut().is_invalidated())
-//            .find(|x| x == &true)
-//            .unwrap_or(false)
-//    }
+    /// Indicates whether or not a widget in the store has been invalidated.
+    pub fn needs_repaint(&mut self) -> bool {
+        self.widgets
+            .iter_mut()
+            .map(|x| x.widget.borrow_mut().is_invalidated())
+            .find(|x| x == &true)
+            .unwrap_or(false)
+    }
 
     /// Adds a `Widget` to the stack by name.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
