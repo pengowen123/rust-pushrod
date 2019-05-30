@@ -7,6 +7,7 @@
 - Converted main graphics drawing routines to use GL drawing instead (#113)
 - Converted text functions to use GlyphCache in GL rather than Piston.
 - Converted images to use Texture instead of G2dTexture objects for GL.
+- Uses CharacterCache trait in Piston to determine rendering width. (#129)
 
 ## 0.2.12
 

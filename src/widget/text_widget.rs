@@ -22,42 +22,6 @@ use crate::widget::config::*;
 use crate::widget::widget::*;
 use self::graphics::character::CharacterCache;
 
-//mod private {
-//    use piston_window::character::CharacterCache;
-//    use piston_window::types::FontSize;
-//    use piston_window::Graphics;
-//
-//    pub struct TextHelper {
-//        pub font_size: FontSize,
-//    }
-//
-//    impl TextHelper {
-//        pub fn new(font_size: FontSize) -> TextHelper {
-//            TextHelper { font_size }
-//        }
-//
-//        pub fn determine_size<C, G>(
-//            &self,
-//            text: &str,
-//            cache: &mut C,
-//            _: &mut G,
-//        ) -> Result<(i32, i32), C::Error>
-//        where
-//            C: CharacterCache,
-//            G: GlGraphics<Texture = <C as CharacterCache>::Texture>,
-//        {
-//            let mut x = 0.0;
-//            let mut y = 0.0;
-//            for ch in text.chars() {
-//                let character = cache.character(self.font_size, ch)?;
-//                x += character.width();
-//                y += character.height();
-//            }
-//            Ok((x as i32, y as i32))
-//        }
-//    }
-//}
-
 /// Enumeration identifying the justification of the text to be drawn, as long as the bounds
 /// of the object allow for it.
 pub enum TextJustify {
