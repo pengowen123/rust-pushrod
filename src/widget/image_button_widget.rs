@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
@@ -34,19 +35,17 @@ pub struct ImageButtonWidget {
 }
 
 impl ImageButtonWidget {
-    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
-    /// the name of the font, the text to display, the image name to display, the size of the font,
-    /// and the font justification when rendered.  Images and fonts are loaded from the `assets/`
+    /// Constructor.  Requires the name of the font, the text to display, the image name to display, the size of the font,
+    /// and the font justification when rendered.  Images are loaded from the `assets/`
     /// directory.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         image_name: String,
         font_size: u32,
         justify: TextJustify,
     ) -> Self {
-        let mut image_widget = ImageWidget::new(factory, image_name.to_string());
+        let mut image_widget = ImageWidget::new(image_name.to_string());
 
         image_widget.set_point(CONFIG_ORIGIN, 2, 2);
 
@@ -54,7 +53,6 @@ impl ImageButtonWidget {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
             text_widget: TextWidget::new(
-                factory,
                 font_name.to_string(),
                 text.to_string(),
                 font_size,
@@ -151,7 +149,7 @@ impl Widget for ImageButtonWidget {
         None
     }
 
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         let size = self.base_widget.config().get_size(CONFIG_BODY_SIZE);

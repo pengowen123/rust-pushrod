@@ -16,6 +16,7 @@
 use piston_window::*;
 
 use std::cell::RefCell;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
@@ -73,14 +74,14 @@ impl WidgetStore {
             .for_each(|x| x.widget.borrow_mut().invalidate());
     }
 
-//  TODO: Refresh this code when in 0.3.x; this will help with redrawing only when necessary.
-//    fn needs_repaint(&mut self) -> bool {
-//        self.widgets
-//            .iter_mut()
-//            .map(|x| x.widget.borrow_mut().is_invalidated())
-//            .find(|x| x == &true)
-//            .unwrap_or(false)
-//    }
+    /// Indicates whether or not a widget in the store has been invalidated.
+    pub fn needs_repaint(&mut self) -> bool {
+        self.widgets
+            .iter_mut()
+            .map(|x| x.widget.borrow_mut().is_invalidated())
+            .find(|x| x == &true)
+            .unwrap_or(false)
+    }
 
     /// Adds a `Widget` to the stack by name.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
@@ -235,7 +236,7 @@ impl WidgetStore {
 
     /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw
     /// request from ID 0 will redraw the entire screen.
-    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut G2d) {
+    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics) {
         let parents_of_widget = self.get_children_of(widget_id);
 
         if parents_of_widget.len() == 0 {

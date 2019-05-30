@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
 use crate::core::point::Point;
@@ -34,29 +35,25 @@ pub struct CheckboxWidget {
 }
 
 impl CheckboxWidget {
-    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
-    /// the name of the font, the text to display, the image name to display, the size of the font,
-    /// and the font justification when rendered.  Images and fonts are loaded from the
-    /// `assets/` directory.
+    /// Constructor.  Requires the name of the font, the text to display, the image name to display, the size of the font,
+    /// and the font justification when rendered.  Images are loaded from the `assets/` directory.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         font_size: u32,
         justify: TextJustify,
         selected: bool,
     ) -> Self {
-        let mut selected_widget = ImageWidget::new(factory, "checkbox_selected.png".to_string());
+        let mut selected_widget = ImageWidget::new("checkbox_selected.png".to_string());
         selected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         selected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, true);
 
         let mut unselected_widget =
-            ImageWidget::new(factory, "checkbox_unselected.png".to_string());
+            ImageWidget::new("checkbox_unselected.png".to_string());
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
         let text_widget = TextWidget::new(
-            factory,
             font_name.to_string(),
             text.to_string(),
             font_size,
@@ -128,7 +125,7 @@ impl Widget for CheckboxWidget {
         None
     }
 
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);

@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent::WidgetSelected;
 use crate::core::callbacks::*;
@@ -40,7 +41,6 @@ impl ToggleButtonWidget {
     /// and the font justification when rendered.  Fonts are loaded from the `assets/`
     /// directory.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         font_size: u32,
@@ -50,7 +50,6 @@ impl ToggleButtonWidget {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
             text_widget: TextWidget::new(
-                factory,
                 font_name.to_string(),
                 text.to_string(),
                 font_size,
@@ -169,7 +168,7 @@ impl Widget for ToggleButtonWidget {
         None
     }
 
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);

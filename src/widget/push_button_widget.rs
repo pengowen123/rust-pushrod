@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
@@ -31,12 +32,9 @@ pub struct PushButtonWidget {
 }
 
 impl PushButtonWidget {
-    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
-    /// the name of the font, the text to display, the size of the font,
-    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
-    /// directory.
+    /// Constructor.  Requires the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         font_size: u32,
@@ -46,7 +44,6 @@ impl PushButtonWidget {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
             text_widget: TextWidget::new(
-                factory,
                 font_name.to_string(),
                 text.to_string(),
                 font_size,
@@ -140,7 +137,7 @@ impl Widget for PushButtonWidget {
         None
     }
 
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);

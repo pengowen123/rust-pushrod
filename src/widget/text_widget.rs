@@ -13,46 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//extern crate graphics;
+
 use piston_window::*;
+use opengl_graphics::{GlGraphics, GlyphCache};
+use graphics::character::CharacterCache;
+use graphics::draw_state::DrawState;
+use graphics::text;
+use graphics::Transformed;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
-
-mod private {
-    use piston_window::character::CharacterCache;
-    use piston_window::types::FontSize;
-    use piston_window::Graphics;
-
-    pub struct TextHelper {
-        pub font_size: FontSize,
-    }
-
-    impl TextHelper {
-        pub fn new(font_size: FontSize) -> TextHelper {
-            TextHelper { font_size }
-        }
-
-        pub fn determine_size<C, G>(
-            &self,
-            text: &str,
-            cache: &mut C,
-            _: &mut G,
-        ) -> Result<(i32, i32), C::Error>
-        where
-            C: CharacterCache,
-            G: Graphics<Texture = <C as CharacterCache>::Texture>,
-        {
-            let mut x = 0.0;
-            let mut y = 0.0;
-            for ch in text.chars() {
-                let character = cache.character(self.font_size, ch)?;
-                x += character.width();
-                y += character.height();
-            }
-            Ok((x as i32, y as i32))
-        }
-    }
-}
 
 /// Enumeration identifying the justification of the text to be drawn, as long as the bounds
 /// of the object allow for it.
@@ -70,67 +41,59 @@ pub enum TextJustify {
 /// Draws a block of text.
 pub struct TextWidget {
     config: Configurable,
-    font_cache: Glyphs,
+    font_cache: GlyphCache<'static>,    // YUCK - I do not like this!
     font_size: u32,
     justify: TextJustify,
-    desired_size: (i32, i32),
+    desired_size: i32,
+    need_text_resize: bool,
 }
 
 impl TextWidget {
-    /// Constructor.  Requires a `GfxFactory` (retrievable from `Main::get_factory`),
-    /// the name of the font, the text to display, the size of the font,
-    /// and the font justification when rendered.  Fonts are loaded from the `assets/`
-    /// directory.
+    /// Constructor.  Requires the name of the font, the text to display, the size of the font,
+    /// and the font justification when rendered.
     pub fn new(
-        factory: &mut GfxFactory,
         font_name: String,
         text: String,
         font_size: u32,
         justify: TextJustify,
     ) -> Self {
-        let assets = find_folder::Search::ParentsThenKids(3, 3)
-            .for_folder("assets")
-            .unwrap();
-        let ref font = assets.join(font_name.clone());
-        let glyphs = Glyphs::new(font, factory.clone(), TextureSettings::new()).unwrap();
         let mut configurable = Configurable::new();
+        let cache = GlyphCache::new(font_name.clone(), (), TextureSettings::new()).unwrap();
 
         configurable.set(CONFIG_DISPLAY_TEXT, Config::Text(text.clone()));
 
         Self {
             config: configurable,
-            font_cache: glyphs,
+            font_cache: cache,
             font_size,
             justify,
-            desired_size: (0, 0),
+            desired_size: 0 as i32,
+            need_text_resize: true,
         }
     }
 
-    fn draw_text(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
-        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
+    fn recalculate_desired_size(&mut self) {
+        let text = self.config().get_text(CONFIG_DISPLAY_TEXT).clone();
+        let mut width = 0.0;
 
-        // This prevents the calculation from occurring at every single draw cycle.  It only needs
-        // to occur once.
-        if self.desired_size.0 == 0 {
-            self.desired_size = private::TextHelper::new(self.font_size)
-                .determine_size(
-                    self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
-                    &mut self.font_cache,
-                    g,
-                )
-                .unwrap();
-
-            if self.desired_size.0 != 0 || self.desired_size.1 != 0 {
-                eprintln!("Desired size={:?} bounds={:?}", self.desired_size, size);
-            }
+        for ch in text.chars() {
+            let character = self.font_cache.character(self.font_size, ch).unwrap();
+            width += character.width();
         }
+
+        self.desired_size = width as i32;
+        self.need_text_resize = false;
+    }
+
+    fn draw_text(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
 
         // Modify transform here based on the width of the text being drawn, which is element 0 of
         // self.desired_size
         let start_x = match self.justify {
             TextJustify::Left => 0.0,
-            TextJustify::Center => ((size.w - self.desired_size.0) / 2) as f64,
-            TextJustify::Right => (size.w - self.desired_size.0) as f64,
+            TextJustify::Center => ((size.w - self.desired_size) / 2) as f64,
+            TextJustify::Right => (size.w - self.desired_size) as f64,
         };
 
         // Vertically justify the text as default.
@@ -143,7 +106,7 @@ impl TextWidget {
         // routines treats the top "y" value specified as the _baseline_ for the image drawing
         // start point.  We want to treat the _inside_ of the box as the baseline, so we simply
         // add the size of the font (in pixels), which adjusts the baseline to the desired area.
-        Text::new_color(self.config().get_color(CONFIG_TEXT_COLOR), self.font_size)
+        text::Text::new_color(self.config().get_color(CONFIG_TEXT_COLOR), self.font_size)
             .draw(
                 self.config().get_text(CONFIG_DISPLAY_TEXT).as_str(),
                 &mut self.font_cache,
@@ -165,8 +128,17 @@ impl Widget for TextWidget {
         self.invalidate();
     }
 
+    fn set_text(&mut self, config: u8, text: String) {
+        self.set_config(config, Config::Text(text.clone()));
+        self.need_text_resize = true;
+    }
+
     /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut G2d, clip: &DrawState) {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        if self.need_text_resize {
+            self.recalculate_desired_size();
+        }
+
         // Draw the text.
         self.draw_text(c, g, &clip);
 

@@ -1,5 +1,18 @@
 # Pushrod Releases
 
+## 0.3.0
+
+- Reenabled use of OpenGL (using Molten's OpenGLES libraries - which are free.)
+- Enabled zoom to handle zoom factor for HiDPI displays when displaying GL texture.
+- Converted main graphics drawing routines to use GL drawing instead (#113)
+- Converted text functions to use GlyphCache in GL rather than Piston.
+- Converted images to use Texture instead of G2dTexture objects for GL.
+- Uses CharacterCache trait in Piston to determine rendering width. (#129)
+- Code no longer uses get_factory() call, since all textures are done via GL instead of 2D.
+- Touched up documentation, removed the GfxFactory documentation, as this is no longer a requirement.
+- More code clean-up, removal of unused imports, etc.
+- Fixed Cargo.toml to pull specific versions of libraries so that graphics and other libs work as expected.
+
 ## 0.2.12
 
 - Added use of Rectangle instead of drawing lines multiple times for box.  (#124)

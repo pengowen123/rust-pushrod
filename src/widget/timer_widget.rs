@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use piston_window::*;
+use opengl_graphics::GlGraphics;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::callbacks::CallbackEvent;
@@ -89,7 +90,7 @@ impl Widget for TimerWidget {
         }
     }
 
-    fn draw(&mut self, _context: Context, _graphics: &mut G2d, _clip: &DrawState) {
+    fn draw(&mut self, _context: Context, _graphics: &mut GlGraphics, _clip: &DrawState) {
         self.tick();
     }
 }
