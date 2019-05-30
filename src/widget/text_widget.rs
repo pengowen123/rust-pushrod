@@ -71,8 +71,14 @@ impl TextWidget {
 
     fn recalculate_desired_size(&mut self) {
         let text = self.config().get_text(CONFIG_DISPLAY_TEXT).clone();
+        let mut width = 0.0;
 
-        self.desired_size = self.font_cache.width(self.font_size, &text).unwrap() as i32;
+        for ch in text.chars() {
+            let character = self.font_cache.character(self.font_size, ch).unwrap();
+            width += character.width();
+        }
+
+        self.desired_size = width as i32;
         self.need_text_resize = false;
     }
 
