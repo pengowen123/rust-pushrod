@@ -42,6 +42,7 @@ pub struct TextWidget {
     font_size: u32,
     justify: TextJustify,
     desired_size: i32,
+    need_text_resize: bool,
 }
 
 impl TextWidget {
@@ -54,8 +55,7 @@ impl TextWidget {
         justify: TextJustify,
     ) -> Self {
         let mut configurable = Configurable::new();
-        let mut cache = GlyphCache::new(font_name.clone(), (), TextureSettings::new()).unwrap();
-        let size = cache.width(font_size, &text).unwrap();
+        let cache = GlyphCache::new(font_name.clone(), (), TextureSettings::new()).unwrap();
 
         configurable.set(CONFIG_DISPLAY_TEXT, Config::Text(text.clone()));
 
@@ -64,8 +64,16 @@ impl TextWidget {
             font_cache: cache,
             font_size,
             justify,
-            desired_size: size as i32,
+            desired_size: 0 as i32,
+            need_text_resize: true,
         }
+    }
+
+    fn recalculate_desired_size(&mut self) {
+        let text = self.config().get_text(CONFIG_DISPLAY_TEXT).clone();
+
+        self.desired_size = self.font_cache.width(self.font_size, &text).unwrap() as i32;
+        self.need_text_resize = false;
     }
 
     fn draw_text(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
@@ -111,8 +119,17 @@ impl Widget for TextWidget {
         self.invalidate();
     }
 
+    fn set_text(&mut self, config: u8, text: String) {
+        self.set_config(config, Config::Text(text.clone()));
+        self.need_text_resize = true;
+    }
+
     /// Draws the contents of the widget.
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        if self.need_text_resize {
+            self.recalculate_desired_size();
+        }
+
         // Draw the text.
         self.draw_text(c, g, &clip);
 
