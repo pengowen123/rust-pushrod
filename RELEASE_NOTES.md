@@ -11,6 +11,7 @@
 - Code no longer uses get_factory() call, since all textures are done via GL instead of 2D.
 - Touched up documentation, removed the GfxFactory documentation, as this is no longer a requirement.
 - More code clean-up, removal of unused imports, etc.
+- Fixed Cargo.toml to pull specific versions of libraries so that graphics and other libs work as expected.
 
 ## 0.2.12
 
