@@ -17,10 +17,10 @@ extern crate graphics;
 
 use piston_window::*;
 use opengl_graphics::{GlGraphics, GlyphCache};
+use graphics::character::CharacterCache;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
-use self::graphics::character::CharacterCache;
 
 /// Enumeration identifying the justification of the text to be drawn, as long as the bounds
 /// of the object allow for it.
