@@ -56,11 +56,6 @@ impl Pushrod {
         }
     }
 
-//    /// Retrieves the window `GfxFactory` factory object for graphics and font textures.
-//    pub fn get_factory(&mut self) -> &mut GfxFactory {
-//        &mut self.window.factory
-//    }
-
     /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         self.widget_store.borrow_mut().add_widget(name, widget)
@@ -156,6 +151,8 @@ impl Pushrod {
             .map(|x| x.widget_id)
             .collect();
         let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
+
+        self.window.window.make_current();
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
@@ -328,8 +325,8 @@ impl Pushrod {
             });
 
             event.render(|args| {
-                self.widget_store.borrow_mut().invalidate_all_widgets();
-
+//                self.widget_store.borrow_mut().invalidate_all_widgets();
+//
                 injectable_map.iter().for_each(|widget_id| {
                     let injectable_event = self
                         .widget_store
@@ -347,16 +344,18 @@ impl Pushrod {
                     }
                 });
 
-                let widgets = &mut self.widget_store.borrow_mut();
+                if self.widget_store.borrow_mut().needs_repaint() {
+                    let widgets = &mut self.widget_store.borrow_mut();
 
-                unsafe {
-                    gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-                }
+                    unsafe {
+                        gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
+                    }
 
-                gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g));
+                    gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g));
 
-                unsafe {
-                    gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
+                    unsafe {
+                        gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
+                    }
                 }
 
                 gl.draw(args.viewport(), |c, g| {

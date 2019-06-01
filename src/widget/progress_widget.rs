@@ -19,6 +19,7 @@ use opengl_graphics::GlGraphics;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
+use crate::core::point::make_origin_point;
 
 /// Draws a progress bar, with progress being a value from 0 to 100.  Configurable options
 /// are:
@@ -63,10 +64,22 @@ impl Widget for ProgressWidget {
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
 
-        self.base_widget.draw(c, g, clip);
+        // Clear drawing area
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
 
-        let draw_width =
-            (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64;
+        self.base_widget.draw_with_offset(c, g, clip, make_origin_point());
+
+        let mut draw_width =
+            (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64 - 2.0;
+
+        if draw_width < 0.0 {
+            draw_width = 0.0;
+        }
 
         // Paint the secondary color to display the progress color.
         Rectangle::new(self.config().get_color(CONFIG_SECONDARY_COLOR)).draw(
