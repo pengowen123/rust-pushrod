@@ -158,7 +158,7 @@ impl Pushrod {
         eprintln!("Window Size: {:?}", self.window.size());
         eprintln!("Draw Size: {:?}", self.window.window.draw_size());
 
-        self.window.set_max_fps(30);
+        self.window.set_max_fps(60);
         self.widget_store.borrow_mut().invalidate_all_widgets();
         self.rebuild_gl_buffers();
 
