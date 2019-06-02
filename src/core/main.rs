@@ -20,13 +20,13 @@ use std::collections::HashSet;
 use crate::core::callbacks::*;
 use crate::core::point::*;
 use crate::core::widget_store::*;
+use crate::core::drawing_texture::*;
 use crate::widget::widget::*;
 
 use glfw_window::GlfwWindow;
 
-use gl::types::GLuint;
 use graphics::math::scale;
-use opengl_graphics::{GlGraphics, Texture};
+use opengl_graphics::GlGraphics;
 use piston_window::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
@@ -36,10 +36,7 @@ pub struct Pushrod {
     /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
     /// display stack.
     pub widget_store: RefCell<WidgetStore>,
-
-    texture_buffer: Box<Vec<u8>>,
-    pub texture: Texture,
-    pub fbo: GLuint,
+    pub drawing_texture: RefCell<DrawingTexture>,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( PistonWindow )` object to create a new
@@ -50,9 +47,7 @@ impl Pushrod {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
-            texture_buffer: Box::new(vec![0u8; 1]),
-            texture: Texture::empty(&TextureSettings::new()).unwrap(),
-            fbo: 0,
+            drawing_texture: RefCell::new(DrawingTexture::new()),
         }
     }
 
@@ -107,30 +102,10 @@ impl Pushrod {
     fn rebuild_gl_buffers(&mut self) {
         let draw_size = self.window.window.draw_size();
 
-        self.texture_buffer = Box::new(vec![0u8; draw_size.width as usize * draw_size.height as usize]);
-        self.texture = Texture::from_memory_alpha(
-            &self.texture_buffer,
-            draw_size.width as u32,
-            draw_size.height as u32,
-            &TextureSettings::new(),
-        )
-            .unwrap();
-
-        unsafe {
-            let mut fbos: [GLuint; 1] = [0];
-
-            gl::GenFramebuffers(1, fbos.as_mut_ptr());
-            self.fbo = fbos[0];
-
-            gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-            gl::FramebufferTexture2D(
-                gl::FRAMEBUFFER,
-                gl::COLOR_ATTACHMENT0,
-                gl::TEXTURE_2D,
-                self.texture.get_id(),
-                0,
-            );
-        }
+        self.drawing_texture.borrow_mut().resize(crate::core::point::Size {
+            w: draw_size.width as i32,
+            h: draw_size.height as i32,
+        });
 
         eprintln!("Rebuild of OpenGL buffers for rendering complete.");
     }
@@ -347,15 +322,11 @@ impl Pushrod {
                 if self.widget_store.borrow_mut().needs_repaint() {
                     let widgets = &mut self.widget_store.borrow_mut();
 
-                    unsafe {
-                        gl::BindFramebuffer(gl::FRAMEBUFFER, self.fbo);
-                    }
+                    self.drawing_texture.borrow_mut().switch_to_texture();
 
                     gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g));
 
-                    unsafe {
-                        gl::BindFramebuffer(gl::FRAMEBUFFER, 0);
-                    }
+                    self.drawing_texture.borrow_mut().switch_to_fb(0);
                 }
 
                 gl.draw(args.viewport(), |c, g| {
@@ -367,7 +338,7 @@ impl Pushrod {
                         (self.window.window.draw_size().width + self.window.window.draw_size().height);
                     let flipped = flipped.zoom(zoom_factor);
 
-                    Image::new().draw(&self.texture, &c.draw_state, flipped, g);
+                    Image::new().draw(&self.drawing_texture.borrow_mut().texture, &c.draw_state, flipped, g);
                 });
             });
         }
