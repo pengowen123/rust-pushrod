@@ -115,6 +115,8 @@ impl Widget for RadioButtonWidget {
                             self.selected = true;
                             self.inject_event = true;
 
+                            self.invalidate();
+
                             return Some(CallbackEvent::WidgetSelected {
                                 widget_id,
                                 button,
@@ -139,6 +141,8 @@ impl Widget for RadioButtonWidget {
                             self.selected = false;
                         }
                     }
+
+                    self.invalidate();
                 }
 
                 _ => (),
@@ -169,6 +173,16 @@ impl Widget for RadioButtonWidget {
         // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
         // Invalidation is controlled by the top level widget (this box).
         self.base_widget.draw(c, g, &clip);
+
+        let size = self.config().get_size(CONFIG_BODY_SIZE);
+
+        // Clear the drawing backing
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
 
         if self.selected {
             self.selected_widget

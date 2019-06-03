@@ -29,3 +29,5 @@ pub mod widget_store;
 /// This is a per-widget event store that is used to call an event handler when an event is
 /// triggered.
 pub mod callbacks;
+
+pub mod drawing_texture;

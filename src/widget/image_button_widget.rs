@@ -67,12 +67,14 @@ impl ImageButtonWidget {
         self.base_widget
             .set_color(CONFIG_MAIN_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.text_widget.set_color(CONFIG_TEXT_COLOR, [1.0; 4]);
+        self.invalidate();
     }
 
     fn draw_unhovered(&mut self) {
         self.base_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         self.text_widget
             .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        self.invalidate();
     }
 }
 

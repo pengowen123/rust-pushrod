@@ -17,17 +17,20 @@ use piston_window::*;
 
 use std::cell::RefCell;
 use opengl_graphics::GlGraphics;
+use gl::types::GLuint;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
+use crate::core::drawing_texture::DrawingTexture;
 
 /// This is a container object that stores a `Widget`, assigns a name, a `Widget` ID, and its
 /// parent.
 pub struct WidgetContainer {
     /// The `Widget` being stored.
     pub widget: RefCell<Box<dyn Widget>>,
+    pub drawing_texture: RefCell<DrawingTexture>,
 
     widget_name: String,
 
@@ -57,6 +60,7 @@ impl WidgetStore {
         );
         widgets_list.push(WidgetContainer {
             widget: RefCell::new(Box::new(base_widget)),
+            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from("_WidgetStoreBase"),
             widget_id: 0,
             parent_id: 0,
@@ -88,6 +92,7 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
         let container = WidgetContainer {
             widget: RefCell::new(widget),
+            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id: 0,
@@ -116,6 +121,7 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
         let container = WidgetContainer {
             widget: RefCell::new(widget),
+            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id,
@@ -236,7 +242,7 @@ impl WidgetStore {
 
     /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw
     /// request from ID 0 will redraw the entire screen.
-    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics) {
+    pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics, original_fbo: GLuint) {
         let parents_of_widget = self.get_children_of(widget_id);
 
         if parents_of_widget.len() == 0 {
@@ -301,7 +307,7 @@ impl WidgetStore {
             }
 
             if parents_of_widget[pos] != widget_id {
-                self.draw(paint_id, c, g);
+                self.draw(paint_id, c, g, original_fbo);
             }
         }
     }

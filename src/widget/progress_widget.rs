@@ -63,10 +63,22 @@ impl Widget for ProgressWidget {
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
 
+        // Clear the drawing backing
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
+
         self.base_widget.draw(c, g, clip);
 
-        let draw_width =
-            (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64;
+        let mut draw_width =
+            (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64 - 2.0;
+
+        if draw_width < 0.0 {
+            draw_width = 0.0;
+        }
 
         // Paint the secondary color to display the progress color.
         Rectangle::new(self.config().get_color(CONFIG_SECONDARY_COLOR)).draw(
