@@ -7,6 +7,9 @@
 - Modified run loop to honor invalidation (#133)
 - Fixed buttons to draw properly with filled text.
 - Fixed ProgressWidget to draw backing so that refresh is correct when invalidating.
+- Fixed CheckboxWidget to invalidate properly.
+- Fixed RadioButtonWidget to invalidate properly.
+- Fixed TextWidget to draw properly when invalidating.
 
 ## 0.3.0
 

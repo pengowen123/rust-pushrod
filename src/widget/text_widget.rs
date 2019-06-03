@@ -131,6 +131,7 @@ impl Widget for TextWidget {
     fn set_text(&mut self, config: u8, text: String) {
         self.set_config(config, Config::Text(text.clone()));
         self.need_text_resize = true;
+        self.invalidate();
     }
 
     /// Draws the contents of the widget.
@@ -138,6 +139,17 @@ impl Widget for TextWidget {
         if self.need_text_resize {
             self.recalculate_desired_size();
         }
+
+        let size = self.config().get_size(CONFIG_BODY_SIZE);
+
+        // Clear the drawing backing
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
+
 
         // Draw the text.
         self.draw_text(c, g, &clip);
