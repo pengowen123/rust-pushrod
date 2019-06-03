@@ -6,6 +6,7 @@
 - Fixing text background colors in simple app (#135)
 - Fixed Show/Hide and Enable/Disable toggles in simple app (#134)
 - Optimized run loop slightly with (in)validation optimization.
+- Removed duplicate code in run loop.
 
 ## 0.3.1
 

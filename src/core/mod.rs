@@ -30,4 +30,6 @@ pub mod widget_store;
 /// triggered.
 pub mod callbacks;
 
+/// This provides a 3D drawing texture that is offloaded onto the GPU for graphics processing.
+/// It is used internally by the drawing loop.
 pub mod drawing_texture;
