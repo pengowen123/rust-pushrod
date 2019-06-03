@@ -2,6 +2,12 @@
 
 ## 0.3.1
 
+```
+CPU usage before optimizations: 10.5%
+CPU usage after current optimo: 6.3%
+On the right track!!
+```
+
 - Removed "get_factory" method - no longer needed with OpenGL
 - Fixed ProgressWidget to draw inside bounds; was exceeding bounds on draw.
 - Modified run loop to honor invalidation (#133)
