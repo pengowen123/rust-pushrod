@@ -20,7 +20,6 @@ use opengl_graphics::GlGraphics;
 use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
-use crate::core::drawing_texture::DrawingTexture;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -30,7 +29,6 @@ use crate::widget::widget::*;
 pub struct WidgetContainer {
     /// The `Widget` being stored.
     pub widget: RefCell<Box<dyn Widget>>,
-    pub drawing_texture: RefCell<DrawingTexture>,
 
     widget_name: String,
 
@@ -60,7 +58,6 @@ impl WidgetStore {
         );
         widgets_list.push(WidgetContainer {
             widget: RefCell::new(Box::new(base_widget)),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from("_WidgetStoreBase"),
             widget_id: 0,
             parent_id: 0,
@@ -92,7 +89,6 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
         let container = WidgetContainer {
             widget: RefCell::new(widget),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id: 0,
@@ -121,7 +117,6 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
         let container = WidgetContainer {
             widget: RefCell::new(widget),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id,

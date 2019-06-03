@@ -9,6 +9,7 @@
 - Removed duplicate code in run loop.
 - Further optimized drawing loop so that image is only redrawn if any objects need repainting.
 - Removed use of RefCell from main run loop for DrawingTexture object.
+- Removed DrawingTexture code from WidgetStore - not necessary (yet).
 
 ## 0.3.1
 
