@@ -266,6 +266,8 @@ impl Pushrod {
                     },
                     &mut self.widget_store.borrow_mut(),
                 );
+
+                self.widget_store.borrow_mut().invalidate_all_widgets();
             });
 
             event.focus(|focused| {
@@ -294,10 +296,6 @@ impl Pushrod {
                 }
                 _ => {}
             };
-
-            event.resize(|_, _| {
-                self.widget_store.borrow_mut().invalidate_all_widgets();
-            });
 
             event.render(|args| {
                 injectable_map.iter().for_each(|widget_id| {

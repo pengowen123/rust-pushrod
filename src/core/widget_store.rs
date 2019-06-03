@@ -254,55 +254,42 @@ impl WidgetStore {
 
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
-
-            if !paint_widget
+            let is_hidden = paint_widget
                 .widget
                 .borrow_mut()
                 .config()
-                .get_toggle(CONFIG_WIDGET_HIDDEN)
-            {
-                if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
-                    let origin: Point = paint_widget
-                        .widget
-                        .borrow_mut()
-                        .config()
-                        .get_point(CONFIG_ORIGIN);
-//                    let size: crate::core::point::Size = paint_widget
-//                        .widget
-//                        .borrow_mut()
-//                        .config()
-//                        .get_size(CONFIG_BODY_SIZE);
+                .get_toggle(CONFIG_WIDGET_HIDDEN);
+            let is_invalidated = &paint_widget.widget.borrow_mut().is_invalidated();
 
-                    let new_context: Context = Context {
-                        viewport: c.viewport,
-                        view: c.view,
-                        transform: c.transform.trans(origin.x as f64, origin.y as f64),
-                        draw_state: c.draw_state,
-                    };
+            if !is_hidden && is_invalidated == &true {
+                let origin: Point = paint_widget
+                    .widget
+                    .borrow_mut()
+                    .config()
+                    .get_point(CONFIG_ORIGIN);
 
-//                    let clip: DrawState = c.draw_state.scissor([
-//                        origin.x as u32,
-//                        origin.y as u32,
-//                        size.w as u32,
-//                        size.h as u32,
-//                    ]);
+                let new_context: Context = Context {
+                    viewport: c.viewport,
+                    view: c.view,
+                    transform: c.transform.trans(origin.x as f64, origin.y as f64),
+                    draw_state: c.draw_state,
+                };
 
+                &paint_widget
+                    .widget
+                    .borrow_mut()
+                    .draw(new_context, g, &c.draw_state);
+
+                if paint_widget
+                    .widget
+                    .borrow_mut()
+                    .config()
+                    .get_toggle(CONFIG_WIDGET_DISABLED)
+                {
                     &paint_widget
                         .widget
                         .borrow_mut()
-                        .draw(new_context, g, &c.draw_state);
-
-                    if paint_widget
-                        .widget
-                        .borrow_mut()
-                        .config()
-                        .get_toggle(CONFIG_WIDGET_DISABLED)
-                    {
-                        &paint_widget
-                            .widget
-                            .borrow_mut()
-                            .draw_disabled(new_context, g, &c.draw_state);
-                    }
+                        .draw_disabled(new_context, g, &c.draw_state);
                 }
             }
 

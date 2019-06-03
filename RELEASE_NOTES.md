@@ -4,6 +4,8 @@
 
 - Fixed PushButton, ToggleButton, and ImageButton text background so that they are clear. (#135)
 - Fixing text background colors in simple app (#135)
+- Fixed Show/Hide and Enable/Disable toggles in simple app (#134)
+- Optimized run loop slightly with (in)validation optimization.
 
 ## 0.3.1
 

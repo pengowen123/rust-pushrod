@@ -154,6 +154,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                     .get_widget_for_name("BaseWidget1")
                                     .borrow_mut()
                                     .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+
+                                widget_store.invalidate_all_widgets();
                             }
                         }
                         _ => (),
@@ -194,6 +196,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                     .get_widget_for_name("RightJustifiedText")
                                     .borrow_mut()
                                     .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+
+                                widget_store.invalidate_all_widgets();
                             }
                         }
                         _ => (),
@@ -238,6 +242,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                     .get_widget_for_name("Box5")
                                     .borrow_mut()
                                     .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+
+                                widget_store.invalidate_all_widgets();
                             }
                         }
                         _ => (),
@@ -270,6 +276,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                                     .get_widget_for_name("BaseWidget1")
                                     .borrow_mut()
                                     .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+                                widget_store.invalidate_all_widgets();
                             }
                         }
                         _ => (),
