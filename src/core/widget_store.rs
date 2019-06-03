@@ -15,15 +15,15 @@
 
 use piston_window::*;
 
-use std::cell::RefCell;
-use opengl_graphics::GlGraphics;
 use gl::types::GLuint;
+use opengl_graphics::GlGraphics;
+use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
+use crate::core::drawing_texture::DrawingTexture;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
-use crate::core::drawing_texture::DrawingTexture;
 
 /// This is a container object that stores a `Widget`, assigns a name, a `Widget` ID, and its
 /// parent.
@@ -210,10 +210,10 @@ impl WidgetStore {
             .widgets
             .iter_mut()
             .find(|x| x.widget_name == String::from(name))
-            {
-                Some(x) => x.widget_id,
-                None => 0,
-            };
+        {
+            Some(x) => x.widget_id,
+            None => 0,
+        };
 
         self.get_widget_for_id(widget_id)
     }

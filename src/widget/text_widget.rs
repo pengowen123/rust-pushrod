@@ -15,12 +15,12 @@
 
 //extern crate graphics;
 
-use piston_window::*;
-use opengl_graphics::{GlGraphics, GlyphCache};
 use graphics::character::CharacterCache;
 use graphics::draw_state::DrawState;
 use graphics::text;
 use graphics::Transformed;
+use opengl_graphics::{GlGraphics, GlyphCache};
+use piston_window::*;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -41,7 +41,7 @@ pub enum TextJustify {
 /// Draws a block of text.
 pub struct TextWidget {
     config: Configurable,
-    font_cache: GlyphCache<'static>,    // YUCK - I do not like this!
+    font_cache: GlyphCache<'static>, // YUCK - I do not like this!
     font_size: u32,
     justify: TextJustify,
     desired_size: i32,
@@ -51,12 +51,7 @@ pub struct TextWidget {
 impl TextWidget {
     /// Constructor.  Requires the name of the font, the text to display, the size of the font,
     /// and the font justification when rendered.
-    pub fn new(
-        font_name: String,
-        text: String,
-        font_size: u32,
-        justify: TextJustify,
-    ) -> Self {
+    pub fn new(font_name: String, text: String, font_size: u32, justify: TextJustify) -> Self {
         let mut configurable = Configurable::new();
         let cache = GlyphCache::new(font_name.clone(), (), TextureSettings::new()).unwrap();
 
@@ -149,7 +144,6 @@ impl Widget for TextWidget {
             clip,
             c.transform,
         );
-
 
         // Draw the text.
         self.draw_text(c, g, &clip);

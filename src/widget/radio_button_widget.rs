@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use crate::core::callbacks::*;
 use crate::core::point::Point;
@@ -57,12 +57,8 @@ impl RadioButtonWidget {
         unselected_widget.set_point(CONFIG_ORIGIN, 2, 2);
         unselected_widget.set_toggle(CONFIG_WIDGET_HIDDEN, false);
 
-        let mut text_widget = TextWidget::new(
-            font_name.to_string(),
-            text.to_string(),
-            font_size,
-            justify,
-        );
+        let mut text_widget =
+            TextWidget::new(font_name.to_string(), text.to_string(), font_size, justify);
         text_widget.set_point(CONFIG_ORIGIN, 36, 0);
 
         Self {

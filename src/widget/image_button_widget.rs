@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
@@ -46,12 +46,8 @@ impl ImageButtonWidget {
         justify: TextJustify,
     ) -> Self {
         let mut image_widget = ImageWidget::new(image_name.to_string());
-        let mut text_widget = TextWidget::new(
-            font_name.to_string(),
-            text.to_string(),
-            font_size,
-            justify,
-        );
+        let mut text_widget =
+            TextWidget::new(font_name.to_string(), text.to_string(), font_size, justify);
 
         text_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
         image_widget.set_point(CONFIG_ORIGIN, 2, 2);

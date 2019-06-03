@@ -42,7 +42,7 @@ impl DrawingTexture {
             size.h as u32,
             &TextureSettings::new(),
         )
-            .unwrap();
+        .unwrap();
 
         unsafe {
             let mut fbos: [GLuint; 1] = [0];

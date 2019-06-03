@@ -18,9 +18,9 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 
 use crate::core::callbacks::*;
+use crate::core::drawing_texture::*;
 use crate::core::point::*;
 use crate::core::widget_store::*;
-use crate::core::drawing_texture::*;
 use crate::widget::widget::*;
 
 use glfw_window::GlfwWindow;
@@ -102,10 +102,12 @@ impl Pushrod {
     fn rebuild_gl_buffers(&mut self) {
         let draw_size = self.window.window.draw_size();
 
-        self.drawing_texture.borrow_mut().resize(crate::core::point::Size {
-            w: draw_size.width as i32,
-            h: draw_size.height as i32,
-        });
+        self.drawing_texture
+            .borrow_mut()
+            .resize(crate::core::point::Size {
+                w: draw_size.width as i32,
+                h: draw_size.height as i32,
+            });
 
         eprintln!("Rebuild of OpenGL buffers for rendering complete.");
     }
@@ -320,7 +322,9 @@ impl Pushrod {
 
                     self.drawing_texture.borrow_mut().switch_to_texture();
 
-                    gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g, self.drawing_texture.borrow_mut().fbo));
+                    gl.draw(args.viewport(), |c, g| {
+                        widgets.draw(0, c, g, self.drawing_texture.borrow_mut().fbo)
+                    });
 
                     self.drawing_texture.borrow_mut().switch_to_fb(0);
 
@@ -329,10 +333,16 @@ impl Pushrod {
                         let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
 
                         // Enable zoom only if the draw size is larger than the window size.
-                        let zoom_factor = (self.window.size().width + self.window.size().height) /
-                            (self.window.window.draw_size().width + self.window.window.draw_size().height);
+                        let zoom_factor = (self.window.size().width + self.window.size().height)
+                            / (self.window.window.draw_size().width
+                                + self.window.window.draw_size().height);
 
-                        Image::new().draw(&self.drawing_texture.borrow_mut().texture, &c.draw_state, flipped.zoom(zoom_factor), g);
+                        Image::new().draw(
+                            &self.drawing_texture.borrow_mut().texture,
+                            &c.draw_state,
+                            flipped.zoom(zoom_factor),
+                            g,
+                        );
                     });
                 }
             });
