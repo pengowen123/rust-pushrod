@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::{GlGraphics, Texture};
+use piston_window::*;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -33,11 +33,8 @@ impl ImageWidget {
         let assets = find_folder::Search::ParentsThenKids(3, 3)
             .for_folder("assets")
             .unwrap();
-        let texture = Texture::from_path(
-            &assets.join(image_name),
-            &TextureSettings::new(),
-        )
-            .unwrap();
+        let texture =
+            Texture::from_path(&assets.join(image_name), &TextureSettings::new()).unwrap();
         let texture_width = texture.get_width() as i32;
         let texture_height = texture.get_height() as i32;
 

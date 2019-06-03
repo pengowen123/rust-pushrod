@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -43,7 +43,10 @@ impl BoxWidget {
 
         Rectangle::new_border(color, border).draw(
             [0.0 as f64, 0.0 as f64, size.w as f64, size.h as f64],
-            clip, c.transform, g);
+            clip,
+            c.transform,
+            g,
+        );
     }
 }
 

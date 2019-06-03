@@ -1,5 +1,16 @@
 # Pushrod Releases
 
+## 0.3.2
+
+- Fixed PushButton, ToggleButton, and ImageButton text background so that they are clear. (#135)
+- Fixing text background colors in simple app (#135)
+- Fixed Show/Hide and Enable/Disable toggles in simple app (#134)
+- Optimized run loop slightly with (in)validation optimization.
+- Removed duplicate code in run loop.
+- Further optimized drawing loop so that image is only redrawn if any objects need repainting.
+- Removed use of RefCell from main run loop for DrawingTexture object.
+- Removed DrawingTexture code from WidgetStore - not necessary (yet).
+
 ## 0.3.1
 
 ```

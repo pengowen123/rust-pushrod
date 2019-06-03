@@ -20,7 +20,7 @@ use piston_window::TextureSettings;
 use crate::core::point::Size;
 
 pub struct DrawingTexture {
-    texture_buffer: Box<Vec<u8>>,
+    texture_buffer: Vec<u8>,
     pub texture: Texture,
     pub fbo: GLuint,
 }
@@ -28,21 +28,21 @@ pub struct DrawingTexture {
 impl DrawingTexture {
     pub fn new() -> Self {
         Self {
-            texture_buffer: Box::new(vec![0u8; 1]),
+            texture_buffer: vec![0u8; 1],
             texture: Texture::empty(&TextureSettings::new()).unwrap(),
             fbo: 0,
         }
     }
 
     pub fn resize(&mut self, size: Size) {
-        self.texture_buffer = Box::new(vec![0u8; size.w as usize * size.h as usize]);
+        self.texture_buffer = vec![0u8; size.w as usize * size.h as usize];
         self.texture = Texture::from_memory_alpha(
             &self.texture_buffer,
             size.w as u32,
             size.h as u32,
             &TextureSettings::new(),
         )
-            .unwrap();
+        .unwrap();
 
         unsafe {
             let mut fbos: [GLuint; 1] = [0];

@@ -31,30 +31,20 @@ pub trait PushrodCallbackEvents {
 pub enum CallbackEvent {
     /// Indicates a mouse entered the bounds of a `Widget`.  Contains the ID of the `Widget` that was
     /// affected.
-    MouseEntered {
-        widget_id: i32,
-    },
+    MouseEntered { widget_id: i32 },
 
     /// Indicates a mouse exited the bounds of a `Widget`.  Contains the ID of the `Widget` that was
     /// affected.
-    MouseExited {
-        widget_id: i32,
-    },
+    MouseExited { widget_id: i32 },
 
     /// Indicates that the scroll wheel was moved inside a `Widget`.  Contains the ID of the
     /// `Widget` that had the mouse scroll action, and the point in the direction of the scroll,
     /// along with the amount of points the mouse scroll moved.
-    MouseScrolled {
-        widget_id: i32,
-        point: Point,
-    },
+    MouseScrolled { widget_id: i32, point: Point },
 
     /// Indicates that a mouse moved within the bounds of a `Widget`.  Contains the ID of the
     /// `Widget` that was affected.
-    MouseMoved {
-        widget_id: i32,
-        point: Point,
-    },
+    MouseMoved { widget_id: i32, point: Point },
 
     /// Indicates that a keyboard key was pressed/released inside the bounds of a `Widget`.  Contains
     /// the ID of the `Widget` that received the keypress, along with the `Key` value, and any
@@ -67,43 +57,27 @@ pub enum CallbackEvent {
 
     /// Indicates that the main application window was resized.  Contains the `Size` of the new
     /// bounds.
-    WindowResized {
-        size: crate::core::point::Size,
-    },
+    WindowResized { size: crate::core::point::Size },
 
     /// Indicates whether or not focus was gained or lost for the main application.  Contains a
     /// boolean flag indicating focus: `true` is focused, `false` if lost.
-    WindowFocused {
-        flag: bool,
-    },
+    WindowFocused { flag: bool },
 
     /// Indicates that a mouse button was pressed within the bounds of a `Widget`.  Contains the
     /// ID of the `Widget`, along with the `Button` that was clicked.
-    MouseButtonDown {
-        widget_id: i32,
-        button: Button,
-    },
+    MouseButtonDown { widget_id: i32, button: Button },
 
     /// Indicates that a mouse button was released within the bounds of a `Widget`.  Contains
     /// the ID of the `Widget`, along with the `Button` that was released.
-    MouseButtonUpInside {
-        widget_id: i32,
-        button: Button,
-    },
+    MouseButtonUpInside { widget_id: i32, button: Button },
 
     /// Indicates that a mouse button was released outside of the bounds of a `Widget`.  Contains
     /// the ID of the `Widget`, along with the `Button` that was released.
-    MouseButtonUpOutside {
-        widget_id: i32,
-        button: Button,
-    },
+    MouseButtonUpOutside { widget_id: i32, button: Button },
 
     /// Indicates that a mouse button triggered a click action within a `Widget`.  Contains the
     /// ID of the `Widget`, along with the `Button` that was used to indicate the click action.
-    WidgetClicked {
-        widget_id: i32,
-        button: Button,
-    },
+    WidgetClicked { widget_id: i32, button: Button },
 
     /// Indicates that a `Widget`'s selected state has been toggled.  Contains the ID of the
     /// `Widget` that was toggled, along with the mouse `Button` that was clicked, and the
@@ -116,14 +90,9 @@ pub enum CallbackEvent {
 
     /// Indicates that a timer timeout has been triggered.  Contains the ID of the `Widget` that was
     /// affected.
-    TimerTriggered {
-        widget_id: i32,
-    },
+    TimerTriggered { widget_id: i32 },
 
     /// Indicates that a group of `RadioButtonWidget` objects has been deselected.  Contains the
     /// ID of the `Widget` that was unselected, along with the group ID.
-    UnselectRadioButtons {
-        widget_id: i32,
-        group_id: i32,
-    },
+    UnselectRadioButtons { widget_id: i32, group_id: i32 },
 }

@@ -18,9 +18,9 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 
 use crate::core::callbacks::*;
+use crate::core::drawing_texture::*;
 use crate::core::point::*;
 use crate::core::widget_store::*;
-use crate::core::drawing_texture::*;
 use crate::widget::widget::*;
 
 use glfw_window::GlfwWindow;
@@ -36,7 +36,7 @@ pub struct Pushrod {
     /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
     /// display stack.
     pub widget_store: RefCell<WidgetStore>,
-    pub drawing_texture: RefCell<DrawingTexture>,
+    pub drawing_texture: DrawingTexture,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( PistonWindow )` object to create a new
@@ -47,7 +47,7 @@ impl Pushrod {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
+            drawing_texture: DrawingTexture::new(),
         }
     }
 
@@ -102,10 +102,11 @@ impl Pushrod {
     fn rebuild_gl_buffers(&mut self) {
         let draw_size = self.window.window.draw_size();
 
-        self.drawing_texture.borrow_mut().resize(crate::core::point::Size {
-            w: draw_size.width as i32,
-            h: draw_size.height as i32,
-        });
+        self.drawing_texture
+            .resize(crate::core::point::Size {
+                w: draw_size.width as i32,
+                h: draw_size.height as i32,
+            });
 
         eprintln!("Rebuild of OpenGL buffers for rendering complete.");
     }
@@ -266,6 +267,8 @@ impl Pushrod {
                     },
                     &mut self.widget_store.borrow_mut(),
                 );
+
+                self.widget_store.borrow_mut().invalidate_all_widgets();
             });
 
             event.focus(|focused| {
@@ -295,10 +298,6 @@ impl Pushrod {
                 _ => {}
             };
 
-            event.resize(|_, _| {
-                self.widget_store.borrow_mut().invalidate_all_widgets();
-            });
-
             event.render(|args| {
                 injectable_map.iter().for_each(|widget_id| {
                     let injectable_event = self
@@ -320,24 +319,31 @@ impl Pushrod {
                 if self.widget_store.borrow_mut().needs_repaint() {
                     let widgets = &mut self.widget_store.borrow_mut();
 
-                    self.drawing_texture.borrow_mut().switch_to_texture();
+                    self.drawing_texture.switch_to_texture();
 
-                    gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g, self.drawing_texture.borrow_mut().fbo));
+                    gl.draw(args.viewport(), |c, g| {
+                        widgets.draw(0, c, g, self.drawing_texture.fbo)
+                    });
 
-                    self.drawing_texture.borrow_mut().switch_to_fb(0);
+                    self.drawing_texture.switch_to_fb(0);
+
+                    gl.draw(args.viewport(), |c, g| {
+                        clear([1.0, 1.0, 1.0, 0.0], g);
+                        let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
+
+                        // Enable zoom only if the draw size is larger than the window size.
+                        let zoom_factor = (self.window.size().width + self.window.size().height)
+                            / (self.window.window.draw_size().width
+                                + self.window.window.draw_size().height);
+
+                        Image::new().draw(
+                            &self.drawing_texture.texture,
+                            &c.draw_state,
+                            flipped.zoom(zoom_factor),
+                            g,
+                        );
+                    });
                 }
-
-                gl.draw(args.viewport(), |c, g| {
-                    clear([1.0, 1.0, 1.0, 0.0], g);
-                    let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
-
-                    // Enable zoom only if the draw size is larger than the window size.
-                    let zoom_factor = (self.window.size().width + self.window.size().height) /
-                        (self.window.window.draw_size().width + self.window.window.draw_size().height);
-                    let flipped = flipped.zoom(zoom_factor);
-
-                    Image::new().draw(&self.drawing_texture.borrow_mut().texture, &c.draw_state, flipped, g);
-                });
             });
         }
     }

@@ -15,22 +15,20 @@
 
 use piston_window::*;
 
-use std::cell::RefCell;
-use opengl_graphics::GlGraphics;
 use gl::types::GLuint;
+use opengl_graphics::GlGraphics;
+use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
-use crate::core::drawing_texture::DrawingTexture;
 
 /// This is a container object that stores a `Widget`, assigns a name, a `Widget` ID, and its
 /// parent.
 pub struct WidgetContainer {
     /// The `Widget` being stored.
     pub widget: RefCell<Box<dyn Widget>>,
-    pub drawing_texture: RefCell<DrawingTexture>,
 
     widget_name: String,
 
@@ -60,7 +58,6 @@ impl WidgetStore {
         );
         widgets_list.push(WidgetContainer {
             widget: RefCell::new(Box::new(base_widget)),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from("_WidgetStoreBase"),
             widget_id: 0,
             parent_id: 0,
@@ -92,7 +89,6 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
         let container = WidgetContainer {
             widget: RefCell::new(widget),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id: 0,
@@ -121,7 +117,6 @@ impl WidgetStore {
         let widget_size = self.widgets.len() as i32;
         let container = WidgetContainer {
             widget: RefCell::new(widget),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
             widget_name: String::from(name),
             widget_id: widget_size,
             parent_id,
@@ -210,10 +205,10 @@ impl WidgetStore {
             .widgets
             .iter_mut()
             .find(|x| x.widget_name == String::from(name))
-            {
-                Some(x) => x.widget_id,
-                None => 0,
-            };
+        {
+            Some(x) => x.widget_id,
+            None => 0,
+        };
 
         self.get_widget_for_id(widget_id)
     }
@@ -254,55 +249,42 @@ impl WidgetStore {
 
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
-
-            if !paint_widget
+            let is_hidden = paint_widget
                 .widget
                 .borrow_mut()
                 .config()
-                .get_toggle(CONFIG_WIDGET_HIDDEN)
-            {
-                if &paint_widget.widget.borrow_mut().is_invalidated() == &true {
-                    let origin: Point = paint_widget
-                        .widget
-                        .borrow_mut()
-                        .config()
-                        .get_point(CONFIG_ORIGIN);
-//                    let size: crate::core::point::Size = paint_widget
-//                        .widget
-//                        .borrow_mut()
-//                        .config()
-//                        .get_size(CONFIG_BODY_SIZE);
+                .get_toggle(CONFIG_WIDGET_HIDDEN);
+            let is_invalidated = *&paint_widget.widget.borrow_mut().is_invalidated();
 
-                    let new_context: Context = Context {
-                        viewport: c.viewport,
-                        view: c.view,
-                        transform: c.transform.trans(origin.x as f64, origin.y as f64),
-                        draw_state: c.draw_state,
-                    };
+            if !is_hidden && is_invalidated {
+                let origin: Point = paint_widget
+                    .widget
+                    .borrow_mut()
+                    .config()
+                    .get_point(CONFIG_ORIGIN);
 
-//                    let clip: DrawState = c.draw_state.scissor([
-//                        origin.x as u32,
-//                        origin.y as u32,
-//                        size.w as u32,
-//                        size.h as u32,
-//                    ]);
+                let new_context: Context = Context {
+                    viewport: c.viewport,
+                    view: c.view,
+                    transform: c.transform.trans(origin.x as f64, origin.y as f64),
+                    draw_state: c.draw_state,
+                };
 
+                &paint_widget
+                    .widget
+                    .borrow_mut()
+                    .draw(new_context, g, &c.draw_state);
+
+                if paint_widget
+                    .widget
+                    .borrow_mut()
+                    .config()
+                    .get_toggle(CONFIG_WIDGET_DISABLED)
+                {
                     &paint_widget
                         .widget
                         .borrow_mut()
-                        .draw(new_context, g, &c.draw_state);
-
-                    if paint_widget
-                        .widget
-                        .borrow_mut()
-                        .config()
-                        .get_toggle(CONFIG_WIDGET_DISABLED)
-                    {
-                        &paint_widget
-                            .widget
-                            .borrow_mut()
-                            .draw_disabled(new_context, g, &c.draw_state);
-                    }
+                        .draw_disabled(new_context, g, &c.draw_state);
                 }
             }
 

@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
 use opengl_graphics::GlGraphics;
+use piston_window::*;
 
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
@@ -74,7 +74,8 @@ impl Widget for ProgressWidget {
         self.base_widget.draw(c, g, clip);
 
         let mut draw_width =
-            (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64 - 2.0;
+            (size.w as f64 * (self.config().get_numeric(CONFIG_PROGRESS) as f64 / 100.0)) as f64
+                - 2.0;
 
         if draw_width < 0.0 {
             draw_width = 0.0;
