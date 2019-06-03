@@ -379,7 +379,7 @@ impl SimpleWindow {
 
         text_widget.set_point(CONFIG_ORIGIN, 20, 20);
         text_widget.set_size(CONFIG_BODY_SIZE, 400, 40);
-        text_widget.set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
+        text_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         text_widget.set_color(CONFIG_TEXT_COLOR, [0.75, 0.25, 1.0, 1.0]);
 
         self.pushrod
@@ -474,6 +474,7 @@ impl SimpleWindow {
         text_widget2.set_point(CONFIG_ORIGIN, 265, 100);
         text_widget2.set_size(CONFIG_BODY_SIZE, 170, 32);
         text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget2.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
         self.pushrod.borrow_mut().add_widget_to_parent(
             "LeftJustifiedText",
             Box::new(text_widget2),
@@ -489,6 +490,7 @@ impl SimpleWindow {
         text_widget3.set_point(CONFIG_ORIGIN, 265, 166);
         text_widget3.set_size(CONFIG_BODY_SIZE, 170, 32);
         text_widget3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget3.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
         self.pushrod.borrow_mut().add_widget_to_parent(
             "CenterJustifiedText",
             Box::new(text_widget3),
@@ -504,6 +506,7 @@ impl SimpleWindow {
         text_widget4.set_point(CONFIG_ORIGIN, 265, 230);
         text_widget4.set_size(CONFIG_BODY_SIZE, 170, 32);
         text_widget4.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget4.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
         self.pushrod.borrow_mut().add_widget_to_parent(
             "RightJustifiedText",
             Box::new(text_widget4),

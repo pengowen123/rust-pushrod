@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.3.2
+
+- Fixed PushButton, ToggleButton, and ImageButton text background so that they are clear. (#135)
+- Fixing text background colors in simple app (#135)
+
 ## 0.3.1
 
 ```

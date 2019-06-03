@@ -40,15 +40,19 @@ impl PushButtonWidget {
         font_size: u32,
         justify: TextJustify,
     ) -> Self {
+        let mut text_widget = TextWidget::new(
+            font_name.to_string(),
+            text.to_string(),
+            font_size,
+            justify,
+        );
+
+        text_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
+
         Self {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
-            text_widget: TextWidget::new(
-                font_name.to_string(),
-                text.to_string(),
-                font_size,
-                justify,
-            ),
+            text_widget,
             active: false,
         }
     }

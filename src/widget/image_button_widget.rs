@@ -46,18 +46,20 @@ impl ImageButtonWidget {
         justify: TextJustify,
     ) -> Self {
         let mut image_widget = ImageWidget::new(image_name.to_string());
+        let mut text_widget = TextWidget::new(
+            font_name.to_string(),
+            text.to_string(),
+            font_size,
+            justify,
+        );
 
+        text_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
         image_widget.set_point(CONFIG_ORIGIN, 2, 2);
 
         Self {
             config: Configurable::new(),
             base_widget: BoxWidget::new(),
-            text_widget: TextWidget::new(
-                font_name.to_string(),
-                text.to_string(),
-                font_size,
-                justify,
-            ),
+            text_widget,
             image_widget,
             active: false,
         }
