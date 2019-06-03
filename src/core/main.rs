@@ -36,7 +36,7 @@ pub struct Pushrod {
     /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
     /// display stack.
     pub widget_store: RefCell<WidgetStore>,
-    pub drawing_texture: RefCell<DrawingTexture>,
+    pub drawing_texture: DrawingTexture,
 }
 
 /// Pushrod implementation.  Create a `Pushrod::new( PistonWindow )` object to create a new
@@ -47,7 +47,7 @@ impl Pushrod {
         Self {
             window,
             widget_store: RefCell::new(WidgetStore::new()),
-            drawing_texture: RefCell::new(DrawingTexture::new()),
+            drawing_texture: DrawingTexture::new(),
         }
     }
 
@@ -103,7 +103,6 @@ impl Pushrod {
         let draw_size = self.window.window.draw_size();
 
         self.drawing_texture
-            .borrow_mut()
             .resize(crate::core::point::Size {
                 w: draw_size.width as i32,
                 h: draw_size.height as i32,
@@ -320,13 +319,13 @@ impl Pushrod {
                 if self.widget_store.borrow_mut().needs_repaint() {
                     let widgets = &mut self.widget_store.borrow_mut();
 
-                    self.drawing_texture.borrow_mut().switch_to_texture();
+                    self.drawing_texture.switch_to_texture();
 
                     gl.draw(args.viewport(), |c, g| {
-                        widgets.draw(0, c, g, self.drawing_texture.borrow_mut().fbo)
+                        widgets.draw(0, c, g, self.drawing_texture.fbo)
                     });
 
-                    self.drawing_texture.borrow_mut().switch_to_fb(0);
+                    self.drawing_texture.switch_to_fb(0);
 
                     gl.draw(args.viewport(), |c, g| {
                         clear([1.0, 1.0, 1.0, 0.0], g);
@@ -338,7 +337,7 @@ impl Pushrod {
                                 + self.window.window.draw_size().height);
 
                         Image::new().draw(
-                            &self.drawing_texture.borrow_mut().texture,
+                            &self.drawing_texture.texture,
                             &c.draw_state,
                             flipped.zoom(zoom_factor),
                             g,
