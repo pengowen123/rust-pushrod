@@ -6,6 +6,7 @@
 - Fixed ProgressWidget to draw inside bounds; was exceeding bounds on draw.
 - Modified run loop to honor invalidation (#133)
 - Fixed buttons to draw properly with filled text.
+- Fixed ProgressWidget to draw backing so that refresh is correct when invalidating.
 
 ## 0.3.0
 
