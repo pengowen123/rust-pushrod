@@ -21,7 +21,6 @@ use gl::types::GLuint;
 
 use crate::core::callbacks::CallbackEvent;
 use crate::core::point::*;
-use crate::core::drawing_texture::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 use crate::core::drawing_texture::DrawingTexture;
