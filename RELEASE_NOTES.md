@@ -5,6 +5,7 @@
 - Removed "get_factory" method - no longer needed with OpenGL
 - Fixed ProgressWidget to draw inside bounds; was exceeding bounds on draw.
 - Modified run loop to honor invalidation (#133)
+- Fixed buttons to draw properly with filled text.
 
 ## 0.3.0
 

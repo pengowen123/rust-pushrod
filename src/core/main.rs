@@ -300,8 +300,6 @@ impl Pushrod {
             });
 
             event.render(|args| {
-//                self.widget_store.borrow_mut().invalidate_all_widgets();
-//
                 injectable_map.iter().for_each(|widget_id| {
                     let injectable_event = self
                         .widget_store
@@ -324,7 +322,7 @@ impl Pushrod {
 
                     self.drawing_texture.borrow_mut().switch_to_texture();
 
-                    gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g));
+                    gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g, self.drawing_texture.borrow_mut().fbo));
 
                     self.drawing_texture.borrow_mut().switch_to_fb(0);
                 }
