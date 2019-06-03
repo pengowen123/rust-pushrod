@@ -259,9 +259,9 @@ impl WidgetStore {
                 .borrow_mut()
                 .config()
                 .get_toggle(CONFIG_WIDGET_HIDDEN);
-            let is_invalidated = &paint_widget.widget.borrow_mut().is_invalidated();
+            let is_invalidated = *&paint_widget.widget.borrow_mut().is_invalidated();
 
-            if !is_hidden && is_invalidated == &true {
+            if !is_hidden && is_invalidated {
                 let origin: Point = paint_widget
                     .widget
                     .borrow_mut()
