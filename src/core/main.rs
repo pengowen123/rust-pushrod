@@ -323,19 +323,18 @@ impl Pushrod {
                     gl.draw(args.viewport(), |c, g| widgets.draw(0, c, g, self.drawing_texture.borrow_mut().fbo));
 
                     self.drawing_texture.borrow_mut().switch_to_fb(0);
+
+                    gl.draw(args.viewport(), |c, g| {
+                        clear([1.0, 1.0, 1.0, 0.0], g);
+                        let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
+
+                        // Enable zoom only if the draw size is larger than the window size.
+                        let zoom_factor = (self.window.size().width + self.window.size().height) /
+                            (self.window.window.draw_size().width + self.window.window.draw_size().height);
+
+                        Image::new().draw(&self.drawing_texture.borrow_mut().texture, &c.draw_state, flipped.zoom(zoom_factor), g);
+                    });
                 }
-
-                gl.draw(args.viewport(), |c, g| {
-                    clear([1.0, 1.0, 1.0, 0.0], g);
-                    let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
-
-                    // Enable zoom only if the draw size is larger than the window size.
-                    let zoom_factor = (self.window.size().width + self.window.size().height) /
-                        (self.window.window.draw_size().width + self.window.window.draw_size().height);
-                    let flipped = flipped.zoom(zoom_factor);
-
-                    Image::new().draw(&self.drawing_texture.borrow_mut().texture, &c.draw_state, flipped, g);
-                });
             });
         }
     }
