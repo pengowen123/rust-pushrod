@@ -14,8 +14,7 @@
 // limitations under the License.
 
 use gl::types::GLuint;
-use opengl_graphics::Texture;
-use piston_window::TextureSettings;
+use opengl_graphics::{Texture, TextureSettings};
 
 use crate::core::point::Size;
 

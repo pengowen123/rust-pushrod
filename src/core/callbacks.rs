@@ -15,8 +15,7 @@
 
 use crate::core::point::Point;
 use crate::core::widget_store::*;
-
-use piston_window::*;
+use piston::input::*;
 
 /// This is the callback event class that is used to handle events that are produced when a widget
 /// is interacted with in the Pushrod Run Loop.  This callback is triggered when an event happens

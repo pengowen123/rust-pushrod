@@ -23,7 +23,7 @@ name = "pushrod"
 path = "src/lib.rs"
 
 [dependencies]
-piston_window = "^0.89"
+piston = "^0.42"
 pistoncore-glfw_window = "^0.49"
 piston2d-opengl_graphics = "^0.59"
 #piston2d-graphics = "*"

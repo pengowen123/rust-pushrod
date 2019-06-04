@@ -13,10 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::*;
-
 use gl::types::GLuint;
 use opengl_graphics::GlGraphics;
+use graphics::*;
 use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;

@@ -17,10 +17,9 @@
 
 use graphics::character::CharacterCache;
 use graphics::draw_state::DrawState;
-use graphics::text;
-use graphics::Transformed;
-use opengl_graphics::{GlGraphics, GlyphCache};
-use piston_window::*;
+use graphics;
+use graphics::*;
+use opengl_graphics::{GlGraphics, GlyphCache, TextureSettings};
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
