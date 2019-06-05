@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use piston_window::types::Color;
+use graphics::types::Color;
 
 use std::collections::HashMap;
 

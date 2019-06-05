@@ -13,7 +13,7 @@
 // limitations under the License.
 
 use opengl_graphics::GlGraphics;
-use piston_window::*;
+use graphics::*;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};

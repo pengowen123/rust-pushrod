@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::{GlGraphics, Texture};
-use piston_window::*;
+use opengl_graphics::{GlGraphics, Texture, TextureSettings};
+use graphics::*;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;

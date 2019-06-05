@@ -26,12 +26,16 @@ use crate::widget::widget::*;
 use glfw_window::GlfwWindow;
 
 use graphics::math::scale;
-use opengl_graphics::GlGraphics;
-use piston_window::*;
+use graphics::*;
+use opengl_graphics::{OpenGL, GlGraphics};
+use piston::input::*;
+use piston::window::*;
+use piston::event_loop::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 pub struct Pushrod {
-    window: PistonWindow<GlfwWindow>,
+    window: GlfwWindow,
+    events: Events,
 
     /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
     /// display stack.
@@ -43,9 +47,12 @@ pub struct Pushrod {
 /// main loop.  Only one of these should be set for the entire application runtime.
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
-    pub fn new(window: PistonWindow<GlfwWindow>) -> Self {
+    pub fn new(window: GlfwWindow) -> Self {
+        let event_settings = EventSettings::new()
+            .max_fps(60);
         Self {
             window,
+            events: Events::new(event_settings),
             widget_store: RefCell::new(WidgetStore::new()),
             drawing_texture: DrawingTexture::new(),
         }
@@ -100,7 +107,7 @@ impl Pushrod {
     }
 
     fn rebuild_gl_buffers(&mut self) {
-        let draw_size = self.window.window.draw_size();
+        let draw_size = self.window.draw_size();
 
         self.drawing_texture
             .resize(crate::core::point::Size {
@@ -128,17 +135,16 @@ impl Pushrod {
             .collect();
         let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
 
-        self.window.window.make_current();
+        self.window.make_current();
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
-        eprintln!("Draw Size: {:?}", self.window.window.draw_size());
+        eprintln!("Draw Size: {:?}", self.window.draw_size());
 
-        self.window.set_max_fps(60);
         self.widget_store.borrow_mut().invalidate_all_widgets();
         self.rebuild_gl_buffers();
 
-        while let Some(ref event) = &self.window.next() {
+        while let Some(ref event) = self.events.next(&mut self.window) {
             event.mouse_cursor(|x, y| {
                 let mouse_point = make_point_f64(x, y);
 
@@ -333,8 +339,8 @@ impl Pushrod {
 
                         // Enable zoom only if the draw size is larger than the window size.
                         let zoom_factor = (self.window.size().width + self.window.size().height)
-                            / (self.window.window.draw_size().width
-                                + self.window.window.draw_size().height);
+                            / (self.window.draw_size().width
+                                + self.window.draw_size().height);
 
                         Image::new().draw(
                             &self.drawing_texture.texture,
