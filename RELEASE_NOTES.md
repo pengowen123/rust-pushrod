@@ -1,5 +1,16 @@
 # Pushrod Releases
 
+## 0.3.3
+
+```
+CPU before: 6.3%
+CPU after: 3.5%
+```
+
+- Included pull request from bvssvni.
+- Changed drawing FPS from 60 to 30.
+- Added ContainerWidget (#139)
+
 ## 0.3.2
 
 - Fixed PushButton, ToggleButton, and ImageButton text background so that they are clear. (#135)

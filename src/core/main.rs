@@ -49,7 +49,7 @@ impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
     pub fn new(window: GlfwWindow) -> Self {
         let event_settings = EventSettings::new()
-            .max_fps(60);
+            .max_fps(30);
         Self {
             window,
             events: Events::new(event_settings),
@@ -134,8 +134,6 @@ impl Pushrod {
             .map(|x| x.widget_id)
             .collect();
         let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
-
-        self.window.make_current();
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());

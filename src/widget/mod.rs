@@ -48,5 +48,9 @@ pub mod radio_button_widget;
 /// Image button component: draws an image inside a push button widget.
 pub mod image_button_widget;
 
+/// Simple container component: used for grouping widgets in a top-level container object, typically
+/// a Dialog Box in other libraries.
+pub mod container_widget;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;
