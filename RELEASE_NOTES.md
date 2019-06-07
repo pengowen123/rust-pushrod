@@ -10,6 +10,7 @@ CPU after: 3.5%
 - Included pull request from bvssvni.
 - Changed drawing FPS from 60 to 30.
 - Added ContainerWidget (#139)
+- Added add_widget_to_parent_by_name, and get_widget_id_by_name (#141)
 
 ## 0.3.2
 

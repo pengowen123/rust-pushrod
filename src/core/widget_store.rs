@@ -14,8 +14,8 @@
 // limitations under the License.
 
 use gl::types::GLuint;
-use opengl_graphics::GlGraphics;
 use graphics::*;
+use opengl_graphics::GlGraphics;
 use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
@@ -195,6 +195,19 @@ impl WidgetStore {
     /// Returns the name of the `Widget` by specified ID.
     pub fn get_name_for_widget_id(&mut self, widget_id: i32) -> &str {
         self.widgets[widget_id as usize].widget_name.as_str()
+    }
+
+    /// Retrieves a widget ID for the name specified.  Returns top-level `CanvasWidget` ID if
+    /// not found.
+    pub fn get_widget_id_for_name(&mut self, name: &str) -> i32 {
+        match self
+            .widgets
+            .iter_mut()
+            .find(|x| x.widget_name == String::from(name))
+        {
+            Some(x) => x.widget_id,
+            None => 0,
+        }
     }
 
     /// Retrieves a reference to a `Widget` by its name.  Returns the top-level `CanvasWidget`

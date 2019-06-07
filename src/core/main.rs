@@ -27,10 +27,10 @@ use glfw_window::GlfwWindow;
 
 use graphics::math::scale;
 use graphics::*;
-use opengl_graphics::{OpenGL, GlGraphics};
+use opengl_graphics::{GlGraphics, OpenGL};
+use piston::event_loop::*;
 use piston::input::*;
 use piston::window::*;
-use piston::event_loop::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 pub struct Pushrod {
@@ -48,8 +48,7 @@ pub struct Pushrod {
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
     pub fn new(window: GlfwWindow) -> Self {
-        let event_settings = EventSettings::new()
-            .max_fps(30);
+        let event_settings = EventSettings::new().max_fps(30);
         Self {
             window,
             events: Events::new(event_settings),
@@ -71,6 +70,23 @@ impl Pushrod {
         widget: Box<dyn Widget>,
         parent_id: i32,
     ) -> i32 {
+        self.widget_store
+            .borrow_mut()
+            .add_widget_to_parent(name, widget, parent_id)
+    }
+
+    /// Convenience method that adds a `Widget` to a parent by the parent's name.
+    pub fn add_widget_to_parent_by_name(
+        &mut self,
+        parent_name: &str,
+        name: &str,
+        widget: Box<dyn Widget>,
+    ) -> i32 {
+        let parent_id = self
+            .widget_store
+            .borrow_mut()
+            .get_widget_id_for_name(parent_name);
+
         self.widget_store
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)
@@ -109,11 +125,10 @@ impl Pushrod {
     fn rebuild_gl_buffers(&mut self) {
         let draw_size = self.window.draw_size();
 
-        self.drawing_texture
-            .resize(crate::core::point::Size {
-                w: draw_size.width as i32,
-                h: draw_size.height as i32,
-            });
+        self.drawing_texture.resize(crate::core::point::Size {
+            w: draw_size.width as i32,
+            h: draw_size.height as i32,
+        });
 
         eprintln!("Rebuild of OpenGL buffers for rendering complete.");
     }
@@ -337,8 +352,7 @@ impl Pushrod {
 
                         // Enable zoom only if the draw size is larger than the window size.
                         let zoom_factor = (self.window.size().width + self.window.size().height)
-                            / (self.window.draw_size().width
-                                + self.window.draw_size().height);
+                            / (self.window.draw_size().width + self.window.draw_size().height);
 
                         Image::new().draw(
                             &self.drawing_texture.texture,

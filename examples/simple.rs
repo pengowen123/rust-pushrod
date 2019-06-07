@@ -20,8 +20,8 @@ use std::cell::RefCell;
 
 use glfw_window::GlfwWindow;
 use opengl_graphics::OpenGL;
-use piston::window::*;
 use piston::input::*;
+use piston::window::*;
 
 use pushrod::core::callbacks::*;
 use pushrod::core::main::*;
@@ -29,6 +29,7 @@ use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
+use pushrod::widget::container_widget::*;
 use pushrod::widget::image_button_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
@@ -379,6 +380,15 @@ impl SimpleWindow {
         }
     }
 
+    fn create_container(&mut self) {
+        let mut container = ContainerWidget::new();
+
+        container.set_size(CONFIG_BODY_SIZE, 800, 600);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("MainContainerWidget", Box::new(container));
+    }
+
     fn add_hello_world(&mut self) {
         let mut text_widget = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -392,9 +402,11 @@ impl SimpleWindow {
         text_widget.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         text_widget.set_color(CONFIG_TEXT_COLOR, [0.75, 0.25, 1.0, 1.0]);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget("TextWidget", Box::new(text_widget));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "TextWidget",
+            Box::new(text_widget),
+        );
     }
 
     fn add_base_widget(&mut self) {
@@ -795,6 +807,7 @@ impl SimpleWindow {
     }
 
     fn build(&mut self) {
+        self.create_container();
         self.add_hello_world();
         self.add_base_widget();
         self.add_box_widgets();

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use graphics::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};

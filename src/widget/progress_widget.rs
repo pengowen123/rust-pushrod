@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use graphics::*;
+use opengl_graphics::GlGraphics;
 
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
