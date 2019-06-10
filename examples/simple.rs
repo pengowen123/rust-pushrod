@@ -49,319 +49,387 @@ pub struct SimpleWindowEventHandler {
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
-    fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
-        match event {
-            CallbackEvent::MouseEntered { widget_id } => {
-                // When a mouse enters a widget, the ID will get modified; modify the debug widget
-                // with the ID that was specified.
-                let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
-                let widget_point = widget_store
-                    .get_widget_for_id(widget_id)
+    fn widget_clicked(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) {
+        match button {
+            Button::Mouse(mouse_button) =>
+                if mouse_button != MouseButton::Left {
+                    return;
+                },
+            _ => (),
+        }
+
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "HideShowMainContainerWidgetButton" => {
+                let state = widget_store
+                    .get_widget_for_name("MainContainerWidget")
                     .borrow_mut()
                     .config()
-                    .get_point(CONFIG_ORIGIN);
-                let widget_size = widget_store
-                    .get_widget_for_id(widget_id)
-                    .borrow_mut()
-                    .config()
-                    .get_size(CONFIG_BODY_SIZE);
+                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+                let button_text = if state == true {
+                    String::from("Hide")
+                } else {
+                    String::from("Show")
+                };
 
                 widget_store
-                    .get_widget_for_name("DebugText1")
+                    .get_widget_for_name("HideShowMainContainerWidgetButton")
                     .borrow_mut()
-                    .set_config(
-                        CONFIG_DISPLAY_TEXT,
-                        Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
-                            .clone(),
-                    );
+                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
 
                 widget_store
-                    .get_widget_for_name("DebugText2")
+                    .get_widget_for_name("MainContainerWidget")
                     .borrow_mut()
-                    .set_config(
-                        CONFIG_DISPLAY_TEXT,
-                        Config::Text(format!(
-                            "Dimensions: x={} y={} w={} h={}",
-                            widget_point.x, widget_point.y, widget_size.w, widget_size.h
-                        ))
-                        .clone(),
-                    );
-            }
+                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
 
-            CallbackEvent::WidgetClicked { widget_id, button } => {
-                match widget_store.get_name_for_widget_id(widget_id) {
-                    "RandomColorButton1" => match button {
-                        Button::Mouse(mouse_button) => {
-                            if mouse_button == MouseButton::Left {
-                                widget_store
-                                    .get_widget_for_name("BaseWidget1")
-                                    .borrow_mut()
-                                    .set_config(
-                                        CONFIG_MAIN_COLOR,
-                                        Config::Color([
-                                            (rand::random::<u8>() as f32 / 255.0),
-                                            (rand::random::<u8>() as f32 / 255.0),
-                                            (rand::random::<u8>() as f32 / 255.0),
-                                            1.0,
-                                        ]),
-                                    );
-                            }
-                        }
-                        _ => (),
-                    },
-
-                    "RandomColorButton2" => match button {
-                        Button::Mouse(mouse_button) => {
-                            if mouse_button == MouseButton::Left {
-                                widget_store
-                                    .get_widget_for_name("ProgressWidget")
-                                    .borrow_mut()
-                                    .set_config(
-                                        CONFIG_SECONDARY_COLOR,
-                                        Config::Color([
-                                            (rand::random::<u8>() as f32 / 255.0),
-                                            (rand::random::<u8>() as f32 / 255.0),
-                                            (rand::random::<u8>() as f32 / 255.0),
-                                            1.0,
-                                        ]),
-                                    );
-                            }
-                        }
-                        _ => (),
-                    },
-
-                    "HideButton1" => match button {
-                        Button::Mouse(mouse_button) => {
-                            if mouse_button == MouseButton::Left {
-                                let state = widget_store
-                                    .get_widget_for_name("BaseWidget1")
-                                    .borrow_mut()
-                                    .config()
-                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
-                                let button_text = if state == true {
-                                    String::from("Hide")
-                                } else {
-                                    String::from("Show")
-                                };
-
-                                widget_store
-                                    .get_widget_for_name("HideButton1")
-                                    .borrow_mut()
-                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-
-                                widget_store
-                                    .get_widget_for_name("RandomColorButton1")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("BaseWidget1")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-
-                                widget_store.invalidate_all_widgets();
-                            }
-                        }
-                        _ => (),
-                    },
-
-                    "HideButton2" => match button {
-                        Button::Mouse(mouse_button) => {
-                            if mouse_button == MouseButton::Left {
-                                let state = widget_store
-                                    .get_widget_for_name("BoxWidget1")
-                                    .borrow_mut()
-                                    .config()
-                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
-                                let button_text = if state == true {
-                                    String::from("Hide")
-                                } else {
-                                    String::from("Show")
-                                };
-
-                                widget_store
-                                    .get_widget_for_name("HideButton2")
-                                    .borrow_mut()
-                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-
-                                widget_store
-                                    .get_widget_for_name("BoxWidget1")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("LeftJustifiedText")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("CenterJustifiedText")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("RightJustifiedText")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-
-                                widget_store.invalidate_all_widgets();
-                            }
-                        }
-                        _ => (),
-                    },
-
-                    "HideButton3" => match button {
-                        Button::Mouse(mouse_button) => {
-                            if mouse_button == MouseButton::Left {
-                                let state = widget_store
-                                    .get_widget_for_name("Box1")
-                                    .borrow_mut()
-                                    .config()
-                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
-                                let button_text = if state == true {
-                                    String::from("Hide")
-                                } else {
-                                    String::from("Show")
-                                };
-
-                                widget_store
-                                    .get_widget_for_name("HideButton3")
-                                    .borrow_mut()
-                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-
-                                widget_store
-                                    .get_widget_for_name("Box1")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("Box2")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("Box3")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("Box4")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-                                widget_store
-                                    .get_widget_for_name("Box5")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-
-                                widget_store.invalidate_all_widgets();
-                            }
-                        }
-                        _ => (),
-                    },
-
-                    "DisableButton1" => match button {
-                        Button::Mouse(mouse_button) => {
-                            if mouse_button == MouseButton::Left {
-                                let state = widget_store
-                                    .get_widget_for_name("BaseWidget1")
-                                    .borrow_mut()
-                                    .config()
-                                    .get_toggle(CONFIG_WIDGET_DISABLED);
-                                let button_text = if state == true {
-                                    String::from("Disable")
-                                } else {
-                                    String::from("Enable")
-                                };
-
-                                widget_store
-                                    .get_widget_for_name("DisableButton1")
-                                    .borrow_mut()
-                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-
-                                widget_store
-                                    .get_widget_for_name("RandomColorButton1")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-                                widget_store
-                                    .get_widget_for_name("BaseWidget1")
-                                    .borrow_mut()
-                                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-
-                                widget_store.invalidate_all_widgets();
-                            }
-                        }
-                        _ => (),
-                    },
-
-                    x => eprintln!("Widget clicked: {}", x),
-                }
-            }
-
-            CallbackEvent::WidgetSelected {
-                widget_id,
-                button: _,
-                selected,
-            } => match widget_store.get_name_for_widget_id(widget_id) {
-                "AnimateButton1" => {
-                    self.animated = selected;
-                }
-
-                "DebugCheck1" => {
-                    widget_store
-                        .get_widget_for_name("DebugText1")
-                        .borrow_mut()
-                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
-                    widget_store
-                        .get_widget_for_name("DebugText2")
-                        .borrow_mut()
-                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
-                }
-
-                "Radio1" => {
-                    widget_store
-                        .get_widget_for_name("TimerWidget1")
-                        .borrow_mut()
-                        .config()
-                        .set_numeric(CONFIG_TIMER_TIMEOUT, 100);
-                }
-
-                "Radio2" => {
-                    widget_store
-                        .get_widget_for_name("TimerWidget1")
-                        .borrow_mut()
-                        .config()
-                        .set_numeric(CONFIG_TIMER_TIMEOUT, 300);
-                }
-
-                "Radio3" => {
-                    widget_store
-                        .get_widget_for_name("TimerWidget1")
-                        .borrow_mut()
-                        .config()
-                        .set_numeric(CONFIG_TIMER_TIMEOUT, 500);
-                }
-
-                _ => (),
+                widget_store.invalidate_all_widgets();
             },
-
-            CallbackEvent::TimerTriggered { widget_id } => {
-                if widget_store.get_name_for_widget_id(widget_id) == "TimerWidget1" {
-                    if self.animated {
-                        self.progress += 1;
-
-                        if self.progress > 100 {
-                            self.progress = 0;
-                        }
-
-                        widget_store
-                            .get_widget_for_name("ProgressWidget")
-                            .borrow_mut()
-                            .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
-
-                        widget_store
-                            .get_widget_for_name("ProgressText1")
-                            .borrow_mut()
-                            .set_text(CONFIG_DISPLAY_TEXT, format!("{} %", self.progress));
-                    }
-                }
-            }
-
             _ => (),
         }
     }
+
+//    fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
+//        match event {
+////            CallbackEvent::MouseEntered { widget_id } => {
+////                // When a mouse enters a widget, the ID will get modified; modify the debug widget
+////                // with the ID that was specified.
+////                let widget_name = String::from(widget_store.get_name_for_widget_id(widget_id));
+////                let widget_point = widget_store
+////                    .get_widget_for_id(widget_id)
+////                    .borrow_mut()
+////                    .config()
+////                    .get_point(CONFIG_ORIGIN);
+////                let widget_size = widget_store
+////                    .get_widget_for_id(widget_id)
+////                    .borrow_mut()
+////                    .config()
+////                    .get_size(CONFIG_BODY_SIZE);
+////
+////                widget_store
+////                    .get_widget_for_name("DebugText1")
+////                    .borrow_mut()
+////                    .set_config(
+////                        CONFIG_DISPLAY_TEXT,
+////                        Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
+////                            .clone(),
+////                    );
+////
+////                widget_store
+////                    .get_widget_for_name("DebugText2")
+////                    .borrow_mut()
+////                    .set_config(
+////                        CONFIG_DISPLAY_TEXT,
+////                        Config::Text(format!(
+////                            "Dimensions: x={} y={} w={} h={}",
+////                            widget_point.x, widget_point.y, widget_size.w, widget_size.h
+////                        ))
+////                        .clone(),
+////                    );
+////            }
+//
+//            CallbackEvent::WidgetClicked { widget_id, button } => {
+//                match widget_store.get_name_for_widget_id(widget_id) {
+//                    "HideShowMainContainerWidgetButton" => match button {
+//                        Button::Mouse(mouse_button) => {
+//                            if mouse_button == MouseButton::Left {
+//                                let state = widget_store
+//                                    .get_widget_for_name("MainContainerWidget")
+//                                    .borrow_mut()
+//                                    .config()
+//                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+//                                let button_text = if state == true {
+//                                    String::from("Hide")
+//                                } else {
+//                                    String::from("Show")
+//                                };
+//
+//                                widget_store
+//                                    .get_widget_for_name("HideShowMainContainerWidgetButton")
+//                                    .borrow_mut()
+//                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+//
+//                                widget_store
+//                                    .get_widget_for_name("MainContainerWidget")
+//                                    .borrow_mut()
+//                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+//
+//                                widget_store.invalidate_all_widgets();
+//                            }
+//                        }
+//                        _ => (),
+//                    },
+//
+////                    "RandomColorButton1" => match button {
+////                        Button::Mouse(mouse_button) => {
+////                            if mouse_button == MouseButton::Left {
+////                                widget_store
+////                                    .get_widget_for_name("BaseWidget1")
+////                                    .borrow_mut()
+////                                    .set_config(
+////                                        CONFIG_MAIN_COLOR,
+////                                        Config::Color([
+////                                            (rand::random::<u8>() as f32 / 255.0),
+////                                            (rand::random::<u8>() as f32 / 255.0),
+////                                            (rand::random::<u8>() as f32 / 255.0),
+////                                            1.0,
+////                                        ]),
+////                                    );
+////                            }
+////                        }
+////                        _ => (),
+////                    },
+////
+////                    "RandomColorButton2" => match button {
+////                        Button::Mouse(mouse_button) => {
+////                            if mouse_button == MouseButton::Left {
+////                                widget_store
+////                                    .get_widget_for_name("ProgressWidget")
+////                                    .borrow_mut()
+////                                    .set_config(
+////                                        CONFIG_SECONDARY_COLOR,
+////                                        Config::Color([
+////                                            (rand::random::<u8>() as f32 / 255.0),
+////                                            (rand::random::<u8>() as f32 / 255.0),
+////                                            (rand::random::<u8>() as f32 / 255.0),
+////                                            1.0,
+////                                        ]),
+////                                    );
+////                            }
+////                        }
+////                        _ => (),
+////                    },
+////
+////                    "HideButton1" => match button {
+////                        Button::Mouse(mouse_button) => {
+////                            if mouse_button == MouseButton::Left {
+////                                let state = widget_store
+////                                    .get_widget_for_name("BaseWidget1")
+////                                    .borrow_mut()
+////                                    .config()
+////                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+////                                let button_text = if state == true {
+////                                    String::from("Hide")
+////                                } else {
+////                                    String::from("Show")
+////                                };
+////
+////                                widget_store
+////                                    .get_widget_for_name("HideButton1")
+////                                    .borrow_mut()
+////                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+////
+////                                widget_store
+////                                    .get_widget_for_name("RandomColorButton1")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("BaseWidget1")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////
+////                                widget_store.invalidate_all_widgets();
+////                            }
+////                        }
+////                        _ => (),
+////                    },
+////
+////                    "HideButton2" => match button {
+////                        Button::Mouse(mouse_button) => {
+////                            if mouse_button == MouseButton::Left {
+////                                let state = widget_store
+////                                    .get_widget_for_name("BoxWidget1")
+////                                    .borrow_mut()
+////                                    .config()
+////                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+////                                let button_text = if state == true {
+////                                    String::from("Hide")
+////                                } else {
+////                                    String::from("Show")
+////                                };
+////
+////                                widget_store
+////                                    .get_widget_for_name("HideButton2")
+////                                    .borrow_mut()
+////                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+////
+////                                widget_store
+////                                    .get_widget_for_name("BoxWidget1")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("LeftJustifiedText")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("CenterJustifiedText")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("RightJustifiedText")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////
+////                                widget_store.invalidate_all_widgets();
+////                            }
+////                        }
+////                        _ => (),
+////                    },
+////
+////                    "HideButton3" => match button {
+////                        Button::Mouse(mouse_button) => {
+////                            if mouse_button == MouseButton::Left {
+////                                let state = widget_store
+////                                    .get_widget_for_name("Box1")
+////                                    .borrow_mut()
+////                                    .config()
+////                                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+////                                let button_text = if state == true {
+////                                    String::from("Hide")
+////                                } else {
+////                                    String::from("Show")
+////                                };
+////
+////                                widget_store
+////                                    .get_widget_for_name("HideButton3")
+////                                    .borrow_mut()
+////                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+////
+////                                widget_store
+////                                    .get_widget_for_name("Box1")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("Box2")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("Box3")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("Box4")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////                                widget_store
+////                                    .get_widget_for_name("Box5")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+////
+////                                widget_store.invalidate_all_widgets();
+////                            }
+////                        }
+////                        _ => (),
+////                    },
+////
+////                    "DisableButton1" => match button {
+////                        Button::Mouse(mouse_button) => {
+////                            if mouse_button == MouseButton::Left {
+////                                let state = widget_store
+////                                    .get_widget_for_name("BaseWidget1")
+////                                    .borrow_mut()
+////                                    .config()
+////                                    .get_toggle(CONFIG_WIDGET_DISABLED);
+////                                let button_text = if state == true {
+////                                    String::from("Disable")
+////                                } else {
+////                                    String::from("Enable")
+////                                };
+////
+////                                widget_store
+////                                    .get_widget_for_name("DisableButton1")
+////                                    .borrow_mut()
+////                                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+////
+////                                widget_store
+////                                    .get_widget_for_name("RandomColorButton1")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+////                                widget_store
+////                                    .get_widget_for_name("BaseWidget1")
+////                                    .borrow_mut()
+////                                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+////
+////                                widget_store.invalidate_all_widgets();
+////                            }
+////                        }
+////                        _ => (),
+////                    },
+//
+//                    x => eprintln!("Widget clicked: {}", x),
+//                }
+//            }
+//
+////            CallbackEvent::WidgetSelected {
+////                widget_id,
+////                button: _,
+////                selected,
+////            } => match widget_store.get_name_for_widget_id(widget_id) {
+////                "AnimateButton1" => {
+////                    self.animated = selected;
+////                }
+////
+////                "DebugCheck1" => {
+////                    widget_store
+////                        .get_widget_for_name("DebugText1")
+////                        .borrow_mut()
+////                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
+////                    widget_store
+////                        .get_widget_for_name("DebugText2")
+////                        .borrow_mut()
+////                        .set_toggle(CONFIG_WIDGET_HIDDEN, !selected);
+////                }
+////
+////                "Radio1" => {
+////                    widget_store
+////                        .get_widget_for_name("TimerWidget1")
+////                        .borrow_mut()
+////                        .config()
+////                        .set_numeric(CONFIG_TIMER_TIMEOUT, 100);
+////                }
+////
+////                "Radio2" => {
+////                    widget_store
+////                        .get_widget_for_name("TimerWidget1")
+////                        .borrow_mut()
+////                        .config()
+////                        .set_numeric(CONFIG_TIMER_TIMEOUT, 300);
+////                }
+////
+////                "Radio3" => {
+////                    widget_store
+////                        .get_widget_for_name("TimerWidget1")
+////                        .borrow_mut()
+////                        .config()
+////                        .set_numeric(CONFIG_TIMER_TIMEOUT, 500);
+////                }
+////
+////                _ => (),
+////            },
+////
+////            CallbackEvent::TimerTriggered { widget_id } => {
+////                if widget_store.get_name_for_widget_id(widget_id) == "TimerWidget1" {
+////                    if self.animated {
+////                        self.progress += 1;
+////
+////                        if self.progress > 100 {
+////                            self.progress = 0;
+////                        }
+////
+////                        widget_store
+////                            .get_widget_for_name("ProgressWidget")
+////                            .borrow_mut()
+////                            .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
+////
+////                        widget_store
+////                            .get_widget_for_name("ProgressText1")
+////                            .borrow_mut()
+////                            .set_text(CONFIG_DISPLAY_TEXT, format!("{} %", self.progress));
+////                    }
+////                }
+////            }
+//
+//            _ => (),
+//        }
+//    }
 }
 
 impl SimpleWindowEventHandler {
@@ -384,9 +452,28 @@ impl SimpleWindow {
         let mut container = ContainerWidget::new();
 
         container.set_size(CONFIG_BODY_SIZE, 800, 600);
+        container.set_color(CONFIG_MAIN_COLOR, [0.9, 0.9, 0.9, 1.0]);
+
         self.pushrod
             .borrow_mut()
             .add_widget("MainContainerWidget", Box::new(container));
+
+        let mut button1 = PushButtonWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Hide".to_string(),
+            18,
+            TextJustify::Center,
+        );
+        button1.set_point(CONFIG_ORIGIN, 30, 604);
+        button1.set_size(CONFIG_BODY_SIZE, 180, 32);
+        button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
+        self.pushrod.borrow_mut().add_widget(
+            "HideShowMainContainerWidgetButton",
+            Box::new(button1),
+        );
     }
 
     fn add_hello_world(&mut self) {
@@ -419,7 +506,8 @@ impl SimpleWindow {
         let base_widget_id = self
             .pushrod
             .borrow_mut()
-            .add_widget("BaseWidget1", Box::new(base_widget));
+            .add_widget_to_parent_by_name(
+                "MainContainerWidget","BaseWidget1", Box::new(base_widget));
 
         let mut button1 = PushButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -485,7 +573,8 @@ impl SimpleWindow {
         let box_widget_id = self
             .pushrod
             .borrow_mut()
-            .add_widget("BoxWidget1", Box::new(box_widget));
+            .add_widget_to_parent_by_name(
+                "MainContainerWidget","BoxWidget1", Box::new(box_widget));
 
         let mut text_widget2 = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -638,7 +727,8 @@ impl SimpleWindow {
 
         self.pushrod
             .borrow_mut()
-            .add_widget("RustImageButton", Box::new(image_widget));
+            .add_widget_to_parent_by_name(
+                "MainContainerWidget","RustImageButton", Box::new(image_widget));
     }
 
     fn add_progress(&mut self) {
@@ -809,12 +899,12 @@ impl SimpleWindow {
     fn build(&mut self) {
         self.create_container();
         self.add_hello_world();
-        self.add_base_widget();
-        self.add_box_widgets();
-        self.add_powered_by();
-        self.add_progress();
-        self.add_timer();
-        self.add_debugging();
+//        self.add_base_widget();
+//        self.add_box_widgets();
+//        self.add_powered_by();
+//        self.add_progress();
+//        self.add_timer();
+//        self.add_debugging();
     }
 
     fn get_pushrod(&mut self) -> &mut Pushrod {
@@ -830,7 +920,7 @@ impl SimpleWindow {
 }
 
 fn main() {
-    let window: GlfwWindow = WindowSettings::new("Pushrod Window", [800, 600])
+    let window: GlfwWindow = WindowSettings::new("Pushrod Window", [800, 640])
         .opengl(OpenGL::V3_2)
         .resizable(true)
         .build()

@@ -345,23 +345,24 @@ impl Pushrod {
                     });
 
                     self.drawing_texture.switch_to_fb(0);
-
-                    gl.draw(args.viewport(), |c, g| {
-                        clear([1.0, 1.0, 1.0, 0.0], g);
-                        let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
-
-                        // Enable zoom only if the draw size is larger than the window size.
-                        let zoom_factor = (self.window.size().width + self.window.size().height)
-                            / (self.window.draw_size().width + self.window.draw_size().height);
-
-                        Image::new().draw(
-                            &self.drawing_texture.texture,
-                            &c.draw_state,
-                            flipped.zoom(zoom_factor),
-                            g,
-                        );
-                    });
                 }
+
+                // Redraw the currently assigned drawing area.
+                gl.draw(args.viewport(), |c, g| {
+                    clear([1.0, 1.0, 1.0, 0.0], g);
+                    let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
+
+                    // Enable zoom only if the draw size is larger than the window size.
+                    let zoom_factor = (self.window.size().width + self.window.size().height)
+                        / (self.window.draw_size().width + self.window.draw_size().height);
+
+                    Image::new().draw(
+                        &self.drawing_texture.texture,
+                        &c.draw_state,
+                        flipped.zoom(zoom_factor),
+                        g,
+                    );
+                });
             });
         }
     }
