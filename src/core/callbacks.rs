@@ -23,51 +23,116 @@ use piston::input::*;
 pub trait PushrodCallbackEvents {
     fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
         match event {
-            CallbackEvent::MouseEntered { widget_id } => self.mouse_entered(widget_id, widget_store),
+            CallbackEvent::MouseEntered { widget_id } => {
+                self.mouse_entered(widget_id, widget_store)
+            }
             CallbackEvent::MouseExited { widget_id } => self.mouse_exited(widget_id, widget_store),
-            CallbackEvent::MouseScrolled { widget_id, point } => self.mouse_scrolled(widget_id, point, widget_store),
-            CallbackEvent::MouseMoved { widget_id, point } => self.mouse_moved(widget_id, point, widget_store),
-            CallbackEvent::KeyPressed { widget_id, key, state } => self.key_pressed(widget_id, key, state, widget_store),
+            CallbackEvent::MouseScrolled { widget_id, point } => {
+                self.mouse_scrolled(widget_id, point, widget_store)
+            }
+            CallbackEvent::MouseMoved { widget_id, point } => {
+                self.mouse_moved(widget_id, point, widget_store)
+            }
+            CallbackEvent::KeyPressed {
+                widget_id,
+                key,
+                state,
+            } => self.key_pressed(widget_id, key, state, widget_store),
             CallbackEvent::WindowResized { size } => self.window_resized(size, widget_store),
             CallbackEvent::WindowFocused { flag } => self.window_focused(flag, widget_store),
-            CallbackEvent::MouseButtonDown { widget_id, button } => self.mouse_button_down(widget_id, button, widget_store),
-            CallbackEvent::MouseButtonUpInside { widget_id, button } => self.mouse_button_up_inside(widget_id, button, widget_store),
-            CallbackEvent::MouseButtonUpOutside { widget_id, button } => self.mouse_button_up_outside(widget_id, button, widget_store),
-            CallbackEvent::WidgetClicked { widget_id, button } => self.widget_clicked(widget_id, button, widget_store),
-            CallbackEvent::WidgetSelected { widget_id, button, selected } => self.widget_selected(widget_id, button, selected, widget_store),
-            CallbackEvent::TimerTriggered { widget_id } => self.timer_triggered(widget_id, widget_store),
-            CallbackEvent::UnselectRadioButtons { widget_id, group_id } => self.unselect_radio_buttons(widget_id, group_id, widget_store),
+            CallbackEvent::MouseButtonDown { widget_id, button } => {
+                self.mouse_button_down(widget_id, button, widget_store)
+            }
+            CallbackEvent::MouseButtonUpInside { widget_id, button } => {
+                self.mouse_button_up_inside(widget_id, button, widget_store)
+            }
+            CallbackEvent::MouseButtonUpOutside { widget_id, button } => {
+                self.mouse_button_up_outside(widget_id, button, widget_store)
+            }
+            CallbackEvent::WidgetClicked { widget_id, button } => {
+                self.widget_clicked(widget_id, button, widget_store)
+            }
+            CallbackEvent::WidgetSelected {
+                widget_id,
+                button,
+                selected,
+            } => self.widget_selected(widget_id, button, selected, widget_store),
+            CallbackEvent::TimerTriggered { widget_id } => {
+                self.timer_triggered(widget_id, widget_store)
+            }
+            CallbackEvent::UnselectRadioButtons {
+                widget_id,
+                group_id,
+            } => self.unselect_radio_buttons(widget_id, group_id, widget_store),
             _ => (),
         }
     }
 
-    fn mouse_entered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) { }
+    fn mouse_entered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {}
 
-    fn mouse_exited(&mut self, widget_id: i32, widget_store: &mut WidgetStore) { }
+    fn mouse_exited(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {}
 
-    fn mouse_scrolled(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) { }
+    fn mouse_scrolled(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) {}
 
-    fn mouse_moved(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) { }
+    fn mouse_moved(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) {}
 
-    fn key_pressed(&mut self, widget_id: i32, key: Key, state: ButtonState, widget_store: &mut WidgetStore) { }
+    fn key_pressed(
+        &mut self,
+        widget_id: i32,
+        key: Key,
+        state: ButtonState,
+        widget_store: &mut WidgetStore,
+    ) {
+    }
 
-    fn window_resized(&mut self, size: crate::core::point::Size, widget_store: &mut WidgetStore) { }
+    fn window_resized(&mut self, size: crate::core::point::Size, widget_store: &mut WidgetStore) {}
 
-    fn window_focused(&mut self, flag: bool, widget_store: &mut WidgetStore) { }
+    fn window_focused(&mut self, flag: bool, widget_store: &mut WidgetStore) {}
 
-    fn mouse_button_down(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) { }
+    fn mouse_button_down(
+        &mut self,
+        widget_id: i32,
+        button: Button,
+        widget_store: &mut WidgetStore,
+    ) {
+    }
 
-    fn mouse_button_up_inside(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) { }
+    fn mouse_button_up_inside(
+        &mut self,
+        widget_id: i32,
+        button: Button,
+        widget_store: &mut WidgetStore,
+    ) {
+    }
 
-    fn mouse_button_up_outside(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) { }
+    fn mouse_button_up_outside(
+        &mut self,
+        widget_id: i32,
+        button: Button,
+        widget_store: &mut WidgetStore,
+    ) {
+    }
 
-    fn widget_clicked(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) { }
+    fn widget_clicked(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) {}
 
-    fn widget_selected(&mut self, widget_id: i32, button: Button, selected: bool, widget_store: &mut WidgetStore) { }
+    fn widget_selected(
+        &mut self,
+        widget_id: i32,
+        button: Button,
+        selected: bool,
+        widget_store: &mut WidgetStore,
+    ) {
+    }
 
-    fn timer_triggered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) { }
+    fn timer_triggered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {}
 
-    fn unselect_radio_buttons(&mut self, widget_id: i32, group_id: i32, widget_store: &mut WidgetStore) { }
+    fn unselect_radio_buttons(
+        &mut self,
+        widget_id: i32,
+        group_id: i32,
+        widget_store: &mut WidgetStore,
+    ) {
+    }
 }
 
 /// These are the different types of events that can be triggered.  Any other callback events
