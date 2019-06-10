@@ -29,7 +29,7 @@ pub trait Widget {
     /// Indicates that a `Widget` object needs to be repainted.
     fn invalidate(&mut self) {
         if !self.is_invalidated() {
-            self.set_config(CONFIG_INVALIDATE, Config::Toggle(true));
+            self.config().set_toggle(CONFIG_INVALIDATE, true);
         }
     }
 

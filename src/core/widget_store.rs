@@ -247,6 +247,25 @@ impl WidgetStore {
         });
     }
 
+    // -- Display-related routines --
+
+    /// Sets the hidden toggle for a parent, and all of its children.
+    pub fn set_hidden(&mut self, widget_id: i32, state: bool) {
+        if widget_id != 0 {
+            let children = self.get_children_of(widget_id);
+
+            children.iter()
+                .for_each(|w_id| {
+                    if *w_id != 0 && *w_id != widget_id {
+                        &self.widgets[*w_id as usize].widget.borrow_mut().set_toggle(CONFIG_WIDGET_HIDDEN, state);
+                        self.set_hidden(*w_id, state);
+                    }
+                });
+
+            &self.widgets[widget_id as usize].widget.borrow_mut().set_toggle(CONFIG_WIDGET_HIDDEN, state);
+        }
+    }
+
     /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw
     /// request from ID 0 will redraw the entire screen.
     pub fn draw(&mut self, widget_id: i32, c: Context, g: &mut GlGraphics, original_fbo: GLuint) {

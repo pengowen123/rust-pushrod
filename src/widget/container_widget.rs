@@ -18,6 +18,15 @@ use opengl_graphics::GlGraphics;
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
+use crate::core::callbacks::*;
+use crate::core::point::Size;
+
+/// Containers that handle resize events should implement this trait when extending
+/// a `ContainerWidget`, as the container widget itself needs to resize its known
+/// contained widgets according to the rules of the container bounds.
+pub trait ContainerWidgetTrait {
+    fn handle_resize(&mut self, size: Size) { }
+}
 
 /// A `ContainerWidget` is a `CanvasWidget` that only contains a backing color.
 pub struct ContainerWidget {
@@ -33,9 +42,30 @@ impl ContainerWidget {
     }
 }
 
+impl ContainerWidgetTrait for ContainerWidget { }
+
 impl Widget for ContainerWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+        if injected {
+            return None;
+        }
+
+        match event {
+            CallbackEvent::WindowResized { size } => {
+                eprintln!("Handle resize of container");
+                self.handle_resize(size);
+
+                eprintln!("Invalidate container");
+                self.invalidate();
+            },
+            _ => (),
+        }
+
+        None
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {

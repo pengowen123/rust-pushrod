@@ -61,11 +61,14 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
         match widget_store.get_name_for_widget_id(widget_id) {
             "HideShowMainContainerWidgetButton" => {
+                let main_container_widget_id = widget_store.get_widget_id_for_name("MainContainerWidget");
+
                 let state = widget_store
                     .get_widget_for_name("MainContainerWidget")
                     .borrow_mut()
                     .config()
                     .get_toggle(CONFIG_WIDGET_HIDDEN);
+
                 let button_text = if state == true {
                     String::from("Hide")
                 } else {
@@ -75,13 +78,9 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 widget_store
                     .get_widget_for_name("HideShowMainContainerWidgetButton")
                     .borrow_mut()
-                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+                    .set_text(CONFIG_DISPLAY_TEXT, button_text);
 
-                widget_store
-                    .get_widget_for_name("MainContainerWidget")
-                    .borrow_mut()
-                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-
+                widget_store.set_hidden(main_container_widget_id, !state);
                 widget_store.invalidate_all_widgets();
             }
             _ => (),

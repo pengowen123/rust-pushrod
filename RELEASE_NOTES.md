@@ -12,6 +12,10 @@ CPU after: 3.5%
 - Added ContainerWidget (#139)
 - Added add_widget_to_parent_by_name, and get_widget_id_by_name (#141)
 - Modified callbacks so that they call overridden functions rather than a catch-all handle_event (#143)
+- Modified simple application to put all widgets within a container
+- Modified simple application to use new Widget convenience methods
+- Added set_hidden method to widget_store, which also sets visibility of children
+- Optimized Widget functionality slightly.
 
 ## 0.3.2
 
