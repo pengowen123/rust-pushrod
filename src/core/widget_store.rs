@@ -14,8 +14,8 @@
 // limitations under the License.
 
 use gl::types::GLuint;
-use opengl_graphics::GlGraphics;
 use graphics::*;
+use opengl_graphics::GlGraphics;
 use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
@@ -197,6 +197,19 @@ impl WidgetStore {
         self.widgets[widget_id as usize].widget_name.as_str()
     }
 
+    /// Retrieves a widget ID for the name specified.  Returns top-level `CanvasWidget` ID if
+    /// not found.
+    pub fn get_widget_id_for_name(&mut self, name: &str) -> i32 {
+        match self
+            .widgets
+            .iter_mut()
+            .find(|x| x.widget_name == String::from(name))
+        {
+            Some(x) => x.widget_id,
+            None => 0,
+        }
+    }
+
     /// Retrieves a reference to a `Widget` by its name.  Returns the top-level `CanvasWidget`
     /// object if not found.
     pub fn get_widget_for_name(&mut self, name: &str) -> &RefCell<Box<dyn Widget>> {
@@ -232,6 +245,25 @@ impl WidgetStore {
         self.widgets.iter_mut().for_each(|x| {
             x.widget.borrow_mut().handle_event(true, event.clone());
         });
+    }
+
+    // -- Display-related routines --
+
+    /// Sets the hidden toggle for a parent, and all of its children.
+    pub fn set_hidden(&mut self, widget_id: i32, state: bool) {
+        if widget_id != 0 {
+            let children = self.get_children_of(widget_id);
+
+            children.iter()
+                .for_each(|w_id| {
+                    if *w_id != 0 && *w_id != widget_id {
+                        &self.widgets[*w_id as usize].widget.borrow_mut().set_toggle(CONFIG_WIDGET_HIDDEN, state);
+                        self.set_hidden(*w_id, state);
+                    }
+                });
+
+            &self.widgets[widget_id as usize].widget.borrow_mut().set_toggle(CONFIG_WIDGET_HIDDEN, state);
+        }
     }
 
     /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw

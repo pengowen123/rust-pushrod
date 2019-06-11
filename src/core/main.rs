@@ -27,10 +27,10 @@ use glfw_window::GlfwWindow;
 
 use graphics::math::scale;
 use graphics::*;
-use opengl_graphics::{OpenGL, GlGraphics};
+use opengl_graphics::{GlGraphics, OpenGL};
+use piston::event_loop::*;
 use piston::input::*;
 use piston::window::*;
-use piston::event_loop::*;
 
 /// This structure is returned when instantiating a new Pushrod main object.
 pub struct Pushrod {
@@ -48,8 +48,7 @@ pub struct Pushrod {
 impl Pushrod {
     /// Pushrod Object Constructor.  Takes in a single OpenGL configuration type.
     pub fn new(window: GlfwWindow) -> Self {
-        let event_settings = EventSettings::new()
-            .max_fps(60);
+        let event_settings = EventSettings::new().max_fps(30);
         Self {
             window,
             events: Events::new(event_settings),
@@ -74,6 +73,31 @@ impl Pushrod {
         self.widget_store
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)
+    }
+
+    /// Convenience method that adds a `Widget` to a parent by the parent's name.
+    pub fn add_widget_to_parent_by_name(
+        &mut self,
+        parent_name: &str,
+        name: &str,
+        widget: Box<dyn Widget>,
+    ) -> i32 {
+        let parent_id = self
+            .widget_store
+            .borrow_mut()
+            .get_widget_id_for_name(parent_name);
+
+        self.widget_store
+            .borrow_mut()
+            .add_widget_to_parent(name, widget, parent_id)
+    }
+
+    fn broadcast_event(&mut self, event: CallbackEvent) {
+        self.widget_store
+            .borrow_mut()
+            .widgets
+            .iter_mut()
+            .for_each(|container| { container.widget.borrow_mut().handle_event(false, event.clone()); });
     }
 
     fn handle_event(
@@ -109,11 +133,10 @@ impl Pushrod {
     fn rebuild_gl_buffers(&mut self) {
         let draw_size = self.window.draw_size();
 
-        self.drawing_texture
-            .resize(crate::core::point::Size {
-                w: draw_size.width as i32,
-                h: draw_size.height as i32,
-            });
+        self.drawing_texture.resize(crate::core::point::Size {
+            w: draw_size.width as i32,
+            h: draw_size.height as i32,
+        });
 
         eprintln!("Rebuild of OpenGL buffers for rendering complete.");
     }
@@ -134,8 +157,6 @@ impl Pushrod {
             .map(|x| x.widget_id)
             .collect();
         let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
-
-        self.window.make_current();
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
@@ -264,14 +285,12 @@ impl Pushrod {
             event.resize(|w, h| {
                 self.handle_resize(w as u32, h as u32);
 
-                event_handler.handle_event(
-                    CallbackEvent::WindowResized {
+                self.broadcast_event(CallbackEvent::WindowResized {
                         size: crate::core::point::Size {
                             w: w as i32,
                             h: h as i32,
                         },
                     },
-                    &mut self.widget_store.borrow_mut(),
                 );
 
                 self.widget_store.borrow_mut().invalidate_all_widgets();
@@ -332,24 +351,24 @@ impl Pushrod {
                     });
 
                     self.drawing_texture.switch_to_fb(0);
-
-                    gl.draw(args.viewport(), |c, g| {
-                        clear([1.0, 1.0, 1.0, 0.0], g);
-                        let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
-
-                        // Enable zoom only if the draw size is larger than the window size.
-                        let zoom_factor = (self.window.size().width + self.window.size().height)
-                            / (self.window.draw_size().width
-                                + self.window.draw_size().height);
-
-                        Image::new().draw(
-                            &self.drawing_texture.texture,
-                            &c.draw_state,
-                            flipped.zoom(zoom_factor),
-                            g,
-                        );
-                    });
                 }
+
+                // Redraw the currently assigned drawing area.
+                gl.draw(args.viewport(), |c, g| {
+                    clear([1.0, 1.0, 1.0, 0.0], g);
+                    let flipped = c.transform.prepend_transform(scale(1.0, -1.0));
+
+                    // Enable zoom only if the draw size is larger than the window size.
+                    let zoom_factor = (self.window.size().width + self.window.size().height)
+                        / (self.window.draw_size().width + self.window.draw_size().height);
+
+                    Image::new().draw(
+                        &self.drawing_texture.texture,
+                        &c.draw_state,
+                        flipped.zoom(zoom_factor),
+                        g,
+                    );
+                });
             });
         }
     }

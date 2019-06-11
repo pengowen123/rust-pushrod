@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use opengl_graphics::GlGraphics;
 use graphics::*;
+use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -29,7 +29,7 @@ pub trait Widget {
     /// Indicates that a `Widget` object needs to be repainted.
     fn invalidate(&mut self) {
         if !self.is_invalidated() {
-            self.set_config(CONFIG_INVALIDATE, Config::Toggle(true));
+            self.config().set_toggle(CONFIG_INVALIDATE, true);
         }
     }
 

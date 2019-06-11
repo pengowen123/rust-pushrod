@@ -21,7 +21,136 @@ use piston::input::*;
 /// is interacted with in the Pushrod Run Loop.  This callback is triggered when an event happens
 /// either in the main GUI, or within a GUI object.
 pub trait PushrodCallbackEvents {
-    fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore);
+
+    /// This is the main event handling function, and can be overridden if necessary.  This function
+    /// is called when an event is handled by the main run loop.  As an event happens in real time,
+    /// this function is called and the translated event is sent here.  If this function is
+    /// _not_ overridden, it will call the helper methods below, which can be overridden by the
+    /// main application as it sees fit for each event type.  It is not necessary to implement
+    /// each callback - only the ones you wish to implement.
+    fn handle_event(&mut self, event: CallbackEvent, widget_store: &mut WidgetStore) {
+        match event {
+            CallbackEvent::MouseEntered { widget_id } => {
+                self.mouse_entered(widget_id, widget_store)
+            }
+            CallbackEvent::MouseExited { widget_id } => self.mouse_exited(widget_id, widget_store),
+            CallbackEvent::MouseScrolled { widget_id, point } => {
+                self.mouse_scrolled(widget_id, point, widget_store)
+            }
+            CallbackEvent::MouseMoved { widget_id, point } => {
+                self.mouse_moved(widget_id, point, widget_store)
+            }
+            CallbackEvent::KeyPressed {
+                widget_id,
+                key,
+                state,
+            } => self.key_pressed(widget_id, key, state, widget_store),
+            CallbackEvent::WindowResized { size } => self.window_resized(size, widget_store),
+            CallbackEvent::WindowFocused { flag } => self.window_focused(flag, widget_store),
+            CallbackEvent::MouseButtonDown { widget_id, button } => {
+                self.mouse_button_down(widget_id, button, widget_store)
+            }
+            CallbackEvent::MouseButtonUpInside { widget_id, button } => {
+                self.mouse_button_up_inside(widget_id, button, widget_store)
+            }
+            CallbackEvent::MouseButtonUpOutside { widget_id, button } => {
+                self.mouse_button_up_outside(widget_id, button, widget_store)
+            }
+            CallbackEvent::WidgetClicked { widget_id, button } => {
+                self.widget_clicked(widget_id, button, widget_store)
+            }
+            CallbackEvent::WidgetSelected {
+                widget_id,
+                button,
+                selected,
+            } => self.widget_selected(widget_id, button, selected, widget_store),
+            CallbackEvent::TimerTriggered { widget_id } => {
+                self.timer_triggered(widget_id, widget_store)
+            }
+            // Radio button deselection is handled internally by the `RadioButtonWidget`, and
+            // are specifically filtered out here.  If you wish to respond to this widget, you must
+            // implement the handle_event function yourself.
+            CallbackEvent::UnselectRadioButtons {
+                widget_id: _,
+                group_id: _,
+            } => (),
+        }
+    }
+
+    /// Called when a mouse enters a widget.
+    fn mouse_entered(&mut self, _widget_id: i32, _widget_store: &mut WidgetStore) {}
+
+    /// Called when a mouse exits a widget.
+    fn mouse_exited(&mut self, _widget_id: i32, _widget_store: &mut WidgetStore) {}
+
+    /// Called when a mouse scroll wheel is used inside a widget.
+    fn mouse_scrolled(&mut self, _widget_id: i32, _point: Point, _widget_store: &mut WidgetStore) {}
+
+    /// Called when a mouse moves inside a widget.
+    fn mouse_moved(&mut self, _widget_id: i32, _point: Point, _widget_store: &mut WidgetStore) {}
+
+    /// Called when a keyboard keypress is detected.  The state of the key press is passed as well.
+    fn key_pressed(
+        &mut self,
+        _widget_id: i32,
+        _key: Key,
+        _state: ButtonState,
+        _widget_store: &mut WidgetStore,
+    ) {
+    }
+
+    /// Called when the main window is resized.
+    fn window_resized(&mut self, _size: crate::core::point::Size, _widget_store: &mut WidgetStore) {}
+
+    /// Called when the window gains or loses focus.
+    fn window_focused(&mut self, _flag: bool, _widget_store: &mut WidgetStore) {}
+
+    /// Called when a mouse button is pressed.
+    fn mouse_button_down(
+        &mut self,
+        _widget_id: i32,
+        _button: Button,
+        _widget_store: &mut WidgetStore,
+    ) {
+    }
+
+    /// Called when a mouse button is released within the same widget which it was pressed.
+    fn mouse_button_up_inside(
+        &mut self,
+        _widget_id: i32,
+        _button: Button,
+        _widget_store: &mut WidgetStore,
+    ) {
+    }
+
+    /// Called when a mouse button is released outside of the scope of the widget from which it was
+    /// pressed.
+    fn mouse_button_up_outside(
+        &mut self,
+        _widget_id: i32,
+        _button: Button,
+        _widget_store: &mut WidgetStore,
+    ) {
+    }
+
+    /// Called when a full click is detected inside a widget.  A "click event" consists of a mouse
+    /// button down and release within the confines of the same widget.
+    fn widget_clicked(&mut self, _widget_id: i32, _button: Button, _widget_store: &mut WidgetStore) {}
+
+    /// Called when a widget is selected.  This is a generated event by a widget, and is not part
+    /// of the main run loop.  This widget is generated by event injection.
+    fn widget_selected(
+        &mut self,
+        _widget_id: i32,
+        _button: Button,
+        _selected: bool,
+        _widget_store: &mut WidgetStore,
+    ) {
+    }
+
+    /// Called when a timer expires for a widget.  The ID of the widget is the timer widget that
+    /// generated the expiration timeout.
+    fn timer_triggered(&mut self, _widget_id: i32, _widget_store: &mut WidgetStore) {}
 }
 
 /// These are the different types of events that can be triggered.  Any other callback events

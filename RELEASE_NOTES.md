@@ -1,5 +1,23 @@
 # Pushrod Releases
 
+## 0.3.3
+
+```
+CPU before: 6.3%
+CPU after: 3.5%
+```
+
+- Included pull request from bvssvni.
+- Changed drawing FPS from 60 to 30.
+- Added ContainerWidget (#139)
+- Added add_widget_to_parent_by_name, and get_widget_id_by_name (#141)
+- Modified callbacks so that they call overridden functions rather than a catch-all handle_event (#143)
+- Modified simple application to put all widgets within a container
+- Modified simple application to use new Widget convenience methods
+- Added set_hidden method to widget_store, which also sets visibility of children
+- Optimized Widget functionality slightly.
+- Resize of window is now transmitted to all widgets (#145)
+
 ## 0.3.2
 
 - Fixed PushButton, ToggleButton, and ImageButton text background so that they are clear. (#135)
