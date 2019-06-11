@@ -346,7 +346,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn widget_selected(
         &mut self,
         widget_id: i32,
-        button: Button,
+        _button: Button,
         selected: bool,
         widget_store: &mut WidgetStore,
     ) {

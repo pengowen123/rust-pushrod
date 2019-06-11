@@ -25,7 +25,7 @@ use crate::core::point::Size;
 /// a `ContainerWidget`, as the container widget itself needs to resize its known
 /// contained widgets according to the rules of the container bounds.
 pub trait ContainerWidgetTrait {
-    fn handle_resize(&mut self, size: Size) { }
+    fn handle_resize(&mut self, _size: Size) { }
 }
 
 /// A `ContainerWidget` is a `CanvasWidget` that only contains a backing color.
