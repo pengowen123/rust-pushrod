@@ -92,6 +92,14 @@ impl Pushrod {
             .add_widget_to_parent(name, widget, parent_id)
     }
 
+    fn broadcast_event(&mut self, event: CallbackEvent) {
+        self.widget_store
+            .borrow_mut()
+            .widgets
+            .iter_mut()
+            .for_each(|container| { container.widget.borrow_mut().handle_event(false, event.clone()); });
+    }
+
     fn handle_event(
         &mut self,
         widget_id: i32,
@@ -277,14 +285,12 @@ impl Pushrod {
             event.resize(|w, h| {
                 self.handle_resize(w as u32, h as u32);
 
-                event_handler.handle_event(
-                    CallbackEvent::WindowResized {
+                self.broadcast_event(CallbackEvent::WindowResized {
                         size: crate::core::point::Size {
                             w: w as i32,
                             h: h as i32,
                         },
                     },
-                    &mut self.widget_store.borrow_mut(),
                 );
 
                 self.widget_store.borrow_mut().invalidate_all_widgets();

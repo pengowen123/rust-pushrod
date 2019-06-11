@@ -16,6 +16,7 @@ CPU after: 3.5%
 - Modified simple application to use new Widget convenience methods
 - Added set_hidden method to widget_store, which also sets visibility of children
 - Optimized Widget functionality slightly.
+- Resize of window is now transmitted to all widgets (#145)
 
 ## 0.3.2
 
