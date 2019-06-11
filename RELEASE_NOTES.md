@@ -18,9 +18,9 @@ CPU after: 3.5%
 - Modified callbacks so that they call overridden functions rather than a catch-all handle_event (#143)
 - Modified simple application to put all widgets within a container
 - Modified simple application to use new Widget convenience methods
-- Added set_hidden method to widget_store, which also sets visibility of children
 - Optimized Widget functionality slightly.
 - Resize of window is now transmitted to all widgets (#145)
+- Hide/Show now honors parent/child relationships (via set_hidden in widget_store) (#142)
 
 ## 0.3.2
 
