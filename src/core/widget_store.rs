@@ -254,15 +254,20 @@ impl WidgetStore {
         if widget_id != 0 {
             let children = self.get_children_of(widget_id);
 
-            children.iter()
-                .for_each(|w_id| {
-                    if *w_id != 0 && *w_id != widget_id {
-                        &self.widgets[*w_id as usize].widget.borrow_mut().set_toggle(CONFIG_WIDGET_HIDDEN, state);
-                        self.set_hidden(*w_id, state);
-                    }
-                });
+            children.iter().for_each(|w_id| {
+                if *w_id != 0 && *w_id != widget_id {
+                    &self.widgets[*w_id as usize]
+                        .widget
+                        .borrow_mut()
+                        .set_toggle(CONFIG_WIDGET_HIDDEN, state);
+                    self.set_hidden(*w_id, state);
+                }
+            });
 
-            &self.widgets[widget_id as usize].widget.borrow_mut().set_toggle(CONFIG_WIDGET_HIDDEN, state);
+            &self.widgets[widget_id as usize]
+                .widget
+                .borrow_mut()
+                .set_toggle(CONFIG_WIDGET_HIDDEN, state);
         }
     }
 

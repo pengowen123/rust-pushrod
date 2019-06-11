@@ -43,7 +43,7 @@ pub struct TextWidget {
     font_cache: GlyphCache<'static>, // YUCK - I do not like this!
     font_size: u32,
     justify: TextJustify,
-    desired_size: i32,
+    pub desired_width: i32,
     need_text_resize: bool,
 }
 
@@ -61,7 +61,7 @@ impl TextWidget {
             font_cache: cache,
             font_size,
             justify,
-            desired_size: 0 as i32,
+            desired_width: 0 as i32,
             need_text_resize: true,
         }
     }
@@ -75,7 +75,7 @@ impl TextWidget {
             width += character.width();
         }
 
-        self.desired_size = width as i32;
+        self.desired_width = width as i32;
         self.need_text_resize = false;
     }
 
@@ -86,8 +86,8 @@ impl TextWidget {
         // self.desired_size
         let start_x = match self.justify {
             TextJustify::Left => 0.0,
-            TextJustify::Center => ((size.w - self.desired_size) / 2) as f64,
-            TextJustify::Right => (size.w - self.desired_size) as f64,
+            TextJustify::Center => ((size.w - self.desired_width) / 2) as f64,
+            TextJustify::Right => (size.w - self.desired_width) as f64,
         };
 
         // Vertically justify the text as default.
