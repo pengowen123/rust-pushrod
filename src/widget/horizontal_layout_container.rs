@@ -17,7 +17,7 @@ use graphics::*;
 use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
-use crate::core::point::Size;
+use crate::core::point::{Size, Point};
 use crate::widget::config::*;
 use crate::widget::widget::*;
 use crate::widget::container_widget::*;
@@ -50,5 +50,11 @@ impl ContainerWidgetTrait for HorizontalContainerWidget {
     fn draw_container(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         eprintln!("[HorizontalContainerWidget] Handle drawing of container here.");
     }
+
+    fn add_widget(&mut self, _widget: Box<Widget>, _positioning: Point) -> i32 {
+        self.reposition_children();
+        0
+    }
+
 
 }
