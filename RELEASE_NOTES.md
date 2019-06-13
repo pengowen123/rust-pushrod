@@ -3,6 +3,9 @@
 ## 0.3.4
 
 - Added ability to retrieve desired width of text after rendering (#147)
+- Added padding and spacing config options for ContainerWidget objects.
+- Added on_resize() and draw_container() methods to ContainerWidget.
+- Added add_widget with widget and positioning so that the widget can be added to multi-dimension containers.
 
 ## 0.3.3
 

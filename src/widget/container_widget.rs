@@ -17,7 +17,7 @@ use graphics::*;
 use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
-use crate::core::point::Size;
+use crate::core::point::{Point, Size};
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -25,7 +25,18 @@ use crate::widget::widget::*;
 /// a `ContainerWidget`, as the container widget itself needs to resize its known
 /// contained widgets according to the rules of the container bounds.
 pub trait ContainerWidgetTrait {
-    fn handle_resize(&mut self, _size: Size) {}
+
+    /// Called when a container is resized.  This should be overridden in the `ContainerWidget`
+    /// that gets created, so that the child objects within the `ContainerWidget` can be repositioned
+    /// properly.
+    fn on_resize(&mut self, _size: Size) {}
+
+    /// Draws the items within the container.
+    fn draw_container(&mut self, _c: Context, _g: &mut GlGraphics, _clip: &DrawState) {}
+
+    /// Adds a widget to the container.
+    fn add_widget(&mut self, _widget: Box<Widget>, _positioning: Point) -> i32 { 0 }
+
 }
 
 /// A `ContainerWidget` is a `CanvasWidget` that only contains a backing color.
@@ -42,7 +53,7 @@ impl ContainerWidget {
     }
 }
 
-impl ContainerWidgetTrait for ContainerWidget {}
+impl ContainerWidgetTrait for ContainerWidget { }
 
 impl Widget for ContainerWidget {
     fn config(&mut self) -> &mut Configurable {
@@ -57,7 +68,7 @@ impl Widget for ContainerWidget {
         match event {
             CallbackEvent::WindowResized { size } => {
                 eprintln!("Handle resize of container");
-                self.handle_resize(size);
+                self.on_resize(size);
 
                 eprintln!("Invalidate container");
                 self.invalidate();
@@ -77,6 +88,8 @@ impl Widget for ContainerWidget {
             clip,
             c.transform,
         );
+
+        self.draw_container(c.clone(), g, clip);
 
         self.clear_invalidate();
     }

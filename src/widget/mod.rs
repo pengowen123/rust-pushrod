@@ -52,5 +52,9 @@ pub mod image_button_widget;
 /// a Dialog Box in other libraries.
 pub mod container_widget;
 
+/// Horizontal widget layout component: stores a list of widgets and resizes them according to the
+/// number of widgets already within the container.
+pub mod horizontal_layout_container;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;
