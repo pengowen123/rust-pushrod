@@ -6,6 +6,7 @@
 - Added padding and spacing config options for ContainerWidget objects.
 - Added on_resize() and draw_container() methods to ContainerWidget.
 - Added add_widget with widget and positioning so that the widget can be added to multi-dimension containers.
+- Removed ContainerWidget - this needs to be redone.
 
 ## 0.3.3
 

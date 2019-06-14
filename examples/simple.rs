@@ -29,7 +29,6 @@ use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
-use pushrod::widget::container_widget::*;
 use pushrod::widget::image_button_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
@@ -412,7 +411,7 @@ impl SimpleWindow {
     }
 
     fn create_container(&mut self) {
-        let mut container = ContainerWidget::new();
+        let mut container = CanvasWidget::new();
 
         container.set_size(CONFIG_BODY_SIZE, 800, 600);
         container.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
