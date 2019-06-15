@@ -21,17 +21,20 @@
 //! Pushrod uses the following dependencies:
 //! ```ignore
 //! [dependencies]
-//! piston_window = "^0.89.0"
+//! piston = "^0.42"
+//! pistoncore-glfw_window = "^0.49"
 //! piston2d-opengl_graphics = "^0.59"
-//! find_folder = "^0.3.0"
+//! piston2d-graphics = "^0.30"
+//! gl = "^0.11"
+//! find_folder = "^0.3"
 //! ```
 //!
 //! To use the crate in your project, add the following dependencies:
 //! ```ignore
 //! [dependencies]
-//! rust-pushrod = "^0.2"
+//! rust-pushrod = "^0.3"
 //! ```
-//! This will pull in the latest version in the 0.2.x branch.
+//! This will pull in the latest version in the 0.3.x branch.
 //!
 //! # Core Components
 //! `pushrod::core` is the _core_ library components, representing the main run loop, the callback

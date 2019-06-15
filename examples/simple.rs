@@ -29,7 +29,6 @@ use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
-use pushrod::widget::container_widget::*;
 use pushrod::widget::image_button_widget::*;
 use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
@@ -61,7 +60,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
         match widget_store.get_name_for_widget_id(widget_id) {
             "HideShowMainContainerWidgetButton" => {
-                let main_container_widget_id = widget_store.get_widget_id_for_name("MainContainerWidget");
+                let main_container_widget_id =
+                    widget_store.get_widget_id_for_name("MainContainerWidget");
 
                 let state = widget_store
                     .get_widget_for_name("MainContainerWidget")
@@ -82,7 +82,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
                 widget_store.set_hidden(main_container_widget_id, !state);
                 widget_store.invalidate_all_widgets();
-            },
+            }
 
             "RandomColorButton1" => match button {
                 Button::Mouse(mouse_button) => {
@@ -326,8 +326,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
             .borrow_mut()
             .set_config(
                 CONFIG_DISPLAY_TEXT,
-                Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name))
-                    .clone(),
+                Config::Text(format!("Current Widget: {} ({})", widget_id, widget_name)).clone(),
             );
 
         widget_store
@@ -412,7 +411,7 @@ impl SimpleWindow {
     }
 
     fn create_container(&mut self) {
-        let mut container = ContainerWidget::new();
+        let mut container = CanvasWidget::new();
 
         container.set_size(CONFIG_BODY_SIZE, 800, 600);
         container.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
@@ -502,11 +501,11 @@ impl SimpleWindow {
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "HideButton1", Box::new(button2));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "HideButton1",
+            Box::new(button2),
+        );
 
         let mut button3 = PushButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -521,11 +520,11 @@ impl SimpleWindow {
         button3.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button3.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "DisableButton1", Box::new(button3));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "DisableButton1",
+            Box::new(button3),
+        );
     }
 
     fn add_box_widgets(&mut self) {
@@ -603,11 +602,11 @@ impl SimpleWindow {
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "HideButton2", Box::new(button2));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "HideButton2",
+            Box::new(button2),
+        );
 
         let mut box_1 = BoxWidget::new();
         box_1.set_point(CONFIG_ORIGIN, 480, 80);
@@ -615,12 +614,11 @@ impl SimpleWindow {
         box_1.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
         box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
-        let box_1_id = self
-            .pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "Box1", Box::new(box_1));
+        let box_1_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "Box1",
+            Box::new(box_1),
+        );
 
         let mut inner_box_1 = BoxWidget::new();
         inner_box_1.set_point(CONFIG_ORIGIN, 505, 105);
@@ -675,11 +673,11 @@ impl SimpleWindow {
         button.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "HideButton3", Box::new(button));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "HideButton3",
+            Box::new(button),
+        );
     }
 
     fn add_powered_by(&mut self) {
@@ -712,11 +710,11 @@ impl SimpleWindow {
         progress_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
         progress_widget.set_color(CONFIG_SECONDARY_COLOR, [0.5, 0.5, 0.5, 1.0]);
         progress_widget.set_numeric(CONFIG_PROGRESS, 50);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "ProgressWidget", Box::new(progress_widget));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "ProgressWidget",
+            Box::new(progress_widget),
+        );
 
         let mut radio_1 = RadioButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -731,11 +729,11 @@ impl SimpleWindow {
         radio_1.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         radio_1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         radio_1.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "Radio1", Box::new(radio_1));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "Radio1",
+            Box::new(radio_1),
+        );
 
         let mut radio_2 = RadioButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -750,11 +748,11 @@ impl SimpleWindow {
         radio_2.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         radio_2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         radio_2.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "Radio2", Box::new(radio_2));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "Radio2",
+            Box::new(radio_2),
+        );
 
         let mut radio_3 = RadioButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -769,11 +767,11 @@ impl SimpleWindow {
         radio_3.set_color(CONFIG_MAIN_COLOR, [1.0; 4]);
         radio_3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         radio_3.set_numeric(CONFIG_WIDGET_GROUP_ID, 1);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "Radio3", Box::new(radio_3));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "Radio3",
+            Box::new(radio_3),
+        );
 
         let mut progress_text = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -785,11 +783,11 @@ impl SimpleWindow {
         progress_text.set_point(CONFIG_ORIGIN, 260, 360);
         progress_text.set_size(CONFIG_BODY_SIZE, 50, 32);
         progress_text.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "ProgressText1", Box::new(progress_text));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "ProgressText1",
+            Box::new(progress_text),
+        );
 
         let mut button1 = ToggleButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -805,11 +803,11 @@ impl SimpleWindow {
         button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button1.set_toggle(CONFIG_SELECTED, true);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "AnimateButton1", Box::new(button1));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "AnimateButton1",
+            Box::new(button1),
+        );
 
         let mut button2 = PushButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -824,11 +822,11 @@ impl SimpleWindow {
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
 
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "RandomColorButton2", Box::new(button2));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "RandomColorButton2",
+            Box::new(button2),
+        );
     }
 
     fn add_timer(&mut self) {
@@ -836,11 +834,11 @@ impl SimpleWindow {
 
         timer.set_numeric(CONFIG_TIMER_TIMEOUT, 100);
         timer.set_toggle(CONFIG_TIMER_ENABLED, true);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "TimerWidget1", Box::new(timer));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "TimerWidget1",
+            Box::new(timer),
+        );
     }
 
     fn add_debugging(&mut self) {
@@ -854,11 +852,11 @@ impl SimpleWindow {
         check_widget.set_point(CONFIG_ORIGIN, 20, 500);
         check_widget.set_size(CONFIG_BODY_SIZE, 400, 28);
         check_widget.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "DebugCheck1", Box::new(check_widget));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "DebugCheck1",
+            Box::new(check_widget),
+        );
 
         let mut text_widget1 = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -869,11 +867,11 @@ impl SimpleWindow {
         text_widget1.set_point(CONFIG_ORIGIN, 20, 530);
         text_widget1.set_size(CONFIG_BODY_SIZE, 400, 28);
         text_widget1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "DebugText1", Box::new(text_widget1));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "DebugText1",
+            Box::new(text_widget1),
+        );
 
         let mut text_widget2 = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -884,11 +882,11 @@ impl SimpleWindow {
         text_widget2.set_point(CONFIG_ORIGIN, 20, 560);
         text_widget2.set_size(CONFIG_BODY_SIZE, 400, 28);
         text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent_by_name(
-                "MainContainerWidget",
-                "DebugText2", Box::new(text_widget2));
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "DebugText2",
+            Box::new(text_widget2),
+        );
     }
 
     fn build(&mut self) {

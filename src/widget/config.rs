@@ -83,6 +83,24 @@ pub const CONFIG_WIDGET_GROUP_ID: u8 = 16;
 /// Indicates whether or not a `Widget` has been toggled/selected, set by `Config::Toggle`.
 pub const CONFIG_SELECTED: u8 = 17;
 
+/// Number of pixels to pad from the top of a container widget, set by `Config::Numeric`.
+pub const CONFIG_PADDING_TOP: u8 = 18;
+
+/// Number of pixels to pad from the bottom of a container widget, set by `Config::Numeric`.
+pub const CONFIG_PADDING_BOTTOM: u8 = 19;
+
+/// Number of pixels to pad from the left side of a container widget, set by `Config::Numeric`.
+pub const CONFIG_PADDING_LEFT: u8 = 20;
+
+/// Number of pixels to pad from the right side of a container widget, set by `Config::Numeric`.
+pub const CONFIG_PADDING_RIGHT: u8 = 21;
+
+/// Number of pixels to space betweeen widgets horizontally in a container widget, set by `Config::Numeric`.
+pub const CONFIG_SPACING_HORIZONTAL: u8 = 22;
+
+/// Number of pixels to space betweeen widgets vertically in a container widget, set by `Config::Numeric`.
+pub const CONFIG_SPACING_VERTICAL: u8 = 23;
+
 /// Structure containing the configuration `HashMap`.
 pub struct Configurable {
     configs: HashMap<u8, Config>,

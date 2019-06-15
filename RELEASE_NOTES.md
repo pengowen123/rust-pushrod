@@ -1,5 +1,13 @@
 # Pushrod Releases
 
+## 0.3.4
+
+- Added ability to retrieve desired width of text after rendering (#147)
+- Added padding and spacing config options for ContainerWidget objects.
+- Added on_resize() and draw_container() methods to ContainerWidget.
+- Added add_widget with widget and positioning so that the widget can be added to multi-dimension containers.
+- Removed ContainerWidget - this needs to be redone.
+
 ## 0.3.3
 
 ```
@@ -14,9 +22,9 @@ CPU after: 3.5%
 - Modified callbacks so that they call overridden functions rather than a catch-all handle_event (#143)
 - Modified simple application to put all widgets within a container
 - Modified simple application to use new Widget convenience methods
-- Added set_hidden method to widget_store, which also sets visibility of children
 - Optimized Widget functionality slightly.
 - Resize of window is now transmitted to all widgets (#145)
+- Hide/Show now honors parent/child relationships (via set_hidden in widget_store) (#142)
 
 ## 0.3.2
 
