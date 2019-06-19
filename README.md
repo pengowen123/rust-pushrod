@@ -1,18 +1,5 @@
 # rust-pushrod
 
-# IMPORTANT NOTE!!!
-
-**This project is on hold until I can get some help with a centralized cache for Widgets.
-Right now, the limitation with the project is that I cannot create a layout manager, or
-properly cache `Widget` display objects in the system.**
-
-**If you are willing to help, please check branch 0.3.5, and try compiling the
-Widget Repository.  Until I can get this code to work, this project is on hold.**
-
-Sorry!
-
-(For reference, please see this Issue: https://github.com/KenSuenobu/rust-pushrod/issues/151)
-
 ## Project Description
 
 [![Build Status](https://travis-ci.org/KenSuenobu/rust-pushrod.svg?branch=master)](https://travis-ci.org/KenSuenobu/rust-pushrod)
