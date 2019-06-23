@@ -289,6 +289,7 @@ impl Pushrod {
 
             event.resize(|w, h| {
                 self.handle_resize(w as u32, h as u32);
+                self.widget_store.borrow_mut().resize(w as u32, h as u32);
 
                 self.broadcast_event(CallbackEvent::WindowResized {
                     size: crate::core::point::Size {

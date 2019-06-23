@@ -19,6 +19,7 @@ use opengl_graphics::GlGraphics;
 use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
+use crate::core::layout_manager::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -37,9 +38,17 @@ pub struct WidgetContainer {
     parent_id: i32,
 }
 
+pub struct LayoutManagerContainer {
+    pub container_widget_id: i32,
+    pub widget_ids: Vec<i32>,
+    pub widget_positions: Vec<Point>,
+    pub layout_manager: RefCell<Box<dyn LayoutManager>>,
+}
+
 /// This is the `WidgetStore`, which contains a list of `Widget` objects for a GUI window.
 pub struct WidgetStore {
     pub widgets: Vec<WidgetContainer>,
+    pub layout_managers: Vec<LayoutManagerContainer>,
 }
 
 impl WidgetStore {
@@ -64,6 +73,7 @@ impl WidgetStore {
 
         Self {
             widgets: widgets_list,
+            layout_managers: Vec::new(),
         }
     }
 
@@ -270,6 +280,8 @@ impl WidgetStore {
                 .set_toggle(CONFIG_WIDGET_HIDDEN, state);
         }
     }
+
+    pub fn resize(&mut self, w: u32, h: u32) {}
 
     /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw
     /// request from ID 0 will redraw the entire screen.
