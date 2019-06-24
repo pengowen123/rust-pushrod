@@ -29,5 +29,15 @@ impl LayoutManager for VerticalLayoutManager {
 
     }
 
-    fn resize(&mut self, size: Size, widget_store: &mut WidgetStore) {}
+    fn resize(
+        &mut self,
+        size: Size,
+        widget_container_id: i32,
+        widget_ids: Vec<i32>,
+        widget_positions: Vec<Point>,
+        widget_store: &Vec<WidgetContainer>,
+    ) {
+
+    }
+
 }

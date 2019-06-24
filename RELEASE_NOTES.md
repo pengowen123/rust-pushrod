@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.3.5
+
+- Added base functionality for layout manager.
+
 ## 0.3.4
 
 - Added ability to retrieve desired width of text after rendering (#147)

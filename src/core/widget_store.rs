@@ -281,7 +281,27 @@ impl WidgetStore {
         }
     }
 
-    pub fn resize(&mut self, w: u32, h: u32) {}
+    pub fn resize_layout_managers(&mut self, w: u32, h: u32) {
+        let num_layout_managers = self.layout_managers.len();
+
+        for pos in 0..num_layout_managers {
+            let mut layout_manager = self.layout_managers[pos as usize].layout_manager.borrow_mut();
+            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
+            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
+            let widget_parent_id = self.layout_managers[pos as usize].container_widget_id;
+
+            layout_manager.resize(
+                Size {
+                    w: w as i32,
+                    h: h as i32,
+                },
+                widget_parent_id,
+                widget_ids,
+                widget_positions,
+                &self.widgets,
+            );
+        }
+    }
 
     /// Draws a `Widget` by ID, and any children contained in that `Widget`.  Submitting a draw
     /// request from ID 0 will redraw the entire screen.
