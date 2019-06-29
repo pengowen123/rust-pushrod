@@ -39,9 +39,9 @@ pub struct WidgetContainer {
 }
 
 pub struct LayoutManagerContainer {
-    pub container_widget_id: i32,
-    pub widget_ids: Vec<i32>,
-    pub widget_positions: Vec<Point>,
+    pub container_id: i32,
+    pub widget_ids: RefCell<Vec<i32>>,
+    pub widget_positions: RefCell<Vec<Point>>,
     pub layout_manager: RefCell<Box<dyn LayoutManager>>,
 }
 
@@ -257,6 +257,91 @@ impl WidgetStore {
         });
     }
 
+    // --- Layout Manager Routines ---
+
+    pub fn add_layout_manager(&mut self, manager: Box<dyn LayoutManager>) -> i32 {
+        let managers_size = self.layout_managers.len() as i32;
+
+        self.layout_managers.push(LayoutManagerContainer {
+            container_id: managers_size,
+            widget_ids: RefCell::new(Vec::new()),
+            widget_positions: RefCell::new(Vec::new()),
+            layout_manager: RefCell::new(manager),
+        });
+
+        managers_size
+    }
+
+    pub fn add_widget_to_layout_manager(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        manager_id: i32,
+        position: Point,
+    ) -> i32 {
+        let layout_container = &self.layout_managers[manager_id as usize];
+        let layout_manager = layout_container.layout_manager.borrow();
+
+        // Get the layout manager's top level widget ID
+        let layout_manager_widget_id = layout_manager.get_widget_id();
+
+        eprintln!(
+            "Add to layout manager: widget id={}",
+            layout_manager_widget_id
+        );
+
+        // Add the widget to the ID of the layout manager by add_widget_to_parent(name, widget, manager_id_widget_id)
+        let widget_size = self.widgets.len() as i32;
+        let container = WidgetContainer {
+            widget: RefCell::new(widget),
+            widget_name: String::from(name),
+            widget_id: widget_size,
+            parent_id: layout_manager_widget_id,
+        };
+
+        // #117 - assigns widget ID to itself
+        container
+            .widget
+            .borrow_mut()
+            .config()
+            .set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
+
+        self.widgets.push(container);
+
+        eprintln!("Added widget ID: id={}", widget_size);
+
+        // Add to the widget_store with the widget_id and position
+        layout_container.widget_ids.borrow_mut().push(widget_size);
+        layout_container
+            .widget_positions
+            .borrow_mut()
+            .push(position);
+
+        widget_size
+    }
+
+    pub fn resize_layout_managers(&mut self, w: u32, h: u32) {
+        let num_layout_managers = self.layout_managers.len();
+
+        for pos in 0..num_layout_managers {
+            let mut layout_manager = self.layout_managers[pos as usize]
+                .layout_manager
+                .borrow_mut();
+            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
+            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
+
+            layout_manager.resize(
+                Size {
+                    w: w as i32,
+                    h: h as i32,
+                },
+                widget_ids.borrow().clone(),
+                widget_positions.borrow().clone(),
+                &self.widgets,
+            );
+        }
+    }
+
     // -- Display-related routines --
 
     /// Sets the hidden toggle for a parent, and all of its children.
@@ -278,28 +363,6 @@ impl WidgetStore {
                 .widget
                 .borrow_mut()
                 .set_toggle(CONFIG_WIDGET_HIDDEN, state);
-        }
-    }
-
-    pub fn resize_layout_managers(&mut self, w: u32, h: u32) {
-        let num_layout_managers = self.layout_managers.len();
-
-        for pos in 0..num_layout_managers {
-            let mut layout_manager = self.layout_managers[pos as usize].layout_manager.borrow_mut();
-            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
-            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
-            let widget_parent_id = self.layout_managers[pos as usize].container_widget_id;
-
-            layout_manager.resize(
-                Size {
-                    w: w as i32,
-                    h: h as i32,
-                },
-                widget_parent_id,
-                widget_ids,
-                widget_positions,
-                &self.widgets,
-            );
         }
     }
 

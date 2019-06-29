@@ -27,9 +27,10 @@ pub trait LayoutManager {
     fn resize(
         &mut self,
         size: Size,
-        widget_container_id: i32,
         widget_ids: Vec<i32>,
         widget_positions: Vec<Point>,
         widget_store: &Vec<WidgetContainer>,
     );
+
+    fn get_widget_id(&self) -> i32;
 }

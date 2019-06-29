@@ -17,7 +17,17 @@ use crate::core::layout_manager::*;
 use crate::core::point::{Point, Size};
 use crate::core::widget_store::*;
 
-pub struct HorizontalLayoutManager {}
+pub struct HorizontalLayoutManager {
+    container_widget_id: i32,
+}
+
+impl HorizontalLayoutManager {
+    pub fn new(widget_id: i32) -> Self {
+        Self {
+            container_widget_id: widget_id,
+        }
+    }
+}
 
 impl LayoutManager for HorizontalLayoutManager {
     fn do_layout(
@@ -32,7 +42,6 @@ impl LayoutManager for HorizontalLayoutManager {
     fn resize(
         &mut self,
         size: Size,
-        widget_container_id: i32,
         widget_ids: Vec<i32>,
         widget_positions: Vec<Point>,
         widget_store: &Vec<WidgetContainer>,
@@ -40,4 +49,7 @@ impl LayoutManager for HorizontalLayoutManager {
 
     }
 
+    fn get_widget_id(&self) -> i32 {
+        return self.container_widget_id;
+    }
 }

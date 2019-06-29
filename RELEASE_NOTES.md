@@ -3,6 +3,7 @@
 ## 0.3.5
 
 - Added base functionality for layout manager.
+- Adding base functionality for Horizontal and Vertical layout managers.
 
 ## 0.3.4
 

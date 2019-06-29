@@ -24,6 +24,7 @@ use piston::input::*;
 use piston::window::*;
 
 use pushrod::core::callbacks::*;
+use pushrod::core::horizontal_layout_manager::*;
 use pushrod::core::main::*;
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
@@ -528,156 +529,179 @@ impl SimpleWindow {
     }
 
     fn add_box_widgets(&mut self) {
-        let mut box_widget = BoxWidget::new();
+        let mut base_widget: CanvasWidget = CanvasWidget::new();
 
-        box_widget.set_point(CONFIG_ORIGIN, 250, 80);
-        box_widget.set_size(CONFIG_BODY_SIZE, 200, 200);
-        box_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 1.0, 0.0, 1.0]);
-        box_widget.set_numeric(CONFIG_BORDER_WIDTH, 4);
-        box_widget.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
-        let box_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+        base_widget.set_point(CONFIG_ORIGIN, 0, 80);
+        base_widget.set_size(CONFIG_BODY_SIZE, 800, 200);
+        base_widget.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
+        base_widget.set_numeric(CONFIG_PADDING_TOP, 4);
+        base_widget.set_numeric(CONFIG_PADDING_BOTTOM, 4);
+        base_widget.set_numeric(CONFIG_PADDING_RIGHT, 4);
+        base_widget.set_numeric(CONFIG_PADDING_LEFT, 4);
+
+        let base_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
             "MainContainerWidget",
-            "BoxWidget1",
-            Box::new(box_widget),
+            "HorizontalWidget1",
+            Box::new(base_widget),
         );
 
-        let mut text_widget2 = TextWidget::new(
-            "assets/OpenSans-Regular.ttf".to_string(),
-            "Left".to_string(),
-            24,
-            TextJustify::Left,
-        );
-        text_widget2.set_point(CONFIG_ORIGIN, 265, 100);
-        text_widget2.set_size(CONFIG_BODY_SIZE, 170, 32);
-        text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        text_widget2.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
-        self.pushrod.borrow_mut().add_widget_to_parent(
-            "LeftJustifiedText",
-            Box::new(text_widget2),
-            box_widget_id,
-        );
-
-        let mut text_widget3 = TextWidget::new(
-            "assets/OpenSans-Regular.ttf".to_string(),
-            "Center".to_string(),
-            24,
-            TextJustify::Center,
-        );
-        text_widget3.set_point(CONFIG_ORIGIN, 265, 166);
-        text_widget3.set_size(CONFIG_BODY_SIZE, 170, 32);
-        text_widget3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        text_widget3.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
-        self.pushrod.borrow_mut().add_widget_to_parent(
-            "CenterJustifiedText",
-            Box::new(text_widget3),
-            box_widget_id,
-        );
-
-        let mut text_widget4 = TextWidget::new(
-            "assets/OpenSans-Regular.ttf".to_string(),
-            "Right".to_string(),
-            24,
-            TextJustify::Right,
-        );
-        text_widget4.set_point(CONFIG_ORIGIN, 265, 230);
-        text_widget4.set_size(CONFIG_BODY_SIZE, 170, 32);
-        text_widget4.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        text_widget4.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
-        self.pushrod.borrow_mut().add_widget_to_parent(
-            "RightJustifiedText",
-            Box::new(text_widget4),
-            box_widget_id,
-        );
-
-        let mut button2 = PushButtonWidget::new(
-            "assets/OpenSans-Regular.ttf".to_string(),
-            "Hide".to_string(),
-            18,
-            TextJustify::Center,
-        );
-
-        button2.set_point(CONFIG_ORIGIN, 250, 290);
-        button2.set_size(CONFIG_BODY_SIZE, 200, 32);
-        button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-
-        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-            "MainContainerWidget",
-            "HideButton2",
-            Box::new(button2),
-        );
-
-        let mut box_1 = BoxWidget::new();
-        box_1.set_point(CONFIG_ORIGIN, 480, 80);
-        box_1.set_size(CONFIG_BODY_SIZE, 200, 200);
-        box_1.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
-        box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
-        box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
-        let box_1_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-            "MainContainerWidget",
-            "Box1",
-            Box::new(box_1),
-        );
-
-        let mut inner_box_1 = BoxWidget::new();
-        inner_box_1.set_point(CONFIG_ORIGIN, 505, 105);
-        inner_box_1.set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_1.set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
-        inner_box_1.set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_1.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 1.0, 1.0]);
-        self.pushrod
+        let base_layout_id = self
+            .pushrod
             .borrow_mut()
-            .add_widget_to_parent("Box2", Box::new(inner_box_1), box_1_id);
+            .add_layout_manager(Box::new(HorizontalLayoutManager::new(base_widget_id)));
 
-        let mut inner_box_2 = BoxWidget::new();
-        inner_box_2.set_point(CONFIG_ORIGIN, 585, 105);
-        inner_box_2.set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_2.set_color(CONFIG_MAIN_COLOR, [0.75, 0.25, 1.0, 1.0]);
-        inner_box_2.set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_2.set_color(CONFIG_BORDER_COLOR, [1.0, 1.0, 0.0, 1.0]);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent("Box3", Box::new(inner_box_2), box_1_id);
+        eprintln!("Base Layout Manager ID: {}", base_layout_id);
 
-        let mut inner_box_3 = BoxWidget::new();
-        inner_box_3.set_point(CONFIG_ORIGIN, 505, 190);
-        inner_box_3.set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_3.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
-        inner_box_3.set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_3.set_color(CONFIG_BORDER_COLOR, [1.0, 0.50, 1.0, 1.0]);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent("Box4", Box::new(inner_box_3), box_1_id);
-
-        let mut inner_box_4 = BoxWidget::new();
-        inner_box_4.set_point(CONFIG_ORIGIN, 585, 190);
-        inner_box_4.set_size(CONFIG_BODY_SIZE, 70, 60);
-        inner_box_4.set_color(CONFIG_MAIN_COLOR, [0.75, 0.50, 0.0, 1.0]);
-        inner_box_4.set_numeric(CONFIG_BORDER_WIDTH, 1);
-        inner_box_4.set_color(CONFIG_BORDER_COLOR, [0.50, 0.0, 0.25, 1.0]);
-        self.pushrod
-            .borrow_mut()
-            .add_widget_to_parent("Box5", Box::new(inner_box_4), box_1_id);
-
-        let mut button = PushButtonWidget::new(
-            "assets/OpenSans-Regular.ttf".to_string(),
-            "Hide".to_string(),
-            18,
-            TextJustify::Center,
-        );
-
-        button.set_point(CONFIG_ORIGIN, 480, 290);
-        button.set_size(CONFIG_BODY_SIZE, 200, 32);
-        button.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button.set_numeric(CONFIG_BORDER_WIDTH, 2);
-        button.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-
-        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-            "MainContainerWidget",
-            "HideButton3",
-            Box::new(button),
-        );
+        //        let mut box_widget = BoxWidget::new();
+        //
+        //        box_widget.set_point(CONFIG_ORIGIN, 250, 80);
+        //        box_widget.set_size(CONFIG_BODY_SIZE, 200, 200);
+        //        box_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 1.0, 0.0, 1.0]);
+        //        box_widget.set_numeric(CONFIG_BORDER_WIDTH, 4);
+        //        box_widget.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
+        //        let box_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+        //            "MainContainerWidget",
+        //            "BoxWidget1",
+        //            Box::new(box_widget),
+        //        );
+        //
+        //        let mut text_widget2 = TextWidget::new(
+        //            "assets/OpenSans-Regular.ttf".to_string(),
+        //            "Left".to_string(),
+        //            24,
+        //            TextJustify::Left,
+        //        );
+        //        text_widget2.set_point(CONFIG_ORIGIN, 265, 100);
+        //        text_widget2.set_size(CONFIG_BODY_SIZE, 170, 32);
+        //        text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        //        text_widget2.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
+        //        self.pushrod.borrow_mut().add_widget_to_parent(
+        //            "LeftJustifiedText",
+        //            Box::new(text_widget2),
+        //            box_widget_id,
+        //        );
+        //
+        //        let mut text_widget3 = TextWidget::new(
+        //            "assets/OpenSans-Regular.ttf".to_string(),
+        //            "Center".to_string(),
+        //            24,
+        //            TextJustify::Center,
+        //        );
+        //        text_widget3.set_point(CONFIG_ORIGIN, 265, 166);
+        //        text_widget3.set_size(CONFIG_BODY_SIZE, 170, 32);
+        //        text_widget3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        //        text_widget3.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
+        //        self.pushrod.borrow_mut().add_widget_to_parent(
+        //            "CenterJustifiedText",
+        //            Box::new(text_widget3),
+        //            box_widget_id,
+        //        );
+        //
+        //        let mut text_widget4 = TextWidget::new(
+        //            "assets/OpenSans-Regular.ttf".to_string(),
+        //            "Right".to_string(),
+        //            24,
+        //            TextJustify::Right,
+        //        );
+        //        text_widget4.set_point(CONFIG_ORIGIN, 265, 230);
+        //        text_widget4.set_size(CONFIG_BODY_SIZE, 170, 32);
+        //        text_widget4.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        //        text_widget4.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
+        //        self.pushrod.borrow_mut().add_widget_to_parent(
+        //            "RightJustifiedText",
+        //            Box::new(text_widget4),
+        //            box_widget_id,
+        //        );
+        //
+        //        let mut button2 = PushButtonWidget::new(
+        //            "assets/OpenSans-Regular.ttf".to_string(),
+        //            "Hide".to_string(),
+        //            18,
+        //            TextJustify::Center,
+        //        );
+        //
+        //        button2.set_point(CONFIG_ORIGIN, 250, 290);
+        //        button2.set_size(CONFIG_BODY_SIZE, 200, 32);
+        //        button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        //        button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        //        button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        //
+        //        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+        //            "MainContainerWidget",
+        //            "HideButton2",
+        //            Box::new(button2),
+        //        );
+        //
+        //        let mut box_1 = BoxWidget::new();
+        //        box_1.set_point(CONFIG_ORIGIN, 480, 80);
+        //        box_1.set_size(CONFIG_BODY_SIZE, 200, 200);
+        //        box_1.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
+        //        box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        //        box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
+        //        let box_1_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+        //            "MainContainerWidget",
+        //            "Box1",
+        //            Box::new(box_1),
+        //        );
+        //
+        //        let mut inner_box_1 = BoxWidget::new();
+        //        inner_box_1.set_point(CONFIG_ORIGIN, 505, 105);
+        //        inner_box_1.set_size(CONFIG_BODY_SIZE, 70, 60);
+        //        inner_box_1.set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
+        //        inner_box_1.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        //        inner_box_1.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 1.0, 1.0]);
+        //        self.pushrod
+        //            .borrow_mut()
+        //            .add_widget_to_parent("Box2", Box::new(inner_box_1), box_1_id);
+        //
+        //        let mut inner_box_2 = BoxWidget::new();
+        //        inner_box_2.set_point(CONFIG_ORIGIN, 585, 105);
+        //        inner_box_2.set_size(CONFIG_BODY_SIZE, 70, 60);
+        //        inner_box_2.set_color(CONFIG_MAIN_COLOR, [0.75, 0.25, 1.0, 1.0]);
+        //        inner_box_2.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        //        inner_box_2.set_color(CONFIG_BORDER_COLOR, [1.0, 1.0, 0.0, 1.0]);
+        //        self.pushrod
+        //            .borrow_mut()
+        //            .add_widget_to_parent("Box3", Box::new(inner_box_2), box_1_id);
+        //
+        //        let mut inner_box_3 = BoxWidget::new();
+        //        inner_box_3.set_point(CONFIG_ORIGIN, 505, 190);
+        //        inner_box_3.set_size(CONFIG_BODY_SIZE, 70, 60);
+        //        inner_box_3.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
+        //        inner_box_3.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        //        inner_box_3.set_color(CONFIG_BORDER_COLOR, [1.0, 0.50, 1.0, 1.0]);
+        //        self.pushrod
+        //            .borrow_mut()
+        //            .add_widget_to_parent("Box4", Box::new(inner_box_3), box_1_id);
+        //
+        //        let mut inner_box_4 = BoxWidget::new();
+        //        inner_box_4.set_point(CONFIG_ORIGIN, 585, 190);
+        //        inner_box_4.set_size(CONFIG_BODY_SIZE, 70, 60);
+        //        inner_box_4.set_color(CONFIG_MAIN_COLOR, [0.75, 0.50, 0.0, 1.0]);
+        //        inner_box_4.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        //        inner_box_4.set_color(CONFIG_BORDER_COLOR, [0.50, 0.0, 0.25, 1.0]);
+        //        self.pushrod
+        //            .borrow_mut()
+        //            .add_widget_to_parent("Box5", Box::new(inner_box_4), box_1_id);
+        //
+        //        let mut button = PushButtonWidget::new(
+        //            "assets/OpenSans-Regular.ttf".to_string(),
+        //            "Hide".to_string(),
+        //            18,
+        //            TextJustify::Center,
+        //        );
+        //
+        //        button.set_point(CONFIG_ORIGIN, 480, 290);
+        //        button.set_size(CONFIG_BODY_SIZE, 200, 32);
+        //        button.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        //        button.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        //        button.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        //
+        //        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+        //            "MainContainerWidget",
+        //            "HideButton3",
+        //            Box::new(button),
+        //        );
     }
 
     fn add_powered_by(&mut self) {

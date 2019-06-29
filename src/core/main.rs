@@ -19,6 +19,7 @@ use std::collections::HashSet;
 
 use crate::core::callbacks::*;
 use crate::core::drawing_texture::*;
+use crate::core::layout_manager::*;
 use crate::core::point::*;
 use crate::core::widget_store::*;
 use crate::widget::widget::*;
@@ -60,6 +61,43 @@ impl Pushrod {
     /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
         self.widget_store.borrow_mut().add_widget(name, widget)
+    }
+
+    /// Convenience method that adds a `LayoutManager` to the layout management stack.
+    pub fn add_layout_manager(&mut self, manager: Box<dyn LayoutManager>) -> i32 {
+        self.widget_store.borrow_mut().add_layout_manager(manager)
+    }
+
+    /// Convenience method that adds a `Widget` to a `LayoutManager` by the manager's ID and
+    /// the positioning of the `Widget`.
+    pub fn add_widget_to_layout_manager(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        manager_id: i32,
+        position: Point,
+    ) {
+        let mut widget_store = self.widget_store.borrow_mut();
+        let mut layout_manager = widget_store.layout_managers[manager_id as usize]
+            .layout_manager
+            .borrow_mut();
+
+        self.widget_store
+            .borrow_mut()
+            .add_widget_to_layout_manager(name, widget, manager_id, position);
+
+        // Call do_layout for the layout_manager
+        layout_manager.do_layout(
+            widget_store.layout_managers[manager_id as usize]
+                .widget_ids
+                .borrow()
+                .clone(),
+            widget_store.layout_managers[manager_id as usize]
+                .widget_positions
+                .borrow()
+                .clone(),
+            &mut self.widget_store.borrow_mut(),
+        );
     }
 
     /// Convenience method that adds a `Widget` to a parent by its ID.  This guarantees a refresh
