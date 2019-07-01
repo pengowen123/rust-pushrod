@@ -78,9 +78,13 @@ impl Pushrod {
         manager_id: i32,
         position: Point,
     ) -> i32 {
-        let widget_id = self.widget_store.borrow_mut().add_widget_to_layout_manager(name, widget, manager_id, position);
+        let widget_id = self
+            .widget_store
+            .borrow_mut()
+            .add_widget_to_layout_manager(name, widget, manager_id, position);
 
-        self.widget_store.borrow_mut()
+        self.widget_store
+            .borrow_mut()
             .do_layout_for_manager(manager_id);
 
         widget_id

@@ -281,7 +281,10 @@ impl WidgetStore {
         widget_ids_copy
             .iter_mut()
             .map(|x| {
-                self.get_widget_for_id(*x).borrow_mut().config().get_point(CONFIG_ORIGIN)
+                self.get_widget_for_id(*x)
+                    .borrow_mut()
+                    .config()
+                    .get_point(CONFIG_ORIGIN)
             })
             .collect()
     }
@@ -295,7 +298,10 @@ impl WidgetStore {
         widget_ids_copy
             .iter_mut()
             .map(|x| {
-                self.get_widget_for_id(*x).borrow_mut().config().get_size(CONFIG_BODY_SIZE)
+                self.get_widget_for_id(*x)
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE)
             })
             .collect()
     }
@@ -311,27 +317,32 @@ impl WidgetStore {
             .layout_manager
             .borrow_mut()
             .get_widget_id();
-        let master_container_size = self.get_widget_for_id(container_widget_id)
+        let master_container_size = self
+            .get_widget_for_id(container_widget_id)
             .borrow_mut()
             .config()
             .get_size(CONFIG_BODY_SIZE);
         let adjusted_sizes = self.layout_managers[manager_id as usize]
             .layout_manager
             .borrow_mut()
-            .do_layout(master_container_size,
-            LayoutManagerCoordinates {
-                widget_origins,
-                widget_sizes,
-                widget_positions,
-            });
+            .do_layout(
+                master_container_size,
+                LayoutManagerCoordinates {
+                    widget_origins,
+                    widget_sizes,
+                    widget_positions,
+                },
+            );
 
-        self.layout_managers[manager_id as usize]
-            .widget_positions = RefCell::new(adjusted_sizes.widget_positions.clone());
+        self.layout_managers[manager_id as usize].widget_positions =
+            RefCell::new(adjusted_sizes.widget_positions.clone());
 
         let num_widgets = adjusted_sizes.widget_positions.len();
 
         for x in 0..num_widgets {
-            let widget_id = self.layout_managers[manager_id as usize].widget_ids.borrow_mut()[x as usize];
+            let widget_id = self.layout_managers[manager_id as usize]
+                .widget_ids
+                .borrow_mut()[x as usize];
             let point: Point = adjusted_sizes.widget_origins[x].clone();
             let size: Size = adjusted_sizes.widget_sizes[x].clone();
             let mut widget = self.get_widget_for_id(widget_id).borrow_mut();
@@ -403,18 +414,18 @@ impl WidgetStore {
 
             eprintln!("WARNING: Unimplemented resize_layout_managers");
 
-//            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
-//            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
-//
-//            layout_manager.resize(
-//                Size {
-//                    w: w as i32,
-//                    h: h as i32,
-//                },
-//                widget_ids.borrow().clone(),
-//                widget_positions.borrow().clone(),
-//                &self.widgets,
-//            );
+            //            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
+            //            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
+            //
+            //            layout_manager.resize(
+            //                Size {
+            //                    w: w as i32,
+            //                    h: h as i32,
+            //                },
+            //                widget_ids.borrow().clone(),
+            //                widget_positions.borrow().clone(),
+            //                &self.widgets,
+            //            );
         }
     }
 

@@ -26,6 +26,7 @@ use piston::window::*;
 use pushrod::core::callbacks::*;
 use pushrod::core::horizontal_layout_manager::*;
 use pushrod::core::main::*;
+use pushrod::core::point::{make_origin_point, make_point_i32};
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
@@ -38,7 +39,6 @@ use pushrod::widget::text_widget::*;
 use pushrod::widget::timer_widget::*;
 use pushrod::widget::toggle_button_widget::*;
 use pushrod::widget::widget::*;
-use pushrod::core::point::{make_point_i32, make_origin_point};
 
 pub struct SimpleWindow {
     pushrod: RefCell<Pushrod>,
@@ -535,10 +535,10 @@ impl SimpleWindow {
         base_widget.set_point(CONFIG_ORIGIN, 0, 80);
         base_widget.set_size(CONFIG_BODY_SIZE, 800, 200);
         base_widget.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
-//        base_widget.set_numeric(CONFIG_PADDING_TOP, 4);
-//        base_widget.set_numeric(CONFIG_PADDING_BOTTOM, 4);
-//        base_widget.set_numeric(CONFIG_PADDING_RIGHT, 4);
-//        base_widget.set_numeric(CONFIG_PADDING_LEFT, 4);
+        //        base_widget.set_numeric(CONFIG_PADDING_TOP, 4);
+        //        base_widget.set_numeric(CONFIG_PADDING_BOTTOM, 4);
+        //        base_widget.set_numeric(CONFIG_PADDING_RIGHT, 4);
+        //        base_widget.set_numeric(CONFIG_PADDING_LEFT, 4);
 
         let base_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
             "MainContainerWidget",
@@ -560,16 +560,16 @@ impl SimpleWindow {
         box_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 1.0, 0.0, 1.0]);
         box_widget.set_numeric(CONFIG_BORDER_WIDTH, 4);
         box_widget.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
-//        let box_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-//            "MainContainerWidget",
-//            "BoxWidget1",
-//            Box::new(box_widget),
-//        );
+        //        let box_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+        //            "MainContainerWidget",
+        //            "BoxWidget1",
+        //            Box::new(box_widget),
+        //        );
         let box_widget_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxWidget1",
             Box::new(box_widget),
             base_layout_id,
-            make_origin_point()
+            make_origin_point(),
         );
 
         //        let mut text_widget2 = TextWidget::new(
