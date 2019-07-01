@@ -32,21 +32,10 @@ impl VerticalLayoutManager {
 impl LayoutManager for VerticalLayoutManager {
     fn do_layout(
         &mut self,
-        widget_ids: Vec<i32>,
-        widget_positions: Vec<Point>,
-        widget_store: &mut WidgetStore,
-    ) {
-
-    }
-
-    fn resize(
-        &mut self,
         size: Size,
-        widget_ids: Vec<i32>,
-        widget_positions: Vec<Point>,
-        widget_store: &Vec<WidgetContainer>,
-    ) {
-
+        coordinates: LayoutManagerCoordinates,
+    ) -> LayoutManagerCoordinates {
+        coordinates
     }
 
     fn get_widget_id(&self) -> i32 {

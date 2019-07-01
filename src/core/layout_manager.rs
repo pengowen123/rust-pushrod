@@ -16,21 +16,19 @@
 use crate::core::point::{Point, Size};
 use crate::core::widget_store::*;
 
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct LayoutManagerCoordinates {
+    pub widget_origins: Vec<Point>,
+    pub widget_sizes: Vec<Size>,
+    pub widget_positions: Vec<Point>,
+}
+
 pub trait LayoutManager {
     fn do_layout(
         &mut self,
-        widget_ids: Vec<i32>,
-        widget_positions: Vec<Point>,
-        widget_store: &mut WidgetStore,
-    );
-
-    fn resize(
-        &mut self,
         size: Size,
-        widget_ids: Vec<i32>,
-        widget_positions: Vec<Point>,
-        widget_store: &Vec<WidgetContainer>,
-    );
+        coordinates: LayoutManagerCoordinates,
+    ) -> LayoutManagerCoordinates;
 
     fn get_widget_id(&self) -> i32;
 }

@@ -32,21 +32,32 @@ impl HorizontalLayoutManager {
 impl LayoutManager for HorizontalLayoutManager {
     fn do_layout(
         &mut self,
-        widget_ids: Vec<i32>,
-        widget_positions: Vec<Point>,
-        widget_store: &mut WidgetStore,
-    ) {
-
-    }
-
-    fn resize(
-        &mut self,
         size: Size,
-        widget_ids: Vec<i32>,
-        widget_positions: Vec<Point>,
-        widget_store: &Vec<WidgetContainer>,
-    ) {
+        coordinates: LayoutManagerCoordinates,
+    ) -> LayoutManagerCoordinates {
+        let num_widgets = coordinates.widget_sizes.len() as i32;
+        let width_per_widget = size.w / num_widgets;
+        let mut widget_origins: Vec<Point> = vec![];
+        let mut widget_sizes: Vec<Size> = vec![];
+        let mut current_x: i32 = 0;
 
+        for x in 0..num_widgets {
+            current_x = width_per_widget * x;
+            widget_origins.push(Point {
+                x: current_x,
+                y: coordinates.widget_origins[x as usize].y,
+            });
+            widget_sizes.push(Size {
+                w: width_per_widget,
+                h: size.h,
+            });
+        }
+
+        LayoutManagerCoordinates {
+            widget_origins: widget_origins.clone(),
+            widget_sizes: widget_sizes.clone(),
+            widget_positions: coordinates.widget_positions.clone(),
+        }
     }
 
     fn get_widget_id(&self) -> i32 {

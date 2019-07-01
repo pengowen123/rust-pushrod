@@ -22,6 +22,7 @@ use crate::core::drawing_texture::*;
 use crate::core::layout_manager::*;
 use crate::core::point::*;
 use crate::core::widget_store::*;
+use crate::widget::config::*;
 use crate::widget::widget::*;
 
 use glfw_window::GlfwWindow;
@@ -76,28 +77,13 @@ impl Pushrod {
         widget: Box<dyn Widget>,
         manager_id: i32,
         position: Point,
-    ) {
-        let mut widget_store = self.widget_store.borrow_mut();
-        let mut layout_manager = widget_store.layout_managers[manager_id as usize]
-            .layout_manager
-            .borrow_mut();
+    ) -> i32 {
+        let widget_id = self.widget_store.borrow_mut().add_widget_to_layout_manager(name, widget, manager_id, position);
 
-        self.widget_store
-            .borrow_mut()
-            .add_widget_to_layout_manager(name, widget, manager_id, position);
+        self.widget_store.borrow_mut()
+            .do_layout_for_manager(manager_id);
 
-        // Call do_layout for the layout_manager
-        layout_manager.do_layout(
-            widget_store.layout_managers[manager_id as usize]
-                .widget_ids
-                .borrow()
-                .clone(),
-            widget_store.layout_managers[manager_id as usize]
-                .widget_positions
-                .borrow()
-                .clone(),
-            &mut self.widget_store.borrow_mut(),
-        );
+        widget_id
     }
 
     /// Convenience method that adds a `Widget` to a parent by its ID.  This guarantees a refresh

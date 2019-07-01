@@ -272,6 +272,77 @@ impl WidgetStore {
         managers_size
     }
 
+    fn get_widget_origins(&mut self, manager_id: i32) -> Vec<Point> {
+        let mut widget_ids_copy = self.layout_managers[manager_id as usize]
+            .widget_ids
+            .borrow_mut()
+            .clone();
+
+        widget_ids_copy
+            .iter_mut()
+            .map(|x| {
+                self.get_widget_for_id(*x).borrow_mut().config().get_point(CONFIG_ORIGIN)
+            })
+            .collect()
+    }
+
+    fn get_widget_sizes(&mut self, manager_id: i32) -> Vec<Size> {
+        let mut widget_ids_copy = self.layout_managers[manager_id as usize]
+            .widget_ids
+            .borrow_mut()
+            .clone();
+
+        widget_ids_copy
+            .iter_mut()
+            .map(|x| {
+                self.get_widget_for_id(*x).borrow_mut().config().get_size(CONFIG_BODY_SIZE)
+            })
+            .collect()
+    }
+
+    pub fn do_layout_for_manager(&mut self, manager_id: i32) {
+        let widget_origins = self.get_widget_origins(manager_id);
+        let widget_sizes = self.get_widget_sizes(manager_id);
+        let widget_positions = self.layout_managers[manager_id as usize]
+            .widget_positions
+            .borrow()
+            .clone();
+        let container_widget_id = self.layout_managers[manager_id as usize]
+            .layout_manager
+            .borrow_mut()
+            .get_widget_id();
+        let master_container_size = self.get_widget_for_id(container_widget_id)
+            .borrow_mut()
+            .config()
+            .get_size(CONFIG_BODY_SIZE);
+        let adjusted_sizes = self.layout_managers[manager_id as usize]
+            .layout_manager
+            .borrow_mut()
+            .do_layout(master_container_size,
+            LayoutManagerCoordinates {
+                widget_origins,
+                widget_sizes,
+                widget_positions,
+            });
+
+        self.layout_managers[manager_id as usize]
+            .widget_positions = RefCell::new(adjusted_sizes.widget_positions.clone());
+
+        let num_widgets = adjusted_sizes.widget_positions.len();
+
+        for x in 0..num_widgets {
+            let widget_id = self.layout_managers[manager_id as usize].widget_ids.borrow_mut()[x as usize];
+            let point: Point = adjusted_sizes.widget_origins[x].clone();
+            let size: Size = adjusted_sizes.widget_sizes[x].clone();
+            let mut widget = self.get_widget_for_id(widget_id).borrow_mut();
+
+            widget.config().set_point(CONFIG_ORIGIN, point.x, point.y);
+            widget.config().set_size(CONFIG_BODY_SIZE, size.w, size.h);
+        }
+
+        eprintln!("Doing manager layout.");
+    }
+
     pub fn add_widget_to_layout_manager(
         &mut self,
         name: &str,
@@ -279,6 +350,8 @@ impl WidgetStore {
         manager_id: i32,
         position: Point,
     ) -> i32 {
+        eprintln!("WARNING: Unimplemented add_widget_to_layout_manager");
+
         let layout_container = &self.layout_managers[manager_id as usize];
         let layout_manager = layout_container.layout_manager.borrow();
 
@@ -327,18 +400,21 @@ impl WidgetStore {
             let mut layout_manager = self.layout_managers[pos as usize]
                 .layout_manager
                 .borrow_mut();
-            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
-            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
 
-            layout_manager.resize(
-                Size {
-                    w: w as i32,
-                    h: h as i32,
-                },
-                widget_ids.borrow().clone(),
-                widget_positions.borrow().clone(),
-                &self.widgets,
-            );
+            eprintln!("WARNING: Unimplemented resize_layout_managers");
+
+//            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
+//            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
+//
+//            layout_manager.resize(
+//                Size {
+//                    w: w as i32,
+//                    h: h as i32,
+//                },
+//                widget_ids.borrow().clone(),
+//                widget_positions.borrow().clone(),
+//                &self.widgets,
+//            );
         }
     }
 
