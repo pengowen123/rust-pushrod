@@ -18,6 +18,7 @@
 use graphics;
 use graphics::character::CharacterCache;
 use graphics::draw_state::DrawState;
+use graphics::types::Color;
 use graphics::*;
 use opengl_graphics::{GlGraphics, GlyphCache, TextureSettings};
 

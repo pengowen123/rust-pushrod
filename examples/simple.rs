@@ -47,6 +47,8 @@ pub struct SimpleWindow {
 pub struct SimpleWindowEventHandler {
     animated: bool,
     progress: u16,
+    red_value: i16,
+    red_direction: i16,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
@@ -287,6 +289,30 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
     }
 
     fn timer_triggered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "HelloWorldTimer" => {
+                if self.red_direction == 1 {
+                    if self.red_value == 255 {
+                        self.red_direction = -1;
+                    }
+                } else {
+                    if self.red_value == 0 {
+                        self.red_direction = 1;
+                    }
+                }
+
+                self.red_value += self.red_direction;
+
+                widget_store
+                    .get_widget_for_name("TextWidget")
+                    .borrow_mut()
+                    .set_color(CONFIG_TEXT_COLOR, [(self.red_value as f32 / 255.0), 0.0, 0.0, 1.0]);
+            },
+
+            _ => {
+
+            },
+        };
 //        if widget_store.get_name_for_widget_id(widget_id) == "TimerWidget1" {
 //            if self.animated {
 //                self.progress += 1;
@@ -401,6 +427,8 @@ impl SimpleWindowEventHandler {
         SimpleWindowEventHandler {
             animated: true,
             progress: 50,
+            red_value: 0,
+            red_direction: 1,
         }
     }
 }
@@ -456,6 +484,16 @@ impl SimpleWindow {
             "MainContainerWidget",
             "TextWidget",
             Box::new(text_widget),
+        );
+
+        let mut timer = TimerWidget::new();
+
+        timer.set_numeric(CONFIG_TIMER_TIMEOUT, 10);
+        timer.set_toggle(CONFIG_TIMER_ENABLED, true);
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "HelloWorldTimer",
+            Box::new(timer),
         );
     }
 
