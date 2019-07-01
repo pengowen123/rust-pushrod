@@ -7,6 +7,7 @@
 - Added "add_widget_to_layout_manager" function.
 - Layout Manager redesign is working properly.
 - Created layout manager that is part of the widget store. (#150)
+- HorizontalLayoutManager code completed. (#58)
 
 ## 0.3.4
 

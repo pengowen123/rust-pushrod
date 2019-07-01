@@ -361,8 +361,6 @@ impl WidgetStore {
         manager_id: i32,
         position: Point,
     ) -> i32 {
-        eprintln!("WARNING: Unimplemented add_widget_to_layout_manager");
-
         let layout_container = &self.layout_managers[manager_id as usize];
         let layout_manager = layout_container.layout_manager.borrow();
 
