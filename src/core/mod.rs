@@ -33,3 +33,9 @@ pub mod callbacks;
 /// This provides a 3D drawing texture that is offloaded onto the GPU for graphics processing.
 /// It is used internally by the drawing loop.
 pub mod drawing_texture;
+
+pub mod horizontal_layout_manager;
+/// This provides a layout manager to the `WidgetStore`, which contains a list of known widgets
+/// by ID and their point offsets within the layouts.
+pub mod layout_manager;
+pub mod vertical_layout_manager;

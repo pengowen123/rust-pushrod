@@ -1,5 +1,16 @@
 # Pushrod Releases
 
+## 0.3.5
+
+- Added base functionality for layout manager.
+- Adding base functionality for Horizontal and Vertical layout managers.
+- Added "add_widget_to_layout_manager" function.
+- Layout Manager redesign is working properly.
+- Created layout manager that is part of the widget store. (#150)
+- HorizontalLayoutManager code completed. (#58)
+- Redoing simple demo to handle better layout.
+- Fixed bug in BoxWidget where border exceeded drawing bounds, and did not fill properly after resize.
+
 ## 0.3.4
 
 - Added ability to retrieve desired width of text after rendering (#147)

@@ -19,6 +19,7 @@ use opengl_graphics::GlGraphics;
 use std::cell::RefCell;
 
 use crate::core::callbacks::CallbackEvent;
+use crate::core::layout_manager::*;
 use crate::core::point::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -37,9 +38,17 @@ pub struct WidgetContainer {
     parent_id: i32,
 }
 
+pub struct LayoutManagerContainer {
+    pub container_id: i32,
+    pub widget_ids: RefCell<Vec<i32>>,
+    pub widget_positions: RefCell<Vec<Point>>,
+    pub layout_manager: RefCell<Box<dyn LayoutManager>>,
+}
+
 /// This is the `WidgetStore`, which contains a list of `Widget` objects for a GUI window.
 pub struct WidgetStore {
     pub widgets: Vec<WidgetContainer>,
+    pub layout_managers: Vec<LayoutManagerContainer>,
 }
 
 impl WidgetStore {
@@ -64,6 +73,7 @@ impl WidgetStore {
 
         Self {
             widgets: widgets_list,
+            layout_managers: Vec::new(),
         }
     }
 
@@ -245,6 +255,182 @@ impl WidgetStore {
         self.widgets.iter_mut().for_each(|x| {
             x.widget.borrow_mut().handle_event(true, event.clone());
         });
+    }
+
+    // --- Layout Manager Routines ---
+
+    pub fn add_layout_manager(&mut self, manager: Box<dyn LayoutManager>) -> i32 {
+        let managers_size = self.layout_managers.len() as i32;
+
+        self.layout_managers.push(LayoutManagerContainer {
+            container_id: managers_size,
+            widget_ids: RefCell::new(Vec::new()),
+            widget_positions: RefCell::new(Vec::new()),
+            layout_manager: RefCell::new(manager),
+        });
+
+        managers_size
+    }
+
+    fn get_widget_origins(&mut self, manager_id: i32) -> Vec<Point> {
+        let mut widget_ids_copy = self.layout_managers[manager_id as usize]
+            .widget_ids
+            .borrow_mut()
+            .clone();
+
+        widget_ids_copy
+            .iter_mut()
+            .map(|x| {
+                self.get_widget_for_id(*x)
+                    .borrow_mut()
+                    .config()
+                    .get_point(CONFIG_ORIGIN)
+            })
+            .collect()
+    }
+
+    fn get_widget_sizes(&mut self, manager_id: i32) -> Vec<Size> {
+        let mut widget_ids_copy = self.layout_managers[manager_id as usize]
+            .widget_ids
+            .borrow_mut()
+            .clone();
+
+        widget_ids_copy
+            .iter_mut()
+            .map(|x| {
+                self.get_widget_for_id(*x)
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE)
+            })
+            .collect()
+    }
+
+    pub fn do_layout_for_manager(&mut self, manager_id: i32) {
+        let widget_origins = self.get_widget_origins(manager_id);
+        let widget_sizes = self.get_widget_sizes(manager_id);
+        let widget_positions = self.layout_managers[manager_id as usize]
+            .widget_positions
+            .borrow()
+            .clone();
+        let container_widget_id = self.layout_managers[manager_id as usize]
+            .layout_manager
+            .borrow_mut()
+            .get_widget_id();
+        let master_container_origin = self
+            .get_widget_for_id(container_widget_id)
+            .borrow_mut()
+            .config()
+            .get_point(CONFIG_ORIGIN);
+        let master_container_size = self
+            .get_widget_for_id(container_widget_id)
+            .borrow_mut()
+            .config()
+            .get_size(CONFIG_BODY_SIZE);
+        let adjusted_sizes = self.layout_managers[manager_id as usize]
+            .layout_manager
+            .borrow_mut()
+            .do_layout(
+                master_container_origin,
+                master_container_size,
+                LayoutManagerCoordinates {
+                    widget_origins,
+                    widget_sizes,
+                    widget_positions,
+                },
+            );
+
+        self.layout_managers[manager_id as usize].widget_positions =
+            RefCell::new(adjusted_sizes.widget_positions.clone());
+
+        let num_widgets = adjusted_sizes.widget_positions.len();
+
+        for x in 0..num_widgets {
+            let widget_id = self.layout_managers[manager_id as usize]
+                .widget_ids
+                .borrow_mut()[x as usize];
+            let point: Point = adjusted_sizes.widget_origins[x].clone();
+            let size: Size = adjusted_sizes.widget_sizes[x].clone();
+            let mut widget = self.get_widget_for_id(widget_id).borrow_mut();
+
+            widget.config().set_point(CONFIG_ORIGIN, point.x, point.y);
+            widget.config().set_size(CONFIG_BODY_SIZE, size.w, size.h);
+        }
+
+        eprintln!("Doing manager layout.");
+    }
+
+    pub fn add_widget_to_layout_manager(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        manager_id: i32,
+        position: Point,
+    ) -> i32 {
+        let layout_container = &self.layout_managers[manager_id as usize];
+        let layout_manager = layout_container.layout_manager.borrow();
+
+        // Get the layout manager's top level widget ID
+        let layout_manager_widget_id = layout_manager.get_widget_id();
+
+        eprintln!(
+            "Add to layout manager: widget id={}",
+            layout_manager_widget_id
+        );
+
+        // Add the widget to the ID of the layout manager by add_widget_to_parent(name, widget, manager_id_widget_id)
+        let widget_size = self.widgets.len() as i32;
+        let container = WidgetContainer {
+            widget: RefCell::new(widget),
+            widget_name: String::from(name),
+            widget_id: widget_size,
+            parent_id: layout_manager_widget_id,
+        };
+
+        // #117 - assigns widget ID to itself
+        container
+            .widget
+            .borrow_mut()
+            .config()
+            .set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
+
+        self.widgets.push(container);
+
+        eprintln!("Added widget ID: id={}", widget_size);
+
+        // Add to the widget_store with the widget_id and position
+        layout_container.widget_ids.borrow_mut().push(widget_size);
+        layout_container
+            .widget_positions
+            .borrow_mut()
+            .push(position);
+
+        widget_size
+    }
+
+    pub fn resize_layout_managers(&mut self, _w: u32, _h: u32) {
+        let num_layout_managers = self.layout_managers.len();
+
+        for pos in 0..num_layout_managers {
+            let _layout_manager = self.layout_managers[pos as usize]
+                .layout_manager
+                .borrow_mut();
+
+            eprintln!("WARNING: Unimplemented resize_layout_managers");
+
+            //            let widget_ids = self.layout_managers[pos as usize].widget_ids.clone();
+            //            let widget_positions = self.layout_managers[pos as usize].widget_positions.clone();
+            //
+            //            layout_manager.resize(
+            //                Size {
+            //                    w: w as i32,
+            //                    h: h as i32,
+            //                },
+            //                widget_ids.borrow().clone(),
+            //                widget_positions.borrow().clone(),
+            //                &self.widgets,
+            //            );
+        }
     }
 
     // -- Display-related routines --
