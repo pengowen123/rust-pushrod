@@ -22,7 +22,6 @@ use crate::core::drawing_texture::*;
 use crate::core::layout_manager::*;
 use crate::core::point::*;
 use crate::core::widget_store::*;
-use crate::widget::config::*;
 use crate::widget::widget::*;
 
 use glfw_window::GlfwWindow;

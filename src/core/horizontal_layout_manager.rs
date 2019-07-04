@@ -15,16 +15,22 @@
 
 use crate::core::layout_manager::*;
 use crate::core::point::{Point, Size};
-use crate::core::widget_store::*;
 
 pub struct HorizontalLayoutManager {
     container_widget_id: i32,
+    padding: LayoutManagerPadding,
 }
 
 impl HorizontalLayoutManager {
     pub fn new(widget_id: i32) -> Self {
         Self {
             container_widget_id: widget_id,
+            padding: LayoutManagerPadding {
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+            },
         }
     }
 }
@@ -32,6 +38,7 @@ impl HorizontalLayoutManager {
 impl LayoutManager for HorizontalLayoutManager {
     fn do_layout(
         &mut self,
+        origin: Point,
         size: Size,
         coordinates: LayoutManagerCoordinates,
     ) -> LayoutManagerCoordinates {
@@ -39,17 +46,20 @@ impl LayoutManager for HorizontalLayoutManager {
         let width_per_widget = size.w / num_widgets;
         let mut widget_origins: Vec<Point> = vec![];
         let mut widget_sizes: Vec<Size> = vec![];
-        let mut current_x: i32 = 0;
+        let mut current_x: i32 = origin.x;
+        let current_y: i32 = origin.y;
+
+        eprintln!("Current origin: {:?}", origin);
 
         for x in 0..num_widgets {
-            current_x = width_per_widget * x;
+            current_x += width_per_widget * x;
             widget_origins.push(Point {
                 x: current_x,
-                y: coordinates.widget_origins[x as usize].y,
+                y: current_y,
             });
             widget_sizes.push(Size {
                 w: width_per_widget,
-                h: size.h,
+                h: size.h - self.padding.bottom,
             });
         }
 

@@ -15,7 +15,6 @@
 
 use crate::core::layout_manager::*;
 use crate::core::point::{Point, Size};
-use crate::core::widget_store::*;
 
 pub struct VerticalLayoutManager {
     container_widget_id: i32,
@@ -32,7 +31,8 @@ impl VerticalLayoutManager {
 impl LayoutManager for VerticalLayoutManager {
     fn do_layout(
         &mut self,
-        size: Size,
+        _origin: Point,
+        _size: Size,
         coordinates: LayoutManagerCoordinates,
     ) -> LayoutManagerCoordinates {
         coordinates

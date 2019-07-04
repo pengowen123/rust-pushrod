@@ -317,6 +317,11 @@ impl WidgetStore {
             .layout_manager
             .borrow_mut()
             .get_widget_id();
+        let master_container_origin = self
+            .get_widget_for_id(container_widget_id)
+            .borrow_mut()
+            .config()
+            .get_point(CONFIG_ORIGIN);
         let master_container_size = self
             .get_widget_for_id(container_widget_id)
             .borrow_mut()
@@ -326,6 +331,7 @@ impl WidgetStore {
             .layout_manager
             .borrow_mut()
             .do_layout(
+                master_container_origin,
                 master_container_size,
                 LayoutManagerCoordinates {
                     widget_origins,
@@ -402,11 +408,11 @@ impl WidgetStore {
         widget_size
     }
 
-    pub fn resize_layout_managers(&mut self, w: u32, h: u32) {
+    pub fn resize_layout_managers(&mut self, _w: u32, _h: u32) {
         let num_layout_managers = self.layout_managers.len();
 
         for pos in 0..num_layout_managers {
-            let mut layout_manager = self.layout_managers[pos as usize]
+            let _layout_manager = self.layout_managers[pos as usize]
                 .layout_manager
                 .borrow_mut();
 

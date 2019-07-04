@@ -14,7 +14,14 @@
 // limitations under the License.
 
 use crate::core::point::{Point, Size};
-use crate::core::widget_store::*;
+
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct LayoutManagerPadding {
+    pub left: i32,
+    pub right: i32,
+    pub top: i32,
+    pub bottom: i32,
+}
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct LayoutManagerCoordinates {
@@ -26,6 +33,7 @@ pub struct LayoutManagerCoordinates {
 pub trait LayoutManager {
     fn do_layout(
         &mut self,
+        origin: Point,
         size: Size,
         coordinates: LayoutManagerCoordinates,
     ) -> LayoutManagerCoordinates;
