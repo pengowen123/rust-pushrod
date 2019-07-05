@@ -4,6 +4,7 @@
 
 - Added padding rules to HorizontalLayoutManager
 - Added spacing rules to HorizontalLayoutManager
+- Added documentation to LayoutManager
 
 ## 0.3.5
 
