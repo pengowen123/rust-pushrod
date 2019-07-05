@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.3.6
+
+- Added padding rules to HorizontalLayoutManager
+- Added spacing rules to HorizontalLayoutManager
+
 ## 0.3.5
 
 - Added base functionality for layout manager.

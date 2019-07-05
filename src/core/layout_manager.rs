@@ -21,6 +21,7 @@ pub struct LayoutManagerPadding {
     pub right: i32,
     pub top: i32,
     pub bottom: i32,
+    pub spacing: i32,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
