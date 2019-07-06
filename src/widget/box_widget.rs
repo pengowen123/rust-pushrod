@@ -16,14 +16,18 @@
 use graphics::*;
 use opengl_graphics::GlGraphics;
 
+use crate::core::callbacks::*;
+use crate::core::point::Size;
 use crate::widget::config::*;
 use crate::widget::widget::*;
+use crate::core::callbacks::CallbackEvent::WidgetMoved;
 
 /// A `BoxWidget` is a `CanvasWidget` with a bounding box.  Takes two additional options:
 /// * `CONFIG_BORDER_WIDTH` specifies the width of the border to be drawn in pixels.
 /// * `CONFIG_BORDER_COLOR` specifies the color of the border to be drawn.
 pub struct BoxWidget {
     config: Configurable,
+    event_list: Vec<CallbackEvent>,
 }
 
 impl BoxWidget {
@@ -31,6 +35,7 @@ impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            event_list: vec![],
         }
     }
 
@@ -67,8 +72,12 @@ impl Widget for BoxWidget {
     }
 
     fn set_config(&mut self, config: u8, config_value: Config) {
-        self.config().set(config, config_value.clone());
+        self.config().set(config, config_value);
         self.invalidate();
+    }
+
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        self.event_list.pop().clone()
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {

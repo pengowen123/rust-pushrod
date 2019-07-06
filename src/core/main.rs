@@ -157,6 +157,14 @@ impl Pushrod {
         }
     }
 
+    fn handle_system_event(
+        &mut self,
+        event_handler: &mut PushrodCallbackEvents,
+        event: CallbackEvent,
+    ) {
+        event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
+    }
+
     fn handle_resize(&mut self, width: u32, height: u32) {
         eprintln!("[Resize] W={} H={}", width, height);
         self.rebuild_gl_buffers();
@@ -171,6 +179,23 @@ impl Pushrod {
         });
 
         eprintln!("Rebuild of OpenGL buffers for rendering complete.");
+    }
+
+    fn get_system_events_list(&mut self) -> Vec<CallbackEvent> {
+        let mut widgets = &mut self.widget_store.borrow_mut().widgets;
+        let mut return_list = vec![];
+
+        for widget in widgets {
+            let mut widget_container = widget.widget.borrow_mut();
+
+            match widget_container
+                .inject_system_event() {
+                Some(ev) => return_list.push(ev.clone()),
+                _ => (),
+            }
+        }
+
+        return_list
     }
 
     /// This is the main run loop for `Pushrod`.  A run loop requires the use of an assigned
@@ -198,6 +223,12 @@ impl Pushrod {
         self.rebuild_gl_buffers();
 
         while let Some(ref event) = self.events.next(&mut self.window) {
+            let mut events_list = self.get_system_events_list();
+
+            for event in events_list {
+                self.handle_system_event(event_handler, event.clone());
+            }
+
             event.mouse_cursor(|x, y| {
                 let mouse_point = make_point_f64(x, y);
 

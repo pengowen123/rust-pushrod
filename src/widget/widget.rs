@@ -93,6 +93,15 @@ pub trait Widget {
         None
     }
 
+    /// Part of the main loop that queries the `Widget` for any system-level events that should
+    /// be injected into the `PushrodCallbackEvents` trait, and not handled by the top-level
+    /// run loop.  This sends out messages that are _bypassed_ from being used by the Run Loop,
+    /// so be very careful.  Use this for sending things like custom messages (such as a `Widget`
+    /// move or `Widget` resize message, which is irrelevant to the run loop.)
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        None
+    }
+
     /// Injects an event into the run loop.  This can be a timer event, a refresh event, or
     /// whatever the `Widget` wants to inject.  These should be custom events, not system
     /// events.  This method only gets called if `injects_events` returns `true`.
@@ -162,12 +171,14 @@ pub trait Widget {
 /// configuration option.  Defaults to white.
 pub struct CanvasWidget {
     config: Configurable,
+    event_list: Vec<CallbackEvent>,
 }
 
 impl CanvasWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            event_list: vec![],
         }
     }
 }
@@ -175,5 +186,14 @@ impl CanvasWidget {
 impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set_config(config, Config::Size(Size { w, h }));
+        eprintln!("Set size: {} {}", w, h);
+    }
+
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        self.event_list.pop().clone()
     }
 }
