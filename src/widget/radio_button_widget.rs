@@ -38,6 +38,7 @@ pub struct RadioButtonWidget {
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
     inject_event: bool,
+    widget_id: i32,
 }
 
 impl RadioButtonWidget {
@@ -71,6 +72,7 @@ impl RadioButtonWidget {
             selected_widget,
             unselected_widget,
             inject_event: false,
+            widget_id: 0,
         }
     }
 }
@@ -135,7 +137,7 @@ impl Widget for RadioButtonWidget {
                     group_id,
                 } => {
                     if group_id == self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32 {
-                        if widget_id != self.config().get_numeric(CONFIG_WIDGET_ID) as i32 {
+                        if widget_id != self.widget_id {
                             self.selected = false;
                         }
                     }
@@ -165,6 +167,14 @@ impl Widget for RadioButtonWidget {
         } else {
             None
         }
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {

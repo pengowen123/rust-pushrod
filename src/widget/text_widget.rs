@@ -45,6 +45,7 @@ pub struct TextWidget {
     justify: TextJustify,
     pub desired_width: i32,
     need_text_resize: bool,
+    widget_id: i32,
 }
 
 impl TextWidget {
@@ -63,6 +64,7 @@ impl TextWidget {
             justify,
             desired_width: 0 as i32,
             need_text_resize: true,
+            widget_id: 0,
         }
     }
 
@@ -126,6 +128,14 @@ impl Widget for TextWidget {
         self.set_config(config, Config::Text(text.clone()));
         self.need_text_resize = true;
         self.invalidate();
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     /// Draws the contents of the widget.

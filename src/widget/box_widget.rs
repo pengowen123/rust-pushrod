@@ -16,6 +16,9 @@
 use graphics::*;
 use opengl_graphics::GlGraphics;
 
+use crate::core::callbacks::CallbackEvent::WidgetMoved;
+use crate::core::callbacks::*;
+use crate::core::point::{Point, Size};
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -24,6 +27,8 @@ use crate::widget::widget::*;
 /// * `CONFIG_BORDER_COLOR` specifies the color of the border to be drawn.
 pub struct BoxWidget {
     config: Configurable,
+    event_list: Vec<CallbackEvent>,
+    widget_id: i32,
 }
 
 impl BoxWidget {
@@ -31,6 +36,8 @@ impl BoxWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            event_list: vec![],
+            widget_id: 0,
         }
     }
 
@@ -67,8 +74,46 @@ impl Widget for BoxWidget {
     }
 
     fn set_config(&mut self, config: u8, config_value: Config) {
-        self.config().set(config, config_value.clone());
+        self.config().set(config, config_value);
         self.invalidate();
+    }
+
+    fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set_config(config, Config::Size(Size { w, h }));
+
+        if self.widget_id != 0 {
+            self.event_list.push(CallbackEvent::WidgetResized {
+                widget_id: self.widget_id,
+                size: Size { w, h },
+            });
+        }
+
+        self.invalidate();
+    }
+
+    fn set_point(&mut self, config: u8, x: i32, y: i32) {
+        self.set_config(config, Config::Point(Point { x, y }));
+
+        if self.widget_id != 0 {
+            self.event_list.push(CallbackEvent::WidgetMoved {
+                widget_id: self.widget_id,
+                point: Point { x, y },
+            });
+        }
+
+        self.invalidate();
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
+    }
+
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        self.event_list.pop().clone()
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {

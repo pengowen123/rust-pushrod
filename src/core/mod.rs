@@ -34,8 +34,11 @@ pub mod callbacks;
 /// It is used internally by the drawing loop.
 pub mod drawing_texture;
 
-pub mod horizontal_layout_manager;
 /// This provides a layout manager to the `WidgetStore`, which contains a list of known widgets
 /// by ID and their point offsets within the layouts.
 pub mod layout_manager;
+
+/// This provides a `HorizontalLayoutManager` object, which accepts `Widget` objects, and
+/// resizes and repositions them according to the width of the manager.
+pub mod horizontal_layout_manager;
 pub mod vertical_layout_manager;

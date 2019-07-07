@@ -34,6 +34,7 @@ pub struct ImageButtonWidget {
     text_widget: TextWidget,
     image_widget: ImageWidget,
     active: bool,
+    widget_id: i32,
 }
 
 impl ImageButtonWidget {
@@ -60,6 +61,7 @@ impl ImageButtonWidget {
             text_widget,
             image_widget,
             active: false,
+            widget_id: 0,
         }
     }
 
@@ -149,6 +151,14 @@ impl Widget for ImageButtonWidget {
         }
 
         None
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {

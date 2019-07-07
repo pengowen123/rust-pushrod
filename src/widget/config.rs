@@ -32,9 +32,6 @@ pub enum Config {
     Toggle(bool),
 }
 
-/// Specifies the `Widget` ID, set by `Config::Numeric`.
-pub const CONFIG_WIDGET_ID: u8 = 1;
-
 /// Indicates whether or not a `Widget` needs to be redrawn, set by `Config::Toggle`.
 pub const CONFIG_INVALIDATE: u8 = 2;
 

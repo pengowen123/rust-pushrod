@@ -12,7 +12,7 @@ Draws inspiration from lots of GUI libraries.
 
 ## (Ever Evolving) Screenshot of Sample
 
-[![](docs/sample-0.2.11.gif)](docs/sample-0.2.11.gif)
+[![](docs/sample-0.3.6.png)](docs/sample-0.3.6.png)
 
 ## Philosophy
 
@@ -42,7 +42,7 @@ Pushrod requires the following minimum versions:
 
 To see what the CPU usage looked like before and after switching between 2D and 3D rendering engines,
 [here is before](docs/cpu_before.png), and [this is after](docs/cpu_after.png).  These numbers represent the
-current version (0.3.0) before any rendering optimizations have been added.
+current version (0.3.x) before any rendering optimizations have been added.
 
 So, is it worth it to add OpenGL?  I'll let you decide.
 

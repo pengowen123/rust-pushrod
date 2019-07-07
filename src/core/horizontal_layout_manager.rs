@@ -22,15 +22,10 @@ pub struct HorizontalLayoutManager {
 }
 
 impl HorizontalLayoutManager {
-    pub fn new(widget_id: i32) -> Self {
+    pub fn new(widget_id: i32, padding: LayoutManagerPadding) -> Self {
         Self {
             container_widget_id: widget_id,
-            padding: LayoutManagerPadding {
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-            },
+            padding,
         }
     }
 }
@@ -49,18 +44,31 @@ impl LayoutManager for HorizontalLayoutManager {
         let mut current_x: i32 = origin.x;
         let current_y: i32 = origin.y;
 
-        eprintln!("Current origin: {:?}", origin);
-
         for x in 0..num_widgets {
-            current_x += width_per_widget * x;
+            if x == 0 {
+                current_x += self.padding.left + width_per_widget * x;
+            } else {
+                current_x += width_per_widget * x + (self.padding.spacing / 2);
+            }
+
             widget_origins.push(Point {
                 x: current_x,
-                y: current_y,
+                y: current_y + self.padding.top,
             });
-            widget_sizes.push(Size {
-                w: width_per_widget,
-                h: size.h - self.padding.bottom,
-            });
+
+            if x == num_widgets - 1 {
+                widget_sizes.push(Size {
+                    w: width_per_widget
+                        - (self.padding.left + self.padding.right)
+                        - (self.padding.spacing / 2),
+                    h: size.h - (self.padding.top + self.padding.bottom),
+                });
+            } else {
+                widget_sizes.push(Size {
+                    w: width_per_widget - (self.padding.spacing / 2),
+                    h: size.h - (self.padding.top + self.padding.bottom),
+                });
+            }
         }
 
         LayoutManagerCoordinates {

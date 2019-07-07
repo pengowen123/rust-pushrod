@@ -33,6 +33,7 @@ pub struct TimerWidget {
     enabled: bool,
     initiated: u64,
     triggered: bool,
+    widget_id: i32,
 }
 
 fn time_ms() -> u64 {
@@ -49,6 +50,7 @@ impl TimerWidget {
             enabled: true,
             initiated: time_ms(),
             triggered: false,
+            widget_id: 0,
         }
     }
 
@@ -88,6 +90,14 @@ impl Widget for TimerWidget {
         } else {
             None
         }
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn draw(&mut self, _context: Context, _graphics: &mut GlGraphics, _clip: &DrawState) {

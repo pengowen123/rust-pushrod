@@ -25,8 +25,9 @@ use piston::window::*;
 
 use pushrod::core::callbacks::*;
 use pushrod::core::horizontal_layout_manager::*;
+use pushrod::core::layout_manager::LayoutManagerPadding;
 use pushrod::core::main::*;
-use pushrod::core::point::{make_origin_point, make_point_i32};
+use pushrod::core::point::{make_origin_point, make_point_i32, Point, Size};
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
@@ -48,7 +49,10 @@ pub struct SimpleWindowEventHandler {
     animated: bool,
     progress: u16,
     red_value: i16,
-    red_direction: i16,
+    green_value: i16,
+    blue_value: i16,
+    color_direction: i16,
+    manipulated_color: i16,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
@@ -291,24 +295,55 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn timer_triggered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {
         match widget_store.get_name_for_widget_id(widget_id) {
             "HelloWorldTimer" => {
-                if self.red_direction == 1 {
-                    if self.red_value == 255 {
-                        self.red_direction = -1;
+                if self.manipulated_color == 1 {
+                    if self.color_direction == 1 {
+                        if self.red_value == 255 {
+                            self.color_direction = -1;
+                        }
+                    } else {
+                        if self.red_value == 0 {
+                            self.color_direction = 1;
+                            self.manipulated_color = 2;
+                        }
                     }
-                } else {
-                    if self.red_value == 0 {
-                        self.red_direction = 1;
-                    }
-                }
 
-                self.red_value += self.red_direction;
+                    self.red_value += self.color_direction;
+                } else if self.manipulated_color == 2 {
+                    if self.color_direction == 1 {
+                        if self.green_value == 255 {
+                            self.color_direction = -1;
+                        }
+                    } else {
+                        if self.green_value == 0 {
+                            self.color_direction = 1;
+                            self.manipulated_color = 3;
+                        }
+                    }
+
+                    self.green_value += self.color_direction;
+                } else if self.manipulated_color == 3 {
+                    if self.color_direction == 1 {
+                        if self.blue_value == 255 {
+                            self.color_direction = -1;
+                        }
+                    } else {
+                        if self.blue_value == 0 {
+                            self.color_direction = 1;
+                            self.manipulated_color = 1;
+                        }
+                    }
+
+                    self.blue_value += self.color_direction;
+                }
 
                 widget_store
                     .get_widget_for_name("TextWidget")
                     .borrow_mut()
                     .set_color(
                         CONFIG_TEXT_COLOR,
-                        [(self.red_value as f32 / 255.0), 0.0, 0.0, 1.0],
+                        [(self.red_value as f32 / 255.0),
+                            (self.green_value as f32 / 255.0),
+                            (self.blue_value as f32 / 255.0), 1.0],
                     );
             }
 
@@ -421,6 +456,146 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         //            _ => (),
         //        }
     }
+
+    fn widget_moved(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) {
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "BoxInLayoutWidget1" => {
+                eprintln!("Reposition text inside BoxInLayoutWidget1");
+
+                widget_store
+                    .get_widget_for_name("LeftJustifiedText")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 16, point.y + 10);
+
+                widget_store
+                    .get_widget_for_name("CenterJustifiedText")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 16, point.y + 100 - 24);
+
+                widget_store
+                    .get_widget_for_name("RightJustifiedText")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 16, point.y + 200 - 54);
+            }
+            "BoxInLayoutWidget2" => {
+                let layout_size = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget2")
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
+
+                eprintln!("Reposition text inside BoxInLayoutWidget2");
+
+                widget_store
+                    .get_widget_for_name("MiniBox1")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 10, point.y + 10);
+
+                widget_store
+                    .get_widget_for_name("MiniBox2")
+                    .borrow_mut()
+                    .set_point(
+                        CONFIG_ORIGIN,
+                        point.x + (layout_size.w / 2) + 4,
+                        point.y + 10,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox3")
+                    .borrow_mut()
+                    .set_point(
+                        CONFIG_ORIGIN,
+                        point.x + 10,
+                        point.y + (layout_size.h / 2) + 4,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox4")
+                    .borrow_mut()
+                    .set_point(
+                        CONFIG_ORIGIN,
+                        point.x + (layout_size.w / 2) + 4,
+                        point.y + (layout_size.h / 2) + 4,
+                    );
+            }
+            _ => (),
+        }
+    }
+
+    fn widget_resized(&mut self, widget_id: i32, size: Size, widget_store: &mut WidgetStore) {
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "BoxInLayoutWidget1" => {
+                let layout_size = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget1")
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
+
+                eprintln!("Resize text inside BoxInLayoutWidget1: {:?}", layout_size);
+
+                widget_store
+                    .get_widget_for_name("LeftJustifiedText")
+                    .borrow_mut()
+                    .set_size(CONFIG_BODY_SIZE, layout_size.w - 32, 32);
+
+                widget_store
+                    .get_widget_for_name("CenterJustifiedText")
+                    .borrow_mut()
+                    .set_size(CONFIG_BODY_SIZE, layout_size.w - 32, 32);
+
+                widget_store
+                    .get_widget_for_name("RightJustifiedText")
+                    .borrow_mut()
+                    .set_size(CONFIG_BODY_SIZE, layout_size.w - 32, 32);
+            }
+            "BoxInLayoutWidget2" => {
+                let layout_size = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget2")
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
+
+                eprintln!("Reposition text inside BoxInLayoutWidget2");
+
+                widget_store
+                    .get_widget_for_name("MiniBox1")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox2")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox3")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox4")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+            }
+            _ => (),
+        }
+    }
 }
 
 impl SimpleWindowEventHandler {
@@ -429,7 +604,10 @@ impl SimpleWindowEventHandler {
             animated: true,
             progress: 50,
             red_value: 0,
-            red_direction: 1,
+            green_value: 0,
+            blue_value: 0,
+            color_direction: 1,
+            manipulated_color: 1,
         }
     }
 }
@@ -476,11 +654,7 @@ impl SimpleWindow {
 
         base_widget.set_point(CONFIG_ORIGIN, 20, 70);
         base_widget.set_size(CONFIG_BODY_SIZE, 760, 200);
-        base_widget.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
-        //        base_widget.set_numeric(CONFIG_PADDING_TOP, 4);
-        //        base_widget.set_numeric(CONFIG_PADDING_BOTTOM, 4);
-        //        base_widget.set_numeric(CONFIG_PADDING_RIGHT, 4);
-        //        base_widget.set_numeric(CONFIG_PADDING_LEFT, 4);
+        base_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
 
         let base_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
             "MainContainerWidget",
@@ -488,10 +662,19 @@ impl SimpleWindow {
             Box::new(base_widget),
         );
 
-        let base_layout_id = self
-            .pushrod
-            .borrow_mut()
-            .add_layout_manager(Box::new(HorizontalLayoutManager::new(base_widget_id)));
+        let base_layout_id =
+            self.pushrod
+                .borrow_mut()
+                .add_layout_manager(Box::new(HorizontalLayoutManager::new(
+                    base_widget_id,
+                    LayoutManagerPadding {
+                        top: 4,
+                        left: 4,
+                        right: 4,
+                        bottom: 4,
+                        spacing: 4,
+                    },
+                )));
 
         let mut box_widget = BoxWidget::new();
 
@@ -501,11 +684,112 @@ impl SimpleWindow {
         box_widget.set_numeric(CONFIG_BORDER_WIDTH, 4);
         box_widget.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
         let box_widget_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
-            "BoxWidget1",
+            "BoxInLayoutWidget1",
             Box::new(box_widget),
             base_layout_id,
             make_origin_point(),
         );
+
+        let mut text_widget2 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Left".to_string(),
+            24,
+            TextJustify::Left,
+        );
+        text_widget2.set_point(CONFIG_ORIGIN, 265, 100);
+        text_widget2.set_size(CONFIG_BODY_SIZE, 170, 32);
+        text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget2.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
+        self.pushrod.borrow_mut().add_widget_to_parent(
+            "LeftJustifiedText",
+            Box::new(text_widget2),
+            box_widget_id,
+        );
+
+        let mut text_widget3 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Center".to_string(),
+            24,
+            TextJustify::Center,
+        );
+        text_widget3.set_point(CONFIG_ORIGIN, 265, 166);
+        text_widget3.set_size(CONFIG_BODY_SIZE, 170, 32);
+        text_widget3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget3.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
+        self.pushrod.borrow_mut().add_widget_to_parent(
+            "CenterJustifiedText",
+            Box::new(text_widget3),
+            box_widget_id,
+        );
+
+        let mut text_widget4 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Right".to_string(),
+            24,
+            TextJustify::Right,
+        );
+        text_widget4.set_point(CONFIG_ORIGIN, 265, 230);
+        text_widget4.set_size(CONFIG_BODY_SIZE, 170, 32);
+        text_widget4.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget4.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
+        self.pushrod.borrow_mut().add_widget_to_parent(
+            "RightJustifiedText",
+            Box::new(text_widget4),
+            box_widget_id,
+        );
+
+        let mut box_1 = BoxWidget::new();
+        box_1.set_point(CONFIG_ORIGIN, 480, 80);
+        box_1.set_size(CONFIG_BODY_SIZE, 200, 200);
+        box_1.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
+        box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
+        let box_1_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "BoxInLayoutWidget2",
+            Box::new(box_1),
+            base_layout_id,
+            make_origin_point(),
+        );
+
+        let mut inner_box_1 = BoxWidget::new();
+        inner_box_1.set_point(CONFIG_ORIGIN, 505, 105);
+        inner_box_1.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_1.set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
+        inner_box_1.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_1.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 1.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget_to_parent("MiniBox1", Box::new(inner_box_1), box_1_id);
+
+        let mut inner_box_2 = BoxWidget::new();
+        inner_box_2.set_point(CONFIG_ORIGIN, 585, 105);
+        inner_box_2.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_2.set_color(CONFIG_MAIN_COLOR, [0.75, 0.25, 1.0, 1.0]);
+        inner_box_2.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_2.set_color(CONFIG_BORDER_COLOR, [1.0, 1.0, 0.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget_to_parent("MiniBox2", Box::new(inner_box_2), box_1_id);
+
+        let mut inner_box_3 = BoxWidget::new();
+        inner_box_3.set_point(CONFIG_ORIGIN, 505, 190);
+        inner_box_3.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_3.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
+        inner_box_3.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_3.set_color(CONFIG_BORDER_COLOR, [1.0, 0.50, 1.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget_to_parent("MiniBox3", Box::new(inner_box_3), box_1_id);
+
+        let mut inner_box_4 = BoxWidget::new();
+        inner_box_4.set_point(CONFIG_ORIGIN, 585, 190);
+        inner_box_4.set_size(CONFIG_BODY_SIZE, 70, 60);
+        inner_box_4.set_color(CONFIG_MAIN_COLOR, [0.75, 0.50, 0.0, 1.0]);
+        inner_box_4.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        inner_box_4.set_color(CONFIG_BORDER_COLOR, [0.50, 0.0, 0.25, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget_to_parent("MiniBox4", Box::new(inner_box_4), box_1_id);
     }
 
     //    fn add_base_widget(&mut self) {
@@ -579,58 +863,6 @@ impl SimpleWindow {
     //    }
     //
     //    fn add_box_widgets(&mut self) {
-    //        let mut base_widget: CanvasWidget = CanvasWidget::new();
-    //
-    //        eprintln!("Base Layout Manager ID: {}", base_layout_id);
-    //
-    //        let mut text_widget2 = TextWidget::new(
-    //            "assets/OpenSans-Regular.ttf".to_string(),
-    //            "Left".to_string(),
-    //            24,
-    //            TextJustify::Left,
-    //        );
-    //        text_widget2.set_point(CONFIG_ORIGIN, 265, 100);
-    //        text_widget2.set_size(CONFIG_BODY_SIZE, 170, 32);
-    //        text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //        text_widget2.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
-    //        self.pushrod.borrow_mut().add_widget_to_parent(
-    //            "LeftJustifiedText",
-    //            Box::new(text_widget2),
-    //            box_widget_id,
-    //        );
-    //
-    //        let mut text_widget3 = TextWidget::new(
-    //            "assets/OpenSans-Regular.ttf".to_string(),
-    //            "Center".to_string(),
-    //            24,
-    //            TextJustify::Center,
-    //        );
-    //        text_widget3.set_point(CONFIG_ORIGIN, 265, 166);
-    //        text_widget3.set_size(CONFIG_BODY_SIZE, 170, 32);
-    //        text_widget3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //        text_widget3.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
-    //        self.pushrod.borrow_mut().add_widget_to_parent(
-    //            "CenterJustifiedText",
-    //            Box::new(text_widget3),
-    //            box_widget_id,
-    //        );
-    //
-    //        let mut text_widget4 = TextWidget::new(
-    //            "assets/OpenSans-Regular.ttf".to_string(),
-    //            "Right".to_string(),
-    //            24,
-    //            TextJustify::Right,
-    //        );
-    //        text_widget4.set_point(CONFIG_ORIGIN, 265, 230);
-    //        text_widget4.set_size(CONFIG_BODY_SIZE, 170, 32);
-    //        text_widget4.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //        text_widget4.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 0.0]);
-    //        self.pushrod.borrow_mut().add_widget_to_parent(
-    //            "RightJustifiedText",
-    //            Box::new(text_widget4),
-    //            box_widget_id,
-    //        );
-    //
     //        let mut button2 = PushButtonWidget::new(
     //            "assets/OpenSans-Regular.ttf".to_string(),
     //            "Hide".to_string(),
@@ -649,59 +881,6 @@ impl SimpleWindow {
     //            "HideButton2",
     //            Box::new(button2),
     //        );
-    //
-    //        let mut box_1 = BoxWidget::new();
-    //        box_1.set_point(CONFIG_ORIGIN, 480, 80);
-    //        box_1.set_size(CONFIG_BODY_SIZE, 200, 200);
-    //        box_1.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
-    //        box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
-    //        box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
-    //        let box_1_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
-    //            "Box1",
-    //            Box::new(box_1),
-    //            base_layout_id,
-    //            make_origin_point(),
-    //        );
-    //
-    //        let mut inner_box_1 = BoxWidget::new();
-    //        inner_box_1.set_point(CONFIG_ORIGIN, 505, 105);
-    //        inner_box_1.set_size(CONFIG_BODY_SIZE, 70, 60);
-    //        inner_box_1.set_color(CONFIG_MAIN_COLOR, [0.75, 0.75, 1.0, 1.0]);
-    //        inner_box_1.set_numeric(CONFIG_BORDER_WIDTH, 1);
-    //        inner_box_1.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 1.0, 1.0]);
-    //        self.pushrod
-    //            .borrow_mut()
-    //            .add_widget_to_parent("Box2", Box::new(inner_box_1), box_1_id);
-    //
-    //        let mut inner_box_2 = BoxWidget::new();
-    //        inner_box_2.set_point(CONFIG_ORIGIN, 585, 105);
-    //        inner_box_2.set_size(CONFIG_BODY_SIZE, 70, 60);
-    //        inner_box_2.set_color(CONFIG_MAIN_COLOR, [0.75, 0.25, 1.0, 1.0]);
-    //        inner_box_2.set_numeric(CONFIG_BORDER_WIDTH, 1);
-    //        inner_box_2.set_color(CONFIG_BORDER_COLOR, [1.0, 1.0, 0.0, 1.0]);
-    //        self.pushrod
-    //            .borrow_mut()
-    //            .add_widget_to_parent("Box3", Box::new(inner_box_2), box_1_id);
-    //
-    //        let mut inner_box_3 = BoxWidget::new();
-    //        inner_box_3.set_point(CONFIG_ORIGIN, 505, 190);
-    //        inner_box_3.set_size(CONFIG_BODY_SIZE, 70, 60);
-    //        inner_box_3.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
-    //        inner_box_3.set_numeric(CONFIG_BORDER_WIDTH, 1);
-    //        inner_box_3.set_color(CONFIG_BORDER_COLOR, [1.0, 0.50, 1.0, 1.0]);
-    //        self.pushrod
-    //            .borrow_mut()
-    //            .add_widget_to_parent("Box4", Box::new(inner_box_3), box_1_id);
-    //
-    //        let mut inner_box_4 = BoxWidget::new();
-    //        inner_box_4.set_point(CONFIG_ORIGIN, 585, 190);
-    //        inner_box_4.set_size(CONFIG_BODY_SIZE, 70, 60);
-    //        inner_box_4.set_color(CONFIG_MAIN_COLOR, [0.75, 0.50, 0.0, 1.0]);
-    //        inner_box_4.set_numeric(CONFIG_BORDER_WIDTH, 1);
-    //        inner_box_4.set_color(CONFIG_BORDER_COLOR, [0.50, 0.0, 0.25, 1.0]);
-    //        self.pushrod
-    //            .borrow_mut()
-    //            .add_widget_to_parent("Box5", Box::new(inner_box_4), box_1_id);
     //
     //        let mut button = PushButtonWidget::new(
     //            "assets/OpenSans-Regular.ttf".to_string(),

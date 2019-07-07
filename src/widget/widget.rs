@@ -85,11 +85,24 @@ pub trait Widget {
         self.set_config(config, Config::Toggle(flag));
     }
 
+    fn set_widget_id(&mut self, widget_id: i32);
+
+    fn get_widget_id(&mut self) -> i32;
+
     /// Custom handler to receive an event.  Any `Widget` that implements this does so to handle
     /// top-level GUI events, such as a mouse entering or exiting the bounds of this `Widget`.
     /// If the `injected` flag is set, it indicates that the event supplied was generate by
     /// a `Widget`, and not by the run loop.
     fn handle_event(&mut self, _injected: bool, _event: CallbackEvent) -> Option<CallbackEvent> {
+        None
+    }
+
+    /// Part of the main loop that queries the `Widget` for any system-level events that should
+    /// be injected into the `PushrodCallbackEvents` trait, and not handled by the top-level
+    /// run loop.  This sends out messages that are _bypassed_ from being used by the Run Loop,
+    /// so be very careful.  Use this for sending things like custom messages (such as a `Widget`
+    /// move or `Widget` resize message, which is irrelevant to the run loop.)
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
         None
     }
 
@@ -162,12 +175,16 @@ pub trait Widget {
 /// configuration option.  Defaults to white.
 pub struct CanvasWidget {
     config: Configurable,
+    event_list: Vec<CallbackEvent>,
+    widget_id: i32,
 }
 
 impl CanvasWidget {
     pub fn new() -> Self {
         Self {
             config: Configurable::new(),
+            event_list: vec![],
+            widget_id: 0,
         }
     }
 }
@@ -175,5 +192,39 @@ impl CanvasWidget {
 impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set_config(config, Config::Size(Size { w, h }));
+
+        if self.widget_id != 0 {
+            self.event_list.push(CallbackEvent::WidgetResized {
+                widget_id: self.widget_id,
+                size: Size { w, h },
+            });
+        }
+    }
+
+    fn set_point(&mut self, config: u8, x: i32, y: i32) {
+        self.set_config(config, Config::Point(Point { x, y }));
+
+        if self.widget_id != 0 {
+            self.event_list.push(CallbackEvent::WidgetMoved {
+                widget_id: self.widget_id,
+                point: Point { x, y },
+            });
+        }
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
+    }
+
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        self.event_list.pop().clone()
     }
 }

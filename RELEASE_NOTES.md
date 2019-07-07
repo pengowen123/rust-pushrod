@@ -1,5 +1,18 @@
 # Pushrod Releases
 
+## 0.3.6
+
+- Added padding rules to HorizontalLayoutManager
+- Added spacing rules to HorizontalLayoutManager
+- Added documentation to LayoutManager
+- Added system-wide event injection for PushrodCallbackEvents (#155)
+- Refactored add_widget so that there is only one entrant function to add a widget (#156)
+- All widgets modified to store their widget_id (#157)
+- Fixed bug with resizing during layout management code (bug found during testing)
+- Added resizing and repositioning of widgets after the layout completes to the demo
+- Added WidgetMoved event when a widget is moved using set_point (#153)
+- Added WidgetResized event when a widget is resized using set_size (#152)
+
 ## 0.3.5
 
 - Added base functionality for layout manager.

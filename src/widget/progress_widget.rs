@@ -29,6 +29,7 @@ use crate::widget::widget::*;
 pub struct ProgressWidget {
     config: Configurable,
     base_widget: BoxWidget,
+    widget_id: i32,
 }
 
 impl ProgressWidget {
@@ -45,6 +46,7 @@ impl ProgressWidget {
         Self {
             config: Configurable::new(),
             base_widget: base,
+            widget_id: 0,
         }
     }
 }
@@ -58,6 +60,14 @@ impl Widget for ProgressWidget {
         self.config().set(config, config_value.clone());
         self.base_widget.config().set(config, config_value.clone());
         self.invalidate();
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {

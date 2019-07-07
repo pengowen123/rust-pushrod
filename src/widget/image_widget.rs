@@ -24,6 +24,7 @@ pub struct ImageWidget {
     config: Configurable,
     image: Texture,
     image_size: crate::core::point::Size,
+    widget_id: i32,
 }
 
 impl ImageWidget {
@@ -45,6 +46,7 @@ impl ImageWidget {
                 w: texture_width,
                 h: texture_height,
             },
+            widget_id: 0,
         }
     }
 }
@@ -52,6 +54,14 @@ impl ImageWidget {
 impl Widget for ImageWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
