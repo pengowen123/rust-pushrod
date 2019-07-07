@@ -62,10 +62,7 @@ impl WidgetStore {
         let mut widgets_list: Vec<WidgetContainer> = Vec::new();
         let mut base_widget = CanvasWidget::new();
 
-        base_widget.config().set(
-            CONFIG_BODY_SIZE,
-            Config::Size(crate::core::point::Size { w: 800, h: 600 }),
-        );
+        base_widget.set_size(CONFIG_BODY_SIZE, 800, 600);
         widgets_list.push(WidgetContainer {
             widget: RefCell::new(Box::new(base_widget)),
             widget_name: String::from("_WidgetStoreBase"),
@@ -115,10 +112,7 @@ impl WidgetStore {
     }
 
     fn set_parent_for_widget(&mut self, widget_id: i32, parent_id: i32) {
-        let mut container = self
-            .widgets
-            .get_mut(widget_id as usize)
-            .unwrap();
+        let mut container = self.widgets.get_mut(widget_id as usize).unwrap();
 
         container.parent_id = parent_id;
     }
@@ -138,7 +132,9 @@ impl WidgetStore {
     }
 
     fn get_layout_manager_widget_id(&mut self, manager_id: i32) -> i32 {
-        let layout_container = self.layout_managers[manager_id as usize].layout_manager.borrow_mut();
+        let layout_container = self.layout_managers[manager_id as usize]
+            .layout_manager
+            .borrow_mut();
 
         layout_container.get_widget_id()
     }

@@ -27,7 +27,7 @@ use pushrod::core::callbacks::*;
 use pushrod::core::horizontal_layout_manager::*;
 use pushrod::core::layout_manager::LayoutManagerPadding;
 use pushrod::core::main::*;
-use pushrod::core::point::{Point, Size, make_origin_point, make_point_i32};
+use pushrod::core::point::{make_origin_point, make_point_i32, Point, Size};
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;
@@ -430,7 +430,6 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn widget_resized(&mut self, _widget_id: i32, _size: Size, _widget_store: &mut WidgetStore) {
         eprintln!("Widget sized: id={} size={:?}", _widget_id, _size);
     }
-
 }
 
 impl SimpleWindowEventHandler {

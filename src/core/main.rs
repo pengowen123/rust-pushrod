@@ -189,8 +189,7 @@ impl Pushrod {
         for widget in widgets {
             let mut widget_container = widget.widget.borrow_mut();
 
-            match widget_container
-                .inject_system_event() {
+            match widget_container.inject_system_event() {
                 Some(ev) => return_list.push(ev.clone()),
                 _ => (),
             }

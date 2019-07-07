@@ -63,14 +63,12 @@ pub trait PushrodCallbackEvents {
                 button,
                 selected,
             } => self.widget_selected(widget_id, button, selected, widget_store),
-            CallbackEvent::WidgetMoved {
-                widget_id,
-                point,
-            } => self.widget_moved(widget_id, point, widget_store),
-            CallbackEvent::WidgetResized {
-                widget_id,
-                size
-            } => self.widget_resized(widget_id, size, widget_store),
+            CallbackEvent::WidgetMoved { widget_id, point } => {
+                self.widget_moved(widget_id, point, widget_store)
+            }
+            CallbackEvent::WidgetResized { widget_id, size } => {
+                self.widget_resized(widget_id, size, widget_store)
+            }
             CallbackEvent::TimerTriggered { widget_id } => {
                 self.timer_triggered(widget_id, widget_store)
             }
@@ -164,11 +162,11 @@ pub trait PushrodCallbackEvents {
 
     /// Called when a `Widget` is moved.  Contains the ID of the `Widget`, along with its new
     /// position as a `Point`.
-    fn widget_moved(&mut self, _widget_id: i32, _point: Point, _widget_store: &mut WidgetStore) { }
+    fn widget_moved(&mut self, _widget_id: i32, _point: Point, _widget_store: &mut WidgetStore) {}
 
     /// Called when a `Widget` is resized.  Contains the ID of the `Widget`, along with its new
     /// `Size`.
-    fn widget_resized(&mut self, _widget_id: i32, _size: Size, _widget_store: &mut WidgetStore) { }
+    fn widget_resized(&mut self, _widget_id: i32, _size: Size, _widget_store: &mut WidgetStore) {}
 
     /// Called when a timer expires for a widget.  The ID of the widget is the timer widget that
     /// generated the expiration timeout.
@@ -241,17 +239,11 @@ pub enum CallbackEvent {
     /// Indicates that a `Widget`'s position has been moved either through physical interaction,
     /// or through a `LayoutManager` repositioning.  Contains the ID of the `Widget` that moved,
     /// along with its new position as a `Point`.
-    WidgetMoved {
-        widget_id: i32,
-        point: Point,
-    },
+    WidgetMoved { widget_id: i32, point: Point },
 
     /// Indicates that a `Widget`'s `Size` has changed.  Contains the ID of the `Widget`, along with
     /// the new `Size` of the `Widget`.
-    WidgetResized {
-        widget_id: i32,
-        size: Size,
-    },
+    WidgetResized { widget_id: i32, size: Size },
 
     /// Indicates that a timer timeout has been triggered.  Contains the ID of the `Widget` that was
     /// affected.

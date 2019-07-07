@@ -194,17 +194,17 @@ impl Widget for CanvasWidget {
         &mut self.config
     }
 
+    fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set_config(config, Config::Size(Size { w, h }));
+        eprintln!("Set size: {} {}", w, h);
+    }
+
     fn set_widget_id(&mut self, widget_id: i32) {
         self.widget_id = widget_id;
     }
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
-    }
-
-    fn set_size(&mut self, config: u8, w: i32, h: i32) {
-        self.set_config(config, Config::Size(Size { w, h }));
-        eprintln!("Set size: {} {}", w, h);
     }
 
     fn inject_system_event(&mut self) -> Option<CallbackEvent> {
