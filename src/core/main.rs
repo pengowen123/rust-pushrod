@@ -162,6 +162,7 @@ impl Pushrod {
         event_handler: &mut PushrodCallbackEvents,
         event: CallbackEvent,
     ) {
+        eprintln!("Handling system event: {:?}", event.clone());
         event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
     }
 

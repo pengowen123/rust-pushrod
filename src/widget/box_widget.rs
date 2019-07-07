@@ -28,6 +28,7 @@ use crate::core::callbacks::CallbackEvent::WidgetMoved;
 pub struct BoxWidget {
     config: Configurable,
     event_list: Vec<CallbackEvent>,
+    widget_id: i32,
 }
 
 impl BoxWidget {
@@ -36,6 +37,7 @@ impl BoxWidget {
         Self {
             config: Configurable::new(),
             event_list: vec![],
+            widget_id: 0,
         }
     }
 
@@ -74,6 +76,14 @@ impl Widget for BoxWidget {
     fn set_config(&mut self, config: u8, config_value: Config) {
         self.config().set(config, config_value);
         self.invalidate();
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn inject_system_event(&mut self) -> Option<CallbackEvent> {

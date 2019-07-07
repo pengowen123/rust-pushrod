@@ -30,12 +30,14 @@ pub struct WidgetContainer {
     /// The `Widget` being stored.
     pub widget: RefCell<Box<dyn Widget>>,
 
-    widget_name: String,
+    /// The name of the `Widget`.
+    pub widget_name: String,
 
     /// The `Widget`'s automatically assigned ID.
     pub widget_id: i32,
 
-    parent_id: i32,
+    /// The `Widget`'s parent ID.
+    pub parent_id: i32,
 }
 
 pub struct LayoutManagerContainer {
@@ -94,8 +96,11 @@ impl WidgetStore {
     }
 
     /// Adds a `Widget` to the stack by name.
-    pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
+    pub fn add_widget(&mut self, name: &str, mut widget: Box<dyn Widget>) -> i32 {
         let widget_size = self.widgets.len() as i32;
+
+        widget.set_widget_id(widget_size);
+
         let container = WidgetContainer {
             widget: RefCell::new(widget),
             widget_name: String::from(name),
@@ -104,15 +109,19 @@ impl WidgetStore {
         };
 
         // #117 - assigns widget ID to itself
-        container
-            .widget
-            .borrow_mut()
-            .config()
-            .set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
 
         self.widgets.push(container);
 
         widget_size
+    }
+
+    fn set_parent_for_widget(&mut self, widget_id: i32, parent_id: i32) {
+        let mut container = self
+            .widgets
+            .get_mut(widget_id as usize)
+            .unwrap();
+
+        container.parent_id = parent_id;
     }
 
     /// Adds a `Widget` object to the parent specified by ID.
@@ -122,25 +131,49 @@ impl WidgetStore {
         widget: Box<dyn Widget>,
         parent_id: i32,
     ) -> i32 {
-        // TODO Validate parent_id
-        let widget_size = self.widgets.len() as i32;
-        let container = WidgetContainer {
-            widget: RefCell::new(widget),
-            widget_name: String::from(name),
-            widget_id: widget_size,
-            parent_id,
-        };
+        let widget_id = self.add_widget(name, widget);
 
-        // #117 - assigns widget ID to itself
-        container
-            .widget
+        self.set_parent_for_widget(widget_id, parent_id);
+
+        widget_id
+    }
+
+    fn get_layout_manager_widget_id(&mut self, manager_id: i32) -> i32 {
+        let layout_container = self.layout_managers[manager_id as usize].layout_manager.borrow_mut();
+
+        layout_container.get_widget_id()
+    }
+
+    pub fn add_widget_to_layout_manager(
+        &mut self,
+        name: &str,
+        widget: Box<dyn Widget>,
+        manager_id: i32,
+        position: Point,
+    ) -> i32 {
+        let widget_id = self.add_widget(name, widget);
+
+        eprintln!("Added widget ID: id={}", widget_id);
+
+        let layout_widget_id = self.get_layout_manager_widget_id(manager_id);
+
+        self.set_parent_for_widget(widget_id, layout_widget_id);
+
+        eprintln!(
+            "Add to layout manager: widget id={}",
+            layout_widget_id
+        );
+
+        // Add to the widget_store with the widget_id and position
+        let layout_container = &self.layout_managers[manager_id as usize];
+
+        layout_container.widget_ids.borrow_mut().push(widget_id);
+        layout_container
+            .widget_positions
             .borrow_mut()
-            .config()
-            .set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
+            .push(position);
 
-        self.widgets.push(container);
-
-        widget_size
+        widget_id
     }
 
     /// Gets the parent of the child `Widget` by ID.  If the child has no assigned parent, the
@@ -358,54 +391,6 @@ impl WidgetStore {
         }
 
         eprintln!("Doing manager layout.");
-    }
-
-    pub fn add_widget_to_layout_manager(
-        &mut self,
-        name: &str,
-        widget: Box<dyn Widget>,
-        manager_id: i32,
-        position: Point,
-    ) -> i32 {
-        let layout_container = &self.layout_managers[manager_id as usize];
-        let layout_manager = layout_container.layout_manager.borrow();
-
-        // Get the layout manager's top level widget ID
-        let layout_manager_widget_id = layout_manager.get_widget_id();
-
-        eprintln!(
-            "Add to layout manager: widget id={}",
-            layout_manager_widget_id
-        );
-
-        // Add the widget to the ID of the layout manager by add_widget_to_parent(name, widget, manager_id_widget_id)
-        let widget_size = self.widgets.len() as i32;
-        let container = WidgetContainer {
-            widget: RefCell::new(widget),
-            widget_name: String::from(name),
-            widget_id: widget_size,
-            parent_id: layout_manager_widget_id,
-        };
-
-        // #117 - assigns widget ID to itself
-        container
-            .widget
-            .borrow_mut()
-            .config()
-            .set_numeric(CONFIG_WIDGET_ID, widget_size as u64);
-
-        self.widgets.push(container);
-
-        eprintln!("Added widget ID: id={}", widget_size);
-
-        // Add to the widget_store with the widget_id and position
-        layout_container.widget_ids.borrow_mut().push(widget_size);
-        layout_container
-            .widget_positions
-            .borrow_mut()
-            .push(position);
-
-        widget_size
     }
 
     pub fn resize_layout_managers(&mut self, _w: u32, _h: u32) {

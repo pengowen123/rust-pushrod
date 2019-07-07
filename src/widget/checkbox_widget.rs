@@ -34,6 +34,7 @@ pub struct CheckboxWidget {
     selected: bool,
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
+    widget_id: i32,
 }
 
 impl CheckboxWidget {
@@ -64,6 +65,7 @@ impl CheckboxWidget {
             selected,
             selected_widget,
             unselected_widget,
+            widget_id: 0,
         }
     }
 }
@@ -122,6 +124,14 @@ impl Widget for CheckboxWidget {
         }
 
         None
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {

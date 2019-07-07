@@ -85,6 +85,10 @@ pub trait Widget {
         self.set_config(config, Config::Toggle(flag));
     }
 
+    fn set_widget_id(&mut self, widget_id: i32);
+
+    fn get_widget_id(&mut self) -> i32;
+
     /// Custom handler to receive an event.  Any `Widget` that implements this does so to handle
     /// top-level GUI events, such as a mouse entering or exiting the bounds of this `Widget`.
     /// If the `injected` flag is set, it indicates that the event supplied was generate by
@@ -172,6 +176,7 @@ pub trait Widget {
 pub struct CanvasWidget {
     config: Configurable,
     event_list: Vec<CallbackEvent>,
+    widget_id: i32,
 }
 
 impl CanvasWidget {
@@ -179,6 +184,7 @@ impl CanvasWidget {
         Self {
             config: Configurable::new(),
             event_list: vec![],
+            widget_id: 0,
         }
     }
 }
@@ -186,6 +192,14 @@ impl CanvasWidget {
 impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 
     fn set_size(&mut self, config: u8, w: i32, h: i32) {

@@ -6,7 +6,8 @@
 - Added spacing rules to HorizontalLayoutManager
 - Added documentation to LayoutManager
 - Added system-wide event injection for PushrodCallbackEvents (#155)
-
+- Refactored add_widget so that there is only one entrant function to add a widget (#156)
+- All widgets modified to store their widget_id (#157)
 
 ## 0.3.5
 
