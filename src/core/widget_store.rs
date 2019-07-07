@@ -99,6 +99,7 @@ impl WidgetStore {
     pub fn add_widget(&mut self, name: &str, mut widget: Box<dyn Widget>) -> i32 {
         let widget_size = self.widgets.len() as i32;
 
+        // #117 - assigns widget ID to itself
         widget.set_widget_id(widget_size);
 
         let container = WidgetContainer {
@@ -107,8 +108,6 @@ impl WidgetStore {
             widget_id: widget_size,
             parent_id: 0,
         };
-
-        // #117 - assigns widget ID to itself
 
         self.widgets.push(container);
 
@@ -153,14 +152,14 @@ impl WidgetStore {
     ) -> i32 {
         let widget_id = self.add_widget(name, widget);
 
-        eprintln!("Added widget ID: id={}", widget_id);
+        eprintln!("[Add widget to layout manager] widget_id={}", widget_id);
 
         let layout_widget_id = self.get_layout_manager_widget_id(manager_id);
 
         self.set_parent_for_widget(widget_id, layout_widget_id);
 
         eprintln!(
-            "Add to layout manager: widget id={}",
+            "[Add widget to layout manager] layout_widget_id={}",
             layout_widget_id
         );
 
@@ -386,8 +385,10 @@ impl WidgetStore {
             let size: Size = adjusted_sizes.widget_sizes[x].clone();
             let mut widget = self.get_widget_for_id(widget_id).borrow_mut();
 
-            widget.config().set_point(CONFIG_ORIGIN, point.x, point.y);
-            widget.config().set_size(CONFIG_BODY_SIZE, size.w, size.h);
+            eprintln!("Resizing widget: id={}", widget.get_widget_id());
+
+            widget.set_point(CONFIG_ORIGIN, point.x, point.y);
+            widget.set_size(CONFIG_BODY_SIZE, size.w, size.h);
         }
 
         eprintln!("Doing manager layout.");

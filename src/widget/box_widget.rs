@@ -74,15 +74,27 @@ impl Widget for BoxWidget {
     }
 
     fn set_config(&mut self, config: u8, config_value: Config) {
+        eprintln!("Setting: {:?} {:?}", config, config_value);
         self.config().set(config, config_value);
         self.invalidate();
     }
 
+    fn set_size(&mut self, config: u8, w: i32, h: i32) {
+        self.set_config(config, Config::Size(Size { w, h }));
+        self.event_list.push(CallbackEvent::WidgetResized {
+            widget_id: self.widget_id.clone(),
+            size: Size { w, h }
+        });
+        eprintln!("Set size: {} {} {}", self.widget_id, w, h);
+    }
+
     fn set_widget_id(&mut self, widget_id: i32) {
         self.widget_id = widget_id;
+        eprintln!("[SET] Widget ID: {}", self.widget_id);
     }
 
     fn get_widget_id(&mut self) -> i32 {
+        eprintln!("[GET] Widget ID: {}", self.widget_id);
         self.widget_id
     }
 
