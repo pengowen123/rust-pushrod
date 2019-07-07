@@ -423,12 +423,144 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         //        }
     }
 
-    fn widget_moved(&mut self, _widget_id: i32, _point: Point, _widget_store: &mut WidgetStore) {
-        eprintln!("Widget moved: id={} point={:?}", _widget_id, _point);
+    fn widget_moved(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) {
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "BoxInLayoutWidget1" => {
+                eprintln!("Reposition text inside BoxInLayoutWidget1");
+
+                widget_store
+                    .get_widget_for_name("LeftJustifiedText")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 16, point.y + 10);
+
+                widget_store
+                    .get_widget_for_name("CenterJustifiedText")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 16, point.y + 100 - 24);
+
+                widget_store
+                    .get_widget_for_name("RightJustifiedText")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 16, point.y + 200 - 54);
+            }
+            "BoxInLayoutWidget2" => {
+                let layout_size = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget2")
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
+
+                eprintln!("Reposition text inside BoxInLayoutWidget2");
+
+                widget_store
+                    .get_widget_for_name("MiniBox1")
+                    .borrow_mut()
+                    .set_point(CONFIG_ORIGIN, point.x + 10, point.y + 10);
+
+                widget_store
+                    .get_widget_for_name("MiniBox2")
+                    .borrow_mut()
+                    .set_point(
+                        CONFIG_ORIGIN,
+                        point.x + (layout_size.w / 2) + 4,
+                        point.y + 10,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox3")
+                    .borrow_mut()
+                    .set_point(
+                        CONFIG_ORIGIN,
+                        point.x + 10,
+                        point.y + (layout_size.h / 2) + 4,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox4")
+                    .borrow_mut()
+                    .set_point(
+                        CONFIG_ORIGIN,
+                        point.x + (layout_size.w / 2) + 4,
+                        point.y + (layout_size.h / 2) + 4,
+                    );
+            }
+            _ => (),
+        }
     }
 
-    fn widget_resized(&mut self, _widget_id: i32, _size: Size, _widget_store: &mut WidgetStore) {
-        eprintln!("Widget sized: id={} size={:?}", _widget_id, _size);
+    fn widget_resized(&mut self, widget_id: i32, size: Size, widget_store: &mut WidgetStore) {
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "BoxInLayoutWidget1" => {
+                let layout_size = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget1")
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
+
+                eprintln!("Resize text inside BoxInLayoutWidget1: {:?}", layout_size);
+
+                widget_store
+                    .get_widget_for_name("LeftJustifiedText")
+                    .borrow_mut()
+                    .set_size(CONFIG_BODY_SIZE, layout_size.w - 32, 32);
+
+                widget_store
+                    .get_widget_for_name("CenterJustifiedText")
+                    .borrow_mut()
+                    .set_size(CONFIG_BODY_SIZE, layout_size.w - 32, 32);
+
+                widget_store
+                    .get_widget_for_name("RightJustifiedText")
+                    .borrow_mut()
+                    .set_size(CONFIG_BODY_SIZE, layout_size.w - 32, 32);
+            }
+            "BoxInLayoutWidget2" => {
+                let layout_size = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget2")
+                    .borrow_mut()
+                    .config()
+                    .get_size(CONFIG_BODY_SIZE);
+
+                eprintln!("Reposition text inside BoxInLayoutWidget2");
+
+                widget_store
+                    .get_widget_for_name("MiniBox1")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox2")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox3")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+
+                widget_store
+                    .get_widget_for_name("MiniBox4")
+                    .borrow_mut()
+                    .set_size(
+                        CONFIG_BODY_SIZE,
+                        (layout_size.w / 2) - 12,
+                        (layout_size.h / 2) - 12,
+                    );
+            }
+            _ => (),
+        }
     }
 }
 
@@ -485,7 +617,7 @@ impl SimpleWindow {
 
         base_widget.set_point(CONFIG_ORIGIN, 20, 70);
         base_widget.set_size(CONFIG_BODY_SIZE, 760, 200);
-        base_widget.set_color(CONFIG_MAIN_COLOR, [0.25, 0.50, 0.75, 1.0]);
+        base_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
 
         let base_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
             "MainContainerWidget",
@@ -515,7 +647,7 @@ impl SimpleWindow {
         box_widget.set_numeric(CONFIG_BORDER_WIDTH, 4);
         box_widget.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
         let box_widget_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
-            "BoxWidget1",
+            "BoxInLayoutWidget1",
             Box::new(box_widget),
             base_layout_id,
             make_origin_point(),
@@ -576,7 +708,7 @@ impl SimpleWindow {
         box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
         let box_1_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
-            "Box1",
+            "BoxInLayoutWidget2",
             Box::new(box_1),
             base_layout_id,
             make_origin_point(),
@@ -590,7 +722,7 @@ impl SimpleWindow {
         inner_box_1.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 1.0, 1.0]);
         self.pushrod
             .borrow_mut()
-            .add_widget_to_parent("Box2", Box::new(inner_box_1), box_1_id);
+            .add_widget_to_parent("MiniBox1", Box::new(inner_box_1), box_1_id);
 
         let mut inner_box_2 = BoxWidget::new();
         inner_box_2.set_point(CONFIG_ORIGIN, 585, 105);
@@ -600,7 +732,7 @@ impl SimpleWindow {
         inner_box_2.set_color(CONFIG_BORDER_COLOR, [1.0, 1.0, 0.0, 1.0]);
         self.pushrod
             .borrow_mut()
-            .add_widget_to_parent("Box3", Box::new(inner_box_2), box_1_id);
+            .add_widget_to_parent("MiniBox2", Box::new(inner_box_2), box_1_id);
 
         let mut inner_box_3 = BoxWidget::new();
         inner_box_3.set_point(CONFIG_ORIGIN, 505, 190);
@@ -610,7 +742,7 @@ impl SimpleWindow {
         inner_box_3.set_color(CONFIG_BORDER_COLOR, [1.0, 0.50, 1.0, 1.0]);
         self.pushrod
             .borrow_mut()
-            .add_widget_to_parent("Box4", Box::new(inner_box_3), box_1_id);
+            .add_widget_to_parent("MiniBox3", Box::new(inner_box_3), box_1_id);
 
         let mut inner_box_4 = BoxWidget::new();
         inner_box_4.set_point(CONFIG_ORIGIN, 585, 190);
@@ -620,7 +752,7 @@ impl SimpleWindow {
         inner_box_4.set_color(CONFIG_BORDER_COLOR, [0.50, 0.0, 0.25, 1.0]);
         self.pushrod
             .borrow_mut()
-            .add_widget_to_parent("Box5", Box::new(inner_box_4), box_1_id);
+            .add_widget_to_parent("MiniBox4", Box::new(inner_box_4), box_1_id);
     }
 
     //    fn add_base_widget(&mut self) {

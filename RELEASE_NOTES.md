@@ -9,6 +9,7 @@
 - Refactored add_widget so that there is only one entrant function to add a widget (#156)
 - All widgets modified to store their widget_id (#157)
 - Fixed bug with resizing during layout management code (bug found during testing)
+- Added resizing and repositioning of widgets after the layout completes to the demo
 
 ## 0.3.5
 

@@ -196,7 +196,24 @@ impl Widget for CanvasWidget {
 
     fn set_size(&mut self, config: u8, w: i32, h: i32) {
         self.set_config(config, Config::Size(Size { w, h }));
-        eprintln!("Set size: {} {}", w, h);
+
+        if self.widget_id != 0 {
+            self.event_list.push(CallbackEvent::WidgetResized {
+                widget_id: self.widget_id,
+                size: Size { w, h },
+            });
+        }
+    }
+
+    fn set_point(&mut self, config: u8, x: i32, y: i32) {
+        self.set_config(config, Config::Point(Point { x, y }));
+
+        if self.widget_id != 0 {
+            self.event_list.push(CallbackEvent::WidgetMoved {
+                widget_id: self.widget_id,
+                point: Point { x, y },
+            });
+        }
     }
 
     fn set_widget_id(&mut self, widget_id: i32) {
