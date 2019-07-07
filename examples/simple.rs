@@ -49,7 +49,10 @@ pub struct SimpleWindowEventHandler {
     animated: bool,
     progress: u16,
     red_value: i16,
-    red_direction: i16,
+    green_value: i16,
+    blue_value: i16,
+    color_direction: i16,
+    manipulated_color: i16,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
@@ -292,24 +295,55 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn timer_triggered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {
         match widget_store.get_name_for_widget_id(widget_id) {
             "HelloWorldTimer" => {
-                if self.red_direction == 1 {
-                    if self.red_value == 255 {
-                        self.red_direction = -1;
+                if self.manipulated_color == 1 {
+                    if self.color_direction == 1 {
+                        if self.red_value == 255 {
+                            self.color_direction = -1;
+                        }
+                    } else {
+                        if self.red_value == 0 {
+                            self.color_direction = 1;
+                            self.manipulated_color = 2;
+                        }
                     }
-                } else {
-                    if self.red_value == 0 {
-                        self.red_direction = 1;
-                    }
-                }
 
-                self.red_value += self.red_direction;
+                    self.red_value += self.color_direction;
+                } else if self.manipulated_color == 2 {
+                    if self.color_direction == 1 {
+                        if self.green_value == 255 {
+                            self.color_direction = -1;
+                        }
+                    } else {
+                        if self.green_value == 0 {
+                            self.color_direction = 1;
+                            self.manipulated_color = 3;
+                        }
+                    }
+
+                    self.green_value += self.color_direction;
+                } else if self.manipulated_color == 3 {
+                    if self.color_direction == 1 {
+                        if self.blue_value == 255 {
+                            self.color_direction = -1;
+                        }
+                    } else {
+                        if self.blue_value == 0 {
+                            self.color_direction = 1;
+                            self.manipulated_color = 1;
+                        }
+                    }
+
+                    self.blue_value += self.color_direction;
+                }
 
                 widget_store
                     .get_widget_for_name("TextWidget")
                     .borrow_mut()
                     .set_color(
                         CONFIG_TEXT_COLOR,
-                        [(self.red_value as f32 / 255.0), 0.0, 0.0, 1.0],
+                        [(self.red_value as f32 / 255.0),
+                            (self.green_value as f32 / 255.0),
+                            (self.blue_value as f32 / 255.0), 1.0],
                     );
             }
 
@@ -570,7 +604,10 @@ impl SimpleWindowEventHandler {
             animated: true,
             progress: 50,
             red_value: 0,
-            red_direction: 1,
+            green_value: 0,
+            blue_value: 0,
+            color_direction: 1,
+            manipulated_color: 1,
         }
     }
 }
