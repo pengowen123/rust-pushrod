@@ -16,7 +16,6 @@
 use graphics::*;
 use opengl_graphics::GlGraphics;
 
-use crate::core::callbacks::CallbackEvent::WidgetMoved;
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
 use crate::widget::config::*;

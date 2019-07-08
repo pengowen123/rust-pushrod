@@ -1,5 +1,11 @@
 # Pushrod Releases
 
+## 0.3.7
+
+- Simple code cleanup
+- Fixed HorizontalLayoutManager bug in repositioning when more than 2 objects
+- Added 3 objects to the HorizontalLayoutManager
+
 ## 0.3.6
 
 - Added padding rules to HorizontalLayoutManager

@@ -57,16 +57,103 @@ pub struct SimpleWindowEventHandler {
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
     fn widget_clicked(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) {
-        //        match button {
-        //            Button::Mouse(mouse_button) => {
-        //                if mouse_button != MouseButton::Left {
-        //                    return;
-        //                }
-        //            }
-        //            _ => (),
-        //        }
-        //
-        //        match widget_store.get_name_for_widget_id(widget_id) {
+        match button {
+            Button::Mouse(mouse_button) => {
+                if mouse_button != MouseButton::Left {
+                    return;
+                }
+            }
+            _ => (),
+        }
+
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "BoxInLayoutWidgetButton1" => {
+                let state = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget1")
+                    .borrow_mut()
+                    .config()
+                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+                let button_text = if state == true {
+                    String::from("Hide")
+                } else {
+                    String::from("Show")
+                };
+
+                widget_store
+                    .get_widget_for_name("BoxInLayoutWidgetButton1")
+                    .borrow_mut()
+                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+                widget_store
+                    .get_widget_for_name("BoxInLayoutWidget1")
+                    .borrow_mut()
+                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+
+                widget_store.invalidate_all_widgets();
+            },
+
+            "BoxInLayoutWidgetButton2" => {
+                let state = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget2")
+                    .borrow_mut()
+                    .config()
+                    .get_toggle(CONFIG_WIDGET_DISABLED);
+                let button_text = if state == true {
+                    String::from("Disable")
+                } else {
+                    String::from("Enable")
+                };
+
+                widget_store
+                    .get_widget_for_name("BoxInLayoutWidgetButton2")
+                    .borrow_mut()
+                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+                widget_store
+                    .get_widget_for_name("BoxInLayoutWidget2")
+                    .borrow_mut()
+                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+                widget_store
+                    .get_widget_for_name("MiniBox1")
+                    .borrow_mut()
+                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+                widget_store
+                    .get_widget_for_name("MiniBox2")
+                    .borrow_mut()
+                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+                widget_store
+                    .get_widget_for_name("MiniBox3")
+                    .borrow_mut()
+                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+                widget_store
+                    .get_widget_for_name("MiniBox4")
+                    .borrow_mut()
+                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+                widget_store.invalidate_all_widgets();
+            },
+
+            "BoxInLayoutWidgetButton3" => {
+                widget_store
+                    .get_widget_for_name("BoxInLayoutWidget3")
+                    .borrow_mut()
+                    .set_config(
+                        CONFIG_MAIN_COLOR,
+                        Config::Color([
+                            (rand::random::<u8>() as f32 / 255.0),
+                            (rand::random::<u8>() as f32 / 255.0),
+                            (rand::random::<u8>() as f32 / 255.0),
+                            1.0,
+                        ]),
+                    );
+            },
+            _ => (),
+        }
+
         //            "HideShowMainContainerWidgetButton" => {
         //                let main_container_widget_id =
         //                    widget_store.get_widget_id_for_name("MainContainerWidget");
@@ -132,39 +219,6 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         //                _ => (),
         //            },
         //
-        //            "HideButton1" => match button {
-        //                Button::Mouse(mouse_button) => {
-        //                    if mouse_button == MouseButton::Left {
-        //                        let state = widget_store
-        //                            .get_widget_for_name("BaseWidget1")
-        //                            .borrow_mut()
-        //                            .config()
-        //                            .get_toggle(CONFIG_WIDGET_HIDDEN);
-        //                        let button_text = if state == true {
-        //                            String::from("Hide")
-        //                        } else {
-        //                            String::from("Show")
-        //                        };
-        //
-        //                        widget_store
-        //                            .get_widget_for_name("HideButton1")
-        //                            .borrow_mut()
-        //                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-        //
-        //                        widget_store
-        //                            .get_widget_for_name("RandomColorButton1")
-        //                            .borrow_mut()
-        //                            .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-        //                        widget_store
-        //                            .get_widget_for_name("BaseWidget1")
-        //                            .borrow_mut()
-        //                            .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-        //
-        //                        widget_store.invalidate_all_widgets();
-        //                    }
-        //                }
-        //                _ => (),
-        //            },
         //
         //            "HideButton2" => match button {
         //                Button::Mouse(mouse_button) => {
@@ -254,39 +308,6 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         //                _ => (),
         //            },
         //
-        //            "DisableButton1" => match button {
-        //                Button::Mouse(mouse_button) => {
-        //                    if mouse_button == MouseButton::Left {
-        //                        let state = widget_store
-        //                            .get_widget_for_name("BaseWidget1")
-        //                            .borrow_mut()
-        //                            .config()
-        //                            .get_toggle(CONFIG_WIDGET_DISABLED);
-        //                        let button_text = if state == true {
-        //                            String::from("Disable")
-        //                        } else {
-        //                            String::from("Enable")
-        //                        };
-        //
-        //                        widget_store
-        //                            .get_widget_for_name("DisableButton1")
-        //                            .borrow_mut()
-        //                            .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-        //
-        //                        widget_store
-        //                            .get_widget_for_name("RandomColorButton1")
-        //                            .borrow_mut()
-        //                            .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-        //                        widget_store
-        //                            .get_widget_for_name("BaseWidget1")
-        //                            .borrow_mut()
-        //                            .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-        //
-        //                        widget_store.invalidate_all_widgets();
-        //                    }
-        //                }
-        //                _ => (),
-        //            },
         //
         //            _ => (),
         //        }
@@ -459,7 +480,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
     fn widget_moved(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) {
         match widget_store.get_name_for_widget_id(widget_id) {
-            "BoxInLayoutWidget1" => {
+            "BoxInLayoutWidget3" => {
                 eprintln!("Reposition text inside BoxInLayoutWidget1");
 
                 widget_store
@@ -476,9 +497,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .get_widget_for_name("RightJustifiedText")
                     .borrow_mut()
                     .set_point(CONFIG_ORIGIN, point.x + 16, point.y + 200 - 54);
-            }
-            "BoxInLayoutWidget2" => {
-                let layout_size = widget_store
+
+                let layout_size2 = widget_store
                     .get_widget_for_name("BoxInLayoutWidget2")
                     .borrow_mut()
                     .config()
@@ -486,18 +506,23 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
                 eprintln!("Reposition text inside BoxInLayoutWidget2");
 
+                let box2_point = widget_store.get_widget_for_name("BoxInLayoutWidget2")
+                    .borrow_mut()
+                    .config()
+                    .get_point(CONFIG_ORIGIN);
+
                 widget_store
                     .get_widget_for_name("MiniBox1")
                     .borrow_mut()
-                    .set_point(CONFIG_ORIGIN, point.x + 10, point.y + 10);
+                    .set_point(CONFIG_ORIGIN, box2_point.x + 10, box2_point.y + 10);
 
                 widget_store
                     .get_widget_for_name("MiniBox2")
                     .borrow_mut()
                     .set_point(
                         CONFIG_ORIGIN,
-                        point.x + (layout_size.w / 2) + 4,
-                        point.y + 10,
+                        box2_point.x + (layout_size2.w / 2) + 4,
+                        box2_point.y + 10,
                     );
 
                 widget_store
@@ -505,8 +530,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_point(
                         CONFIG_ORIGIN,
-                        point.x + 10,
-                        point.y + (layout_size.h / 2) + 4,
+                        box2_point.x + 10,
+                        box2_point.y + (layout_size2.h / 2) + 4,
                     );
 
                 widget_store
@@ -514,8 +539,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_point(
                         CONFIG_ORIGIN,
-                        point.x + (layout_size.w / 2) + 4,
-                        point.y + (layout_size.h / 2) + 4,
+                        box2_point.x + (layout_size2.w / 2) + 4,
+                        box2_point.y + (layout_size2.h / 2) + 4,
                     );
             }
             _ => (),
@@ -524,14 +549,14 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
     fn widget_resized(&mut self, widget_id: i32, size: Size, widget_store: &mut WidgetStore) {
         match widget_store.get_name_for_widget_id(widget_id) {
-            "BoxInLayoutWidget1" => {
+            "BoxInLayoutWidget3" => {
                 let layout_size = widget_store
                     .get_widget_for_name("BoxInLayoutWidget1")
                     .borrow_mut()
                     .config()
                     .get_size(CONFIG_BODY_SIZE);
 
-                eprintln!("Resize text inside BoxInLayoutWidget1: {:?}", layout_size);
+                eprintln!("Resize text inside BoxInLayoutWidget1");
 
                 widget_store
                     .get_widget_for_name("LeftJustifiedText")
@@ -547,23 +572,22 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .get_widget_for_name("RightJustifiedText")
                     .borrow_mut()
                     .set_size(CONFIG_BODY_SIZE, layout_size.w - 32, 32);
-            }
-            "BoxInLayoutWidget2" => {
-                let layout_size = widget_store
+
+                let layout_size2 = widget_store
                     .get_widget_for_name("BoxInLayoutWidget2")
                     .borrow_mut()
                     .config()
                     .get_size(CONFIG_BODY_SIZE);
 
-                eprintln!("Reposition text inside BoxInLayoutWidget2");
+                eprintln!("Resize boxes inside BoxInLayoutWidget2: {:?}", layout_size2);
 
                 widget_store
                     .get_widget_for_name("MiniBox1")
                     .borrow_mut()
                     .set_size(
                         CONFIG_BODY_SIZE,
-                        (layout_size.w / 2) - 12,
-                        (layout_size.h / 2) - 12,
+                        (layout_size2.w / 2) - 12,
+                        (layout_size2.h / 2) - 12,
                     );
 
                 widget_store
@@ -571,8 +595,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_size(
                         CONFIG_BODY_SIZE,
-                        (layout_size.w / 2) - 12,
-                        (layout_size.h / 2) - 12,
+                        (layout_size2.w / 2) - 12,
+                        (layout_size2.h / 2) - 12,
                     );
 
                 widget_store
@@ -580,8 +604,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_size(
                         CONFIG_BODY_SIZE,
-                        (layout_size.w / 2) - 12,
-                        (layout_size.h / 2) - 12,
+                        (layout_size2.w / 2) - 12,
+                        (layout_size2.h / 2) - 12,
                     );
 
                 widget_store
@@ -589,8 +613,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_size(
                         CONFIG_BODY_SIZE,
-                        (layout_size.w / 2) - 12,
-                        (layout_size.h / 2) - 12,
+                        (layout_size2.w / 2) - 12,
+                        (layout_size2.h / 2) - 12,
                     );
             }
             _ => (),
@@ -790,6 +814,109 @@ impl SimpleWindow {
         self.pushrod
             .borrow_mut()
             .add_widget_to_parent("MiniBox4", Box::new(inner_box_4), box_1_id);
+
+        let mut box_2 = BoxWidget::new();
+        box_2.set_point(CONFIG_ORIGIN, 480, 80);
+        box_2.set_size(CONFIG_BODY_SIZE, 200, 200);
+        box_2.set_color(CONFIG_MAIN_COLOR, [
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    1.0,
+                                ]);
+        box_2.set_numeric(CONFIG_BORDER_WIDTH, 1);
+        box_2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        let box_2_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "BoxInLayoutWidget3",
+            Box::new(box_2),
+            base_layout_id,
+            make_origin_point(),
+        );
+    }
+
+    fn add_horizontal_layout_buttons(&mut self) {
+        let mut base_widget: CanvasWidget = CanvasWidget::new();
+
+        base_widget.set_point(CONFIG_ORIGIN, 20, 270);
+        base_widget.set_size(CONFIG_BODY_SIZE, 760, 36);
+        base_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+
+        let base_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "HorizontalManagerWidget2",
+            Box::new(base_widget),
+        );
+
+        let base_layout_id =
+            self.pushrod
+                .borrow_mut()
+                .add_layout_manager(Box::new(HorizontalLayoutManager::new(
+                    base_widget_id,
+                    LayoutManagerPadding {
+                        top: 0,
+                        left: 4,
+                        right: 4,
+                        bottom: 4,
+                        spacing: 4,
+                    },
+                )));
+
+        let mut button1 = PushButtonWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Hide".to_string(),
+            18,
+            TextJustify::Center,
+        );
+        button1.set_point(CONFIG_ORIGIN, 30, 236);
+        button1.set_size(CONFIG_BODY_SIZE, 180, 32);
+        button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
+        self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "BoxInLayoutWidgetButton1",
+            Box::new(button1),
+            base_layout_id,
+            make_origin_point(),
+        );
+
+        let mut button3 = PushButtonWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Disable".to_string(),
+            18,
+            TextJustify::Center,
+        );
+        button3.set_point(CONFIG_ORIGIN, 30, 236);
+        button3.set_size(CONFIG_BODY_SIZE, 180, 32);
+        button3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button3.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button3.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
+        self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "BoxInLayoutWidgetButton2",
+            Box::new(button3),
+            base_layout_id,
+            make_origin_point(),
+        );
+
+        let mut button5 = PushButtonWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Randomize".to_string(),
+            18,
+            TextJustify::Center,
+        );
+        button5.set_point(CONFIG_ORIGIN, 30, 236);
+        button5.set_size(CONFIG_BODY_SIZE, 180, 32);
+        button5.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button5.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button5.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
+        self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "BoxInLayoutWidgetButton3",
+            Box::new(button5),
+            base_layout_id,
+            make_origin_point(),
+        );
     }
 
     //    fn add_base_widget(&mut self) {
@@ -1115,6 +1242,7 @@ impl SimpleWindow {
     fn build(&mut self) {
         self.add_hello_world();
         self.add_horizontal_layout();
+        self.add_horizontal_layout_buttons();
         //        self.add_base_widget();
         //        self.add_box_widgets();
         //        self.add_powered_by();
