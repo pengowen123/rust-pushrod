@@ -5,6 +5,9 @@
 - Simple code cleanup
 - Fixed HorizontalLayoutManager bug in repositioning when more than 2 objects
 - Added 3 objects to the HorizontalLayoutManager
+- Revamping the sample application to do a little more, now that it's got a better layout
+- Added VerticalLayoutManager (#59)
+- Modified sample application to include VerticalLayoutManager code
 
 ## 0.3.6
 

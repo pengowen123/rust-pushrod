@@ -39,6 +39,11 @@ pub mod drawing_texture;
 pub mod layout_manager;
 
 /// This provides a `HorizontalLayoutManager` object, which accepts `Widget` objects, and
-/// resizes and repositions them according to the width of the manager.
+/// resizes and repositions them according to the width of the manager.  `Widget`s are
+/// repositioned in the `HorizontalLayoutManager`'s top level widget equally.
 pub mod horizontal_layout_manager;
+
+/// This provides a `VerticalLayoutManager` object, which accepts `Widget` objects, and
+/// resizes and repositions them according to the height of the manager.  `Widget`s are
+/// repositioned in the `VerticalLayoutManager`'s top level widget equally.
 pub mod vertical_layout_manager;

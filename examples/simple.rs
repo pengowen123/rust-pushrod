@@ -25,6 +25,7 @@ use piston::window::*;
 
 use pushrod::core::callbacks::*;
 use pushrod::core::horizontal_layout_manager::*;
+use pushrod::core::vertical_layout_manager::*;
 use pushrod::core::layout_manager::LayoutManagerPadding;
 use pushrod::core::main::*;
 use pushrod::core::point::{make_origin_point, make_point_i32, Point, Size};
@@ -90,7 +91,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
 
                 widget_store.invalidate_all_widgets();
-            },
+            }
 
             "BoxInLayoutWidgetButton2" => {
                 let state = widget_store
@@ -135,7 +136,7 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .set_toggle(CONFIG_WIDGET_DISABLED, !state);
 
                 widget_store.invalidate_all_widgets();
-            },
+            }
 
             "BoxInLayoutWidgetButton3" => {
                 widget_store
@@ -150,7 +151,28 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                             1.0,
                         ]),
                     );
+            }
+
+            "RandomColorButton2" => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        widget_store
+                            .get_widget_for_name("ProgressWidget")
+                            .borrow_mut()
+                            .set_config(
+                                CONFIG_SECONDARY_COLOR,
+                                Config::Color([
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    (rand::random::<u8>() as f32 / 255.0),
+                                    1.0,
+                                ]),
+                            );
+                    }
+                }
+                _ => (),
             },
+
             _ => (),
         }
 
@@ -198,27 +220,6 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         //                }
         //                _ => (),
         //            },
-        //
-        //            "RandomColorButton2" => match button {
-        //                Button::Mouse(mouse_button) => {
-        //                    if mouse_button == MouseButton::Left {
-        //                        widget_store
-        //                            .get_widget_for_name("ProgressWidget")
-        //                            .borrow_mut()
-        //                            .set_config(
-        //                                CONFIG_SECONDARY_COLOR,
-        //                                Config::Color([
-        //                                    (rand::random::<u8>() as f32 / 255.0),
-        //                                    (rand::random::<u8>() as f32 / 255.0),
-        //                                    (rand::random::<u8>() as f32 / 255.0),
-        //                                    1.0,
-        //                                ]),
-        //                            );
-        //                    }
-        //                }
-        //                _ => (),
-        //            },
-        //
         //
         //            "HideButton2" => match button {
         //                Button::Mouse(mouse_button) => {
@@ -362,33 +363,37 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                     .borrow_mut()
                     .set_color(
                         CONFIG_TEXT_COLOR,
-                        [(self.red_value as f32 / 255.0),
+                        [
+                            (self.red_value as f32 / 255.0),
                             (self.green_value as f32 / 255.0),
-                            (self.blue_value as f32 / 255.0), 1.0],
+                            (self.blue_value as f32 / 255.0),
+                            1.0,
+                        ],
                     );
+            }
+
+            "TimerWidget1" => {
+                if self.animated {
+                    self.progress += 1;
+
+                    if self.progress > 100 {
+                        self.progress = 0;
+                    }
+
+                    widget_store
+                        .get_widget_for_name("ProgressWidget")
+                        .borrow_mut()
+                        .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
+
+                    widget_store
+                        .get_widget_for_name("ProgressText1")
+                        .borrow_mut()
+                        .set_text(CONFIG_DISPLAY_TEXT, format!("{} %", self.progress));
+                }
             }
 
             _ => {}
         };
-        //        if widget_store.get_name_for_widget_id(widget_id) == "TimerWidget1" {
-        //            if self.animated {
-        //                self.progress += 1;
-        //
-        //                if self.progress > 100 {
-        //                    self.progress = 0;
-        //                }
-        //
-        //                widget_store
-        //                    .get_widget_for_name("ProgressWidget")
-        //                    .borrow_mut()
-        //                    .set_config(CONFIG_PROGRESS, Config::Numeric(self.progress as u64));
-        //
-        //                widget_store
-        //                    .get_widget_for_name("ProgressText1")
-        //                    .borrow_mut()
-        //                    .set_text(CONFIG_DISPLAY_TEXT, format!("{} %", self.progress));
-        //            }
-        //        }
     }
 
     fn mouse_entered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {
@@ -434,11 +439,11 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         selected: bool,
         widget_store: &mut WidgetStore,
     ) {
-        //        match widget_store.get_name_for_widget_id(widget_id) {
-        //            "AnimateButton1" => {
-        //                self.animated = selected;
-        //            }
-        //
+        match widget_store.get_name_for_widget_id(widget_id) {
+            "AnimateButton1" => {
+                self.animated = selected;
+            }
+
         //            "DebugCheck1" => {
         //                widget_store
         //                    .get_widget_for_name("DebugText1")
@@ -474,8 +479,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         //                    .set_numeric(CONFIG_TIMER_TIMEOUT, 500);
         //            }
         //
-        //            _ => (),
-        //        }
+            _ => (),
+        }
     }
 
     fn widget_moved(&mut self, widget_id: i32, point: Point, widget_store: &mut WidgetStore) {
@@ -506,7 +511,8 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 
                 eprintln!("Reposition text inside BoxInLayoutWidget2");
 
-                let box2_point = widget_store.get_widget_for_name("BoxInLayoutWidget2")
+                let box2_point = widget_store
+                    .get_widget_for_name("BoxInLayoutWidget2")
                     .borrow_mut()
                     .config()
                     .get_point(CONFIG_ORIGIN);
@@ -818,12 +824,15 @@ impl SimpleWindow {
         let mut box_2 = BoxWidget::new();
         box_2.set_point(CONFIG_ORIGIN, 480, 80);
         box_2.set_size(CONFIG_BODY_SIZE, 200, 200);
-        box_2.set_color(CONFIG_MAIN_COLOR, [
-                                    (rand::random::<u8>() as f32 / 255.0),
-                                    (rand::random::<u8>() as f32 / 255.0),
-                                    (rand::random::<u8>() as f32 / 255.0),
-                                    1.0,
-                                ]);
+        box_2.set_color(
+            CONFIG_MAIN_COLOR,
+            [
+                (rand::random::<u8>() as f32 / 255.0),
+                (rand::random::<u8>() as f32 / 255.0),
+                (rand::random::<u8>() as f32 / 255.0),
+                1.0,
+            ],
+        );
         box_2.set_numeric(CONFIG_BORDER_WIDTH, 1);
         box_2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         let box_2_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
@@ -914,6 +923,106 @@ impl SimpleWindow {
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidgetButton3",
             Box::new(button5),
+            base_layout_id,
+            make_origin_point(),
+        );
+    }
+
+    fn add_vertical_layout(&mut self) {
+        let mut base_widget: CanvasWidget = CanvasWidget::new();
+
+        base_widget.set_point(CONFIG_ORIGIN, 20, 306);
+        base_widget.set_size(CONFIG_BODY_SIZE, 200, 150);
+        base_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+
+        let base_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "VerticalManagerWidget1",
+            Box::new(base_widget),
+        );
+
+        let base_layout_id =
+            self.pushrod
+                .borrow_mut()
+                .add_layout_manager(Box::new(VerticalLayoutManager::new(
+                    base_widget_id,
+                    LayoutManagerPadding {
+                        top: 4,
+                        left: 4,
+                        right: 4,
+                        bottom: 4,
+                        spacing: 2,
+                    },
+                )));
+
+        let mut progress_widget = ProgressWidget::new();
+
+        progress_widget.set_point(CONFIG_ORIGIN, 20, 360);
+        progress_widget.set_size(CONFIG_BODY_SIZE, 230, 32);
+        progress_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+        progress_widget.set_color(CONFIG_SECONDARY_COLOR, [0.5, 0.5, 0.5, 1.0]);
+        progress_widget.set_numeric(CONFIG_PROGRESS, 50);
+        self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "ProgressWidget",
+            Box::new(progress_widget),
+            base_layout_id,
+            make_origin_point(),
+        );
+
+        let mut progress_text = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "50%".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        progress_text.set_point(CONFIG_ORIGIN, 260, 360);
+        progress_text.set_size(CONFIG_BODY_SIZE, 50, 32);
+        progress_text.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "ProgressText1",
+            Box::new(progress_text),
+            base_layout_id,
+            make_origin_point(),
+        );
+
+        let mut button1 = ToggleButtonWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Animate".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button1.set_point(CONFIG_ORIGIN, 340, 360);
+        button1.set_size(CONFIG_BODY_SIZE, 160, 32);
+        button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.set_toggle(CONFIG_SELECTED, true);
+
+        self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "AnimateButton1",
+            Box::new(button1),
+            base_layout_id,
+            make_origin_point(),
+        );
+
+        let mut button2 = PushButtonWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "Randomize".to_string(),
+            18,
+            TextJustify::Center,
+        );
+
+        button2.set_point(CONFIG_ORIGIN, 520, 360);
+        button2.set_size(CONFIG_BODY_SIZE, 160, 32);
+        button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
+        button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+
+        self.pushrod.borrow_mut().add_widget_to_layout_manager(
+            "RandomColorButton2",
+            Box::new(button2),
             base_layout_id,
             make_origin_point(),
         );
@@ -1053,19 +1162,6 @@ impl SimpleWindow {
     //    }
     //
     //    fn add_progress(&mut self) {
-    //        let mut progress_widget = ProgressWidget::new();
-    //
-    //        progress_widget.set_point(CONFIG_ORIGIN, 20, 360);
-    //        progress_widget.set_size(CONFIG_BODY_SIZE, 230, 32);
-    //        progress_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
-    //        progress_widget.set_color(CONFIG_SECONDARY_COLOR, [0.5, 0.5, 0.5, 1.0]);
-    //        progress_widget.set_numeric(CONFIG_PROGRESS, 50);
-    //        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-    //            "MainContainerWidget",
-    //            "ProgressWidget",
-    //            Box::new(progress_widget),
-    //        );
-    //
     //        let mut radio_1 = RadioButtonWidget::new(
     //            "assets/OpenSans-Regular.ttf".to_string(),
     //            "1".to_string(),
@@ -1122,75 +1218,20 @@ impl SimpleWindow {
     //            "Radio3",
     //            Box::new(radio_3),
     //        );
-    //
-    //        let mut progress_text = TextWidget::new(
-    //            "assets/OpenSans-Regular.ttf".to_string(),
-    //            "50%".to_string(),
-    //            18,
-    //            TextJustify::Left,
-    //        );
-    //
-    //        progress_text.set_point(CONFIG_ORIGIN, 260, 360);
-    //        progress_text.set_size(CONFIG_BODY_SIZE, 50, 32);
-    //        progress_text.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-    //            "MainContainerWidget",
-    //            "ProgressText1",
-    //            Box::new(progress_text),
-    //        );
-    //
-    //        let mut button1 = ToggleButtonWidget::new(
-    //            "assets/OpenSans-Regular.ttf".to_string(),
-    //            "Animate".to_string(),
-    //            18,
-    //            TextJustify::Center,
-    //        );
-    //
-    //        button1.set_point(CONFIG_ORIGIN, 340, 360);
-    //        button1.set_size(CONFIG_BODY_SIZE, 160, 32);
-    //        button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //        button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
-    //        button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //        button1.set_toggle(CONFIG_SELECTED, true);
-    //
-    //        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-    //            "MainContainerWidget",
-    //            "AnimateButton1",
-    //            Box::new(button1),
-    //        );
-    //
-    //        let mut button2 = PushButtonWidget::new(
-    //            "assets/OpenSans-Regular.ttf".to_string(),
-    //            "Randomize".to_string(),
-    //            18,
-    //            TextJustify::Center,
-    //        );
-    //
-    //        button2.set_point(CONFIG_ORIGIN, 520, 360);
-    //        button2.set_size(CONFIG_BODY_SIZE, 160, 32);
-    //        button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //        button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
-    //        button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-    //
-    //        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-    //            "MainContainerWidget",
-    //            "RandomColorButton2",
-    //            Box::new(button2),
-    //        );
     //    }
-    //
-    //    fn add_timer(&mut self) {
-    //        let mut timer = TimerWidget::new();
-    //
-    //        timer.set_numeric(CONFIG_TIMER_TIMEOUT, 100);
-    //        timer.set_toggle(CONFIG_TIMER_ENABLED, true);
-    //        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
-    //            "MainContainerWidget",
-    //            "TimerWidget1",
-    //            Box::new(timer),
-    //        );
-    //    }
-    //
+
+    fn add_timer(&mut self) {
+        let mut timer = TimerWidget::new();
+
+        timer.set_numeric(CONFIG_TIMER_TIMEOUT, 100);
+        timer.set_toggle(CONFIG_TIMER_ENABLED, true);
+        self.pushrod.borrow_mut().add_widget_to_parent_by_name(
+            "MainContainerWidget",
+            "TimerWidget1",
+            Box::new(timer),
+        );
+    }
+
     //    fn add_debugging(&mut self) {
     //        let mut check_widget = CheckboxWidget::new(
     //            "assets/OpenSans-Regular.ttf".to_string(),
@@ -1243,11 +1284,12 @@ impl SimpleWindow {
         self.add_hello_world();
         self.add_horizontal_layout();
         self.add_horizontal_layout_buttons();
+        self.add_vertical_layout();
         //        self.add_base_widget();
         //        self.add_box_widgets();
         //        self.add_powered_by();
         //        self.add_progress();
-        //        self.add_timer();
+        self.add_timer();
         //        self.add_debugging();
     }
 
