@@ -8,6 +8,7 @@
 - Revamping the sample application to do a little more, now that it's got a better layout
 - Added VerticalLayoutManager (#59)
 - Modified sample application to include VerticalLayoutManager code
+- Updated sample application code, now finished for 0.3.x
 
 ## 0.3.6
 
