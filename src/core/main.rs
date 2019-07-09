@@ -183,7 +183,7 @@ impl Pushrod {
     }
 
     fn get_system_events_list(&mut self) -> Vec<CallbackEvent> {
-        let mut widgets = &mut self.widget_store.borrow_mut().widgets;
+        let widgets = &self.widget_store.borrow().widgets;
         let mut return_list = vec![];
 
         for widget in widgets {
@@ -223,7 +223,7 @@ impl Pushrod {
         self.rebuild_gl_buffers();
 
         while let Some(ref event) = self.events.next(&mut self.window) {
-            let mut events_list = self.get_system_events_list();
+            let events_list = self.get_system_events_list();
 
             for event in events_list {
                 self.handle_system_event(event_handler, event.clone());

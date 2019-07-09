@@ -46,9 +46,9 @@ impl LayoutManager for HorizontalLayoutManager {
 
         for x in 0..num_widgets {
             if x == 0 {
-                current_x += self.padding.left + width_per_widget * x;
+                current_x = self.padding.left + origin.x;
             } else {
-                current_x += width_per_widget * x + (self.padding.spacing / 2);
+                current_x += width_per_widget + (self.padding.spacing / 2);
             }
 
             widget_origins.push(Point {

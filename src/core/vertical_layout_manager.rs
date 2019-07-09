@@ -18,12 +18,14 @@ use crate::core::point::{Point, Size};
 
 pub struct VerticalLayoutManager {
     container_widget_id: i32,
+    padding: LayoutManagerPadding,
 }
 
 impl VerticalLayoutManager {
-    pub fn new(widget_id: i32) -> Self {
+    pub fn new(widget_id: i32, padding: LayoutManagerPadding) -> Self {
         Self {
             container_widget_id: widget_id,
+            padding,
         }
     }
 }
@@ -31,11 +33,49 @@ impl VerticalLayoutManager {
 impl LayoutManager for VerticalLayoutManager {
     fn do_layout(
         &mut self,
-        _origin: Point,
-        _size: Size,
+        origin: Point,
+        size: Size,
         coordinates: LayoutManagerCoordinates,
     ) -> LayoutManagerCoordinates {
-        coordinates
+        let num_widgets = coordinates.widget_sizes.len() as i32;
+        let height_per_widget = (size.h / num_widgets) - (self.padding.spacing / 2);
+        let mut widget_origins: Vec<Point> = vec![];
+        let mut widget_sizes: Vec<Size> = vec![];
+        let current_x: i32 = origin.x;
+        let mut current_y: i32 = origin.y;
+
+        for x in 0..num_widgets {
+            if x == 0 {
+                current_y = self.padding.top + origin.y;
+            } else {
+                current_y += height_per_widget + (self.padding.spacing / 2);
+            }
+
+            widget_origins.push(Point {
+                x: current_x + self.padding.left,
+                y: current_y,
+            });
+
+            if x == num_widgets - 1 {
+                widget_sizes.push(Size {
+                    w: size.w - (self.padding.left + self.padding.right),
+                    h: height_per_widget
+                        - self.padding.bottom,
+                });
+            } else {
+                widget_sizes.push(Size {
+                    w: size.w - (self.padding.left + self.padding.right),
+                    h: height_per_widget
+                        - (self.padding.spacing / 2),
+                });
+            }
+        }
+
+        LayoutManagerCoordinates {
+            widget_origins: widget_origins.clone(),
+            widget_sizes: widget_sizes.clone(),
+            widget_positions: coordinates.widget_positions.clone(),
+        }
     }
 
     fn get_widget_id(&self) -> i32 {
