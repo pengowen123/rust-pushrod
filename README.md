@@ -14,6 +14,33 @@ Draws inspiration from lots of GUI libraries.
 
 [![](docs/sample-0.3.7.png)](docs/sample-0.3.7.png)
 
+## 0.4.x Status
+
+- [ ] New traits for optimization: `Drawable`, `InjectableSystemEvents` and `InjectCustomEvents`
+- [ ] Widget offset updates (adding a child origin based on parent)
+- [ ] Optimizations to screen invalidation
+- [ ] Optimizations to drawing (every object is a 3D texture, not just blitting to a master texture)
+- [ ] Layout Manager optimizations (call `do_update` at the end of layout)
+- [ ] `PageWidget`: page controller to contain and swap displays of different pages of containers
+- [ ] `GridLayoutContainer`: layout objects equally sized in a grid
+- [ ] `ToolboxWidget`: layout that displays clickable images and captioned text
+- [ ] `HorizontalSpaceWidget`: horizontal spacer for layout containers
+- [ ] `VerticalSpaceWidget`: vertical spacer for layout containers
+- [ ] `DropdownMenuWidget`: displays a dropdown menu with selectable items in a list
+- [ ] `SplitContainerWidget`: splits two displays horizontally or vertically by a resizable spacer
+- [ ] `GridWidget`: displays a grid (either by lines or dots) evenly spaced by a grid snap offset
+- [ ] `TabWidget`: displays a series of tabs that can be used with the `PageWidget` to control page switching
+- [ ] `PopupMenuWidget`: displays a dropdown menu anywhere on the screen based on the mouse offset
+- [ ] `Viewport`: container that is larger than the screen that can be repositioned
+- [ ] `SliderWidget`: displays a slideable box in a bounding box, allowing for content to be scrolled
+- [ ] `MenuBar`: creates a menu bar at the top of the window that can be used to interact with the app
+- [ ] Layout for dialog boxes and/or form displays
+- [ ] Modal Alert box either by a new window or by a static modal dialog box that disables the top-level container
+- [ ] (De)serialization library for widgets to file
+- [ ] Modification of main application to use (de)serialization for layout
+
+Please (see here)[https://github.com/KenSuenobu/rust-pushrod/milestone/5] for more details on issues.
+
 ## Philosophy
 
 The reason I created this library instead of extending another library was that
@@ -52,14 +79,6 @@ So, is it worth it to add OpenGL?  I'll let you decide.
 
 You should use `brew` on your system.  If you have Homebrew already installed, use `brew install glfw` to 
 install the `GLFW` formula.
-
-### Pre-requisite for Linux
-
-... TBD ...
-
-### Pre-requisite for Windows
-
-... TBD ...
 
 ## After installing pre-requisites:
 
