@@ -39,7 +39,7 @@ Draws inspiration from lots of GUI libraries.
 - [ ] (De)serialization library for widgets to file
 - [ ] Modification of main application to use (de)serialization for layout
 
-Please (see here)[https://github.com/KenSuenobu/rust-pushrod/milestone/5] for more details on issues.
+Please [see here](https://github.com/KenSuenobu/rust-pushrod/milestone/5) for more details on issues.
 
 ## Philosophy
 
