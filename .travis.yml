@@ -5,5 +5,5 @@ os:
   - osx
 cache: cargo
 script:
-  - cargo build --tests
+  - sh scripts/travis-build.sh
 
