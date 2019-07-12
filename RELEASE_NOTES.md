@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.4.0
+
+- Fixed build to build properly on Linux and OS X in TravisCI. (#159)
+
 ## 0.3.7
 
 - Simple code cleanup
