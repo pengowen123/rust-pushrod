@@ -4,7 +4,6 @@
 
 if [ "$TRAVIS_OS_NAME" = "osx" ]; then
   echo "Special build rules for OS X here"
-  brew update
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
@@ -15,3 +14,4 @@ fi
 echo "Building Pushrod"
 
 cargo build --tests
+
