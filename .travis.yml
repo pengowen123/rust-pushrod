@@ -4,6 +4,7 @@ rust:
 os:
   - linux
   - osx
+dist: trusty
 cache: cargo
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sh scripts/travis/setup-osx.sh; fi
