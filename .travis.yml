@@ -7,7 +7,6 @@ os:
 dist: trusty
 cache: cargo
 before_install:
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sh scripts/travis/setup-osx.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sh scripts/travis/setup-linux.sh; fi
 script:
   - cargo build --tests
