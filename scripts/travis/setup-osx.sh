@@ -2,4 +2,4 @@
 #
 # Build script for Travis CI on Mac
 
-
+brew update
