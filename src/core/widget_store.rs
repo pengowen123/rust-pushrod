@@ -480,22 +480,24 @@ impl WidgetStore {
                     .get_drawable()
                     .draw(new_context, g, &c.draw_state);
 
-//                &paint_widget
-//                    .widget
-//                    .borrow_mut()
-//                    .draw(new_context, g, &c.draw_state);
-//
-//                if paint_widget
-//                    .widget
-//                    .borrow_mut()
-//                    .config()
-//                    .get_toggle(CONFIG_WIDGET_DISABLED)
-//                {
-//                    &paint_widget
-//                        .widget
-//                        .borrow_mut()
-//                        .draw_disabled(new_context, g, &c.draw_state);
-//                }
+                if paint_widget
+                    .widget
+                    .borrow_mut()
+                    .config()
+                    .get_toggle(CONFIG_WIDGET_DISABLED)
+                {
+                    let size: Size = paint_widget
+                        .widget
+                        .borrow_mut()
+                        .config()
+                        .get_size(CONFIG_BODY_SIZE);
+
+                    &paint_widget
+                        .widget
+                        .borrow_mut()
+                        .get_drawable()
+                        .draw_disabled(new_context, size, g, &c.draw_state);
+                }
             }
 
             if parents_of_widget[pos] != widget_id {
