@@ -70,7 +70,7 @@ impl TimerWidget {
     }
 }
 
-impl Drawable for TimerWidget { }
+impl Drawable for TimerWidget {}
 
 impl Widget for TimerWidget {
     fn config(&mut self) -> &mut Configurable {

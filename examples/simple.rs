@@ -25,10 +25,10 @@ use piston::window::*;
 
 use pushrod::core::callbacks::*;
 use pushrod::core::horizontal_layout_manager::*;
-use pushrod::core::vertical_layout_manager::*;
 use pushrod::core::layout_manager::LayoutManagerPadding;
 use pushrod::core::main::*;
 use pushrod::core::point::{make_origin_point, Point, Size};
+use pushrod::core::vertical_layout_manager::*;
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
 use pushrod::widget::checkbox_widget::*;

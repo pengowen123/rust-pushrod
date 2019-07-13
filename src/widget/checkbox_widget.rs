@@ -91,9 +91,12 @@ impl Drawable for CheckboxWidget {
                 .get_drawable()
                 .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
         } else {
-            self.unselected_widget
-                .get_drawable()
-                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
+            self.unselected_widget.get_drawable().draw_with_offset(
+                c,
+                g,
+                &clip,
+                Point { x: 0, y: 0 },
+            );
         }
 
         self.text_widget

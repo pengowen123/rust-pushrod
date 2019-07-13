@@ -458,7 +458,7 @@ impl WidgetStore {
                 .borrow_mut()
                 .config()
                 .get_toggle(CONFIG_WIDGET_HIDDEN);
-            let is_invalidated = *&paint_widget.widget.borrow_mut().is_invalidated();
+            let is_invalidated = paint_widget.widget.borrow_mut().is_invalidated();
 
             if !is_hidden && is_invalidated {
                 let origin: Point = paint_widget
@@ -474,11 +474,11 @@ impl WidgetStore {
                     draw_state: c.draw_state,
                 };
 
-                &paint_widget
-                    .widget
-                    .borrow_mut()
-                    .get_drawable()
-                    .draw(new_context, g, &c.draw_state);
+                &paint_widget.widget.borrow_mut().get_drawable().draw(
+                    new_context,
+                    g,
+                    &c.draw_state,
+                );
 
                 if paint_widget
                     .widget

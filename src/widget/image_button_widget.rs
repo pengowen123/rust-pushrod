@@ -98,9 +98,7 @@ impl Drawable for ImageButtonWidget {
         self.image_widget
             .get_drawable()
             .draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
-        self.text_widget
-            .get_drawable()
-            .draw_with_offset(
+        self.text_widget.get_drawable().draw_with_offset(
             c,
             g,
             &clip,
