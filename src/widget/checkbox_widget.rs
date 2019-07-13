@@ -86,16 +86,19 @@ impl Drawable for CheckboxWidget {
             c.transform,
         );
 
-//        if self.selected {
-//            self.selected_widget
-//                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
-//        } else {
-//            self.unselected_widget
-//                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
-//        }
-//
-//        self.text_widget
-//            .draw_with_offset(c, g, &clip, Point { x: 38, y: 0 });
+        if self.selected {
+            self.selected_widget
+                .get_drawable()
+                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
+        } else {
+            self.unselected_widget
+                .get_drawable()
+                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
+        }
+
+        self.text_widget
+            .get_drawable()
+            .draw_with_offset(c, g, &clip, Point { x: 38, y: 0 });
 
         // Then clear invalidation.
         self.clear_invalidate();

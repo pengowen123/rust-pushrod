@@ -94,17 +94,21 @@ impl Drawable for ImageButtonWidget {
         );
 
         self.base_widget.draw(c, g, &clip);
-//        self.image_widget
-//            .draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
-//        self.text_widget.draw_with_offset(
-//            c,
-//            g,
-//            &clip,
-//            Point {
-//                x: size.h + border + 4,
-//                y: 0,
-//            },
-//        );
+
+        self.image_widget
+            .get_drawable()
+            .draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
+        self.text_widget
+            .get_drawable()
+            .draw_with_offset(
+            c,
+            g,
+            &clip,
+            Point {
+                x: size.h + border + 4,
+                y: 0,
+            },
+        );
 
         // Then clear invalidation.
         self.clear_invalidate();
