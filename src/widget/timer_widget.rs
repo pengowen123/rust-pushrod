@@ -70,6 +70,8 @@ impl TimerWidget {
     }
 }
 
+impl Drawable for TimerWidget { }
+
 impl Widget for TimerWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -100,8 +102,8 @@ impl Widget for TimerWidget {
         self.widget_id
     }
 
-    fn get_drawable(&mut self) -> Option<&dyn Drawable> {
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
         self.tick();
-        None
+        self
     }
 }

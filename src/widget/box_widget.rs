@@ -124,4 +124,8 @@ impl Widget for BoxWidget {
     fn inject_system_event(&mut self) -> Option<CallbackEvent> {
         self.event_list.pop().clone()
     }
+
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
+    }
 }

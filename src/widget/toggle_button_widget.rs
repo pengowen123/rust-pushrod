@@ -88,6 +88,18 @@ impl ToggleButtonWidget {
     }
 }
 
+impl Drawable for ToggleButtonWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
+        // Invalidation is controlled by the top level widget (this box).
+        self.base_widget.draw(c, g, &clip);
+        self.text_widget.draw(c, g, &clip);
+
+        // Then clear invalidation.
+        self.clear_invalidate();
+    }
+}
+
 impl Widget for ToggleButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -178,14 +190,8 @@ impl Widget for ToggleButtonWidget {
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
     }
-//
-//    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-//        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
-//        // Invalidation is controlled by the top level widget (this box).
-//        self.base_widget.draw(c, g, &clip);
-//        self.text_widget.draw(c, g, &clip);
-//
-//        // Then clear invalidation.
-//        self.clear_invalidate();
-//    }
+
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
+    }
 }

@@ -104,4 +104,8 @@ impl Widget for ProgressWidget {
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
     }
+
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
+    }
 }

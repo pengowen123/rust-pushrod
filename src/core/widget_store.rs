@@ -474,6 +474,12 @@ impl WidgetStore {
                     draw_state: c.draw_state,
                 };
 
+                &paint_widget
+                    .widget
+                    .borrow_mut()
+                    .get_drawable()
+                    .draw(new_context, g, &c.draw_state);
+
 //                &paint_widget
 //                    .widget
 //                    .borrow_mut()
