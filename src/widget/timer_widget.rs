@@ -100,7 +100,8 @@ impl Widget for TimerWidget {
         self.widget_id
     }
 
-    fn draw(&mut self, _context: Context, _graphics: &mut GlGraphics, _clip: &DrawState) {
+    fn get_drawable(&mut self) -> Option<&dyn Drawable> {
         self.tick();
+        None
     }
 }

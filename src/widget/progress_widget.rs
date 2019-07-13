@@ -51,25 +51,7 @@ impl ProgressWidget {
     }
 }
 
-impl Widget for ProgressWidget {
-    fn config(&mut self) -> &mut Configurable {
-        &mut self.config
-    }
-
-    fn set_config(&mut self, config: u8, config_value: Config) {
-        self.config().set(config, config_value.clone());
-        self.base_widget.config().set(config, config_value.clone());
-        self.invalidate();
-    }
-
-    fn set_widget_id(&mut self, widget_id: i32) {
-        self.widget_id = widget_id;
-    }
-
-    fn get_widget_id(&mut self) -> i32 {
-        self.widget_id
-    }
-
+impl Drawable for ProgressWidget {
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
 
@@ -101,5 +83,25 @@ impl Widget for ProgressWidget {
 
         // Then clear invalidation.
         self.clear_invalidate();
+    }
+}
+
+impl Widget for ProgressWidget {
+    fn config(&mut self) -> &mut Configurable {
+        &mut self.config
+    }
+
+    fn set_config(&mut self, config: u8, config_value: Config) {
+        self.config().set(config, config_value.clone());
+        self.base_widget.config().set(config, config_value.clone());
+        self.invalidate();
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 }

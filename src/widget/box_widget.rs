@@ -67,6 +67,16 @@ impl BoxWidget {
     }
 }
 
+impl Drawable for BoxWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        // Paint the box.
+        self.draw_box(c, g, &clip);
+
+        // Then clear invalidation.
+        self.clear_invalidate();
+    }
+}
+
 impl Widget for BoxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -113,13 +123,5 @@ impl Widget for BoxWidget {
 
     fn inject_system_event(&mut self) -> Option<CallbackEvent> {
         self.event_list.pop().clone()
-    }
-
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        // Paint the box.
-        self.draw_box(c, g, &clip);
-
-        // Then clear invalidation.
-        self.clear_invalidate();
     }
 }

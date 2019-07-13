@@ -19,6 +19,47 @@ use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
 use crate::widget::config::*;
 
+pub trait Drawable {
+    /// Draws the `Widget`'s contents.  Only gets called if the `Widget` is in invalidated
+    /// state.  Provides a modified `Context` object that has an origin of `0x0` in drawing
+    /// space for the draw routine.  Also provides a `mut G2d` object against which to draw,
+    /// and a `clip`, which is automatically set to provide a clipping area for the `Widget`.  If
+    /// the `Widget` draws outside of the clipped bounds, that will not be drawn on the
+    /// screen.
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState);
+
+//    /// Internal method that is used to draw a box around the `Widget` when in disabled state.
+//    /// You can override this method, should you choose to, so that the disabled state appears
+//    /// differently in your application.  It is safe to leave this alone.
+//    fn draw_disabled(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+//        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
+//
+//        g.rectangle(
+//            &Rectangle::new([0.0, 0.0, 0.0, 0.8]),
+//            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+//            clip,
+//            c.transform,
+//        );
+//    }
+//
+//    /// Draws an object at an offset on the screen.  This is a convenience method that is used
+//    /// by other `Widget`s that contain multiple widgets.  (See `CheckboxWidget` and
+//    /// `ImageButtonWidget` for good examples of this use.)
+//    fn draw_with_offset(
+//        &mut self,
+//        c: Context,
+//        g: &mut GlGraphics,
+//        clip: &DrawState,
+//        point_offset: Point,
+//    ) {
+//        self.draw(
+//            c.trans(point_offset.x as f64, point_offset.y as f64),
+//            g,
+//            clip,
+//        );
+//    }
+}
+
 /// Master level trait object for describing a `Widget`.  A `Widget` is a GUI element that can
 /// be interacted with and can receive and generate events.
 pub trait Widget {
@@ -120,54 +161,11 @@ pub trait Widget {
         false
     }
 
-    /// Draws the `Widget`'s contents.  Only gets called if the `Widget` is in invalidated
-    /// state.  Provides a modified `Context` object that has an origin of `0x0` in drawing
-    /// space for the draw routine.  Also provides a `mut G2d` object against which to draw,
-    /// and a `clip`, which is automatically set to provide a clipping area for the `Widget`.  If
-    /// the `Widget` draws outside of the clipped bounds, that will not be drawn on the
-    /// screen.
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
-
-        g.rectangle(
-            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
-            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
-            clip,
-            c.transform,
-        );
-
-        self.clear_invalidate();
-    }
-
-    /// Internal method that is used to draw a box around the `Widget` when in disabled state.
-    /// You can override this method, should you choose to, so that the disabled state appears
-    /// differently in your application.  It is safe to leave this alone.
-    fn draw_disabled(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
-
-        g.rectangle(
-            &Rectangle::new([0.0, 0.0, 0.0, 0.8]),
-            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
-            clip,
-            c.transform,
-        );
-    }
-
-    /// Draws an object at an offset on the screen.  This is a convenience method that is used
-    /// by other `Widget`s that contain multiple widgets.  (See `CheckboxWidget` and
-    /// `ImageButtonWidget` for good examples of this use.)
-    fn draw_with_offset(
-        &mut self,
-        c: Context,
-        g: &mut GlGraphics,
-        clip: &DrawState,
-        point_offset: Point,
-    ) {
-        self.draw(
-            c.trans(point_offset.x as f64, point_offset.y as f64),
-            g,
-            clip,
-        );
+    /// Retrieves the `Drawable` functionality of this `Widget`.  This function is called each
+    /// time a frame is refreshed, so if there is no `Drawable` available, this function could
+    /// serve as a way to indicate a frame tick.
+    fn get_drawable(&mut self) -> Option<&dyn Drawable> {
+        None
     }
 }
 
@@ -186,6 +184,21 @@ impl CanvasWidget {
             event_list: vec![],
             widget_id: 0,
         }
+    }
+}
+
+impl Drawable for CanvasWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        let size: crate::core::point::Size = self.config().get_size(CONFIG_BODY_SIZE);
+
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
+
+        self.clear_invalidate();
     }
 }
 
@@ -226,5 +239,9 @@ impl Widget for CanvasWidget {
 
     fn inject_system_event(&mut self) -> Option<CallbackEvent> {
         self.event_list.pop().clone()
+    }
+
+    fn get_drawable(&mut self) -> Option<&dyn Drawable> {
+        Some(self)
     }
 }

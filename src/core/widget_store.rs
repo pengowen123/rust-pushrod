@@ -474,22 +474,22 @@ impl WidgetStore {
                     draw_state: c.draw_state,
                 };
 
-                &paint_widget
-                    .widget
-                    .borrow_mut()
-                    .draw(new_context, g, &c.draw_state);
-
-                if paint_widget
-                    .widget
-                    .borrow_mut()
-                    .config()
-                    .get_toggle(CONFIG_WIDGET_DISABLED)
-                {
-                    &paint_widget
-                        .widget
-                        .borrow_mut()
-                        .draw_disabled(new_context, g, &c.draw_state);
-                }
+//                &paint_widget
+//                    .widget
+//                    .borrow_mut()
+//                    .draw(new_context, g, &c.draw_state);
+//
+//                if paint_widget
+//                    .widget
+//                    .borrow_mut()
+//                    .config()
+//                    .get_toggle(CONFIG_WIDGET_DISABLED)
+//                {
+//                    &paint_widget
+//                        .widget
+//                        .borrow_mut()
+//                        .draw_disabled(new_context, g, &c.draw_state);
+//                }
             }
 
             if parents_of_widget[pos] != widget_id {

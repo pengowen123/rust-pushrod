@@ -51,19 +51,7 @@ impl ImageWidget {
     }
 }
 
-impl Widget for ImageWidget {
-    fn config(&mut self) -> &mut Configurable {
-        &mut self.config
-    }
-
-    fn set_widget_id(&mut self, widget_id: i32) {
-        self.widget_id = widget_id;
-    }
-
-    fn get_widget_id(&mut self) -> i32 {
-        self.widget_id
-    }
-
+impl Drawable for ImageWidget {
     fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
         let size = self.config().get_size(CONFIG_BODY_SIZE);
         let transform = c.transform.scale(
@@ -75,5 +63,19 @@ impl Widget for ImageWidget {
 
         // Then clear invalidation.
         self.clear_invalidate();
+    }
+}
+
+impl Widget for ImageWidget {
+    fn config(&mut self) -> &mut Configurable {
+        &mut self.config
+    }
+
+    fn set_widget_id(&mut self, widget_id: i32) {
+        self.widget_id = widget_id;
+    }
+
+    fn get_widget_id(&mut self) -> i32 {
+        self.widget_id
     }
 }
