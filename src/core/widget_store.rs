@@ -453,55 +453,58 @@ impl WidgetStore {
 
             let paint_id = parents_of_widget[pos];
             let paint_widget = &mut self.widgets[paint_id as usize];
-            let is_hidden = paint_widget
-                .widget
-                .borrow_mut()
-                .config()
-                .get_toggle(CONFIG_WIDGET_HIDDEN);
-            let is_invalidated = paint_widget.widget.borrow_mut().is_invalidated();
 
-            if !is_hidden && is_invalidated {
-                let origin: Point = paint_widget
+            if paint_widget.widget.borrow_mut().is_drawable() {
+                let is_hidden = paint_widget
                     .widget
                     .borrow_mut()
                     .config()
-                    .get_point(CONFIG_ORIGIN);
+                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+                let is_invalidated = paint_widget.widget.borrow_mut().is_invalidated();
 
-                let new_context: Context = Context {
-                    viewport: c.viewport,
-                    view: c.view,
-                    transform: c.transform.trans(origin.x as f64, origin.y as f64),
-                    draw_state: c.draw_state,
-                };
-
-                &paint_widget.widget.borrow_mut().get_drawable().draw(
-                    new_context,
-                    g,
-                    &c.draw_state,
-                );
-
-                if paint_widget
-                    .widget
-                    .borrow_mut()
-                    .config()
-                    .get_toggle(CONFIG_WIDGET_DISABLED)
-                {
-                    let size: Size = paint_widget
+                if !is_hidden && is_invalidated {
+                    let origin: Point = paint_widget
                         .widget
                         .borrow_mut()
                         .config()
-                        .get_size(CONFIG_BODY_SIZE);
+                        .get_point(CONFIG_ORIGIN);
 
-                    &paint_widget
+                    let new_context: Context = Context {
+                        viewport: c.viewport,
+                        view: c.view,
+                        transform: c.transform.trans(origin.x as f64, origin.y as f64),
+                        draw_state: c.draw_state,
+                    };
+
+                    &paint_widget.widget.borrow_mut().get_drawable().draw(
+                        new_context,
+                        g,
+                        &c.draw_state,
+                    );
+
+                    if paint_widget
                         .widget
                         .borrow_mut()
-                        .get_drawable()
-                        .draw_disabled(new_context, size, g, &c.draw_state);
-                }
-            }
+                        .config()
+                        .get_toggle(CONFIG_WIDGET_DISABLED)
+                    {
+                        let size: Size = paint_widget
+                            .widget
+                            .borrow_mut()
+                            .config()
+                            .get_size(CONFIG_BODY_SIZE);
 
-            if parents_of_widget[pos] != widget_id {
-                self.draw(paint_id, c, g, original_fbo);
+                        &paint_widget
+                            .widget
+                            .borrow_mut()
+                            .get_drawable()
+                            .draw_disabled(new_context, size, g, &c.draw_state);
+                    }
+                }
+
+                if parents_of_widget[pos] != widget_id {
+                    self.draw(paint_id, c, g, original_fbo);
+                }
             }
         }
     }

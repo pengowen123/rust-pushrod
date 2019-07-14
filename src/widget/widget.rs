@@ -161,10 +161,16 @@ pub trait Widget {
         false
     }
 
-    /// Retrieves the `Drawable` functionality of this `Widget`.  This function is called each
-    /// time a frame is refreshed, so if there is no `Drawable` available, this function could
-    /// serve as a way to indicate a frame tick.
+    /// Retrieves the `Drawable` functionality of this `Widget`.
     fn get_drawable(&mut self) -> &mut dyn Drawable;
+
+    /// Describes whether or not the `Widget` returns a `Drawable` trait.  This function is called each
+    /// time a frame is refreshed, so if there is no `Drawable` available, this function could
+    /// serve as a way to indicate a frame tick.  Only override this to set it to `false` if your
+    /// `Widget` does not draw anything on the screen.
+    fn is_drawable(&mut self) -> bool {
+        true
+    }
 }
 
 /// Base `Widget` object.  Displays a blank canvas, with the color set by the `CONFIG_MAIN_COLOR`

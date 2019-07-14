@@ -103,7 +103,11 @@ impl Widget for TimerWidget {
     }
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
-        self.tick();
         self
+    }
+
+    fn is_drawable(&mut self) -> bool {
+        self.tick();
+        false
     }
 }

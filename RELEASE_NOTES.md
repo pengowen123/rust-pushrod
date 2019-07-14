@@ -4,6 +4,7 @@
 
 - Fixed build to build properly on Linux and OS X in TravisCI. (#159)
 - Added Drawable trait (#161)
+- Added is_drawable to traits to optimize draw loop.
 - Modified widgets to use Drawable trait.
 
 ## 0.3.7
