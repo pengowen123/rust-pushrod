@@ -179,6 +179,7 @@ pub trait Widget {
     /// than that should be ignored completely.
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents;
 
+    /// Indicates to the run loop whether or not a `Widget` injects system-level events.
     fn injects_system_events(&mut self) -> bool {
         false
     }

@@ -19,7 +19,7 @@ Draws inspiration from lots of GUI libraries.
 - [x] Fix build so that it builds on TravisCI for both OSes properly
 - [x] New traits for optimization:
   - [x] `Drawable`
-  - [ ] `InjectableSystemEvents`
+  - [x] `InjectableSystemEvents`
   - [ ] `InjectCustomEvents`
 - [ ] Widget offset updates (adding a child origin based on parent)
 - [ ] Optimizations to screen invalidation
