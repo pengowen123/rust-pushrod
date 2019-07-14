@@ -81,6 +81,8 @@ impl Drawable for PushButtonWidget {
 
 impl InjectableSystemEvents for PushButtonWidget {}
 
+impl InjectableCustomEvents for PushButtonWidget {}
+
 impl Widget for PushButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -162,6 +164,10 @@ impl Widget for PushButtonWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
     }
 
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {

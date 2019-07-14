@@ -111,6 +111,21 @@ impl Drawable for RadioButtonWidget {
 
 impl InjectableSystemEvents for RadioButtonWidget {}
 
+impl InjectableCustomEvents for RadioButtonWidget {
+    fn inject_custom_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
+        if self.inject_event {
+            self.inject_event = false;
+
+            Some(CallbackEvent::UnselectRadioButtons {
+                widget_id,
+                group_id: self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32,
+            })
+        } else {
+            None
+        }
+    }
+}
+
 impl Widget for RadioButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -190,21 +205,8 @@ impl Widget for RadioButtonWidget {
         true
     }
 
-    fn injects_events(&mut self) -> bool {
+    fn injects_custom_events(&mut self) -> bool {
         true
-    }
-
-    fn inject_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
-        if self.inject_event {
-            self.inject_event = false;
-
-            Some(CallbackEvent::UnselectRadioButtons {
-                widget_id,
-                group_id: self.config().get_numeric(CONFIG_WIDGET_GROUP_ID) as i32,
-            })
-        } else {
-            None
-        }
     }
 
     fn set_widget_id(&mut self, widget_id: i32) {
@@ -213,6 +215,10 @@ impl Widget for RadioButtonWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
     }
 
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {

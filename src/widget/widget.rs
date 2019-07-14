@@ -71,6 +71,15 @@ pub trait InjectableSystemEvents {
     }
 }
 
+pub trait InjectableCustomEvents {
+    /// Injects an event into the run loop.  This can be a timer event, a refresh event, or
+    /// whatever the `Widget` wants to inject.  These should be custom events, not system
+    /// events.  This method only gets called if `injects_events` returns `true`.
+    fn inject_custom_event(&mut self, _widget_id: i32) -> Option<CallbackEvent> {
+        None
+    }
+}
+
 /// Master level trait object for describing a `Widget`.  A `Widget` is a GUI element that can
 /// be interacted with and can receive and generate events.
 pub trait Widget {
@@ -154,17 +163,17 @@ pub trait Widget {
         false
     }
 
-    /// Injects an event into the run loop.  This can be a timer event, a refresh event, or
-    /// whatever the `Widget` wants to inject.  These should be custom events, not system
-    /// events.  This method only gets called if `injects_events` returns `true`.
-    fn inject_event(&mut self, _widget_id: i32) -> Option<CallbackEvent> {
-        None
-    }
+    /// Retrieves the `InjectableCustomEvents` trait of this class, which is responsible for
+    /// injecting custom events when appropriate.  Injecting system events is used with the
+    /// `InjectableSystemEvents`, and things like mouse clicks and widget clicks are used
+    /// with the `handle_event` block.  This code is used to inject events that are not
+    /// triggered by other events in the system.
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents;
 
     /// If this `Widget` provides custom injected events that are generated outside of the
     /// `handle_event` loop, indicate `true`.  Only override if necessary.  (See `TimerWidget`
     /// for reference.)
-    fn injects_events(&mut self) -> bool {
+    fn injects_custom_events(&mut self) -> bool {
         false
     }
 
@@ -229,6 +238,8 @@ impl InjectableSystemEvents for CanvasWidget {
     }
 }
 
+impl InjectableCustomEvents for CanvasWidget {}
+
 impl Widget for CanvasWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -262,6 +273,10 @@ impl Widget for CanvasWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
     }
 
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {

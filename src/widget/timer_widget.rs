@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use graphics::*;
-use opengl_graphics::GlGraphics;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::callbacks::CallbackEvent;
@@ -74,6 +72,17 @@ impl Drawable for TimerWidget {}
 
 impl InjectableSystemEvents for TimerWidget {}
 
+impl InjectableCustomEvents for TimerWidget {
+    fn inject_custom_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
+        if self.triggered {
+            self.triggered = false;
+            Some(CallbackEvent::TimerTriggered { widget_id })
+        } else {
+            None
+        }
+    }
+}
+
 impl Widget for TimerWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -83,17 +92,8 @@ impl Widget for TimerWidget {
         true
     }
 
-    fn injects_events(&mut self) -> bool {
+    fn injects_custom_events(&mut self) -> bool {
         true
-    }
-
-    fn inject_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
-        if self.triggered {
-            self.triggered = false;
-            Some(CallbackEvent::TimerTriggered { widget_id })
-        } else {
-            None
-        }
     }
 
     fn set_widget_id(&mut self, widget_id: i32) {
@@ -102,6 +102,10 @@ impl Widget for TimerWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
     }
 
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {

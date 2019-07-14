@@ -102,6 +102,8 @@ impl Drawable for ToggleButtonWidget {
 
 impl InjectableSystemEvents for ToggleButtonWidget {}
 
+impl InjectableCustomEvents for ToggleButtonWidget {}
+
 impl Widget for ToggleButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -195,6 +197,10 @@ impl Widget for ToggleButtonWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
     }
 
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {

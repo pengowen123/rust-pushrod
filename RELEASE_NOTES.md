@@ -9,6 +9,9 @@
 - Added InjectableSystemEvents (#160)
 - Added "handles_events" flag to indicate whether or not a Widget handles system-generated events
 - Modified Widgets to support handles_events flags (checkbox, image, push, radio, and toggle buttons)
+- Added InjectableCustomEvents (#162)
+- Modified run loop to honor custom event checking
+- More optimizations to run loop after event changes made
 
 ## 0.3.7
 

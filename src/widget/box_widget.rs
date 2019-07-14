@@ -83,6 +83,8 @@ impl InjectableSystemEvents for BoxWidget {
     }
 }
 
+impl InjectableCustomEvents for BoxWidget {}
+
 impl Widget for BoxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -129,6 +131,10 @@ impl Widget for BoxWidget {
 
     fn injects_system_events(&mut self) -> bool {
         true
+    }
+
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
     }
 
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {

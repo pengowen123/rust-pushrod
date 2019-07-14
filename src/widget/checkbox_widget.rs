@@ -110,6 +110,8 @@ impl Drawable for CheckboxWidget {
 
 impl InjectableSystemEvents for CheckboxWidget {}
 
+impl InjectableCustomEvents for CheckboxWidget {}
+
 impl Widget for CheckboxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -176,6 +178,10 @@ impl Widget for CheckboxWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
     }
 
     fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
