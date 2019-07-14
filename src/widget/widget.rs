@@ -60,6 +60,17 @@ pub trait Drawable {
     }
 }
 
+pub trait InjectableSystemEvents {
+    /// Part of the main loop that queries the `Widget` for any system-level events that should
+    /// be injected into the `PushrodCallbackEvents` trait, and not handled by the top-level
+    /// run loop.  This sends out messages that are _bypassed_ from being used by the Run Loop,
+    /// so be very careful.  Use this for sending things like custom messages (such as a `Widget`
+    /// move or `Widget` resize message, which is irrelevant to the run loop.)
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        None
+    }
+}
+
 /// Master level trait object for describing a `Widget`.  A `Widget` is a GUI element that can
 /// be interacted with and can receive and generate events.
 pub trait Widget {
@@ -138,15 +149,6 @@ pub trait Widget {
         None
     }
 
-    /// Part of the main loop that queries the `Widget` for any system-level events that should
-    /// be injected into the `PushrodCallbackEvents` trait, and not handled by the top-level
-    /// run loop.  This sends out messages that are _bypassed_ from being used by the Run Loop,
-    /// so be very careful.  Use this for sending things like custom messages (such as a `Widget`
-    /// move or `Widget` resize message, which is irrelevant to the run loop.)
-    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
-        None
-    }
-
     /// Injects an event into the run loop.  This can be a timer event, a refresh event, or
     /// whatever the `Widget` wants to inject.  These should be custom events, not system
     /// events.  This method only gets called if `injects_events` returns `true`.
@@ -170,6 +172,15 @@ pub trait Widget {
     /// `Widget` does not draw anything on the screen.
     fn is_drawable(&mut self) -> bool {
         true
+    }
+
+    /// Retrieves the trait for injecting system events.  Only use this if your `Widget` injects
+    /// custom system-level events that the top-level application needs to use.  Anything other
+    /// than that should be ignored completely.
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents;
+
+    fn injects_system_events(&mut self) -> bool {
+        false
     }
 }
 
@@ -203,6 +214,12 @@ impl Drawable for CanvasWidget {
         );
 
         self.clear_invalidate();
+    }
+}
+
+impl InjectableSystemEvents for CanvasWidget {
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        self.event_list.pop().clone()
     }
 }
 
@@ -241,8 +258,8 @@ impl Widget for CanvasWidget {
         self.widget_id
     }
 
-    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
-        self.event_list.pop().clone()
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
     }
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {

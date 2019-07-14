@@ -109,6 +109,8 @@ impl Drawable for RadioButtonWidget {
     }
 }
 
+impl InjectableSystemEvents for RadioButtonWidget {}
+
 impl Widget for RadioButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -207,6 +209,10 @@ impl Widget for RadioButtonWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
     }
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {

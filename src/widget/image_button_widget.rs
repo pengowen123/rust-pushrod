@@ -113,6 +113,8 @@ impl Drawable for ImageButtonWidget {
     }
 }
 
+impl InjectableSystemEvents for ImageButtonWidget {}
+
 impl Widget for ImageButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -192,6 +194,10 @@ impl Widget for ImageButtonWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
     }
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {

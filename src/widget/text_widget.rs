@@ -138,6 +138,8 @@ impl Drawable for TextWidget {
     }
 }
 
+impl InjectableSystemEvents for TextWidget {}
+
 impl Widget for TextWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -160,6 +162,10 @@ impl Widget for TextWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
     }
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {

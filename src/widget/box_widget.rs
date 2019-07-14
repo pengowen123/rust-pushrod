@@ -77,6 +77,12 @@ impl Drawable for BoxWidget {
     }
 }
 
+impl InjectableSystemEvents for BoxWidget {
+    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
+        self.event_list.pop().clone()
+    }
+}
+
 impl Widget for BoxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -121,8 +127,12 @@ impl Widget for BoxWidget {
         self.widget_id
     }
 
-    fn inject_system_event(&mut self) -> Option<CallbackEvent> {
-        self.event_list.pop().clone()
+    fn injects_system_events(&mut self) -> bool {
+        true
+    }
+
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
     }
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
