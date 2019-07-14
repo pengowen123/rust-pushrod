@@ -17,7 +17,10 @@ Draws inspiration from lots of GUI libraries.
 ## 0.4.x Status
 
 - [x] Fix build so that it builds on TravisCI for both OSes properly
-- [ ] New traits for optimization: `Drawable`, `InjectableSystemEvents` and `InjectCustomEvents`
+- [x] New traits for optimization:
+  - [x] `Drawable`
+  - [ ] `InjectableSystemEvents`
+  - [ ] `InjectCustomEvents`
 - [ ] Widget offset updates (adding a child origin based on parent)
 - [ ] Optimizations to screen invalidation
 - [ ] Optimizations to drawing (every object is a 3D texture, not just blitting to a master texture)
