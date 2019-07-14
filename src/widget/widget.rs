@@ -149,6 +149,11 @@ pub trait Widget {
         None
     }
 
+    /// Indicates to the run loop whether or not the `Widget` handles system-generated events.
+    fn handles_events(&mut self) -> bool {
+        false
+    }
+
     /// Injects an event into the run loop.  This can be a timer event, a refresh event, or
     /// whatever the `Widget` wants to inject.  These should be custom events, not system
     /// events.  This method only gets called if `injects_events` returns `true`.

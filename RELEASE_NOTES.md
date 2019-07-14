@@ -7,6 +7,8 @@
 - Added is_drawable to traits to optimize draw loop.
 - Modified widgets to use Drawable trait.
 - Added InjectableSystemEvents (#160)
+- Added "handles_events" flag to indicate whether or not a Widget handles system-generated events
+- Modified Widgets to support handles_events flags (checkbox, image, push, radio, and toggle buttons)
 
 ## 0.3.7
 

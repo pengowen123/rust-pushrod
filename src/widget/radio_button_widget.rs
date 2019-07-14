@@ -186,6 +186,10 @@ impl Widget for RadioButtonWidget {
         None
     }
 
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn injects_events(&mut self) -> bool {
         true
     }

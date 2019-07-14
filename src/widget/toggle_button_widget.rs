@@ -185,6 +185,10 @@ impl Widget for ToggleButtonWidget {
         None
     }
 
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn set_widget_id(&mut self, widget_id: i32) {
         self.widget_id = widget_id;
     }
