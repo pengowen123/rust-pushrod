@@ -26,7 +26,7 @@ pub trait Drawable {
     /// and a `clip`, which is automatically set to provide a clipping area for the `Widget`.  If
     /// the `Widget` draws outside of the clipped bounds, that will not be drawn on the
     /// screen.
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+    fn draw(&mut self, _c: Context, _g: &mut GlGraphics, _clip: &DrawState) {
         // Do nothing on the draw.
     }
 

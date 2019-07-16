@@ -12,6 +12,7 @@
 - Added InjectableCustomEvents (#162)
 - Modified run loop to honor custom event checking
 - More optimizations to run loop after event changes made
+- Removed unused code
 
 ## 0.3.7
 
