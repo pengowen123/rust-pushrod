@@ -189,9 +189,14 @@ impl Pushrod {
         for widget in widgets {
             let mut widget_container = widget.widget.borrow_mut();
 
-            match widget_container.inject_system_event() {
-                Some(ev) => return_list.push(ev.clone()),
-                _ => (),
+            if widget_container.injects_system_events() {
+                match widget_container
+                    .get_injectable_system_events()
+                    .inject_system_event()
+                {
+                    Some(ev) => return_list.push(ev.clone()),
+                    _ => (),
+                }
             }
         }
 
@@ -210,7 +215,7 @@ impl Pushrod {
             .borrow_mut()
             .widgets
             .iter()
-            .filter(|x| x.widget.borrow_mut().injects_events())
+            .filter(|x| x.widget.borrow_mut().injects_custom_events())
             .map(|x| x.widget_id)
             .collect();
         let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
@@ -390,19 +395,29 @@ impl Pushrod {
 
             event.render(|args| {
                 injectable_map.iter().for_each(|widget_id| {
-                    let injectable_event = self
+                    let can_inject = self
                         .widget_store
                         .borrow_mut()
                         .get_widget_for_id(*widget_id)
                         .borrow_mut()
-                        .inject_event(*widget_id);
+                        .injects_custom_events();
 
-                    match injectable_event {
-                        Some(x) => {
-                            self.handle_event(*widget_id, event_handler, x.clone());
-                            self.widget_store.borrow_mut().inject_event(x.clone());
+                    if can_inject {
+                        let injectable_event = self
+                            .widget_store
+                            .borrow_mut()
+                            .get_widget_for_id(*widget_id)
+                            .borrow_mut()
+                            .get_injectable_custom_events()
+                            .inject_custom_event(*widget_id);
+
+                        match injectable_event {
+                            Some(x) => {
+                                self.handle_event(*widget_id, event_handler, x.clone());
+                                self.widget_store.borrow_mut().inject_event(x.clone());
+                            }
+                            None => (),
                         }
-                        None => (),
                     }
                 });
 

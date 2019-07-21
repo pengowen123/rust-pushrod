@@ -51,6 +51,25 @@ impl ImageWidget {
     }
 }
 
+impl Drawable for ImageWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        let size = self.config().get_size(CONFIG_BODY_SIZE);
+        let transform = c.transform.scale(
+            size.w as f64 / self.image_size.w as f64,
+            size.h as f64 / self.image_size.h as f64,
+        );
+
+        Image::new().draw(&self.image, clip, transform, g);
+
+        // Then clear invalidation.
+        self.clear_invalidate();
+    }
+}
+
+impl InjectableSystemEvents for ImageWidget {}
+
+impl InjectableCustomEvents for ImageWidget {}
+
 impl Widget for ImageWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -64,16 +83,15 @@ impl Widget for ImageWidget {
         self.widget_id
     }
 
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        let size = self.config().get_size(CONFIG_BODY_SIZE);
-        let transform = c.transform.scale(
-            size.w as f64 / self.image_size.w as f64,
-            size.h as f64 / self.image_size.h as f64,
-        );
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
+    }
 
-        Image::new().draw(&self.image, clip, transform, g);
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
+    }
 
-        // Then clear invalidation.
-        self.clear_invalidate();
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
     }
 }

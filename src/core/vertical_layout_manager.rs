@@ -59,14 +59,12 @@ impl LayoutManager for VerticalLayoutManager {
             if x == num_widgets - 1 {
                 widget_sizes.push(Size {
                     w: size.w - (self.padding.left + self.padding.right),
-                    h: height_per_widget
-                        - self.padding.bottom,
+                    h: height_per_widget - self.padding.bottom,
                 });
             } else {
                 widget_sizes.push(Size {
                     w: size.w - (self.padding.left + self.padding.right),
-                    h: height_per_widget
-                        - (self.padding.spacing / 2),
+                    h: height_per_widget - (self.padding.spacing / 2),
                 });
             }
         }

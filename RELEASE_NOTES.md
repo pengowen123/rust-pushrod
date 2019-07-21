@@ -3,6 +3,16 @@
 ## 0.4.0
 
 - Fixed build to build properly on Linux and OS X in TravisCI. (#159)
+- Added Drawable trait (#161)
+- Added is_drawable to traits to optimize draw loop.
+- Modified widgets to use Drawable trait.
+- Added InjectableSystemEvents (#160)
+- Added "handles_events" flag to indicate whether or not a Widget handles system-generated events
+- Modified Widgets to support handles_events flags (checkbox, image, push, radio, and toggle buttons)
+- Added InjectableCustomEvents (#162)
+- Modified run loop to honor custom event checking
+- More optimizations to run loop after event changes made
+- Removed unused code
 
 ## 0.3.7
 

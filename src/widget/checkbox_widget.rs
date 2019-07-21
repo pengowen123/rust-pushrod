@@ -70,6 +70,48 @@ impl CheckboxWidget {
     }
 }
 
+impl Drawable for CheckboxWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
+        // Invalidation is controlled by the top level widget (this box).
+        self.base_widget.draw(c, g, &clip);
+
+        let size = self.config().get_size(CONFIG_BODY_SIZE);
+
+        // Clear the drawing backing
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
+
+        if self.selected {
+            self.selected_widget
+                .get_drawable()
+                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
+        } else {
+            self.unselected_widget.get_drawable().draw_with_offset(
+                c,
+                g,
+                &clip,
+                Point { x: 0, y: 0 },
+            );
+        }
+
+        self.text_widget
+            .get_drawable()
+            .draw_with_offset(c, g, &clip, Point { x: 38, y: 0 });
+
+        // Then clear invalidation.
+        self.clear_invalidate();
+    }
+}
+
+impl InjectableSystemEvents for CheckboxWidget {}
+
+impl InjectableCustomEvents for CheckboxWidget {}
+
 impl Widget for CheckboxWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -126,6 +168,10 @@ impl Widget for CheckboxWidget {
         None
     }
 
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn set_widget_id(&mut self, widget_id: i32) {
         self.widget_id = widget_id;
     }
@@ -134,33 +180,15 @@ impl Widget for CheckboxWidget {
         self.widget_id
     }
 
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
-        // Invalidation is controlled by the top level widget (this box).
-        self.base_widget.draw(c, g, &clip);
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
+    }
 
-        let size = self.config().get_size(CONFIG_BODY_SIZE);
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
+    }
 
-        // Clear the drawing backing
-        g.rectangle(
-            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
-            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
-            clip,
-            c.transform,
-        );
-
-        if self.selected {
-            self.selected_widget
-                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
-        } else {
-            self.unselected_widget
-                .draw_with_offset(c, g, &clip, Point { x: 0, y: 0 });
-        }
-
-        self.text_widget
-            .draw_with_offset(c, g, &clip, Point { x: 38, y: 0 });
-
-        // Then clear invalidation.
-        self.clear_invalidate();
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
     }
 }

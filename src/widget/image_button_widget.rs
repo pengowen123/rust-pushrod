@@ -80,6 +80,43 @@ impl ImageButtonWidget {
     }
 }
 
+impl Drawable for ImageButtonWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
+        // Invalidation is controlled by the top level widget (this box).
+        let size = self.base_widget.config().get_size(CONFIG_BODY_SIZE);
+        let border = (self.base_widget.config().get_numeric(CONFIG_BORDER_WIDTH) * 2) as i32;
+
+        self.image_widget.config().set_size(
+            CONFIG_BODY_SIZE,
+            size.h - border as i32,
+            size.h - (border * 2) as i32,
+        );
+
+        self.base_widget.draw(c, g, &clip);
+
+        self.image_widget
+            .get_drawable()
+            .draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
+        self.text_widget.get_drawable().draw_with_offset(
+            c,
+            g,
+            &clip,
+            Point {
+                x: size.h + border + 4,
+                y: 0,
+            },
+        );
+
+        // Then clear invalidation.
+        self.clear_invalidate();
+    }
+}
+
+impl InjectableSystemEvents for ImageButtonWidget {}
+
+impl InjectableCustomEvents for ImageButtonWidget {}
+
 impl Widget for ImageButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -153,6 +190,10 @@ impl Widget for ImageButtonWidget {
         None
     }
 
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn set_widget_id(&mut self, widget_id: i32) {
         self.widget_id = widget_id;
     }
@@ -161,32 +202,15 @@ impl Widget for ImageButtonWidget {
         self.widget_id
     }
 
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
-        // Invalidation is controlled by the top level widget (this box).
-        let size = self.base_widget.config().get_size(CONFIG_BODY_SIZE);
-        let border = (self.base_widget.config().get_numeric(CONFIG_BORDER_WIDTH) * 2) as i32;
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
+    }
 
-        self.image_widget.config().set_size(
-            CONFIG_BODY_SIZE,
-            size.h - border as i32,
-            size.h - (border * 2) as i32,
-        );
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
+    }
 
-        self.base_widget.draw(c, g, &clip);
-        self.image_widget
-            .draw_with_offset(c, g, &clip, Point { x: 2, y: 2 });
-        self.text_widget.draw_with_offset(
-            c,
-            g,
-            &clip,
-            Point {
-                x: size.h + border + 4,
-                y: 0,
-            },
-        );
-
-        // Then clear invalidation.
-        self.clear_invalidate();
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
     }
 }

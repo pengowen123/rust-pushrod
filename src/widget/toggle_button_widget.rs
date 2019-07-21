@@ -88,6 +88,22 @@ impl ToggleButtonWidget {
     }
 }
 
+impl Drawable for ToggleButtonWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
+        // Invalidation is controlled by the top level widget (this box).
+        self.base_widget.draw(c, g, &clip);
+        self.text_widget.draw(c, g, &clip);
+
+        // Then clear invalidation.
+        self.clear_invalidate();
+    }
+}
+
+impl InjectableSystemEvents for ToggleButtonWidget {}
+
+impl InjectableCustomEvents for ToggleButtonWidget {}
+
 impl Widget for ToggleButtonWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -171,6 +187,10 @@ impl Widget for ToggleButtonWidget {
         None
     }
 
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn set_widget_id(&mut self, widget_id: i32) {
         self.widget_id = widget_id;
     }
@@ -179,13 +199,15 @@ impl Widget for ToggleButtonWidget {
         self.widget_id
     }
 
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        // Paint the base widget first.  Forcing a draw() call here will ignore invalidation.
-        // Invalidation is controlled by the top level widget (this box).
-        self.base_widget.draw(c, g, &clip);
-        self.text_widget.draw(c, g, &clip);
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
+    }
 
-        // Then clear invalidation.
-        self.clear_invalidate();
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
+    }
+
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
     }
 }

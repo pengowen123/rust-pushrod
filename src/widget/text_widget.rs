@@ -114,6 +114,34 @@ impl TextWidget {
     }
 }
 
+impl Drawable for TextWidget {
+    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
+        if self.need_text_resize {
+            self.recalculate_desired_size();
+        }
+
+        let size = self.config().get_size(CONFIG_BODY_SIZE);
+
+        // Clear the drawing backing
+        g.rectangle(
+            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
+            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
+            clip,
+            c.transform,
+        );
+
+        // Draw the text.
+        self.draw_text(c, g, &clip);
+
+        // Then clear invalidation.
+        self.clear_invalidate();
+    }
+}
+
+impl InjectableSystemEvents for TextWidget {}
+
+impl InjectableCustomEvents for TextWidget {}
+
 impl Widget for TextWidget {
     fn config(&mut self) -> &mut Configurable {
         &mut self.config
@@ -138,26 +166,15 @@ impl Widget for TextWidget {
         self.widget_id
     }
 
-    /// Draws the contents of the widget.
-    fn draw(&mut self, c: Context, g: &mut GlGraphics, clip: &DrawState) {
-        if self.need_text_resize {
-            self.recalculate_desired_size();
-        }
+    fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
+        self
+    }
 
-        let size = self.config().get_size(CONFIG_BODY_SIZE);
+    fn get_injectable_system_events(&mut self) -> &mut dyn InjectableSystemEvents {
+        self
+    }
 
-        // Clear the drawing backing
-        g.rectangle(
-            &Rectangle::new(self.config().get_color(CONFIG_MAIN_COLOR)),
-            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
-            clip,
-            c.transform,
-        );
-
-        // Draw the text.
-        self.draw_text(c, g, &clip);
-
-        // Then clear invalidation.
-        self.clear_invalidate();
+    fn get_drawable(&mut self) -> &mut dyn Drawable {
+        self
     }
 }
