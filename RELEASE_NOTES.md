@@ -1,5 +1,10 @@
 # Pushrod Releases
 
+## 0.4.1
+
+- Adding horizontal layout example
+- Added dyn trait as suggested by latest cargo build
+
 ## 0.4.0
 
 - Fixed build to build properly on Linux and OS X in TravisCI. (#159)
