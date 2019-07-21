@@ -21,6 +21,7 @@ Draws inspiration from lots of GUI libraries.
   - [x] `Drawable`
   - [x] `InjectableSystemEvents`
   - [x] `InjectableCustomEvents`
+- [ ] More samples to show use of Horizontal and Vertical layouts
 - [ ] Custom event handler intelligently uses callbacks
 - [ ] Widget offset updates (adding a child origin based on parent)
 - [ ] Optimizations to screen invalidation
