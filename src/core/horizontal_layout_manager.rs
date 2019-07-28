@@ -78,6 +78,10 @@ impl LayoutManager for HorizontalLayoutManager {
         }
     }
 
+    fn adjust_layout(&mut self, coordinates: LayoutManagerPadding) {
+        self.padding = coordinates.clone()
+    }
+
     fn get_widget_id(&self) -> i32 {
         return self.container_widget_id;
     }

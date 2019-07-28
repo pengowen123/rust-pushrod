@@ -59,6 +59,8 @@ pub trait LayoutManager {
         coordinates: LayoutManagerCoordinates,
     ) -> LayoutManagerCoordinates;
 
+    fn adjust_layout(&mut self, coordinates: LayoutManagerPadding);
+
     /// This function must be overridden to return the ID of the `Widget` that is stored within
     /// the `LayoutManager`, since the system doesn't have direct access to it.
     fn get_widget_id(&self) -> i32;

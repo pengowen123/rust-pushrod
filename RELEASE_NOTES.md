@@ -1,5 +1,12 @@
 # Pushrod Releases
 
+## 0.4.1
+
+- Adding horizontal layout example
+- Added dyn trait as suggested by latest cargo build
+- Added ability to modify layout manager spacing in real time (#170)
+- Modified horizontal layout example to handle manager spacing resizing
+
 ## 0.4.0
 
 - Fixed build to build properly on Linux and OS X in TravisCI. (#159)

@@ -403,6 +403,14 @@ impl WidgetStore {
         eprintln!("Doing manager layout.");
     }
 
+    pub fn adjust_layout_manager(&mut self, manager_id: i32, coordinates: LayoutManagerPadding) {
+        self.layout_managers[manager_id as usize]
+            .layout_manager
+            .borrow_mut()
+            .adjust_layout(coordinates.clone());
+        self.do_layout_for_manager(manager_id);
+    }
+
     pub fn resize_layout_managers(&mut self, _w: u32, _h: u32) {
         let num_layout_managers = self.layout_managers.len();
 

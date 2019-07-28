@@ -135,7 +135,7 @@ impl Pushrod {
     fn handle_event(
         &mut self,
         widget_id: i32,
-        event_handler: &mut PushrodCallbackEvents,
+        event_handler: &mut dyn PushrodCallbackEvents,
         event: CallbackEvent,
     ) {
         if widget_id == -1 {
@@ -159,7 +159,7 @@ impl Pushrod {
 
     fn handle_system_event(
         &mut self,
-        event_handler: &mut PushrodCallbackEvents,
+        event_handler: &mut dyn PushrodCallbackEvents,
         event: CallbackEvent,
     ) {
         eprintln!("Handling system event: {:?}", event.clone());
@@ -206,7 +206,7 @@ impl Pushrod {
     /// This is the main run loop for `Pushrod`.  A run loop requires the use of an assigned
     /// `PushrodCallbackEvents` event handler.  This is how all communications take place when
     /// an action occurs within the GUI window.
-    pub fn run(&mut self, event_handler: &mut PushrodCallbackEvents) {
+    pub fn run(&mut self, event_handler: &mut dyn PushrodCallbackEvents) {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
         let mut button_map: HashMap<i32, HashSet<Button>> = HashMap::new();

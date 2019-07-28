@@ -14,6 +14,10 @@ Draws inspiration from lots of GUI libraries.
 
 [![](docs/sample-0.3.7.png)](docs/sample-0.3.7.png)
 
+## Horizontal Layout Sample
+
+[![](docs/hlayout.png)](docs/hlayout.png)
+
 ## 0.4.x Status
 
 - [x] Fix build so that it builds on TravisCI for both OSes properly
@@ -21,7 +25,8 @@ Draws inspiration from lots of GUI libraries.
   - [x] `Drawable`
   - [x] `InjectableSystemEvents`
   - [x] `InjectableCustomEvents`
-- [ ] More samples to show use of Horizontal and Vertical layouts
+- [x] Horizontal Layout sample application
+- [ ] Vertical Layout sample application
 - [ ] Custom event handler intelligently uses callbacks
 - [ ] Widget offset updates (adding a child origin based on parent)
 - [ ] Optimizations to screen invalidation

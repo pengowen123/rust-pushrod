@@ -76,6 +76,10 @@ impl LayoutManager for VerticalLayoutManager {
         }
     }
 
+    fn adjust_layout(&mut self, coordinates: LayoutManagerPadding) {
+        self.padding = coordinates.clone()
+    }
+
     fn get_widget_id(&self) -> i32 {
         self.container_widget_id
     }
