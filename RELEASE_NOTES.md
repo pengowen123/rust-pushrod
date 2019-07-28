@@ -4,6 +4,8 @@
 
 - Adding horizontal layout example
 - Added dyn trait as suggested by latest cargo build
+- Added ability to modify layout manager spacing in real time (#170)
+- Modified horizontal layout example to handle manager spacing resizing
 
 ## 0.4.0
 

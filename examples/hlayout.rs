@@ -43,6 +43,7 @@ use pushrod::widget::widget::*;
 
 pub struct SimpleWindow {
     pushrod: RefCell<Pushrod>,
+    layout_id: i32,
 }
 
 pub struct SimpleWindowEventHandler {
@@ -51,6 +52,7 @@ pub struct SimpleWindowEventHandler {
     right_padding: i32,
     bottom_padding: i32,
     spacing: i32,
+    layout_id: i32,
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
@@ -65,6 +67,86 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
         }
 
         match widget_store.get_name_for_widget_id(widget_id) {
+            "TopButtonPlus" => {
+                self.top_padding += 1;
+                if self.top_padding > 10 {
+                    self.top_padding = 10;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "TopButtonMinus" => {
+                self.top_padding -= 1;
+                if self.top_padding <= 0 {
+                    self.top_padding = 0;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "LeftButtonPlus" => {
+                self.left_padding += 1;
+                if self.left_padding > 20 {
+                    self.left_padding = 20;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "LeftButtonMinus" => {
+                self.left_padding -= 1;
+                if self.left_padding <= 0 {
+                    self.left_padding = 0;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "RightButtonPlus" => {
+                self.right_padding += 1;
+                if self.right_padding > 20 {
+                    self.right_padding = 20;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "RightButtonMinus" => {
+                self.right_padding -= 1;
+                if self.right_padding <= 0 {
+                    self.right_padding = 0;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "BottomButtonPlus" => {
+                self.bottom_padding += 1;
+                if self.bottom_padding > 10 {
+                    self.bottom_padding = 10;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "BottomButtonMinus" => {
+                self.bottom_padding -= 1;
+                if self.bottom_padding <= 0 {
+                    self.bottom_padding = 0;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "SpacingButtonPlus" => {
+                self.spacing += 1;
+                if self.spacing > 12 {
+                    self.spacing = 12;
+                }
+                self.refresh_layout(widget_store);
+            }
+
+            "SpacingButtonMinus" => {
+                self.spacing -= 1;
+                if self.spacing <= 0 {
+                    self.spacing = 0;
+                }
+                self.refresh_layout(widget_store);
+            }
+
             //            "BoxInLayoutWidgetButton1" => {
             //                let state = widget_store
             //                    .get_widget_for_name("BoxInLayoutWidget1")
@@ -326,7 +408,25 @@ impl SimpleWindowEventHandler {
             right_padding: 1,
             bottom_padding: 1,
             spacing: 1,
+            layout_id: 0,
         }
+    }
+
+    fn refresh_layout(&mut self, widget_store: &mut WidgetStore) {
+        widget_store.adjust_layout_manager(self.layout_id,
+        LayoutManagerPadding {
+            top: self.top_padding,
+            left: self.left_padding,
+            right: self.right_padding,
+            bottom: self.bottom_padding,
+            spacing: self.spacing,
+        });
+
+        widget_store.invalidate_all_widgets();
+    }
+
+    pub fn set_layout_id(&mut self, layout_id: i32) {
+        self.layout_id = layout_id;
     }
 }
 
@@ -334,6 +434,7 @@ impl SimpleWindow {
     fn new(prod: Pushrod) -> Self {
         Self {
             pushrod: RefCell::new(prod),
+            layout_id: 0,
         }
     }
 
@@ -350,7 +451,7 @@ impl SimpleWindow {
             Box::new(base_widget),
         );
 
-        let base_layout_id =
+        self.layout_id =
             self.pushrod
                 .borrow_mut()
                 .add_layout_manager(Box::new(HorizontalLayoutManager::new(
@@ -374,7 +475,7 @@ impl SimpleWindow {
         let box_widget_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidget1",
             Box::new(box_widget),
-            base_layout_id,
+            self.layout_id,
             make_origin_point(),
         );
 
@@ -387,7 +488,7 @@ impl SimpleWindow {
         let box_1_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidget2",
             Box::new(box_1),
-            base_layout_id,
+            self.layout_id,
             make_origin_point(),
         );
 
@@ -408,7 +509,7 @@ impl SimpleWindow {
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidget3",
             Box::new(box_2),
-            base_layout_id,
+            self.layout_id,
             make_origin_point(),
         );
     }
@@ -658,6 +759,9 @@ impl SimpleWindow {
         let mut handler = SimpleWindowEventHandler::new();
 
         self.build();
+
+        handler.set_layout_id(self.layout_id);
+
         self.get_pushrod().run(&mut handler);
     }
 }
