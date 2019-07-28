@@ -14,6 +14,10 @@ Draws inspiration from lots of GUI libraries.
 
 [![](docs/sample-0.3.7.png)](docs/sample-0.3.7.png)
 
+## Horizontal Layout Sample
+
+[![](docs/hlayout.png)](docs/hlayout.png)
+
 ## 0.4.x Status
 
 - [x] Fix build so that it builds on TravisCI for both OSes properly

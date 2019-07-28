@@ -174,6 +174,46 @@ impl SimpleWindowEventHandler {
             spacing: self.spacing,
         });
 
+        widget_store
+            .get_widget_for_name("TopButtonText")
+            .borrow_mut()
+            .set_config(
+                CONFIG_DISPLAY_TEXT,
+                Config::Text(format!("{}", self.top_padding)).clone(),
+            );
+
+        widget_store
+            .get_widget_for_name("LeftButtonText")
+            .borrow_mut()
+            .set_config(
+                CONFIG_DISPLAY_TEXT,
+                Config::Text(format!("{}", self.left_padding)).clone(),
+            );
+
+        widget_store
+            .get_widget_for_name("RightButtonText")
+            .borrow_mut()
+            .set_config(
+                CONFIG_DISPLAY_TEXT,
+                Config::Text(format!("{}", self.right_padding)).clone(),
+            );
+
+        widget_store
+            .get_widget_for_name("BottomButtonText")
+            .borrow_mut()
+            .set_config(
+                CONFIG_DISPLAY_TEXT,
+                Config::Text(format!("{}", self.bottom_padding)).clone(),
+            );
+
+        widget_store
+            .get_widget_for_name("SpacingButtonText")
+            .borrow_mut()
+            .set_config(
+                CONFIG_DISPLAY_TEXT,
+                Config::Text(format!("{}", self.spacing)).clone(),
+            );
+
         widget_store.invalidate_all_widgets();
     }
 
@@ -369,6 +409,20 @@ impl SimpleWindow {
             .borrow_mut()
             .add_widget("TopButtonMinus", Box::new(button2));
 
+        let mut text_widget1 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "1".to_string(),
+            18,
+            TextJustify::Left,
+        );
+        text_widget1.set_point(CONFIG_ORIGIN, 310, 230);
+        text_widget1.set_size(CONFIG_BODY_SIZE, 40, 24);
+        text_widget1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget1.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("TopButtonText", Box::new(text_widget1));
+
         let mut button3 = PushButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
             "+".to_string(),
@@ -400,6 +454,20 @@ impl SimpleWindow {
         self.pushrod
             .borrow_mut()
             .add_widget("LeftButtonMinus", Box::new(button4));
+
+        let mut text_widget2 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "1".to_string(),
+            18,
+            TextJustify::Left,
+        );
+        text_widget2.set_point(CONFIG_ORIGIN, 310, 256);
+        text_widget2.set_size(CONFIG_BODY_SIZE, 40, 24);
+        text_widget2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget2.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("LeftButtonText", Box::new(text_widget2));
 
         let mut button5 = PushButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
@@ -433,6 +501,20 @@ impl SimpleWindow {
             .borrow_mut()
             .add_widget("RightButtonMinus", Box::new(button6));
 
+        let mut text_widget3 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "1".to_string(),
+            18,
+            TextJustify::Left,
+        );
+        text_widget3.set_point(CONFIG_ORIGIN, 310, 282);
+        text_widget3.set_size(CONFIG_BODY_SIZE, 40, 24);
+        text_widget3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget3.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+        self.pushrod
+            .borrow_mut()
+            .add_widget("RightButtonText", Box::new(text_widget3));
+
         let mut button7 = PushButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
             "+".to_string(),
@@ -465,6 +547,21 @@ impl SimpleWindow {
             .borrow_mut()
             .add_widget("BottomButtonMinus", Box::new(button8));
 
+        let mut text_widget4 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "1".to_string(),
+            18,
+            TextJustify::Left,
+        );
+        text_widget4.set_point(CONFIG_ORIGIN, 310, 308);
+        text_widget4.set_size(CONFIG_BODY_SIZE, 40, 24);
+        text_widget4.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget4.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget("BottomButtonText", Box::new(text_widget4));
+
         let mut button9 = PushButtonWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
             "+".to_string(),
@@ -496,6 +593,21 @@ impl SimpleWindow {
         self.pushrod
             .borrow_mut()
             .add_widget("SpacingButtonMinus", Box::new(button10));
+
+        let mut text_widget5 = TextWidget::new(
+            "assets/OpenSans-Regular.ttf".to_string(),
+            "1".to_string(),
+            18,
+            TextJustify::Left,
+        );
+        text_widget5.set_point(CONFIG_ORIGIN, 310, 334);
+        text_widget5.set_size(CONFIG_BODY_SIZE, 40, 24);
+        text_widget5.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        text_widget5.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+
+        self.pushrod
+            .borrow_mut()
+            .add_widget("SpacingButtonText", Box::new(text_widget5));
     }
 
     fn build(&mut self) {
