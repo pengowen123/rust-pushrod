@@ -10,6 +10,8 @@
 
 Draws inspiration from lots of GUI libraries.
 
+[Click here to donate to this project!](https://www.patreon.com/KenSuenobu)
+
 ## (Ever Evolving) Screenshot of Sample
 
 [![](docs/sample-0.3.7.png)](docs/sample-0.3.7.png)
