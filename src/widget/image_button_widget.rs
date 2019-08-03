@@ -35,6 +35,7 @@ pub struct ImageButtonWidget {
     image_widget: ImageWidget,
     active: bool,
     widget_id: i32,
+    on_click: Option<Box<dyn FnMut (&mut ImageButtonWidget)>>,
 }
 
 impl ImageButtonWidget {
@@ -62,6 +63,7 @@ impl ImageButtonWidget {
             image_widget,
             active: false,
             widget_id: 0,
+            on_click: None,
         }
     }
 
@@ -77,6 +79,17 @@ impl ImageButtonWidget {
         self.text_widget
             .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.invalidate();
+    }
+
+    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut ImageButtonWidget) + 'static {
+        self.on_click = Some(Box::new(callback));
+    }
+
+    pub fn click(&mut self) {
+        if let Some(mut cb) = self.on_click.take() {
+            cb(self);
+            self.on_click = Some(cb);
+        }
     }
 }
 
@@ -163,6 +176,7 @@ impl Widget for ImageButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.draw_unhovered();
                             self.active = false;
+                            self.click();
 
                             return Some(WidgetClicked { widget_id, button });
                         }

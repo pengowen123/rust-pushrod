@@ -36,6 +36,7 @@ pub struct ToggleButtonWidget {
     selected: bool,
     active: bool,
     widget_id: i32,
+    on_click: Option<Box<dyn FnMut (&mut ToggleButtonWidget, bool)>>,
 }
 
 impl ToggleButtonWidget {
@@ -56,6 +57,7 @@ impl ToggleButtonWidget {
             selected: false,
             active: false,
             widget_id: 0,
+            on_click: None,
         }
     }
 
@@ -85,6 +87,17 @@ impl ToggleButtonWidget {
         }
 
         self.invalidate();
+    }
+
+    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut ToggleButtonWidget, bool) + 'static {
+        self.on_click = Some(Box::new(callback));
+    }
+
+    pub fn click(&mut self, state: bool) {
+        if let Some(mut cb) = self.on_click.take() {
+            cb(self, state);
+            self.on_click = Some(cb);
+        }
     }
 }
 
@@ -156,6 +169,7 @@ impl Widget for ToggleButtonWidget {
                             self.selected = !self.selected;
                             self.draw_unhovered();
                             self.active = false;
+                            self.click(self.selected);
 
                             return Some(WidgetSelected {
                                 widget_id,

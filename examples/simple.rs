@@ -864,6 +864,7 @@ impl SimpleWindow {
             make_origin_point(),
         );
     }
+
     fn add_timer(&mut self) {
         let mut timer = TimerWidget::new();
 
