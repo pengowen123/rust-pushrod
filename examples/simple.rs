@@ -971,7 +971,6 @@ impl SimpleWindow {
 
 fn main() {
     let window: GlfwWindow = WindowSettings::new("Pushrod Window", [800, 640])
-        .opengl(OpenGL::V3_2)
         .resizable(true)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));

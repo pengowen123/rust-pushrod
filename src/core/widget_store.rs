@@ -476,14 +476,15 @@ impl WidgetStore {
             let paint_widget = &mut self.widgets[paint_id as usize];
 
             if paint_widget.widget.borrow_mut().is_drawable() {
-                let is_hidden = paint_widget
-                    .widget
-                    .borrow_mut()
-                    .config()
-                    .get_toggle(CONFIG_WIDGET_HIDDEN);
+//                let is_hidden = paint_widget
+//                    .widget
+//                    .borrow_mut()
+//                    .config()
+//                    .get_toggle(CONFIG_WIDGET_HIDDEN);
                 let is_invalidated = paint_widget.widget.borrow_mut().is_invalidated();
 
-                if !is_hidden && is_invalidated {
+//                if !is_hidden && is_invalidated {
+                if is_invalidated {
                     let origin: Point = paint_widget
                         .widget
                         .borrow_mut()
@@ -515,11 +516,12 @@ impl WidgetStore {
                             .config()
                             .get_size(CONFIG_BODY_SIZE);
 
-                        &paint_widget
-                            .widget
-                            .borrow_mut()
-                            .get_drawable()
-                            .draw_disabled(new_context, size, g, &c.draw_state);
+                        g.rectangle(
+                            &Rectangle::new([0.0, 0.0, 0.0, 0.8]),
+                            [origin.x as f64, origin.y as f64, size.w as f64, size.h as f64],
+                            &c.draw_state,
+                            c.transform,
+                        );
                     }
                 }
 

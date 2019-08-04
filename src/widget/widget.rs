@@ -30,18 +30,6 @@ pub trait Drawable {
         // Do nothing on the draw.
     }
 
-    /// Internal method that is used to draw a box around the `Widget` when in disabled state.
-    /// You can override this method, should you choose to, so that the disabled state appears
-    /// differently in your application.  It is safe to leave this alone.
-    fn draw_disabled(&mut self, c: Context, size: Size, g: &mut GlGraphics, clip: &DrawState) {
-        g.rectangle(
-            &Rectangle::new([0.0, 0.0, 0.0, 0.8]),
-            [0.0f64, 0.0f64, size.w as f64, size.h as f64],
-            clip,
-            c.transform,
-        );
-    }
-
     /// Draws an object at an offset on the screen.  This is a convenience method that is used
     /// by other `Widget`s that contain multiple widgets.  (See `CheckboxWidget` and
     /// `ImageButtonWidget` for good examples of this use.)

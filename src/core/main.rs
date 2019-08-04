@@ -234,8 +234,8 @@ impl Pushrod {
                 self.handle_system_event(event_handler, event.clone());
             }
 
-            event.mouse_cursor(|x, y| {
-                let mouse_point = make_point_f64(x, y);
+            event.mouse_cursor(|pos| {
+                let mouse_point = make_point_f64(pos[0], pos[1]);
 
                 if mouse_point.x != previous_mouse_position.x
                     || mouse_point.y != previous_mouse_position.y
@@ -285,8 +285,8 @@ impl Pushrod {
                 }
             });
 
-            event.mouse_scroll(|x, y| {
-                let mouse_point = make_point_f64(x, y);
+            event.mouse_scroll(|pos| {
+                let mouse_point = make_point_f64(pos[0], pos[1]);
 
                 if last_widget_id != -1 {
                     self.handle_event(
@@ -350,8 +350,11 @@ impl Pushrod {
                 }
             });
 
-            event.resize(|w, h| {
-                self.handle_resize(w as u32, h as u32);
+            event.resize(|args| {
+                let w: u32 = args.window_size[0] as u32;
+                let h: u32 = args.window_size[1] as u32;
+
+                self.handle_resize(w, h);
                 self.widget_store
                     .borrow_mut()
                     .resize_layout_managers(w as u32, h as u32);
@@ -373,25 +376,25 @@ impl Pushrod {
                     CallbackEvent::WindowFocused { flag: focused },
                 );
             });
-
-            match event {
-                Event::Input(Input::Button(ButtonArgs {
-                    state,
-                    button: Button::Keyboard(key),
-                    scancode: _,
-                })) => {
-                    self.handle_event(
-                        last_widget_id,
-                        event_handler,
-                        CallbackEvent::KeyPressed {
-                            widget_id: last_widget_id,
-                            key: *key,
-                            state: *state,
-                        },
-                    );
-                }
-                _ => {}
-            };
+//
+//            match event {
+//                Event::Input(Input::Button(ButtonArgs {
+//                    state,
+//                    button: Button::Keyboard(key),
+//                    scancode: _,
+//                })) => {
+//                    self.handle_event(
+//                        last_widget_id,
+//                        event_handler,
+//                        CallbackEvent::KeyPressed {
+//                            widget_id: last_widget_id,
+//                            key: *key,
+//                            state: *state,
+//                        },
+//                    );
+//                }
+//                _ => {}
+//            };
 
             event.render(|args| {
                 injectable_map.iter().for_each(|widget_id| {

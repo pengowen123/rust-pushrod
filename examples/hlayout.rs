@@ -634,8 +634,7 @@ impl SimpleWindow {
 
 fn main() {
     let window: GlfwWindow = WindowSettings::new("Horizontal Layout Example", [800, 370])
-        .opengl(OpenGL::V3_2)
-        .resizable(true)
+        .resizable(false)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
     let mut app_window = SimpleWindow::new(Pushrod::new(window));
