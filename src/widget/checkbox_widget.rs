@@ -35,6 +35,7 @@ pub struct CheckboxWidget {
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
     widget_id: i32,
+    on_click: Option<Box<dyn FnMut (&mut CheckboxWidget, bool)>>,
 }
 
 impl CheckboxWidget {
@@ -66,6 +67,18 @@ impl CheckboxWidget {
             selected_widget,
             unselected_widget,
             widget_id: 0,
+            on_click: None,
+        }
+    }
+
+    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut CheckboxWidget, bool) + 'static {
+        self.on_click = Some(Box::new(callback));
+    }
+
+    pub fn click(&mut self, state: bool) {
+        if let Some(mut cb) = self.on_click.take() {
+            cb(self, state);
+            self.on_click = Some(cb);
         }
     }
 }
@@ -148,7 +161,7 @@ impl Widget for CheckboxWidget {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
                             self.selected = !self.selected;
-
+                            self.click(self.selected);
                             self.invalidate();
 
                             return Some(CallbackEvent::WidgetSelected {

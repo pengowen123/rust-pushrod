@@ -32,6 +32,7 @@ pub struct PushButtonWidget {
     text_widget: TextWidget,
     active: bool,
     widget_id: i32,
+    on_click: Option<Box<dyn FnMut (&mut PushButtonWidget)>>,
 }
 
 impl PushButtonWidget {
@@ -49,6 +50,7 @@ impl PushButtonWidget {
             text_widget,
             active: false,
             widget_id: 0,
+            on_click: None,
         }
     }
 
@@ -64,6 +66,17 @@ impl PushButtonWidget {
         self.text_widget
             .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.invalidate();
+    }
+
+    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut PushButtonWidget) + 'static {
+        self.on_click = Some(Box::new(callback));
+    }
+
+    pub fn click(&mut self) {
+        if let Some(mut cb) = self.on_click.take() {
+            cb(self);
+            self.on_click = Some(cb);
+        }
     }
 }
 
@@ -127,6 +140,8 @@ impl Widget for PushButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.draw_unhovered();
                             self.active = false;
+
+                            self.click();
 
                             return Some(WidgetClicked { widget_id, button });
                         }

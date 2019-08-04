@@ -231,11 +231,13 @@ impl SimpleWindow {
     }
 
     fn add_horizontal_layout(&mut self) {
-        let mut base_widget: CanvasWidget = CanvasWidget::new();
+        let mut base_widget: BoxWidget = BoxWidget::new();
 
         base_widget.set_point(CONFIG_ORIGIN, 20, 20);
         base_widget.set_size(CONFIG_BODY_SIZE, 760, 200);
+        base_widget.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         base_widget.set_color(CONFIG_MAIN_COLOR, [1.0, 1.0, 1.0, 1.0]);
+        base_widget.set_numeric(CONFIG_BORDER_WIDTH, 1);
 
         let base_widget_id = self.pushrod.borrow_mut().add_widget_to_parent_by_name(
             "MainContainerWidget",

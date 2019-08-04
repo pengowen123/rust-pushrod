@@ -1,5 +1,15 @@
 # Pushrod Releases
 
+## 0.4.2
+
+- Added functionality for callbacks in Push Button Widget.
+- Added on_click to PushButtonWidget (#172)
+- Added on_click with selected state to CheckboxWidget (#172)
+- Added on_click to ImageButtonWidget (#172)
+- Added on_click to RadioButtonWidget (#172)
+- Added on_click with selected state to ToggleButtonWidget (#172)
+- Added on_tick to TimerWidget (#172)
+
 ## 0.4.1
 
 - Adding horizontal layout example

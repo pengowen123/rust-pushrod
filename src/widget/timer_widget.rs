@@ -32,6 +32,7 @@ pub struct TimerWidget {
     initiated: u64,
     triggered: bool,
     widget_id: i32,
+    on_tick: Option<Box<dyn FnMut (&mut TimerWidget)>>,
 }
 
 fn time_ms() -> u64 {
@@ -49,6 +50,7 @@ impl TimerWidget {
             initiated: time_ms(),
             triggered: false,
             widget_id: 0,
+            on_tick: None,
         }
     }
 
@@ -66,6 +68,17 @@ impl TimerWidget {
             self.triggered = true;
         }
     }
+
+    pub fn on_tick<F>(&mut self, callback: F) where F: FnMut (&mut TimerWidget) + 'static {
+        self.on_tick = Some(Box::new(callback));
+    }
+
+    fn trigger_tick(&mut self) {
+        if let Some(mut cb) = self.on_tick.take() {
+            cb(self);
+            self.on_tick = Some(cb);
+        }
+    }
 }
 
 impl Drawable for TimerWidget {}
@@ -76,6 +89,7 @@ impl InjectableCustomEvents for TimerWidget {
     fn inject_custom_event(&mut self, widget_id: i32) -> Option<CallbackEvent> {
         if self.triggered {
             self.triggered = false;
+            self.trigger_tick();
             Some(CallbackEvent::TimerTriggered { widget_id })
         } else {
             None
