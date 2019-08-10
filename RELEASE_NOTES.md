@@ -1,5 +1,11 @@
 # Pushrod Releases
 
+## 0.4.3
+
+- Removed draw_disabled, now controlled by the draw loop.
+- Updated Piston to 0.49, glwindow, opengl and graphics libraries to latest.
+- Hidden widgets no longer traverses children to draw (#165)
+
 ## 0.4.2
 
 - Added functionality for callbacks in Push Button Widget.

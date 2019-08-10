@@ -74,7 +74,7 @@ impl TextWidget {
 
         for ch in text.chars() {
             let character = self.font_cache.character(self.font_size, ch).unwrap();
-            width += character.width();
+            width += character.advance_width();
         }
 
         self.desired_width = width as i32;

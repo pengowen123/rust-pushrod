@@ -10,7 +10,7 @@
 
 Draws inspiration from lots of GUI libraries.
 
-[Click here to donate to this project!](https://www.patreon.com/KenSuenobu)
+If you like this library, please consider [donating to this project!](https://www.patreon.com/KenSuenobu)
 
 ## (Ever Evolving) Screenshot of Sample
 
