@@ -19,7 +19,6 @@ extern crate pushrod;
 use std::cell::RefCell;
 
 use glfw_window::GlfwWindow;
-use opengl_graphics::OpenGL;
 use piston::input::*;
 use piston::window::*;
 

@@ -19,7 +19,6 @@ extern crate pushrod;
 use std::cell::RefCell;
 
 use glfw_window::GlfwWindow;
-use opengl_graphics::OpenGL;
 use piston::input::*;
 use piston::window::*;
 
@@ -27,18 +26,12 @@ use pushrod::core::callbacks::*;
 use pushrod::core::horizontal_layout_manager::*;
 use pushrod::core::layout_manager::LayoutManagerPadding;
 use pushrod::core::main::*;
-use pushrod::core::point::{make_origin_point, Point, Size};
-use pushrod::core::vertical_layout_manager::*;
+use pushrod::core::point::make_origin_point;
 use pushrod::core::widget_store::*;
 use pushrod::widget::box_widget::*;
-use pushrod::widget::checkbox_widget::*;
 use pushrod::widget::config::*;
-use pushrod::widget::image_button_widget::*;
-use pushrod::widget::progress_widget::*;
 use pushrod::widget::push_button_widget::*;
 use pushrod::widget::text_widget::*;
-use pushrod::widget::timer_widget::*;
-use pushrod::widget::toggle_button_widget::*;
 use pushrod::widget::widget::*;
 
 pub struct SimpleWindow {
@@ -165,16 +158,14 @@ impl SimpleWindowEventHandler {
     }
 
     fn refresh_layout(&mut self, widget_store: &mut WidgetStore) {
-        widget_store.adjust_layout_manager(
-            self.layout_id,
-            LayoutManagerPadding {
-                top: self.top_padding,
-                left: self.left_padding,
-                right: self.right_padding,
-                bottom: self.bottom_padding,
-                spacing: self.spacing,
-            },
-        );
+        widget_store.adjust_layout_manager(self.layout_id,
+        LayoutManagerPadding {
+            top: self.top_padding,
+            left: self.left_padding,
+            right: self.right_padding,
+            bottom: self.bottom_padding,
+            spacing: self.spacing,
+        });
 
         widget_store
             .get_widget_for_name("TopButtonText")
@@ -268,7 +259,7 @@ impl SimpleWindow {
         box_widget.set_color(CONFIG_MAIN_COLOR, [0.0, 1.0, 0.0, 1.0]);
         box_widget.set_numeric(CONFIG_BORDER_WIDTH, 4);
         box_widget.set_color(CONFIG_BORDER_COLOR, [1.0, 0.0, 0.0, 1.0]);
-        let box_widget_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
+        let _box_widget_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidget1",
             Box::new(box_widget),
             self.layout_id,
@@ -281,7 +272,7 @@ impl SimpleWindow {
         box_1.set_color(CONFIG_MAIN_COLOR, [0.5, 0.5, 1.0, 1.0]);
         box_1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         box_1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 1.0, 1.0]);
-        let box_1_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
+        let _box_1_id = self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidget2",
             Box::new(box_1),
             self.layout_id,

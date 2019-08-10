@@ -2,6 +2,7 @@
 
 ## 0.4.4
 
+- Cleaned up sample code.
 
 ## 0.4.3
 
