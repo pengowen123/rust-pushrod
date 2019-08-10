@@ -521,7 +521,12 @@ impl WidgetStore {
 
                             g.rectangle(
                                 &Rectangle::new([0.0, 0.0, 0.0, 0.8]),
-                                [origin.x as f64, origin.y as f64, size.w as f64, size.h as f64],
+                                [
+                                    origin.x as f64,
+                                    origin.y as f64,
+                                    size.w as f64,
+                                    size.h as f64,
+                                ],
                                 &c.draw_state,
                                 c.transform,
                             );

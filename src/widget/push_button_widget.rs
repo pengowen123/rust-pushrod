@@ -32,7 +32,7 @@ pub struct PushButtonWidget {
     text_widget: TextWidget,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut (&mut PushButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut PushButtonWidget)>>,
 }
 
 impl PushButtonWidget {
@@ -68,7 +68,10 @@ impl PushButtonWidget {
         self.invalidate();
     }
 
-    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut PushButtonWidget) + 'static {
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut PushButtonWidget) + 'static,
+    {
         self.on_click = Some(Box::new(callback));
     }
 

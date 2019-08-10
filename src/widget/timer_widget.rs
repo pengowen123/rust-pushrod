@@ -32,7 +32,7 @@ pub struct TimerWidget {
     initiated: u64,
     triggered: bool,
     widget_id: i32,
-    on_tick: Option<Box<dyn FnMut (&mut TimerWidget)>>,
+    on_tick: Option<Box<dyn FnMut(&mut TimerWidget)>>,
 }
 
 fn time_ms() -> u64 {
@@ -69,7 +69,10 @@ impl TimerWidget {
         }
     }
 
-    pub fn on_tick<F>(&mut self, callback: F) where F: FnMut (&mut TimerWidget) + 'static {
+    pub fn on_tick<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut TimerWidget) + 'static,
+    {
         self.on_tick = Some(Box::new(callback));
     }
 

@@ -39,7 +39,7 @@ pub struct RadioButtonWidget {
     unselected_widget: ImageWidget,
     inject_event: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut (&mut RadioButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut RadioButtonWidget)>>,
 }
 
 impl RadioButtonWidget {
@@ -78,7 +78,10 @@ impl RadioButtonWidget {
         }
     }
 
-    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut RadioButtonWidget) + 'static {
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut RadioButtonWidget) + 'static,
+    {
         self.on_click = Some(Box::new(callback));
     }
 

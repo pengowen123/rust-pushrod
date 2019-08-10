@@ -35,7 +35,7 @@ pub struct ImageButtonWidget {
     image_widget: ImageWidget,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut (&mut ImageButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut ImageButtonWidget)>>,
 }
 
 impl ImageButtonWidget {
@@ -81,7 +81,10 @@ impl ImageButtonWidget {
         self.invalidate();
     }
 
-    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut ImageButtonWidget) + 'static {
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut ImageButtonWidget) + 'static,
+    {
         self.on_click = Some(Box::new(callback));
     }
 
