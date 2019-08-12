@@ -71,6 +71,8 @@ impl CheckboxWidget {
         }
     }
 
+    /// Sets a callback closure that can be called when a click is registered for this
+    /// `Widget`.
     pub fn on_click<F>(&mut self, callback: F)
     where
         F: FnMut(&mut CheckboxWidget, bool) + 'static,
@@ -78,6 +80,10 @@ impl CheckboxWidget {
         self.on_click = Some(Box::new(callback));
     }
 
+    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
+    /// of the current `Widget` object as a parameter, so this object can be modified when
+    /// a click is registered, if necessary.  The checkbox' sselected state is also passed
+    /// into the click callback.
     pub fn click(&mut self, state: bool) {
         if let Some(mut cb) = self.on_click.take() {
             cb(self, state);

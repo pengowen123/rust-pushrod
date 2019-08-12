@@ -68,6 +68,8 @@ impl PushButtonWidget {
         self.invalidate();
     }
 
+    /// Sets a callback closure that can be called when a click is registered for this
+    /// widget.
     pub fn on_click<F>(&mut self, callback: F)
     where
         F: FnMut(&mut PushButtonWidget) + 'static,
@@ -75,6 +77,9 @@ impl PushButtonWidget {
         self.on_click = Some(Box::new(callback));
     }
 
+    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
+    /// of the current `Widget` object as a parameter, so this object can be modified when
+    /// a click is registered, if necessary.
     pub fn click(&mut self) {
         if let Some(mut cb) = self.on_click.take() {
             cb(self);

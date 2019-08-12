@@ -33,7 +33,6 @@ pub struct ProgressWidget {
 }
 
 impl ProgressWidget {
-    ///
     pub fn new() -> Self {
         let mut base = BoxWidget::new();
 

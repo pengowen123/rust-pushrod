@@ -27,9 +27,12 @@ If you like this library, please consider [donating to this project!](https://ww
   - [x] `Drawable`
   - [x] `InjectableSystemEvents`
   - [x] `InjectableCustomEvents`
+- [x] Update Piston to the latest release
+- [x] Fix hidden object traversal in main draw loop
+- [ ] Fix all `Widget`s so that they draw to a texture
 - [x] Horizontal Layout sample application
 - [ ] Vertical Layout sample application
-- [ ] Custom event handler intelligently uses callbacks
+- [ ] Update documentation
 - [ ] Widget offset updates (adding a child origin based on parent)
 - [ ] Optimizations to screen invalidation
 - [ ] Optimizations to drawing (every object is a 3D texture, not just blitting to a master texture)

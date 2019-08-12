@@ -59,6 +59,9 @@ pub trait LayoutManager {
         coordinates: LayoutManagerCoordinates,
     ) -> LayoutManagerCoordinates;
 
+    /// This method is used to reset the `LayoutManagerCoordinates`.  Once the layout coordinates
+    /// are adjusted, the system will automatically call `do_layout` so that the layout is
+    /// re-calculated, and the objects are redrawn inside the bounds of the layout box.
     fn adjust_layout(&mut self, coordinates: LayoutManagerPadding);
 
     /// This function must be overridden to return the ID of the `Widget` that is stored within

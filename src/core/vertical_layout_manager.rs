@@ -1,5 +1,5 @@
 // Vertical Layout Manager
-// Lays out Widgets in a Vertical Area
+// Lays out Widgets Vertically in a Bounding Box
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
