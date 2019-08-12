@@ -158,14 +158,16 @@ impl SimpleWindowEventHandler {
     }
 
     fn refresh_layout(&mut self, widget_store: &mut WidgetStore) {
-        widget_store.adjust_layout_manager(self.layout_id,
-        LayoutManagerPadding {
-            top: self.top_padding,
-            left: self.left_padding,
-            right: self.right_padding,
-            bottom: self.bottom_padding,
-            spacing: self.spacing,
-        });
+        widget_store.adjust_layout_manager(
+            self.layout_id,
+            LayoutManagerPadding {
+                top: self.top_padding,
+                left: self.left_padding,
+                right: self.right_padding,
+                bottom: self.bottom_padding,
+                spacing: self.spacing,
+            },
+        );
 
         widget_store
             .get_widget_for_name("TopButtonText")
