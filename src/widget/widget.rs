@@ -31,8 +31,9 @@ pub trait Drawable {
     }
 
     /// Draws an object at an offset on the screen.  This is a convenience method that is used
-    /// by other `Widget`s that contain multiple widgets.  (See `CheckboxWidget` and
-    /// `ImageButtonWidget` for good examples of this use.)
+    /// by other `Widget`s that contain multiple widgets.  Draw with offset always uses 0x0 as
+    /// the starting drawing coordinates, as this is what will be drawn within the bounds of the
+    /// `Widget`.  (See `CheckboxWidget` and `ImageButtonWidget` for good examples of this use.)
     fn draw_with_offset(
         &mut self,
         c: Context,
