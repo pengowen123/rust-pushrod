@@ -14,9 +14,9 @@
 // limitations under the License.
 
 use std::cell::RefCell;
-use std::rc::Rc;
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::rc::Rc;
 
 use crate::core::callbacks::*;
 use crate::core::drawing_texture::*;
@@ -61,12 +61,16 @@ impl Pushrod {
 
     /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
-        Rc::clone(&self.widget_store).borrow_mut().add_widget(name, widget)
+        Rc::clone(&self.widget_store)
+            .borrow_mut()
+            .add_widget(name, widget)
     }
 
     /// Convenience method that adds a `LayoutManager` to the layout management stack.
     pub fn add_layout_manager(&mut self, manager: Box<dyn LayoutManager>) -> i32 {
-        Rc::clone(&self.widget_store).borrow_mut().add_layout_manager(manager)
+        Rc::clone(&self.widget_store)
+            .borrow_mut()
+            .add_layout_manager(manager)
     }
 
     /// Convenience method that adds a `Widget` to a `LayoutManager` by the manager's ID and
@@ -416,7 +420,9 @@ impl Pushrod {
                         match injectable_event {
                             Some(x) => {
                                 self.handle_event(*widget_id, event_handler, x.clone());
-                                Rc::clone(&self.widget_store).borrow_mut().inject_event(x.clone());
+                                Rc::clone(&self.widget_store)
+                                    .borrow_mut()
+                                    .inject_event(x.clone());
                             }
                             None => (),
                         }
@@ -427,7 +433,12 @@ impl Pushrod {
                     self.drawing_texture.switch_to_texture();
 
                     gl.draw(args.viewport(), |c, g| {
-                        Rc::clone(&self.widget_store).borrow_mut().draw(0, c, g, self.drawing_texture.fbo)
+                        Rc::clone(&self.widget_store).borrow_mut().draw(
+                            0,
+                            c,
+                            g,
+                            self.drawing_texture.fbo,
+                        )
                     });
 
                     self.drawing_texture.switch_to_fb(0);
