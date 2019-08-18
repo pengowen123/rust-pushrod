@@ -3,7 +3,7 @@
 ## 0.4.4
 
 - Cleaned up sample code.
-- Updated Pushrod to wrap WidgetStore in an Rc.
+- Updated Pushrod to wrap WidgetStore in an Rc, updated event rendering with Rc::clone
 
 ## 0.4.3
 
