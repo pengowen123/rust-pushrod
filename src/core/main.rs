@@ -61,12 +61,12 @@ impl Pushrod {
 
     /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
-        self.widget_store.borrow_mut().add_widget(name, widget)
+        Rc::clone(&self.widget_store).borrow_mut().add_widget(name, widget)
     }
 
     /// Convenience method that adds a `LayoutManager` to the layout management stack.
     pub fn add_layout_manager(&mut self, manager: Box<dyn LayoutManager>) -> i32 {
-        self.widget_store.borrow_mut().add_layout_manager(manager)
+        Rc::clone(&self.widget_store).borrow_mut().add_layout_manager(manager)
     }
 
     /// Convenience method that adds a `Widget` to a `LayoutManager` by the manager's ID and
@@ -399,16 +399,14 @@ impl Pushrod {
 
             event.render(|args| {
                 injectable_map.iter().for_each(|widget_id| {
-                    let can_inject = self
-                        .widget_store
+                    let can_inject = Rc::clone(&self.widget_store)
                         .borrow_mut()
                         .get_widget_for_id(*widget_id)
                         .borrow_mut()
                         .injects_custom_events();
 
                     if can_inject {
-                        let injectable_event = self
-                            .widget_store
+                        let injectable_event = Rc::clone(&self.widget_store)
                             .borrow_mut()
                             .get_widget_for_id(*widget_id)
                             .borrow_mut()
@@ -418,7 +416,7 @@ impl Pushrod {
                         match injectable_event {
                             Some(x) => {
                                 self.handle_event(*widget_id, event_handler, x.clone());
-                                self.widget_store.borrow_mut().inject_event(x.clone());
+                                Rc::clone(&self.widget_store).borrow_mut().inject_event(x.clone());
                             }
                             None => (),
                         }
@@ -426,12 +424,10 @@ impl Pushrod {
                 });
 
                 if self.widget_store.borrow_mut().needs_repaint() {
-                    let widgets = &mut self.widget_store.borrow_mut();
-
                     self.drawing_texture.switch_to_texture();
 
                     gl.draw(args.viewport(), |c, g| {
-                        widgets.draw(0, c, g, self.drawing_texture.fbo)
+                        Rc::clone(&self.widget_store).borrow_mut().draw(0, c, g, self.drawing_texture.fbo)
                     });
 
                     self.drawing_texture.switch_to_fb(0);
