@@ -82,12 +82,11 @@ impl Pushrod {
         manager_id: i32,
         position: Point,
     ) -> i32 {
-        let widget_id = self
-            .widget_store
+        let widget_id = Rc::clone(&self.widget_store)
             .borrow_mut()
             .add_widget_to_layout_manager(name, widget, manager_id, position);
 
-        self.widget_store
+        Rc::clone(&self.widget_store)
             .borrow_mut()
             .do_layout_for_manager(manager_id);
 
@@ -102,7 +101,7 @@ impl Pushrod {
         widget: Box<dyn Widget>,
         parent_id: i32,
     ) -> i32 {
-        self.widget_store
+        Rc::clone(&self.widget_store)
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)
     }
@@ -114,18 +113,17 @@ impl Pushrod {
         name: &str,
         widget: Box<dyn Widget>,
     ) -> i32 {
-        let parent_id = self
-            .widget_store
+        let parent_id = Rc::clone(&self.widget_store)
             .borrow_mut()
             .get_widget_id_for_name(parent_name);
 
-        self.widget_store
+        Rc::clone(&self.widget_store)
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)
     }
 
     fn broadcast_event(&mut self, event: CallbackEvent) {
-        self.widget_store
+        Rc::clone(&self.widget_store)
             .borrow_mut()
             .widgets
             .iter_mut()
@@ -147,16 +145,15 @@ impl Pushrod {
             return;
         }
 
-        let injectable_event = self
-            .widget_store
+        let injectable_event = Rc::clone(&self.widget_store)
             .borrow_mut()
             .handle_event(widget_id, event.clone());
 
-        event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
+        event_handler.handle_event(event.clone(), &mut Rc::clone(&self.widget_store).borrow_mut());
 
         match injectable_event {
             Some(new_event) => {
-                event_handler.handle_event(new_event.clone(), &mut self.widget_store.borrow_mut())
+                event_handler.handle_event(new_event.clone(), &mut Rc::clone(&self.widget_store).borrow_mut())
             }
             None => (),
         }
@@ -168,7 +165,7 @@ impl Pushrod {
         event: CallbackEvent,
     ) {
         eprintln!("Handling system event: {:?}", event.clone());
-        event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
+        event_handler.handle_event(event.clone(), &mut Rc::clone(&self.widget_store).borrow_mut());
     }
 
     fn handle_resize(&mut self, width: u32, height: u32) {
@@ -215,8 +212,7 @@ impl Pushrod {
         let mut last_widget_id = -1;
         let mut previous_mouse_position: Point = make_origin_point();
         let mut button_map: HashMap<i32, HashSet<Button>> = HashMap::new();
-        let injectable_map: Vec<i32> = self
-            .widget_store
+        let injectable_map: Vec<i32> = Rc::clone(&self.widget_store)
             .borrow_mut()
             .widgets
             .iter()
@@ -247,8 +243,7 @@ impl Pushrod {
                 {
                     previous_mouse_position = mouse_point.clone();
 
-                    let current_widget_id = self
-                        .widget_store
+                    let current_widget_id = Rc::clone(&self.widget_store)
                         .borrow_mut()
                         .get_widget_id_for_point(mouse_point.clone());
 
@@ -360,7 +355,7 @@ impl Pushrod {
                 let h: u32 = args.window_size[1] as u32;
 
                 self.handle_resize(w, h);
-                self.widget_store
+                Rc::clone(&self.widget_store)
                     .borrow_mut()
                     .resize_layout_managers(w as u32, h as u32);
 
@@ -371,7 +366,9 @@ impl Pushrod {
                     },
                 });
 
-                self.widget_store.borrow_mut().invalidate_all_widgets();
+                Rc::clone(&self.widget_store)
+                    .borrow_mut()
+                    .invalidate_all_widgets();
             });
 
             event.focus(|focused| {
