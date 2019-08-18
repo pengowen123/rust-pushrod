@@ -4,6 +4,7 @@
 
 - Cleaned up sample code.
 - Updated Pushrod to wrap WidgetStore in an Rc, updated event rendering with Rc::clone
+- Changed from using iterator to for loop.
 
 ## 0.4.3
 

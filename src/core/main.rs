@@ -234,14 +234,15 @@ impl Pushrod {
             .iter()
             .filter(|x| x.widget.borrow_mut().injects_custom_events())
             .map(|x| x.widget_id)
-            .collect();
+            .collect()
+            .clone();
         let mut gl: GlGraphics = GlGraphics::new(OpenGL::V3_2);
 
         eprintln!("Injectable Map: {:?}", injectable_map);
         eprintln!("Window Size: {:?}", self.window.size());
         eprintln!("Draw Size: {:?}", self.window.draw_size());
 
-        self.widget_store.borrow_mut().invalidate_all_widgets();
+        Rc::clone(&self.widget_store).borrow_mut().invalidate_all_widgets();
         self.rebuild_gl_buffers();
 
         while let Some(ref event) = self.events.next(&mut self.window) {
@@ -415,24 +416,25 @@ impl Pushrod {
             //            };
 
             event.render(|args| {
-                injectable_map.iter().for_each(|widget_id| {
+                for pos in 0..injectable_map.len() {
+                    let widget_id = injectable_map[pos];
                     let can_inject = Rc::clone(&self.widget_store)
                         .borrow_mut()
-                        .get_widget_for_id(*widget_id)
+                        .get_widget_for_id(widget_id)
                         .borrow_mut()
                         .injects_custom_events();
 
                     if can_inject {
                         let injectable_event = Rc::clone(&self.widget_store)
                             .borrow_mut()
-                            .get_widget_for_id(*widget_id)
+                            .get_widget_for_id(widget_id)
                             .borrow_mut()
                             .get_injectable_custom_events()
-                            .inject_custom_event(*widget_id);
+                            .inject_custom_event(widget_id);
 
                         match injectable_event {
                             Some(x) => {
-                                self.handle_event(*widget_id, event_handler, x.clone());
+                                self.handle_event(widget_id, event_handler, x.clone());
 
                                 // Injects an event to all widgets, allowing them to exhibit custom event handling behavior if
                                 // required.  This is usually used in cases where special triggering needs to take place, like
@@ -455,7 +457,7 @@ impl Pushrod {
                             None => (),
                         }
                     }
-                });
+                }
 
                 if self.widget_store.borrow_mut().needs_repaint() {
                     self.drawing_texture.switch_to_texture();
