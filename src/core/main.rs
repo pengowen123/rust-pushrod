@@ -14,6 +14,7 @@
 // limitations under the License.
 
 use std::cell::RefCell;
+use std::rc::Rc;
 use std::collections::HashMap;
 use std::collections::HashSet;
 
@@ -40,7 +41,7 @@ pub struct Pushrod {
 
     /// This is the `WidgetStore` object that is used to store the `Widget` list in the current
     /// display stack.
-    pub widget_store: RefCell<WidgetStore>,
+    pub widget_store: Rc<RefCell<WidgetStore>>,
     pub drawing_texture: DrawingTexture,
 }
 
@@ -53,7 +54,7 @@ impl Pushrod {
         Self {
             window,
             events: Events::new(event_settings),
-            widget_store: RefCell::new(WidgetStore::new()),
+            widget_store: Rc::new(RefCell::new(WidgetStore::new())),
             drawing_texture: DrawingTexture::new(),
         }
     }

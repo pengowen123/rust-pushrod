@@ -3,6 +3,7 @@
 ## 0.4.4
 
 - Cleaned up sample code.
+- Updated Pushrod to wrap WidgetStore in an Rc.
 
 ## 0.4.3
 
