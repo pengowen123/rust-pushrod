@@ -20,6 +20,7 @@ use piston::input::*;
 
 use crate::core::callbacks::*;
 use crate::core::point::Point;
+use crate::core::widget_store::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::image_widget::*;
@@ -176,7 +177,7 @@ impl Widget for RadioButtonWidget {
         }
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&mut WidgetStore>) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
