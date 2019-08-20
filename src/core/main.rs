@@ -134,7 +134,7 @@ impl Pushrod {
                 .widgets[i]
                 .widget
                 .borrow_mut()
-                .handle_event(false, event.clone(), None);
+                .handle_event(false, event.clone(), Some(&self.widget_store.borrow().widgets));
         }
     }
 
