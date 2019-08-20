@@ -144,7 +144,7 @@ pub trait Widget {
     /// top-level GUI events, such as a mouse entering or exiting the bounds of this `Widget`.
     /// If the `injected` flag is set, it indicates that the event supplied was generate by
     /// a `Widget`, and not by the run loop.
-    fn handle_event(&mut self, _injected: bool, _event: CallbackEvent, _widget_store: Option<&mut WidgetStore>) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, _injected: bool, _event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
         None
     }
 

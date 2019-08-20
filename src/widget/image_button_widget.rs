@@ -152,7 +152,7 @@ impl Widget for ImageButtonWidget {
         self.image_widget.set_config(config, config_value.clone());
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&mut WidgetStore>) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseEntered { widget_id: _ } => {

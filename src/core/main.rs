@@ -61,14 +61,14 @@ impl Pushrod {
 
     /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
-        Rc::clone(&self.widget_store)
+        self.widget_store
             .borrow_mut()
             .add_widget(name, widget)
     }
 
     /// Convenience method that adds a `LayoutManager` to the layout management stack.
     pub fn add_layout_manager(&mut self, manager: Box<dyn LayoutManager>) -> i32 {
-        Rc::clone(&self.widget_store)
+        self.widget_store
             .borrow_mut()
             .add_layout_manager(manager)
     }
@@ -82,11 +82,11 @@ impl Pushrod {
         manager_id: i32,
         position: Point,
     ) -> i32 {
-        let widget_id = Rc::clone(&self.widget_store)
+        let widget_id = self.widget_store
             .borrow_mut()
             .add_widget_to_layout_manager(name, widget, manager_id, position);
 
-        Rc::clone(&self.widget_store)
+        self.widget_store
             .borrow_mut()
             .do_layout_for_manager(manager_id);
 
@@ -101,7 +101,7 @@ impl Pushrod {
         widget: Box<dyn Widget>,
         parent_id: i32,
     ) -> i32 {
-        Rc::clone(&self.widget_store)
+        self.widget_store
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)
     }
@@ -113,24 +113,24 @@ impl Pushrod {
         name: &str,
         widget: Box<dyn Widget>,
     ) -> i32 {
-        let parent_id = Rc::clone(&self.widget_store)
+        let parent_id = self.widget_store
             .borrow_mut()
             .get_widget_id_for_name(parent_name);
 
-        Rc::clone(&self.widget_store)
+        self.widget_store
             .borrow_mut()
             .add_widget_to_parent(name, widget, parent_id)
     }
 
     fn broadcast_event(&mut self, event: CallbackEvent) {
-        let widget_len = Rc::clone(&self.widget_store)
-            .borrow_mut()
+        let widget_len = self.widget_store
+            .borrow()
             .widgets
             .len();
 
         for i in 0..widget_len {
-            Rc::clone(&self.widget_store)
-                .borrow_mut()
+            self.widget_store
+                .borrow()
                 .widgets[i]
                 .widget
                 .borrow_mut()
@@ -149,16 +149,16 @@ impl Pushrod {
             return;
         }
 
-        let handles_events = Rc::clone(&self.widget_store)
-            .borrow_mut()
+        let handles_events = self.widget_store
+            .borrow()
             .widgets[widget_id as usize]
             .widget
             .borrow_mut()
             .handles_events();
 
         let injectable_event = if handles_events {
-            Rc::clone(&self.widget_store)
-                .borrow_mut()
+            self.widget_store
+                .borrow()
                 .widgets[widget_id as usize]
                 .widget
                 .borrow_mut()
@@ -169,11 +169,11 @@ impl Pushrod {
         };
 
 
-        event_handler.handle_event(event.clone(), &mut Rc::clone(&self.widget_store).borrow_mut());
+        event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
 
         match injectable_event {
             Some(new_event) => {
-                event_handler.handle_event(new_event.clone(), &mut Rc::clone(&self.widget_store).borrow_mut())
+                event_handler.handle_event(new_event.clone(), &mut self.widget_store.borrow_mut())
             }
             None => (),
         }
@@ -185,7 +185,7 @@ impl Pushrod {
         event: CallbackEvent,
     ) {
         eprintln!("Handling system event: {:?}", event.clone());
-        event_handler.handle_event(event.clone(), &mut Rc::clone(&self.widget_store).borrow_mut());
+        event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
     }
 
     fn handle_resize(&mut self, width: u32, height: u32) {
@@ -233,7 +233,7 @@ impl Pushrod {
         let mut previous_mouse_position: Point = make_origin_point();
         let mut button_map: HashMap<i32, HashSet<Button>> = HashMap::new();
         let injectable_map: Vec<i32> = Rc::clone(&self.widget_store)
-            .borrow_mut()
+            .borrow()
             .widgets
             .iter()
             .filter(|x| x.widget.borrow_mut().injects_custom_events())
@@ -446,18 +446,19 @@ impl Pushrod {
 
                                 for i in 0..widget_size {
                                     let handles_events = Rc::clone(&self.widget_store)
-                                        .borrow_mut()
+                                        .borrow()
                                         .widgets[i]
                                         .widget
                                         .borrow_mut().handles_events();
 
                                     if handles_events {
                                         Rc::clone(&self.widget_store)
-                                            .borrow_mut()
+                                            .borrow()
                                             .widgets[i]
                                             .widget
                                             .borrow_mut()
-                                            .handle_event(true, x.clone(),None);
+                                            .handle_event(true, x.clone(),
+                                            Some(&self.widget_store.borrow().widgets));
                                     }
                                 }
                             }
