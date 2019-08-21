@@ -277,3 +277,7 @@ impl Widget for CanvasWidget {
         self
     }
 }
+
+pub fn get_widget_position_by_name(widgets: &Vec<WidgetContainer>, name: String) -> i32 {
+    0
+}

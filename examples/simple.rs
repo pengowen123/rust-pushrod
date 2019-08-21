@@ -717,6 +717,9 @@ impl SimpleWindow {
         button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button1.on_click(|x, widgets| {
+            eprintln!("Clicked: {}", x.get_widget_id());
+        });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidgetButton1",
@@ -736,6 +739,9 @@ impl SimpleWindow {
         button3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button3.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button3.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button3.on_click(|x, widgets| {
+            eprintln!("Clicked: {}", x.get_widget_id());
+        });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidgetButton2",
@@ -755,6 +761,9 @@ impl SimpleWindow {
         button5.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button5.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button5.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button5.on_click(|x, widgets| {
+            eprintln!("Clicked: {}", x.get_widget_id());
+        });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "BoxInLayoutWidgetButton3",
@@ -855,6 +864,9 @@ impl SimpleWindow {
         button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
+        button2.on_click(|x, widgets| {
+            eprintln!("Clicked: {}", x.get_widget_id());
+        });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
             "RandomColorButton2",

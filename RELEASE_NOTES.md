@@ -5,6 +5,9 @@
 - Cleaned up sample code.
 - Updated Pushrod to wrap WidgetStore in an Rc, updated event rendering with Rc::clone
 - Changed from using iterator to for loop.
+- Switched to using borrow() instead of borrow_mut(), only in certain cases.
+- Converted Callbacks to pass the widget list rather than the WidgetStore.
+- Created helper functions in widget core class to provide lookups for widget positions by name.
 
 ## 0.4.3
 
