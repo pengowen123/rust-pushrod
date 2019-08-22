@@ -8,6 +8,7 @@
 - Switched to using borrow() instead of borrow_mut(), only in certain cases.
 - Converted Callbacks to pass the widget list rather than the WidgetStore.
 - Created helper functions in widget core class to provide lookups for widget positions by name.
+- Added callbacks to the simple test code.
 
 ## 0.4.3
 

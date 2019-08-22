@@ -136,41 +136,6 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
                 widget_store.invalidate_all_widgets();
             }
 
-            "BoxInLayoutWidgetButton3" => {
-                widget_store
-                    .get_widget_for_name("BoxInLayoutWidget3")
-                    .borrow_mut()
-                    .set_config(
-                        CONFIG_MAIN_COLOR,
-                        Config::Color([
-                            (rand::random::<u8>() as f32 / 255.0),
-                            (rand::random::<u8>() as f32 / 255.0),
-                            (rand::random::<u8>() as f32 / 255.0),
-                            1.0,
-                        ]),
-                    );
-            }
-
-            "RandomColorButton2" => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        widget_store
-                            .get_widget_for_name("ProgressWidget")
-                            .borrow_mut()
-                            .set_config(
-                                CONFIG_SECONDARY_COLOR,
-                                Config::Color([
-                                    (rand::random::<u8>() as f32 / 255.0),
-                                    (rand::random::<u8>() as f32 / 255.0),
-                                    (rand::random::<u8>() as f32 / 255.0),
-                                    1.0,
-                                ]),
-                            );
-                    }
-                }
-                _ => (),
-            },
-
             _ => (),
         }
     }
@@ -763,6 +728,21 @@ impl SimpleWindow {
         button5.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button5.on_click(|x, widgets| {
             eprintln!("Clicked: {}", x.get_widget_id());
+
+            let bilw3 = get_widget_position_by_name(widgets, "BoxInLayoutWidget3".to_string());
+
+            widgets[bilw3 as usize]
+                .widget
+                .borrow_mut()
+                .set_config(
+                    CONFIG_MAIN_COLOR,
+                    Config::Color([
+                        (rand::random::<u8>() as f32 / 255.0),
+                        (rand::random::<u8>() as f32 / 255.0),
+                        (rand::random::<u8>() as f32 / 255.0),
+                        1.0,
+                    ]),
+                );
         });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
@@ -865,7 +845,20 @@ impl SimpleWindow {
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button2.on_click(|x, widgets| {
-            eprintln!("Clicked: {}", x.get_widget_id());
+            let widget_id = get_widget_position_by_name(widgets, "ProgressWidget".to_string());
+
+            widgets[widget_id as usize]
+                .widget
+                .borrow_mut()
+                .set_config(
+                    CONFIG_SECONDARY_COLOR,
+                    Config::Color([
+                        (rand::random::<u8>() as f32 / 255.0),
+                        (rand::random::<u8>() as f32 / 255.0),
+                        (rand::random::<u8>() as f32 / 255.0),
+                        1.0,
+                    ]),
+                );
         });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(

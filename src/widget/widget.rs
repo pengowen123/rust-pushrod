@@ -279,5 +279,11 @@ impl Widget for CanvasWidget {
 }
 
 pub fn get_widget_position_by_name(widgets: &Vec<WidgetContainer>, name: String) -> i32 {
-    0
+    match widgets
+        .iter()
+        .find(|x| x.widget_name == String::from(name.clone()))
+        {
+            Some(x) => x.widget_id,
+            None => 0,
+        }
 }
