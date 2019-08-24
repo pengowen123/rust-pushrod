@@ -598,7 +598,8 @@ impl SimpleWindow {
         button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button1.on_click(|x, widgets| {
-            let state = widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget1".to_string()) as usize]
+            let state = widgets
+                [get_widget_position_by_name(widgets, "BoxInLayoutWidget1".to_string()) as usize]
                 .widget
                 .borrow_mut()
                 .config()
@@ -611,7 +612,8 @@ impl SimpleWindow {
 
             x.set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
 
-            widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget1".to_string()) as usize]
+            widgets
+                [get_widget_position_by_name(widgets, "BoxInLayoutWidget1".to_string()) as usize]
                 .widget
                 .borrow_mut()
                 .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
@@ -638,7 +640,8 @@ impl SimpleWindow {
         button3.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button3.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button3.on_click(|x, widgets| {
-            let state = widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget2".to_string()) as usize]
+            let state = widgets
+                [get_widget_position_by_name(widgets, "BoxInLayoutWidget2".to_string()) as usize]
                 .widget
                 .borrow_mut()
                 .config()
@@ -651,7 +654,8 @@ impl SimpleWindow {
 
             x.set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
 
-            widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget2".to_string()) as usize]
+            widgets
+                [get_widget_position_by_name(widgets, "BoxInLayoutWidget2".to_string()) as usize]
                 .widget
                 .borrow_mut()
                 .set_toggle(CONFIG_WIDGET_DISABLED, !state);
@@ -698,18 +702,15 @@ impl SimpleWindow {
         button5.on_click(|x, widgets| {
             let bilw3 = get_widget_position_by_name(widgets, "BoxInLayoutWidget3".to_string());
 
-            widgets[bilw3 as usize]
-                .widget
-                .borrow_mut()
-                .set_config(
-                    CONFIG_MAIN_COLOR,
-                    Config::Color([
-                        (rand::random::<u8>() as f32 / 255.0),
-                        (rand::random::<u8>() as f32 / 255.0),
-                        (rand::random::<u8>() as f32 / 255.0),
-                        1.0,
-                    ]),
-                );
+            widgets[bilw3 as usize].widget.borrow_mut().set_config(
+                CONFIG_MAIN_COLOR,
+                Config::Color([
+                    (rand::random::<u8>() as f32 / 255.0),
+                    (rand::random::<u8>() as f32 / 255.0),
+                    (rand::random::<u8>() as f32 / 255.0),
+                    1.0,
+                ]),
+            );
         });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
@@ -814,18 +815,15 @@ impl SimpleWindow {
         button2.on_click(|x, widgets| {
             let widget_id = get_widget_position_by_name(widgets, "ProgressWidget".to_string());
 
-            widgets[widget_id as usize]
-                .widget
-                .borrow_mut()
-                .set_config(
-                    CONFIG_SECONDARY_COLOR,
-                    Config::Color([
-                        (rand::random::<u8>() as f32 / 255.0),
-                        (rand::random::<u8>() as f32 / 255.0),
-                        (rand::random::<u8>() as f32 / 255.0),
-                        1.0,
-                    ]),
-                );
+            widgets[widget_id as usize].widget.borrow_mut().set_config(
+                CONFIG_SECONDARY_COLOR,
+                Config::Color([
+                    (rand::random::<u8>() as f32 / 255.0),
+                    (rand::random::<u8>() as f32 / 255.0),
+                    (rand::random::<u8>() as f32 / 255.0),
+                    1.0,
+                ]),
+            );
         });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(

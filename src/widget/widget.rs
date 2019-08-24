@@ -144,7 +144,12 @@ pub trait Widget {
     /// top-level GUI events, such as a mouse entering or exiting the bounds of this `Widget`.
     /// If the `injected` flag is set, it indicates that the event supplied was generate by
     /// a `Widget`, and not by the run loop.
-    fn handle_event(&mut self, _injected: bool, _event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
+    fn handle_event(
+        &mut self,
+        _injected: bool,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
         None
     }
 
@@ -282,14 +287,16 @@ pub fn get_widget_position_by_name(widgets: &Vec<WidgetContainer>, name: String)
     match widgets
         .iter()
         .find(|x| x.widget_name == String::from(name.clone()))
-        {
-            Some(x) => x.widget_id,
-            None => 0,
-        }
+    {
+        Some(x) => x.widget_id,
+        None => 0,
+    }
 }
 
 pub fn invalidate_all_widgets_except(widgets: &Vec<WidgetContainer>, skip_id: i32) {
-    widgets
-        .iter()
-        .for_each(|x| if x.widget_id != skip_id { x.widget.borrow_mut().invalidate() } );
+    widgets.iter().for_each(|x| {
+        if x.widget_id != skip_id {
+            x.widget.borrow_mut().invalidate()
+        }
+    });
 }

@@ -117,7 +117,12 @@ impl Widget for PushButtonWidget {
         self.text_widget.set_config(config, config_value.clone());
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseEntered { widget_id: _ } => {
@@ -154,7 +159,7 @@ impl Widget for PushButtonWidget {
                             match _widget_store {
                                 Some(widgets) => {
                                     self.click(widgets);
-                                },
+                                }
                                 None => (),
                             }
 

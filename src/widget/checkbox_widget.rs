@@ -164,7 +164,12 @@ impl Widget for CheckboxWidget {
         }
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {

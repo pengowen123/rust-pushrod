@@ -1,5 +1,7 @@
 # Pushrod Releases
 
+## 0.4.5
+
 ## 0.4.4
 
 - Cleaned up sample code.
