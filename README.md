@@ -29,9 +29,9 @@ If you like this library, please consider [donating to this project!](https://ww
   - [x] `InjectableCustomEvents`
 - [x] Update Piston to the latest release
 - [x] Fix hidden object traversal in main draw loop
+- [x] Pass in event system trait so that `Widget`s have access to the `Widgets` from the `WidgetStore`
+- [x] Add helper methods to access widgets by name and invalidate via Widget vector
 - [ ] Modify Event system so that it is a single trait
-- [ ] Pass in event system trait so that `Widget`s have access to the `WidgetStore`
-- [ ] Modify Callback functions such that `&mut WidgetStore` is accessible from within the callback body
 - [ ] Get rid of Point and Size, use array value types instead
 - [ ] Fix all `Widget`s so that they draw to a texture
 - [ ] Fix Invalidation such that it walks the children so that drawing is done in order
