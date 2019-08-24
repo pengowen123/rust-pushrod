@@ -14,9 +14,6 @@ include = [
     "**/*.rs",
     "Cargo.toml",
 ]
-exclude = [
-    "examples/*.rs",
-]
 
 [lib]
 name = "pushrod"
