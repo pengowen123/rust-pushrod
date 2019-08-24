@@ -80,6 +80,11 @@ pub const CONFIG_WIDGET_GROUP_ID: u8 = 16;
 /// Indicates whether or not a `Widget` has been toggled/selected, set by `Config::Toggle`.
 pub const CONFIG_SELECTED: u8 = 17;
 
+/// Stores a payload attached to the `Widget`, which can be any string that identifies information
+/// about the widget, set by `Config::Text`.  If you wish to store binary data, it may be best
+/// to store that as Base64 or some other encoded form.
+pub const CONFIG_PAYLOAD: u8 = 18;
+
 /// Structure containing the configuration `HashMap`.
 pub struct Configurable {
     configs: HashMap<u8, Config>,

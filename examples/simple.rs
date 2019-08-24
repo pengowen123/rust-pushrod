@@ -55,91 +55,6 @@ pub struct SimpleWindowEventHandler {
 }
 
 impl PushrodCallbackEvents for SimpleWindowEventHandler {
-    fn widget_clicked(&mut self, widget_id: i32, button: Button, widget_store: &mut WidgetStore) {
-        match button {
-            Button::Mouse(mouse_button) => {
-                if mouse_button != MouseButton::Left {
-                    return;
-                }
-            }
-            _ => (),
-        }
-
-        match widget_store.get_name_for_widget_id(widget_id) {
-            "BoxInLayoutWidgetButton1" => {
-                let state = widget_store
-                    .get_widget_for_name("BoxInLayoutWidget1")
-                    .borrow_mut()
-                    .config()
-                    .get_toggle(CONFIG_WIDGET_HIDDEN);
-                let button_text = if state == true {
-                    String::from("Hide")
-                } else {
-                    String::from("Show")
-                };
-
-                widget_store
-                    .get_widget_for_name("BoxInLayoutWidgetButton1")
-                    .borrow_mut()
-                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-
-                widget_store
-                    .get_widget_for_name("BoxInLayoutWidget1")
-                    .borrow_mut()
-                    .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
-
-                widget_store.invalidate_all_widgets();
-            }
-
-            "BoxInLayoutWidgetButton2" => {
-                let state = widget_store
-                    .get_widget_for_name("BoxInLayoutWidget2")
-                    .borrow_mut()
-                    .config()
-                    .get_toggle(CONFIG_WIDGET_DISABLED);
-                let button_text = if state == true {
-                    String::from("Disable")
-                } else {
-                    String::from("Enable")
-                };
-
-                widget_store
-                    .get_widget_for_name("BoxInLayoutWidgetButton2")
-                    .borrow_mut()
-                    .set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
-
-                widget_store
-                    .get_widget_for_name("BoxInLayoutWidget2")
-                    .borrow_mut()
-                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-
-                widget_store
-                    .get_widget_for_name("MiniBox1")
-                    .borrow_mut()
-                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-
-                widget_store
-                    .get_widget_for_name("MiniBox2")
-                    .borrow_mut()
-                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-
-                widget_store
-                    .get_widget_for_name("MiniBox3")
-                    .borrow_mut()
-                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-
-                widget_store
-                    .get_widget_for_name("MiniBox4")
-                    .borrow_mut()
-                    .set_toggle(CONFIG_WIDGET_DISABLED, !state);
-
-                widget_store.invalidate_all_widgets();
-            }
-
-            _ => (),
-        }
-    }
-
     fn timer_triggered(&mut self, widget_id: i32, widget_store: &mut WidgetStore) {
         match widget_store.get_name_for_widget_id(widget_id) {
             "HelloWorldTimer" => {
@@ -683,7 +598,25 @@ impl SimpleWindow {
         button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button1.on_click(|x, widgets| {
-            eprintln!("Clicked: {}", x.get_widget_id());
+            let state = widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget1".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .config()
+                .get_toggle(CONFIG_WIDGET_HIDDEN);
+            let button_text = if state == true {
+                String::from("Hide")
+            } else {
+                String::from("Show")
+            };
+
+            x.set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+            widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget1".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .set_toggle(CONFIG_WIDGET_HIDDEN, !state);
+
+            invalidate_all_widgets_except(widgets, x.get_widget_id());
         });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
@@ -705,7 +638,43 @@ impl SimpleWindow {
         button3.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button3.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button3.on_click(|x, widgets| {
-            eprintln!("Clicked: {}", x.get_widget_id());
+            let state = widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget2".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .config()
+                .get_toggle(CONFIG_WIDGET_DISABLED);
+            let button_text = if state == true {
+                String::from("Disable")
+            } else {
+                String::from("Enable")
+            };
+
+            x.set_config(CONFIG_DISPLAY_TEXT, Config::Text(button_text));
+
+            widgets[get_widget_position_by_name(widgets, "BoxInLayoutWidget2".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+            widgets[get_widget_position_by_name(widgets, "MiniBox1".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+            widgets[get_widget_position_by_name(widgets, "MiniBox2".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+            widgets[get_widget_position_by_name(widgets, "MiniBox3".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .set_toggle(CONFIG_WIDGET_DISABLED, !state);
+
+            widgets[get_widget_position_by_name(widgets, "MiniBox4".to_string()) as usize]
+                .widget
+                .borrow_mut()
+                .set_toggle(CONFIG_WIDGET_DISABLED, !state);
         });
 
         self.pushrod.borrow_mut().add_widget_to_layout_manager(
@@ -727,8 +696,6 @@ impl SimpleWindow {
         button5.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button5.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button5.on_click(|x, widgets| {
-            eprintln!("Clicked: {}", x.get_widget_id());
-
             let bilw3 = get_widget_position_by_name(widgets, "BoxInLayoutWidget3".to_string());
 
             widgets[bilw3 as usize]

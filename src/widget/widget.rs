@@ -287,3 +287,9 @@ pub fn get_widget_position_by_name(widgets: &Vec<WidgetContainer>, name: String)
             None => 0,
         }
 }
+
+pub fn invalidate_all_widgets_except(widgets: &Vec<WidgetContainer>, skip_id: i32) {
+    widgets
+        .iter()
+        .for_each(|x| if x.widget_id != skip_id { x.widget.borrow_mut().invalidate() } );
+}
