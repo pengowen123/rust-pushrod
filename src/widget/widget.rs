@@ -14,6 +14,7 @@
 
 use graphics::*;
 use opengl_graphics::GlGraphics;
+use std::cell::RefMut;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -283,14 +284,16 @@ impl Widget for CanvasWidget {
     }
 }
 
-pub fn get_widget_position_by_name(widgets: &Vec<WidgetContainer>, name: String) -> i32 {
-    match widgets
+pub fn get_widget_by_name(widgets: &Vec<WidgetContainer>, name: String) -> RefMut<Box<dyn Widget>> {
+    let pos = match widgets
         .iter()
         .find(|x| x.widget_name == String::from(name.clone()))
-    {
-        Some(x) => x.widget_id,
-        None => 0,
-    }
+        {
+            Some(x) => x.widget_id as usize,
+            None => 0 as usize,
+        };
+
+    widgets[pos].widget.borrow_mut()
 }
 
 pub fn invalidate_all_widgets_except(widgets: &Vec<WidgetContainer>, skip_id: i32) {
