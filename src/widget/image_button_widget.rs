@@ -21,6 +21,7 @@ use piston::input::*;
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
 use crate::core::point::Point;
+use crate::core::widget_store::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::image_widget::*;
@@ -35,7 +36,7 @@ pub struct ImageButtonWidget {
     image_widget: ImageWidget,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut (&mut ImageButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut ImageButtonWidget)>>,
 }
 
 impl ImageButtonWidget {
@@ -81,10 +82,18 @@ impl ImageButtonWidget {
         self.invalidate();
     }
 
-    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut ImageButtonWidget) + 'static {
+    /// Sets a callback closure that can be called when a click is registered for this
+    /// widget.
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut ImageButtonWidget) + 'static,
+    {
         self.on_click = Some(Box::new(callback));
     }
 
+    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
+    /// of the current `Widget` object as a parameter, so this object can be modified when
+    /// a click is registered, if necessary.
     pub fn click(&mut self) {
         if let Some(mut cb) = self.on_click.take() {
             cb(self);
@@ -143,7 +152,7 @@ impl Widget for ImageButtonWidget {
         self.image_widget.set_config(config, config_value.clone());
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseEntered { widget_id: _ } => {

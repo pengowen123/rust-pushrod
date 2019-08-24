@@ -17,6 +17,7 @@ use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
+use crate::core::widget_store::*;
 use crate::widget::config::*;
 
 pub trait Drawable {
@@ -31,8 +32,9 @@ pub trait Drawable {
     }
 
     /// Draws an object at an offset on the screen.  This is a convenience method that is used
-    /// by other `Widget`s that contain multiple widgets.  (See `CheckboxWidget` and
-    /// `ImageButtonWidget` for good examples of this use.)
+    /// by other `Widget`s that contain multiple widgets.  Draw with offset always uses 0x0 as
+    /// the starting drawing coordinates, as this is what will be drawn within the bounds of the
+    /// `Widget`.  (See `CheckboxWidget` and `ImageButtonWidget` for good examples of this use.)
     fn draw_with_offset(
         &mut self,
         c: Context,
@@ -142,7 +144,7 @@ pub trait Widget {
     /// top-level GUI events, such as a mouse entering or exiting the bounds of this `Widget`.
     /// If the `injected` flag is set, it indicates that the event supplied was generate by
     /// a `Widget`, and not by the run loop.
-    fn handle_event(&mut self, _injected: bool, _event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, _injected: bool, _event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
         None
     }
 
@@ -274,4 +276,20 @@ impl Widget for CanvasWidget {
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
     }
+}
+
+pub fn get_widget_position_by_name(widgets: &Vec<WidgetContainer>, name: String) -> i32 {
+    match widgets
+        .iter()
+        .find(|x| x.widget_name == String::from(name.clone()))
+        {
+            Some(x) => x.widget_id,
+            None => 0,
+        }
+}
+
+pub fn invalidate_all_widgets_except(widgets: &Vec<WidgetContainer>, skip_id: i32) {
+    widgets
+        .iter()
+        .for_each(|x| if x.widget_id != skip_id { x.widget.borrow_mut().invalidate() } );
 }

@@ -92,7 +92,7 @@ impl TextWidget {
             TextJustify::Right => (size.w - self.desired_width) as f64,
         };
 
-        // Vertically justify the text as default.
+        // Vertically justify the text as default.  This isn't a very elegant formula, but it works.
         let start_y = (self.font_size - 2 + size.h as u32) / 2 - 1;
 
         // And draw the remaining text based on the starting point adjusted by the text justification.

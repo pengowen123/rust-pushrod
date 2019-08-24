@@ -1,5 +1,17 @@
 # Pushrod Releases
 
+## 0.4.4
+
+- Cleaned up sample code.
+- Updated Pushrod to wrap WidgetStore in an Rc, updated event rendering with Rc::clone
+- Changed from using iterator to for loop.
+- Switched to using borrow() instead of borrow_mut(), only in certain cases.
+- Converted Callbacks to pass the widget list rather than the WidgetStore. (#179)
+- Modified callbacks to contain reference to widget store, and widget lookup functions (#178)
+- Created helper functions in widget core class to provide lookups for widget positions by name.
+- Converted first set of callbacks to the simple test code.
+- Added CONFIG_PAYLOAD so that a payload can be attached to a Widget, storing data about it.
+
 ## 0.4.3
 
 - Removed draw_disabled, now controlled by the draw loop.

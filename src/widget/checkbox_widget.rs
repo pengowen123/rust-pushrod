@@ -20,6 +20,7 @@ use piston::input::*;
 
 use crate::core::callbacks::*;
 use crate::core::point::Point;
+use crate::core::widget_store::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::image_widget::*;
@@ -35,7 +36,7 @@ pub struct CheckboxWidget {
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut (&mut CheckboxWidget, bool)>>,
+    on_click: Option<Box<dyn FnMut(&mut CheckboxWidget, bool)>>,
 }
 
 impl CheckboxWidget {
@@ -71,10 +72,19 @@ impl CheckboxWidget {
         }
     }
 
-    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut CheckboxWidget, bool) + 'static {
+    /// Sets a callback closure that can be called when a click is registered for this
+    /// `Widget`.
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut CheckboxWidget, bool) + 'static,
+    {
         self.on_click = Some(Box::new(callback));
     }
 
+    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
+    /// of the current `Widget` object as a parameter, so this object can be modified when
+    /// a click is registered, if necessary.  The checkbox' sselected state is also passed
+    /// into the click callback.
     pub fn click(&mut self, state: bool) {
         if let Some(mut cb) = self.on_click.take() {
             cb(self, state);
@@ -154,7 +164,7 @@ impl Widget for CheckboxWidget {
         }
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {

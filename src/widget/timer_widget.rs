@@ -32,7 +32,7 @@ pub struct TimerWidget {
     initiated: u64,
     triggered: bool,
     widget_id: i32,
-    on_tick: Option<Box<dyn FnMut (&mut TimerWidget)>>,
+    on_tick: Option<Box<dyn FnMut(&mut TimerWidget)>>,
 }
 
 fn time_ms() -> u64 {
@@ -69,10 +69,17 @@ impl TimerWidget {
         }
     }
 
-    pub fn on_tick<F>(&mut self, callback: F) where F: FnMut (&mut TimerWidget) + 'static {
+    /// Assigns the callback closure that will be used when a timer tick is triggered.
+    pub fn on_tick<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut TimerWidget) + 'static,
+    {
         self.on_tick = Some(Box::new(callback));
     }
 
+    /// Calls the click `on_tick` callback, if set.  Otherwise, ignored.  Sends a reference
+    /// of the current `Widget` object as a parameter, so this object can be modified when
+    /// a click is registered, if necessary.
     fn trigger_tick(&mut self) {
         if let Some(mut cb) = self.on_tick.take() {
             cb(self);

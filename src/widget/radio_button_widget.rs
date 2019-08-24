@@ -20,6 +20,7 @@ use piston::input::*;
 
 use crate::core::callbacks::*;
 use crate::core::point::Point;
+use crate::core::widget_store::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::image_widget::*;
@@ -39,7 +40,7 @@ pub struct RadioButtonWidget {
     unselected_widget: ImageWidget,
     inject_event: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut (&mut RadioButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut RadioButtonWidget)>>,
 }
 
 impl RadioButtonWidget {
@@ -78,10 +79,18 @@ impl RadioButtonWidget {
         }
     }
 
-    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut RadioButtonWidget) + 'static {
+    /// Sets a callback closure that can be called when a click is registered for this
+    /// widget.
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut RadioButtonWidget) + 'static,
+    {
         self.on_click = Some(Box::new(callback));
     }
 
+    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
+    /// of the current `Widget` object as a parameter, so this object can be modified when
+    /// a click is registered, if necessary.
     pub fn click(&mut self) {
         if let Some(mut cb) = self.on_click.take() {
             cb(self);
@@ -168,7 +177,7 @@ impl Widget for RadioButtonWidget {
         }
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {

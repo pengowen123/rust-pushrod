@@ -20,6 +20,7 @@ use piston::input::*;
 
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
+use crate::core::widget_store::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::text_widget::*;
@@ -32,7 +33,7 @@ pub struct PushButtonWidget {
     text_widget: TextWidget,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut (&mut PushButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut PushButtonWidget, &Vec<WidgetContainer>)>>,
 }
 
 impl PushButtonWidget {
@@ -68,13 +69,22 @@ impl PushButtonWidget {
         self.invalidate();
     }
 
-    pub fn on_click<F>(&mut self, callback: F) where F: FnMut (&mut PushButtonWidget) + 'static {
+    /// Sets a callback closure that can be called when a click is registered for this
+    /// widget.
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut PushButtonWidget, &Vec<WidgetContainer>) + 'static,
+    {
+        eprintln!("Setting on click callback.");
         self.on_click = Some(Box::new(callback));
     }
 
-    pub fn click(&mut self) {
+    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
+    /// of the current `Widget` object as a parameter, so this object can be modified when
+    /// a click is registered, if necessary.
+    pub fn click(&mut self, widgets: &Vec<WidgetContainer>) {
         if let Some(mut cb) = self.on_click.take() {
-            cb(self);
+            cb(self, widgets);
             self.on_click = Some(cb);
         }
     }
@@ -107,7 +117,7 @@ impl Widget for PushButtonWidget {
         self.text_widget.set_config(config, config_value.clone());
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent) -> Option<CallbackEvent> {
+    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseEntered { widget_id: _ } => {
@@ -141,7 +151,12 @@ impl Widget for PushButtonWidget {
                             self.draw_unhovered();
                             self.active = false;
 
-                            self.click();
+                            match _widget_store {
+                                Some(widgets) => {
+                                    self.click(widgets);
+                                },
+                                None => (),
+                            }
 
                             return Some(WidgetClicked { widget_id, button });
                         }
