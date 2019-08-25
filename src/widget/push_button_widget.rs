@@ -33,7 +33,7 @@ pub struct PushButtonWidget {
     text_widget: TextWidget,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut PushButtonWidget, &Vec<WidgetContainer>)>>,
+    on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
 }
 
 impl PushButtonWidget {
@@ -73,9 +73,8 @@ impl PushButtonWidget {
     /// widget.
     pub fn on_click<F>(&mut self, callback: F)
     where
-        F: FnMut(&mut PushButtonWidget, &Vec<WidgetContainer>) + 'static,
+        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
     {
-        eprintln!("Setting on click callback.");
         self.on_click = Some(Box::new(callback));
     }
 
@@ -121,7 +120,7 @@ impl Widget for PushButtonWidget {
         &mut self,
         injected: bool,
         event: CallbackEvent,
-        _widget_store: Option<&Vec<WidgetContainer>>,
+        widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
         if !injected {
             match event {
@@ -156,7 +155,7 @@ impl Widget for PushButtonWidget {
                             self.draw_unhovered();
                             self.active = false;
 
-                            match _widget_store {
+                            match widget_store {
                                 Some(widgets) => {
                                     self.click(widgets);
                                 }

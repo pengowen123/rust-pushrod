@@ -36,7 +36,7 @@ pub struct CheckboxWidget {
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut CheckboxWidget, bool, &Vec<WidgetContainer>)>>,
+    on_click: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
 }
 
 impl CheckboxWidget {
@@ -76,7 +76,7 @@ impl CheckboxWidget {
     /// `Widget`.
     pub fn on_click<F>(&mut self, callback: F)
     where
-        F: FnMut(&mut CheckboxWidget, bool, &Vec<WidgetContainer>) + 'static,
+        F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
     {
         self.on_click = Some(Box::new(callback));
     }

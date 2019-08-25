@@ -4,6 +4,7 @@
 
 - Changed get_widget_position_by_name to get_widget_by_name (far easier to use)
 - Fixed all other on_click callbacks so that widgets from widget store are included
+- Genericized on_click to use `dyn Widget` instead of customized `Widget` definition
 
 ## 0.4.4
 

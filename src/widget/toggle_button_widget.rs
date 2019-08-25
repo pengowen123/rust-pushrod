@@ -37,7 +37,7 @@ pub struct ToggleButtonWidget {
     selected: bool,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut ToggleButtonWidget, bool, &Vec<WidgetContainer>)>>,
+    on_click: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
 }
 
 impl ToggleButtonWidget {
@@ -94,7 +94,7 @@ impl ToggleButtonWidget {
     /// widget.
     pub fn on_click<F>(&mut self, callback: F)
     where
-        F: FnMut(&mut ToggleButtonWidget, bool, &Vec<WidgetContainer>) + 'static,
+        F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
     {
         self.on_click = Some(Box::new(callback));
     }
