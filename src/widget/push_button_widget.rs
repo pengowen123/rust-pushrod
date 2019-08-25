@@ -33,6 +33,7 @@ pub struct PushButtonWidget {
     text_widget: TextWidget,
     active: bool,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
     on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
 }
 
@@ -51,6 +52,7 @@ impl PushButtonWidget {
             text_widget,
             active: false,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
             on_click: None,
         }
     }
@@ -210,5 +212,9 @@ impl Widget for PushButtonWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

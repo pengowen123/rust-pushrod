@@ -21,6 +21,12 @@ use crate::core::point::{Point, Size};
 use crate::core::widget_store::*;
 use crate::widget::config::*;
 
+pub trait WidgetCallbacks {
+    fn on_click<F>(&mut self, callback: F)
+        where
+            F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static;
+}
+
 pub trait Drawable {
     /// Draws the `Widget`'s contents.  Only gets called if the `Widget` is in invalidated
     /// state.  Provides a modified `Context` object that has an origin of `0x0` in drawing
@@ -193,6 +199,12 @@ pub trait Widget {
     fn injects_system_events(&mut self) -> bool {
         false
     }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks;
+
+    fn has_callbacks(&mut self) -> bool {
+        false
+    }
 }
 
 /// Base `Widget` object.  Displays a blank canvas, with the color set by the `CONFIG_MAIN_COLOR`
@@ -201,6 +213,7 @@ pub struct CanvasWidget {
     config: Configurable,
     event_list: Vec<CallbackEvent>,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl CanvasWidget {
@@ -209,6 +222,7 @@ impl CanvasWidget {
             config: Configurable::new(),
             event_list: vec![],
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 }
@@ -281,6 +295,32 @@ impl Widget for CanvasWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
+    }
+
+}
+
+
+pub struct DefaultWidgetCallbacks {
+    on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
+}
+
+impl WidgetCallbacks for DefaultWidgetCallbacks {
+    fn on_click<F>(&mut self, callback: F)
+        where
+            F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static {
+        self.on_click = Some(Box::new(callback));;
+    }
+}
+
+impl DefaultWidgetCallbacks {
+    pub fn new() -> Self {
+        Self {
+            on_click: None,
+        }
     }
 }
 

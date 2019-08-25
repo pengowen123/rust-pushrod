@@ -36,6 +36,7 @@ pub struct CheckboxWidget {
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
     on_click: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
 }
 
@@ -68,6 +69,7 @@ impl CheckboxWidget {
             selected_widget,
             unselected_widget,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
             on_click: None,
         }
     }
@@ -226,4 +228,9 @@ impl Widget for CheckboxWidget {
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
     }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
+    }
+
 }

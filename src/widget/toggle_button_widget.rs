@@ -37,6 +37,7 @@ pub struct ToggleButtonWidget {
     selected: bool,
     active: bool,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
     on_click: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
 }
 
@@ -58,6 +59,7 @@ impl ToggleButtonWidget {
             selected: false,
             active: false,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
             on_click: None,
         }
     }
@@ -244,5 +246,9 @@ impl Widget for ToggleButtonWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

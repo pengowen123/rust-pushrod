@@ -32,6 +32,7 @@ pub struct TimerWidget {
     initiated: u64,
     triggered: bool,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
     on_tick: Option<Box<dyn FnMut(&mut TimerWidget)>>,
 }
 
@@ -50,6 +51,7 @@ impl TimerWidget {
             initiated: time_ms(),
             triggered: false,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
             on_tick: None,
         }
     }
@@ -140,5 +142,9 @@ impl Widget for TimerWidget {
     fn is_drawable(&mut self) -> bool {
         self.tick();
         false
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

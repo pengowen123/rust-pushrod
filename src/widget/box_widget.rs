@@ -28,6 +28,7 @@ pub struct BoxWidget {
     config: Configurable,
     event_list: Vec<CallbackEvent>,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl BoxWidget {
@@ -37,6 +38,7 @@ impl BoxWidget {
             config: Configurable::new(),
             event_list: vec![],
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 
@@ -144,4 +146,9 @@ impl Widget for BoxWidget {
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
     }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
+    }
+
 }

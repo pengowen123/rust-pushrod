@@ -40,6 +40,7 @@ pub struct RadioButtonWidget {
     unselected_widget: ImageWidget,
     inject_event: bool,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
     on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
 }
 
@@ -75,6 +76,7 @@ impl RadioButtonWidget {
             unselected_widget,
             inject_event: false,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
             on_click: None,
         }
     }
@@ -261,5 +263,9 @@ impl Widget for RadioButtonWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

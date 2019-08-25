@@ -46,6 +46,7 @@ pub struct TextWidget {
     pub desired_width: i32,
     need_text_resize: bool,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl TextWidget {
@@ -65,6 +66,7 @@ impl TextWidget {
             desired_width: 0 as i32,
             need_text_resize: true,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 
@@ -176,5 +178,9 @@ impl Widget for TextWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

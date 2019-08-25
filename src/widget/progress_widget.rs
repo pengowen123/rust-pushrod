@@ -30,6 +30,7 @@ pub struct ProgressWidget {
     config: Configurable,
     base_widget: BoxWidget,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl ProgressWidget {
@@ -46,6 +47,7 @@ impl ProgressWidget {
             config: Configurable::new(),
             base_widget: base,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 }
@@ -118,5 +120,9 @@ impl Widget for ProgressWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

@@ -25,6 +25,7 @@ pub struct ImageWidget {
     image: Texture,
     image_size: crate::core::point::Size,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl ImageWidget {
@@ -47,6 +48,7 @@ impl ImageWidget {
                 h: texture_height,
             },
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 }
@@ -93,5 +95,9 @@ impl Widget for ImageWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }
