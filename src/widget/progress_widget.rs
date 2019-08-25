@@ -19,6 +19,8 @@ use opengl_graphics::GlGraphics;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
+use crate::core::callbacks::*;
+use crate::core::widget_store::*;
 
 /// Draws a progress bar, with progress being a value from 0 to 100.  Configurable options
 /// are:
@@ -108,6 +110,22 @@ impl Widget for ProgressWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        event: CallbackEvent,
+        widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
+        if !injected {
+        }
+
+        None
+    }
+
+    fn handles_events(&mut self) -> bool {
+        true
     }
 
     fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {

@@ -18,6 +18,8 @@ use opengl_graphics::{GlGraphics, Texture, TextureSettings};
 
 use crate::widget::config::*;
 use crate::widget::widget::*;
+use crate::core::callbacks::*;
+use crate::core::widget_store::*;
 
 /// Draws an image.
 pub struct ImageWidget {
@@ -83,6 +85,22 @@ impl Widget for ImageWidget {
 
     fn get_widget_id(&mut self) -> i32 {
         self.widget_id
+    }
+
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        event: CallbackEvent,
+        widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
+        if !injected {
+        }
+
+        None
+    }
+
+    fn handles_events(&mut self) -> bool {
+        true
     }
 
     fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
