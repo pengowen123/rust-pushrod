@@ -299,6 +299,7 @@ impl Widget for CanvasWidget {
 pub struct DefaultWidgetCallbacks {
     pub on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
     pub on_toggle: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
+    pub on_mouse_move: Option<Box<dyn FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>)>>,
 }
 
 impl DefaultWidgetCallbacks {
@@ -306,6 +307,7 @@ impl DefaultWidgetCallbacks {
         Self {
             on_click: None,
             on_toggle: None,
+            on_mouse_move: None,
         }
     }
 
@@ -321,6 +323,13 @@ impl DefaultWidgetCallbacks {
             F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
     {
         self.on_toggle = Some(Box::new(callback));;
+    }
+
+    pub fn on_mouse_move<F>(&mut self, callback: F)
+        where
+            F: FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_mouse_move = Some(Box::new(callback));;
     }
 }
 

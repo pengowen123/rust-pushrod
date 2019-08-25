@@ -21,6 +21,7 @@ use piston::input::*;
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
 use crate::core::widget_store::*;
+use crate::core::point::Point;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::text_widget::*;
@@ -78,6 +79,13 @@ impl PushButtonWidget {
             self.get_callbacks().on_click = Some(cb);
         }
     }
+
+    pub fn mouse_moved(&mut self, point: Point, widgets: &Vec<WidgetContainer>) {
+        if let Some(mut cb) = self.get_callbacks().on_mouse_move.take() {
+            cb(self, point, widgets);
+            self.get_callbacks().on_mouse_move = Some(cb);
+        }
+    }
 }
 
 impl Drawable for PushButtonWidget {
@@ -124,6 +132,15 @@ impl Widget for PushButtonWidget {
                 CallbackEvent::MouseExited { widget_id: _ } => {
                     if self.active {
                         self.draw_unhovered();
+                    }
+                }
+
+                CallbackEvent::MouseMoved { widget_id: _, point } => {
+                    match widget_store {
+                        Some(widgets) => {
+                            self.mouse_moved(point.clone(), widgets);
+                        }
+                        None => (),
                     }
                 }
 

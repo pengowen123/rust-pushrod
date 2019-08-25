@@ -9,6 +9,7 @@
 - Converted callbacks to use get_callbacks() function for setting callback closures
 - Modified PushButtonWidget to use get_callbacks()
 - Added on_toggle callback (#190)
+- Added on_mouse_move callback (#183)
 
 ## 0.4.4
 
