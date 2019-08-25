@@ -36,7 +36,7 @@ pub struct ImageButtonWidget {
     image_widget: ImageWidget,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut ImageButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut ImageButtonWidget, &Vec<WidgetContainer>)>>,
 }
 
 impl ImageButtonWidget {
@@ -86,7 +86,7 @@ impl ImageButtonWidget {
     /// widget.
     pub fn on_click<F>(&mut self, callback: F)
     where
-        F: FnMut(&mut ImageButtonWidget) + 'static,
+        F: FnMut(&mut ImageButtonWidget, &Vec<WidgetContainer>) + 'static,
     {
         self.on_click = Some(Box::new(callback));
     }
@@ -94,9 +94,9 @@ impl ImageButtonWidget {
     /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
     /// of the current `Widget` object as a parameter, so this object can be modified when
     /// a click is registered, if necessary.
-    pub fn click(&mut self) {
+    pub fn click(&mut self, widgets: &Vec<WidgetContainer>) {
         if let Some(mut cb) = self.on_click.take() {
-            cb(self);
+            cb(self, widgets);
             self.on_click = Some(cb);
         }
     }
@@ -156,7 +156,7 @@ impl Widget for ImageButtonWidget {
         &mut self,
         injected: bool,
         event: CallbackEvent,
-        _widget_store: Option<&Vec<WidgetContainer>>,
+        widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
         if !injected {
             match event {
@@ -190,7 +190,13 @@ impl Widget for ImageButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.draw_unhovered();
                             self.active = false;
-                            self.click();
+
+                            match widget_store {
+                                Some(widgets) => {
+                                    self.click(widgets);
+                                }
+                                None => (),
+                            }
 
                             return Some(WidgetClicked { widget_id, button });
                         }

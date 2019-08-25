@@ -40,7 +40,7 @@ pub struct RadioButtonWidget {
     unselected_widget: ImageWidget,
     inject_event: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut RadioButtonWidget)>>,
+    on_click: Option<Box<dyn FnMut(&mut RadioButtonWidget, &Vec<WidgetContainer>)>>,
 }
 
 impl RadioButtonWidget {
@@ -83,7 +83,7 @@ impl RadioButtonWidget {
     /// widget.
     pub fn on_click<F>(&mut self, callback: F)
     where
-        F: FnMut(&mut RadioButtonWidget) + 'static,
+        F: FnMut(&mut RadioButtonWidget, &Vec<WidgetContainer>) + 'static,
     {
         self.on_click = Some(Box::new(callback));
     }
@@ -91,9 +91,9 @@ impl RadioButtonWidget {
     /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
     /// of the current `Widget` object as a parameter, so this object can be modified when
     /// a click is registered, if necessary.
-    pub fn click(&mut self) {
+    pub fn click(&mut self, widgets: &Vec<WidgetContainer>) {
         if let Some(mut cb) = self.on_click.take() {
-            cb(self);
+            cb(self, widgets);
             self.on_click = Some(cb);
         }
     }
@@ -181,7 +181,7 @@ impl Widget for RadioButtonWidget {
         &mut self,
         injected: bool,
         event: CallbackEvent,
-        _widget_store: Option<&Vec<WidgetContainer>>,
+        widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
         if !injected {
             match event {
@@ -190,7 +190,13 @@ impl Widget for RadioButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.selected = true;
                             self.inject_event = true;
-                            self.click();
+
+                            match widget_store {
+                                Some(widgets) => {
+                                    self.click(widgets);
+                                }
+                                None => (),
+                            }
 
                             self.invalidate();
 

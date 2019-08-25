@@ -36,7 +36,7 @@ pub struct CheckboxWidget {
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut CheckboxWidget, bool)>>,
+    on_click: Option<Box<dyn FnMut(&mut CheckboxWidget, bool, &Vec<WidgetContainer>)>>,
 }
 
 impl CheckboxWidget {
@@ -76,7 +76,7 @@ impl CheckboxWidget {
     /// `Widget`.
     pub fn on_click<F>(&mut self, callback: F)
     where
-        F: FnMut(&mut CheckboxWidget, bool) + 'static,
+        F: FnMut(&mut CheckboxWidget, bool, &Vec<WidgetContainer>) + 'static,
     {
         self.on_click = Some(Box::new(callback));
     }
@@ -85,9 +85,9 @@ impl CheckboxWidget {
     /// of the current `Widget` object as a parameter, so this object can be modified when
     /// a click is registered, if necessary.  The checkbox' sselected state is also passed
     /// into the click callback.
-    pub fn click(&mut self, state: bool) {
+    pub fn click(&mut self, state: bool, widgets: &Vec<WidgetContainer>) {
         if let Some(mut cb) = self.on_click.take() {
-            cb(self, state);
+            cb(self, state, widgets);
             self.on_click = Some(cb);
         }
     }
@@ -168,7 +168,7 @@ impl Widget for CheckboxWidget {
         &mut self,
         injected: bool,
         event: CallbackEvent,
-        _widget_store: Option<&Vec<WidgetContainer>>,
+        widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
         if !injected {
             match event {
@@ -176,7 +176,14 @@ impl Widget for CheckboxWidget {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
                             self.selected = !self.selected;
-                            self.click(self.selected);
+
+                            match widget_store {
+                                Some(widgets) => {
+                                    self.click(self.selected, widgets);
+                                }
+                                None => (),
+                            }
+
                             self.invalidate();
 
                             return Some(CallbackEvent::WidgetSelected {

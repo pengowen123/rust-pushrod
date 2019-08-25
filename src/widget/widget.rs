@@ -288,10 +288,10 @@ pub fn get_widget_by_name(widgets: &Vec<WidgetContainer>, name: String) -> RefMu
     let pos = match widgets
         .iter()
         .find(|x| x.widget_name == String::from(name.clone()))
-        {
-            Some(x) => x.widget_id as usize,
-            None => 0 as usize,
-        };
+    {
+        Some(x) => x.widget_id as usize,
+        None => 0 as usize,
+    };
 
     widgets[pos].widget.borrow_mut()
 }
