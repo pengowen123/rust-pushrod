@@ -37,7 +37,6 @@ pub struct CheckboxWidget {
     unselected_widget: ImageWidget,
     widget_id: i32,
     callbacks: DefaultWidgetCallbacks,
-    on_click: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
 }
 
 impl CheckboxWidget {
@@ -70,17 +69,7 @@ impl CheckboxWidget {
             unselected_widget,
             widget_id: 0,
             callbacks: DefaultWidgetCallbacks::new(),
-            on_click: None,
         }
-    }
-
-    /// Sets a callback closure that can be called when a click is registered for this
-    /// `Widget`.
-    pub fn on_click<F>(&mut self, callback: F)
-    where
-        F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
-    {
-        self.on_click = Some(Box::new(callback));
     }
 
     /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
@@ -88,9 +77,9 @@ impl CheckboxWidget {
     /// a click is registered, if necessary.  The checkbox' sselected state is also passed
     /// into the click callback.
     pub fn click(&mut self, state: bool, widgets: &Vec<WidgetContainer>) {
-        if let Some(mut cb) = self.on_click.take() {
+        if let Some(mut cb) = self.get_callbacks().on_toggle.take() {
             cb(self, state, widgets);
-            self.on_click = Some(cb);
+            self.get_callbacks().on_toggle = Some(cb);
         }
     }
 }
@@ -179,11 +168,13 @@ impl Widget for CheckboxWidget {
                         if mouse_button == MouseButton::Left {
                             self.selected = !self.selected;
 
-                            match widget_store {
-                                Some(widgets) => {
-                                    self.click(self.selected, widgets);
+                            if self.get_callbacks().has_on_toggle() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        self.click(self.selected, widgets);
+                                    }
+                                    None => (),
                                 }
-                                None => (),
                             }
 
                             self.invalidate();

@@ -182,11 +182,13 @@ impl Widget for ImageButtonWidget {
                             self.draw_unhovered();
                             self.active = false;
 
-                            match widget_store {
-                                Some(widgets) => {
-                                    self.click(widgets);
+                            if self.get_callbacks().has_on_click() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        self.click(widgets);
+                                    }
+                                    None => (),
                                 }
-                                None => (),
                             }
 
                             return Some(WidgetClicked { widget_id, button });

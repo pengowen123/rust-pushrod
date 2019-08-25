@@ -182,11 +182,13 @@ impl Widget for RadioButtonWidget {
                             self.selected = true;
                             self.inject_event = true;
 
-                            match widget_store {
-                                Some(widgets) => {
-                                    self.click(widgets);
+                            if self.get_callbacks().has_on_click() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        self.click(widgets);
+                                    }
+                                    None => (),
                                 }
-                                None => (),
                             }
 
                             self.invalidate();

@@ -176,11 +176,13 @@ impl Widget for ToggleButtonWidget {
                             self.draw_unhovered();
                             self.active = false;
 
-                            match widget_store {
-                                Some(widgets) => {
-                                    self.click(self.selected, widgets);
+                            if self.get_callbacks().has_on_toggle() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        self.click(self.selected, widgets);
+                                    }
+                                    None => (),
                                 }
-                                None => (),
                             }
 
                             return Some(WidgetSelected {

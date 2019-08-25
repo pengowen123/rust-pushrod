@@ -300,6 +300,9 @@ pub struct DefaultWidgetCallbacks {
     pub on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
     pub on_toggle: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
     pub on_mouse_move: Option<Box<dyn FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>)>>,
+    on_click_populated: bool,
+    on_toggle_populated: bool,
+    on_mouse_move_populated: bool,
 }
 
 impl DefaultWidgetCallbacks {
@@ -308,6 +311,9 @@ impl DefaultWidgetCallbacks {
             on_click: None,
             on_toggle: None,
             on_mouse_move: None,
+            on_click_populated: false,
+            on_toggle_populated: false,
+            on_mouse_move_populated: false,
         }
     }
 
@@ -315,21 +321,36 @@ impl DefaultWidgetCallbacks {
     where
         F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
     {
-        self.on_click = Some(Box::new(callback));;
+        self.on_click = Some(Box::new(callback));
+        self.on_click_populated = true;
+    }
+
+    pub fn has_on_click(&mut self) -> bool {
+        self.on_click_populated
     }
 
     pub fn on_toggle<F>(&mut self, callback: F)
         where
             F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
     {
-        self.on_toggle = Some(Box::new(callback));;
+        self.on_toggle = Some(Box::new(callback));
+        self.on_toggle_populated = true;
+    }
+
+    pub fn has_on_toggle(&mut self) -> bool {
+        self.on_toggle_populated
     }
 
     pub fn on_mouse_move<F>(&mut self, callback: F)
         where
             F: FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>) + 'static,
     {
-        self.on_mouse_move = Some(Box::new(callback));;
+        self.on_mouse_move = Some(Box::new(callback));
+        self.on_mouse_move_populated = true;
+    }
+
+    pub fn has_on_mouse_move(&mut self) -> bool {
+        self.on_mouse_move_populated
     }
 }
 

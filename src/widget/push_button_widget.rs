@@ -79,13 +79,6 @@ impl PushButtonWidget {
             self.get_callbacks().on_click = Some(cb);
         }
     }
-
-    pub fn mouse_moved(&mut self, point: Point, widgets: &Vec<WidgetContainer>) {
-        if let Some(mut cb) = self.get_callbacks().on_mouse_move.take() {
-            cb(self, point, widgets);
-            self.get_callbacks().on_mouse_move = Some(cb);
-        }
-    }
 }
 
 impl Drawable for PushButtonWidget {
@@ -135,15 +128,6 @@ impl Widget for PushButtonWidget {
                     }
                 }
 
-                CallbackEvent::MouseMoved { widget_id: _, point } => {
-                    match widget_store {
-                        Some(widgets) => {
-                            self.mouse_moved(point.clone(), widgets);
-                        }
-                        None => (),
-                    }
-                }
-
                 CallbackEvent::MouseButtonDown {
                     widget_id: _,
                     button,
@@ -163,11 +147,13 @@ impl Widget for PushButtonWidget {
                             self.draw_unhovered();
                             self.active = false;
 
-                            match widget_store {
-                                Some(widgets) => {
-                                    self.click(widgets);
+                            if self.get_callbacks().has_on_click() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        self.click(widgets);
+                                    }
+                                    None => (),
                                 }
-                                None => (),
                             }
 
                             return Some(WidgetClicked { widget_id, button });
