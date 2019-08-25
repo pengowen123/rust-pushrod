@@ -200,11 +200,11 @@ pub trait Widget {
         false
     }
 
+    /// Retrieves the callbacks that are registered for the `Widget`.  These callbacks are used
+    /// when a specific event triggers an action - a click, mouse enter/exit, or movement event,
+    /// for example.  The callbacks stored in the `DefaultWidgetCallbacks` object can be used
+    /// to perform static actions.
     fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks;
-
-    fn has_callbacks(&mut self) -> bool {
-        false
-    }
 }
 
 /// Base `Widget` object.  Displays a blank canvas, with the color set by the `CONFIG_MAIN_COLOR`
@@ -302,7 +302,6 @@ impl Widget for CanvasWidget {
     }
 
 }
-
 
 pub struct DefaultWidgetCallbacks {
     on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,

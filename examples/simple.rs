@@ -597,7 +597,8 @@ impl SimpleWindow {
         button1.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button1.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button1.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button1.on_click(|x, widgets| {
+        button1.get_callbacks()
+            .on_click(|x, widgets| {
             let state = get_widget_by_name(widgets, "BoxInLayoutWidget1".to_string())
                 .config()
                 .get_toggle(CONFIG_WIDGET_HIDDEN);
@@ -633,7 +634,8 @@ impl SimpleWindow {
         button3.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button3.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button3.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button3.on_click(|x, widgets| {
+        button3.get_callbacks()
+            .on_click(|x, widgets| {
             let state = get_widget_by_name(widgets, "BoxInLayoutWidget2".to_string())
                 .config()
                 .get_toggle(CONFIG_WIDGET_DISABLED);
@@ -679,7 +681,8 @@ impl SimpleWindow {
         button5.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button5.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button5.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button5.on_click(|x, widgets| {
+        button5.get_callbacks()
+            .on_click(|x, widgets| {
             get_widget_by_name(widgets, "BoxInLayoutWidget3".to_string()).set_config(
                 CONFIG_MAIN_COLOR,
                 Config::Color([
@@ -790,7 +793,8 @@ impl SimpleWindow {
         button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button2.on_click(|x, widgets| {
+        button2.get_callbacks()
+            .on_click(|x, widgets| {
             get_widget_by_name(widgets, "ProgressWidget".to_string()).set_config(
                 CONFIG_SECONDARY_COLOR,
                 Config::Color([
