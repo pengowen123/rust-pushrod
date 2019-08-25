@@ -21,12 +21,6 @@ use crate::core::point::{Point, Size};
 use crate::core::widget_store::*;
 use crate::widget::config::*;
 
-pub trait WidgetCallbacks {
-    fn on_click<F>(&mut self, callback: F)
-    where
-        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static;
-}
-
 pub trait Drawable {
     /// Draws the `Widget`'s contents.  Only gets called if the `Widget` is in invalidated
     /// state.  Provides a modified `Context` object that has an origin of `0x0` in drawing
@@ -304,20 +298,29 @@ impl Widget for CanvasWidget {
 
 pub struct DefaultWidgetCallbacks {
     pub on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
+    pub on_toggle: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
 }
 
-impl WidgetCallbacks for DefaultWidgetCallbacks {
-    fn on_click<F>(&mut self, callback: F)
+impl DefaultWidgetCallbacks {
+    pub fn new() -> Self {
+        Self {
+            on_click: None,
+            on_toggle: None,
+        }
+    }
+
+    pub fn on_click<F>(&mut self, callback: F)
     where
         F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
     {
         self.on_click = Some(Box::new(callback));;
     }
-}
 
-impl DefaultWidgetCallbacks {
-    pub fn new() -> Self {
-        Self { on_click: None }
+    pub fn on_toggle<F>(&mut self, callback: F)
+        where
+            F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_toggle = Some(Box::new(callback));;
     }
 }
 
