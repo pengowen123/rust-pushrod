@@ -23,8 +23,8 @@ use crate::widget::config::*;
 
 pub trait WidgetCallbacks {
     fn on_click<F>(&mut self, callback: F)
-        where
-            F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static;
+    where
+        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static;
 }
 
 pub trait Drawable {
@@ -300,26 +300,24 @@ impl Widget for CanvasWidget {
     fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
         &mut self.callbacks
     }
-
 }
 
 pub struct DefaultWidgetCallbacks {
-    on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
+    pub on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
 }
 
 impl WidgetCallbacks for DefaultWidgetCallbacks {
     fn on_click<F>(&mut self, callback: F)
-        where
-            F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static {
+    where
+        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
+    {
         self.on_click = Some(Box::new(callback));;
     }
 }
 
 impl DefaultWidgetCallbacks {
     pub fn new() -> Self {
-        Self {
-            on_click: None,
-        }
+        Self { on_click: None }
     }
 }
 

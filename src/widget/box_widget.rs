@@ -150,5 +150,4 @@ impl Widget for BoxWidget {
     fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
         &mut self.callbacks
     }
-
 }

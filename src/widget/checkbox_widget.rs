@@ -232,5 +232,4 @@ impl Widget for CheckboxWidget {
     fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
         &mut self.callbacks
     }
-
 }

@@ -41,7 +41,6 @@ pub struct RadioButtonWidget {
     inject_event: bool,
     widget_id: i32,
     callbacks: DefaultWidgetCallbacks,
-    on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
 }
 
 impl RadioButtonWidget {
@@ -77,26 +76,16 @@ impl RadioButtonWidget {
             inject_event: false,
             widget_id: 0,
             callbacks: DefaultWidgetCallbacks::new(),
-            on_click: None,
         }
-    }
-
-    /// Sets a callback closure that can be called when a click is registered for this
-    /// widget.
-    pub fn on_click<F>(&mut self, callback: F)
-    where
-        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
-    {
-        self.on_click = Some(Box::new(callback));
     }
 
     /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
     /// of the current `Widget` object as a parameter, so this object can be modified when
     /// a click is registered, if necessary.
     pub fn click(&mut self, widgets: &Vec<WidgetContainer>) {
-        if let Some(mut cb) = self.on_click.take() {
+        if let Some(mut cb) = self.get_callbacks().on_click.take() {
             cb(self, widgets);
-            self.on_click = Some(cb);
+            self.get_callbacks().on_click = Some(cb);
         }
     }
 }
