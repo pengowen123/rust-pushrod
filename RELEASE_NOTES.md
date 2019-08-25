@@ -2,6 +2,8 @@
 
 ## 0.4.5
 
+- Changed get_widget_position_by_name to get_widget_by_name (far easier to use)
+
 ## 0.4.4
 
 - Cleaned up sample code.
