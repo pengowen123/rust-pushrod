@@ -36,7 +36,6 @@ If you like this library, please consider [donating to this project!](https://ww
   - [x] Mouse Moved
   - [x] Widget Toggled
   - [ ] Key Pressed
-  - [ ] Widget Selected
   - [ ] Timer Tick
   - [ ] Add number of clicks to on click
   - [ ] Mouse Button Down
