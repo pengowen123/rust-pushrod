@@ -162,7 +162,8 @@ impl Widget for CheckboxWidget {
                             if self.get_callbacks().has_on_toggle() {
                                 match widget_store {
                                     Some(widgets) => {
-                                        if let Some(mut cb) = self.get_callbacks().on_toggle.take() {
+                                        if let Some(mut cb) = self.get_callbacks().on_toggle.take()
+                                        {
                                             cb(self, selected, widgets);
                                             self.get_callbacks().on_toggle = Some(cb);
                                         }

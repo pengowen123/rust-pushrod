@@ -16,10 +16,9 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::callbacks::CallbackEvent;
+use crate::core::widget_store::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
-use crate::core::callbacks::*;
-use crate::core::widget_store::*;
 
 /// Creates a timer that can be used to generate callbacks based on a timeout.  When a timeout
 /// has been reached, a `TimerTriggered` event is generated.  Set the timer timeout in
@@ -132,11 +131,10 @@ impl Widget for TimerWidget {
     fn handle_event(
         &mut self,
         injected: bool,
-        event: CallbackEvent,
-        widget_store: Option<&Vec<WidgetContainer>>,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
-        if !injected {
-        }
+        if !injected {}
 
         None
     }

@@ -21,10 +21,10 @@ use graphics::draw_state::DrawState;
 use graphics::*;
 use opengl_graphics::{GlGraphics, GlyphCache, TextureSettings};
 
-use crate::widget::config::*;
-use crate::widget::widget::*;
 use crate::core::callbacks::*;
 use crate::core::widget_store::*;
+use crate::widget::config::*;
+use crate::widget::widget::*;
 
 /// Enumeration identifying the justification of the text to be drawn, as long as the bounds
 /// of the object allow for it.
@@ -173,11 +173,10 @@ impl Widget for TextWidget {
     fn handle_event(
         &mut self,
         injected: bool,
-        event: CallbackEvent,
-        widget_store: Option<&Vec<WidgetContainer>>,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
-        if !injected {
-        }
+        if !injected {}
 
         None
     }

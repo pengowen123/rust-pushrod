@@ -330,8 +330,8 @@ impl DefaultWidgetCallbacks {
     }
 
     pub fn on_toggle<F>(&mut self, callback: F)
-        where
-            F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
+    where
+        F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
     {
         self.on_toggle = Some(Box::new(callback));
         self.on_toggle_populated = true;
@@ -342,8 +342,8 @@ impl DefaultWidgetCallbacks {
     }
 
     pub fn on_mouse_move<F>(&mut self, callback: F)
-        where
-            F: FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>) + 'static,
+    where
+        F: FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>) + 'static,
     {
         self.on_mouse_move = Some(Box::new(callback));
         self.on_mouse_move_populated = true;

@@ -21,7 +21,6 @@ use piston::input::*;
 use crate::core::callbacks::CallbackEvent::WidgetClicked;
 use crate::core::callbacks::*;
 use crate::core::widget_store::*;
-use crate::core::point::Point;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::text_widget::*;

@@ -127,8 +127,8 @@ impl Widget for BoxWidget {
     fn handle_event(
         &mut self,
         injected: bool,
-        event: CallbackEvent,
-        widget_store: Option<&Vec<WidgetContainer>>,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
         if !injected {
         }
