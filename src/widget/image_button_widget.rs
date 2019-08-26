@@ -36,7 +36,7 @@ pub struct ImageButtonWidget {
     image_widget: ImageWidget,
     active: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut ImageButtonWidget)>>,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl ImageButtonWidget {
@@ -64,7 +64,7 @@ impl ImageButtonWidget {
             image_widget,
             active: false,
             widget_id: 0,
-            on_click: None,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 
@@ -80,25 +80,6 @@ impl ImageButtonWidget {
         self.text_widget
             .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.invalidate();
-    }
-
-    /// Sets a callback closure that can be called when a click is registered for this
-    /// widget.
-    pub fn on_click<F>(&mut self, callback: F)
-    where
-        F: FnMut(&mut ImageButtonWidget) + 'static,
-    {
-        self.on_click = Some(Box::new(callback));
-    }
-
-    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
-    /// of the current `Widget` object as a parameter, so this object can be modified when
-    /// a click is registered, if necessary.
-    pub fn click(&mut self) {
-        if let Some(mut cb) = self.on_click.take() {
-            cb(self);
-            self.on_click = Some(cb);
-        }
     }
 }
 
@@ -152,7 +133,12 @@ impl Widget for ImageButtonWidget {
         self.image_widget.set_config(config, config_value.clone());
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        event: CallbackEvent,
+        widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseEntered { widget_id: _ } => {
@@ -185,7 +171,18 @@ impl Widget for ImageButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.draw_unhovered();
                             self.active = false;
-                            self.click();
+
+                            if self.get_callbacks().has_on_click() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        if let Some(mut cb) = self.get_callbacks().on_click.take() {
+                                            cb(self, widgets);
+                                            self.get_callbacks().on_click = Some(cb);
+                                        }
+                                    }
+                                    None => (),
+                                }
+                            }
 
                             return Some(WidgetClicked { widget_id, button });
                         }
@@ -235,5 +232,9 @@ impl Widget for ImageButtonWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

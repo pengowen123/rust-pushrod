@@ -1,5 +1,17 @@
 # Pushrod Releases
 
+## 0.4.5
+
+- Changed get_widget_position_by_name to get_widget_by_name (far easier to use)
+- Fixed all other on_click callbacks so that widgets from widget store are included
+- Genericized on_click to use `dyn Widget` instead of customized `Widget` definition
+- Moved callbacks to `DefaultWidgetCallbacks` object so that callbacks are stored in a structure
+- Converted callbacks to use get_callbacks() function for setting callback closures
+- Modified PushButtonWidget to use get_callbacks()
+- Added on_toggle callback (#190)
+- Added on_mouse_move callback (#183)
+- Optimized callbacks so that they are processed only if populated
+
 ## 0.4.4
 
 - Cleaned up sample code.

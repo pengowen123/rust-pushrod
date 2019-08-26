@@ -40,7 +40,7 @@ pub struct RadioButtonWidget {
     unselected_widget: ImageWidget,
     inject_event: bool,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut RadioButtonWidget)>>,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl RadioButtonWidget {
@@ -75,26 +75,7 @@ impl RadioButtonWidget {
             unselected_widget,
             inject_event: false,
             widget_id: 0,
-            on_click: None,
-        }
-    }
-
-    /// Sets a callback closure that can be called when a click is registered for this
-    /// widget.
-    pub fn on_click<F>(&mut self, callback: F)
-    where
-        F: FnMut(&mut RadioButtonWidget) + 'static,
-    {
-        self.on_click = Some(Box::new(callback));
-    }
-
-    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
-    /// of the current `Widget` object as a parameter, so this object can be modified when
-    /// a click is registered, if necessary.
-    pub fn click(&mut self) {
-        if let Some(mut cb) = self.on_click.take() {
-            cb(self);
-            self.on_click = Some(cb);
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 }
@@ -177,7 +158,12 @@ impl Widget for RadioButtonWidget {
         }
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        event: CallbackEvent,
+        widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
@@ -185,7 +171,18 @@ impl Widget for RadioButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.selected = true;
                             self.inject_event = true;
-                            self.click();
+
+                            if self.get_callbacks().has_on_click() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        if let Some(mut cb) = self.get_callbacks().on_click.take() {
+                                            cb(self, widgets);
+                                            self.get_callbacks().on_click = Some(cb);
+                                        }
+                                    }
+                                    None => (),
+                                }
+                            }
 
                             self.invalidate();
 
@@ -250,5 +247,9 @@ impl Widget for RadioButtonWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

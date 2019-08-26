@@ -16,6 +16,8 @@
 use graphics::*;
 use opengl_graphics::GlGraphics;
 
+use crate::core::callbacks::*;
+use crate::core::widget_store::*;
 use crate::widget::box_widget::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
@@ -30,6 +32,7 @@ pub struct ProgressWidget {
     config: Configurable,
     base_widget: BoxWidget,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl ProgressWidget {
@@ -46,6 +49,7 @@ impl ProgressWidget {
             config: Configurable::new(),
             base_widget: base,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 }
@@ -108,6 +112,21 @@ impl Widget for ProgressWidget {
         self.widget_id
     }
 
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
+        if !injected {}
+
+        None
+    }
+
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
         self
     }
@@ -118,5 +137,9 @@ impl Widget for ProgressWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

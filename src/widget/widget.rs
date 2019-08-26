@@ -14,6 +14,7 @@
 
 use graphics::*;
 use opengl_graphics::GlGraphics;
+use std::cell::RefMut;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -144,7 +145,12 @@ pub trait Widget {
     /// top-level GUI events, such as a mouse entering or exiting the bounds of this `Widget`.
     /// If the `injected` flag is set, it indicates that the event supplied was generate by
     /// a `Widget`, and not by the run loop.
-    fn handle_event(&mut self, _injected: bool, _event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
+    fn handle_event(
+        &mut self,
+        _injected: bool,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
         None
     }
 
@@ -187,6 +193,12 @@ pub trait Widget {
     fn injects_system_events(&mut self) -> bool {
         false
     }
+
+    /// Retrieves the callbacks that are registered for the `Widget`.  These callbacks are used
+    /// when a specific event triggers an action - a click, mouse enter/exit, or movement event,
+    /// for example.  The callbacks stored in the `DefaultWidgetCallbacks` object can be used
+    /// to perform static actions.
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks;
 }
 
 /// Base `Widget` object.  Displays a blank canvas, with the color set by the `CONFIG_MAIN_COLOR`
@@ -195,6 +207,7 @@ pub struct CanvasWidget {
     config: Configurable,
     event_list: Vec<CallbackEvent>,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl CanvasWidget {
@@ -203,6 +216,7 @@ impl CanvasWidget {
             config: Configurable::new(),
             event_list: vec![],
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 }
@@ -276,20 +290,86 @@ impl Widget for CanvasWidget {
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
     }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
+    }
 }
 
-pub fn get_widget_position_by_name(widgets: &Vec<WidgetContainer>, name: String) -> i32 {
-    match widgets
+pub struct DefaultWidgetCallbacks {
+    pub on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
+    pub on_toggle: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
+    pub on_mouse_move: Option<Box<dyn FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>)>>,
+    on_click_populated: bool,
+    on_toggle_populated: bool,
+    on_mouse_move_populated: bool,
+}
+
+impl DefaultWidgetCallbacks {
+    pub fn new() -> Self {
+        Self {
+            on_click: None,
+            on_toggle: None,
+            on_mouse_move: None,
+            on_click_populated: false,
+            on_toggle_populated: false,
+            on_mouse_move_populated: false,
+        }
+    }
+
+    pub fn on_click<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_click = Some(Box::new(callback));
+        self.on_click_populated = true;
+    }
+
+    pub fn has_on_click(&mut self) -> bool {
+        self.on_click_populated
+    }
+
+    pub fn on_toggle<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_toggle = Some(Box::new(callback));
+        self.on_toggle_populated = true;
+    }
+
+    pub fn has_on_toggle(&mut self) -> bool {
+        self.on_toggle_populated
+    }
+
+    pub fn on_mouse_move<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_mouse_move = Some(Box::new(callback));
+        self.on_mouse_move_populated = true;
+    }
+
+    pub fn has_on_mouse_move(&mut self) -> bool {
+        self.on_mouse_move_populated
+    }
+}
+
+pub fn get_widget_by_name(widgets: &Vec<WidgetContainer>, name: String) -> RefMut<Box<dyn Widget>> {
+    let pos = match widgets
         .iter()
         .find(|x| x.widget_name == String::from(name.clone()))
-        {
-            Some(x) => x.widget_id,
-            None => 0,
-        }
+    {
+        Some(x) => x.widget_id as usize,
+        None => 0 as usize,
+    };
+
+    widgets[pos].widget.borrow_mut()
 }
 
 pub fn invalidate_all_widgets_except(widgets: &Vec<WidgetContainer>, skip_id: i32) {
-    widgets
-        .iter()
-        .for_each(|x| if x.widget_id != skip_id { x.widget.borrow_mut().invalidate() } );
+    widgets.iter().for_each(|x| {
+        if x.widget_id != skip_id {
+            x.widget.borrow_mut().invalidate()
+        }
+    });
 }

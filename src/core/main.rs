@@ -61,16 +61,12 @@ impl Pushrod {
 
     /// Convenience method that adds a `Widget` to the GUI display stack.
     pub fn add_widget(&mut self, name: &str, widget: Box<dyn Widget>) -> i32 {
-        self.widget_store
-            .borrow_mut()
-            .add_widget(name, widget)
+        self.widget_store.borrow_mut().add_widget(name, widget)
     }
 
     /// Convenience method that adds a `LayoutManager` to the layout management stack.
     pub fn add_layout_manager(&mut self, manager: Box<dyn LayoutManager>) -> i32 {
-        self.widget_store
-            .borrow_mut()
-            .add_layout_manager(manager)
+        self.widget_store.borrow_mut().add_layout_manager(manager)
     }
 
     /// Convenience method that adds a `Widget` to a `LayoutManager` by the manager's ID and
@@ -82,7 +78,8 @@ impl Pushrod {
         manager_id: i32,
         position: Point,
     ) -> i32 {
-        let widget_id = self.widget_store
+        let widget_id = self
+            .widget_store
             .borrow_mut()
             .add_widget_to_layout_manager(name, widget, manager_id, position);
 
@@ -113,7 +110,8 @@ impl Pushrod {
         name: &str,
         widget: Box<dyn Widget>,
     ) -> i32 {
-        let parent_id = self.widget_store
+        let parent_id = self
+            .widget_store
             .borrow_mut()
             .get_widget_id_for_name(parent_name);
 
@@ -123,18 +121,17 @@ impl Pushrod {
     }
 
     fn broadcast_event(&mut self, event: CallbackEvent) {
-        let widget_len = self.widget_store
-            .borrow()
-            .widgets
-            .len();
+        let widget_len = self.widget_store.borrow().widgets.len();
 
         for i in 0..widget_len {
-            self.widget_store
-                .borrow()
-                .widgets[i]
+            self.widget_store.borrow().widgets[i]
                 .widget
                 .borrow_mut()
-                .handle_event(false, event.clone(), Some(&self.widget_store.borrow().widgets));
+                .handle_event(
+                    false,
+                    event.clone(),
+                    Some(&self.widget_store.borrow().widgets),
+                );
         }
     }
 
@@ -149,25 +146,23 @@ impl Pushrod {
             return;
         }
 
-        let handles_events = self.widget_store
-            .borrow()
-            .widgets[widget_id as usize]
+        let handles_events = self.widget_store.borrow().widgets[widget_id as usize]
             .widget
             .borrow_mut()
             .handles_events();
 
         let injectable_event = if handles_events {
-            self.widget_store
-                .borrow()
-                .widgets[widget_id as usize]
+            self.widget_store.borrow().widgets[widget_id as usize]
                 .widget
                 .borrow_mut()
-                .handle_event(false, event.clone(),
-                              Some(&self.widget_store.borrow().widgets))
+                .handle_event(
+                    false,
+                    event.clone(),
+                    Some(&self.widget_store.borrow().widgets),
+                )
         } else {
             None
         };
-
 
         event_handler.handle_event(event.clone(), &mut self.widget_store.borrow_mut());
 
@@ -245,7 +240,9 @@ impl Pushrod {
         eprintln!("Window Size: {:?}", self.window.size());
         eprintln!("Draw Size: {:?}", self.window.draw_size());
 
-        Rc::clone(&self.widget_store).borrow_mut().invalidate_all_widgets();
+        Rc::clone(&self.widget_store)
+            .borrow_mut()
+            .invalidate_all_widgets();
         self.rebuild_gl_buffers();
 
         while let Some(ref event) = self.events.next(&mut self.window) {
@@ -442,23 +439,25 @@ impl Pushrod {
                                 // Injects an event to all widgets, allowing them to exhibit custom event handling behavior if
                                 // required.  This is usually used in cases where special triggering needs to take place, like
                                 // an indication of a timeout or transient error.
-                                let widget_size = Rc::clone(&self.widget_store).borrow_mut().widgets.len();
+                                let widget_size =
+                                    Rc::clone(&self.widget_store).borrow_mut().widgets.len();
 
                                 for i in 0..widget_size {
-                                    let handles_events = Rc::clone(&self.widget_store)
-                                        .borrow()
-                                        .widgets[i]
-                                        .widget
-                                        .borrow_mut().handles_events();
-
-                                    if handles_events {
-                                        Rc::clone(&self.widget_store)
-                                            .borrow()
-                                            .widgets[i]
+                                    let handles_events =
+                                        Rc::clone(&self.widget_store).borrow().widgets[i]
                                             .widget
                                             .borrow_mut()
-                                            .handle_event(true, x.clone(),
-                                            Some(&self.widget_store.borrow().widgets));
+                                            .handles_events();
+
+                                    if handles_events {
+                                        Rc::clone(&self.widget_store).borrow().widgets[i]
+                                            .widget
+                                            .borrow_mut()
+                                            .handle_event(
+                                                true,
+                                                x.clone(),
+                                                Some(&self.widget_store.borrow().widgets),
+                                            );
                                     }
                                 }
                             }

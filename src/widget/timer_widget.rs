@@ -16,6 +16,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::core::callbacks::CallbackEvent;
+use crate::core::widget_store::*;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -32,6 +33,7 @@ pub struct TimerWidget {
     initiated: u64,
     triggered: bool,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
     on_tick: Option<Box<dyn FnMut(&mut TimerWidget)>>,
 }
 
@@ -50,6 +52,7 @@ impl TimerWidget {
             initiated: time_ms(),
             triggered: false,
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
             on_tick: None,
         }
     }
@@ -125,6 +128,21 @@ impl Widget for TimerWidget {
         self.widget_id
     }
 
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
+        if !injected {}
+
+        None
+    }
+
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn get_injectable_custom_events(&mut self) -> &mut dyn InjectableCustomEvents {
         self
     }
@@ -140,5 +158,9 @@ impl Widget for TimerWidget {
     fn is_drawable(&mut self) -> bool {
         self.tick();
         false
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

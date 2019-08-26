@@ -18,6 +18,7 @@ use opengl_graphics::GlGraphics;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
+use crate::core::widget_store::WidgetContainer;
 use crate::widget::config::*;
 use crate::widget::widget::*;
 
@@ -28,6 +29,7 @@ pub struct BoxWidget {
     config: Configurable,
     event_list: Vec<CallbackEvent>,
     widget_id: i32,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl BoxWidget {
@@ -37,6 +39,7 @@ impl BoxWidget {
             config: Configurable::new(),
             event_list: vec![],
             widget_id: 0,
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 
@@ -121,6 +124,22 @@ impl Widget for BoxWidget {
         self.invalidate();
     }
 
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        _event: CallbackEvent,
+        _widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
+        if !injected {
+        }
+
+        None
+    }
+
+    fn handles_events(&mut self) -> bool {
+        true
+    }
+
     fn set_widget_id(&mut self, widget_id: i32) {
         self.widget_id = widget_id;
     }
@@ -143,5 +162,9 @@ impl Widget for BoxWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }

@@ -36,7 +36,7 @@ pub struct CheckboxWidget {
     selected_widget: ImageWidget,
     unselected_widget: ImageWidget,
     widget_id: i32,
-    on_click: Option<Box<dyn FnMut(&mut CheckboxWidget, bool)>>,
+    callbacks: DefaultWidgetCallbacks,
 }
 
 impl CheckboxWidget {
@@ -68,27 +68,7 @@ impl CheckboxWidget {
             selected_widget,
             unselected_widget,
             widget_id: 0,
-            on_click: None,
-        }
-    }
-
-    /// Sets a callback closure that can be called when a click is registered for this
-    /// `Widget`.
-    pub fn on_click<F>(&mut self, callback: F)
-    where
-        F: FnMut(&mut CheckboxWidget, bool) + 'static,
-    {
-        self.on_click = Some(Box::new(callback));
-    }
-
-    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
-    /// of the current `Widget` object as a parameter, so this object can be modified when
-    /// a click is registered, if necessary.  The checkbox' sselected state is also passed
-    /// into the click callback.
-    pub fn click(&mut self, state: bool) {
-        if let Some(mut cb) = self.on_click.take() {
-            cb(self, state);
-            self.on_click = Some(cb);
+            callbacks: DefaultWidgetCallbacks::new(),
         }
     }
 }
@@ -164,14 +144,34 @@ impl Widget for CheckboxWidget {
         }
     }
 
-    fn handle_event(&mut self, injected: bool, event: CallbackEvent, _widget_store: Option<&Vec<WidgetContainer>>) -> Option<CallbackEvent> {
+    fn handle_event(
+        &mut self,
+        injected: bool,
+        event: CallbackEvent,
+        widget_store: Option<&Vec<WidgetContainer>>,
+    ) -> Option<CallbackEvent> {
         if !injected {
             match event {
                 CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
                     Button::Mouse(mouse_button) => {
                         if mouse_button == MouseButton::Left {
                             self.selected = !self.selected;
-                            self.click(self.selected);
+
+                            let selected = self.selected;
+
+                            if self.get_callbacks().has_on_toggle() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        if let Some(mut cb) = self.get_callbacks().on_toggle.take()
+                                        {
+                                            cb(self, selected, widgets);
+                                            self.get_callbacks().on_toggle = Some(cb);
+                                        }
+                                    }
+                                    None => (),
+                                }
+                            }
+
                             self.invalidate();
 
                             return Some(CallbackEvent::WidgetSelected {
@@ -213,5 +213,9 @@ impl Widget for CheckboxWidget {
 
     fn get_drawable(&mut self) -> &mut dyn Drawable {
         self
+    }
+
+    fn get_callbacks(&mut self) -> &mut DefaultWidgetCallbacks {
+        &mut self.callbacks
     }
 }
