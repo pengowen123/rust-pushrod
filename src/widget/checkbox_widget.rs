@@ -71,17 +71,6 @@ impl CheckboxWidget {
             callbacks: DefaultWidgetCallbacks::new(),
         }
     }
-
-    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
-    /// of the current `Widget` object as a parameter, so this object can be modified when
-    /// a click is registered, if necessary.  The checkbox' sselected state is also passed
-    /// into the click callback.
-    pub fn click(&mut self, state: bool, widgets: &Vec<WidgetContainer>) {
-        if let Some(mut cb) = self.get_callbacks().on_toggle.take() {
-            cb(self, state, widgets);
-            self.get_callbacks().on_toggle = Some(cb);
-        }
-    }
 }
 
 impl Drawable for CheckboxWidget {
@@ -168,10 +157,15 @@ impl Widget for CheckboxWidget {
                         if mouse_button == MouseButton::Left {
                             self.selected = !self.selected;
 
+                            let selected = self.selected;
+
                             if self.get_callbacks().has_on_toggle() {
                                 match widget_store {
                                     Some(widgets) => {
-                                        self.click(self.selected, widgets);
+                                        if let Some(mut cb) = self.get_callbacks().on_toggle.take() {
+                                            cb(self, selected, widgets);
+                                            self.get_callbacks().on_toggle = Some(cb);
+                                        }
                                     }
                                     None => (),
                                 }

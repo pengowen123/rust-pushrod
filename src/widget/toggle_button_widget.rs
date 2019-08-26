@@ -89,17 +89,6 @@ impl ToggleButtonWidget {
 
         self.invalidate();
     }
-
-    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
-    /// of the current `Widget` object as a parameter, so this object can be modified when
-    /// a click is registered, if necessary.  Also indicates the state of the object, whether
-    /// or not the object has been toggled.
-    pub fn click(&mut self, state: bool, widgets: &Vec<WidgetContainer>) {
-        if let Some(mut cb) = self.get_callbacks().on_toggle.take() {
-            cb(self, state, widgets);
-            self.get_callbacks().on_toggle = Some(cb);
-        }
-    }
 }
 
 impl Drawable for ToggleButtonWidget {
@@ -177,9 +166,14 @@ impl Widget for ToggleButtonWidget {
                             self.active = false;
 
                             if self.get_callbacks().has_on_toggle() {
+                                let selected = self.selected;
+
                                 match widget_store {
                                     Some(widgets) => {
-                                        self.click(self.selected, widgets);
+                                        if let Some(mut cb) = self.get_callbacks().on_toggle.take() {
+                                            cb(self, selected, widgets);
+                                            self.get_callbacks().on_toggle = Some(cb);
+                                        }
                                     }
                                     None => (),
                                 }

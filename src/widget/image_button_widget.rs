@@ -81,16 +81,6 @@ impl ImageButtonWidget {
             .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.invalidate();
     }
-
-    /// Calls the click `on_click` callback, if set.  Otherwise, ignored.  Sends a reference
-    /// of the current `Widget` object as a parameter, so this object can be modified when
-    /// a click is registered, if necessary.
-    pub fn click(&mut self, widgets: &Vec<WidgetContainer>) {
-        if let Some(mut cb) = self.get_callbacks().on_click.take() {
-            cb(self, widgets);
-            self.get_callbacks().on_click = Some(cb);
-        }
-    }
 }
 
 impl Drawable for ImageButtonWidget {
@@ -185,7 +175,10 @@ impl Widget for ImageButtonWidget {
                             if self.get_callbacks().has_on_click() {
                                 match widget_store {
                                     Some(widgets) => {
-                                        self.click(widgets);
+                                        if let Some(mut cb) = self.get_callbacks().on_click.take() {
+                                            cb(self, widgets);
+                                            self.get_callbacks().on_click = Some(cb);
+                                        }
                                     }
                                     None => (),
                                 }
