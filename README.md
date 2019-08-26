@@ -31,6 +31,18 @@ If you like this library, please consider [donating to this project!](https://ww
 - [x] Fix hidden object traversal in main draw loop
 - [x] Pass in event system trait so that `Widget`s have access to the `Widgets` from the `WidgetStore`
 - [x] Add helper methods to access widgets by name and invalidate via Widget vector
+- [ ] Add Callbacks:
+  - [x] On Click without number of clicks
+  - [x] Mouse Moved
+  - [x] Widget Toggled
+  - [ ] Key Pressed
+  - [ ] Widget Selected
+  - [ ] Timer Tick
+  - [ ] Add number of clicks to on click
+  - [ ] Mouse Button Down
+  - [ ] Mouse Button Up
+  - [ ] Mouse Entered
+  - [ ] Mouse Exited
 - [ ] Modify Event system so that it is a single trait
 - [ ] Get rid of Point and Size, use array value types instead
 - [ ] Fix all `Widget`s so that they draw to a texture
