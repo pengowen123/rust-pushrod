@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.4.6
+
+- Added on_mouse_button callback (#184, #185)
+
 ## 0.4.5
 
 - Changed get_widget_position_by_name to get_widget_by_name (far easier to use)
