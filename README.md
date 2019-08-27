@@ -35,11 +35,11 @@ If you like this library, please consider [donating to this project!](https://ww
   - [x] On Click without number of clicks
   - [x] Mouse Moved
   - [x] Widget Toggled
+  - [x] Timer Tick
+  - [x] Mouse Button Down
+  - [x] Mouse Button Up
   - [ ] Key Pressed
-  - [ ] Timer Tick
   - [ ] Add number of clicks to on click
-  - [ ] Mouse Button Down
-  - [ ] Mouse Button Up
   - [ ] Mouse Entered
   - [ ] Mouse Exited
 - [ ] Modify Event system so that it is a single trait
