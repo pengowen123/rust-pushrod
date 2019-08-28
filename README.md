@@ -40,8 +40,8 @@ If you like this library, please consider [donating to this project!](https://ww
   - [x] Mouse Button Up
   - [ ] Key Pressed
   - [ ] Add number of clicks to on click
-  - [ ] Mouse Entered
-  - [ ] Mouse Exited
+  - [x] Mouse Entered
+  - [x] Mouse Exited
 - [ ] Modify Event system so that it is a single trait
 - [ ] Get rid of Point and Size, use array value types instead
 - [ ] Fix all `Widget`s so that they draw to a texture

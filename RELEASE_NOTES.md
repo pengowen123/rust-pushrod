@@ -4,6 +4,7 @@
 
 - Added on_mouse_button callback (#184, #185)
 - Added on_tick callback (#187)
+- Added on_mouse_bounds callback (#181, #182)
 
 ## 0.4.5
 
