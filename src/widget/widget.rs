@@ -155,35 +155,6 @@ pub trait Widget {
         None
     }
 
-    fn handle_event_callbacks(
-        &mut self,
-        event: CallbackEvent,
-        widget_store: Option<&Vec<WidgetContainer>>)
-    {
-        let widgets = match widget_store {
-            Some(widgets) => widgets,
-            _ => return,
-        };
-
-        match event {
-            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
-                Button::Mouse(mouse_button) => {
-                    if mouse_button == MouseButton::Left {
-                        if self.get_callbacks().has_on_click() {
-                            if let Some(mut cb) = self.get_callbacks().on_click.take() {
-                                cb(self, widgets);
-                                self.get_callbacks().on_click = Some(cb);
-                            }
-                        }
-                    }
-                }
-                _ => (),
-            },
-
-            _ => (),
-        }
-    }
-
     /// Indicates to the run loop whether or not the `Widget` handles system-generated events.
     fn handles_events(&mut self) -> bool {
         false
@@ -450,4 +421,66 @@ pub fn invalidate_all_widgets_except(widgets: &Vec<WidgetContainer>, skip_id: i3
             x.widget.borrow_mut().invalidate()
         }
     });
+}
+
+#[macro_export]
+macro_rules! inject_event_handler {
+    () => {
+        fn handle_event_callbacks(
+            &mut self,
+            event: CallbackEvent,
+            widget_store: Option<&Vec<WidgetContainer>>)
+        {
+            let widgets = match widget_store {
+                Some(widgets) => widgets,
+                _ => return,
+            };
+
+            match event {
+                CallbackEvent::MouseButtonUpInside { widget_id: _, button } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            if self.get_callbacks().has_on_click() {
+                                if let Some(mut cb) = self.get_callbacks().on_click.take() {
+                                    cb(self, widgets);
+                                    self.get_callbacks().on_click = Some(cb);
+                                }
+                            }
+                        }
+                    }
+                    _ => (),
+                },
+
+                CallbackEvent::MouseMoved { widget_id: _, point } => {
+                    if self.get_callbacks().has_on_mouse_move() {
+                        if let Some(mut cb) = self.get_callbacks().on_mouse_move.take() {
+                            cb(self, point, widgets);
+                            self.get_callbacks().on_mouse_move = Some(cb);
+                        }
+                    }
+                },
+
+                CallbackEvent::MouseEntered { widget_id: _ } => {
+                    if self.get_callbacks().has_on_mouse_bounds() {
+                        if let Some(mut cb) = self.get_callbacks().on_mouse_bounds.take() {
+                            cb(self, true, widgets);
+                            self.get_callbacks().on_mouse_bounds = Some(cb);
+                        }
+                    }
+                }
+
+                CallbackEvent::MouseExited { widget_id: _ } => {
+                    if self.get_callbacks().has_on_mouse_bounds() {
+                        if let Some(mut cb) = self.get_callbacks().on_mouse_bounds.take() {
+                            cb(self, false, widgets);
+                            self.get_callbacks().on_mouse_bounds = Some(cb);
+                        }
+                    }
+                }
+
+                _ => (),
+            }
+        }
+
+    }
 }

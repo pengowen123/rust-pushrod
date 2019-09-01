@@ -20,6 +20,7 @@ use graphics::character::CharacterCache;
 use graphics::draw_state::DrawState;
 use graphics::*;
 use opengl_graphics::{GlGraphics, GlyphCache, TextureSettings};
+use piston::input::*;
 
 use crate::core::callbacks::*;
 use crate::core::widget_store::*;
@@ -116,6 +117,8 @@ impl TextWidget {
             )
             .unwrap();
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for TextWidget {
@@ -176,7 +179,9 @@ impl Widget for TextWidget {
         _event: CallbackEvent,
         _widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
-        if !injected {}
+        if !injected {
+            self.handle_event_callbacks(_event, _widget_store);
+        }
 
         None
     }

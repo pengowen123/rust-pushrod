@@ -71,6 +71,8 @@ impl CheckboxWidget {
             callbacks: DefaultWidgetCallbacks::new(),
         }
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for CheckboxWidget {
@@ -184,7 +186,7 @@ impl Widget for CheckboxWidget {
                     _ => (),
                 },
 
-                _ => (),
+                _ => self.handle_event_callbacks(event, widget_store),
             }
         }
 

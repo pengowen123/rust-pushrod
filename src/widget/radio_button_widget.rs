@@ -78,6 +78,8 @@ impl RadioButtonWidget {
             callbacks: DefaultWidgetCallbacks::new(),
         }
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for RadioButtonWidget {
@@ -171,19 +173,18 @@ impl Widget for RadioButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.selected = true;
                             self.inject_event = true;
-                            self.handle_event_callbacks(event, widget_store);
 
-//                            if self.get_callbacks().has_on_click() {
-//                                match widget_store {
-//                                    Some(widgets) => {
-//                                        if let Some(mut cb) = self.get_callbacks().on_click.take() {
-//                                            cb(self, widgets);
-//                                            self.get_callbacks().on_click = Some(cb);
-//                                        }
-//                                    }
-//                                    None => (),
-//                                }
-//                            }
+                            if self.get_callbacks().has_on_click() {
+                                match widget_store {
+                                    Some(widgets) => {
+                                        if let Some(mut cb) = self.get_callbacks().on_click.take() {
+                                            cb(self, widgets);
+                                            self.get_callbacks().on_click = Some(cb);
+                                        }
+                                    }
+                                    None => (),
+                                }
+                            }
 
                             self.invalidate();
 
@@ -198,7 +199,7 @@ impl Widget for RadioButtonWidget {
                     _ => (),
                 },
 
-                _ => (),
+                _ => self.handle_event_callbacks(event, widget_store),
             }
         } else {
             match event {
