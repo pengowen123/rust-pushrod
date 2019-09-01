@@ -15,6 +15,7 @@
 
 use graphics::*;
 use opengl_graphics::GlGraphics;
+use piston::input::*;
 
 use crate::core::callbacks::*;
 use crate::core::widget_store::*;
@@ -52,6 +53,8 @@ impl ProgressWidget {
             callbacks: DefaultWidgetCallbacks::new(),
         }
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for ProgressWidget {
@@ -118,7 +121,9 @@ impl Widget for ProgressWidget {
         _event: CallbackEvent,
         _widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
-        if !injected {}
+        if !injected {
+            self.handle_event_callbacks(_event, _widget_store);
+        }
 
         None
     }

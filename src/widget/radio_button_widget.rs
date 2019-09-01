@@ -78,6 +78,8 @@ impl RadioButtonWidget {
             callbacks: DefaultWidgetCallbacks::new(),
         }
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for RadioButtonWidget {
@@ -197,7 +199,7 @@ impl Widget for RadioButtonWidget {
                     _ => (),
                 },
 
-                _ => (),
+                _ => self.handle_event_callbacks(event, widget_store),
             }
         } else {
             match event {

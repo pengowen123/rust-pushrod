@@ -15,11 +15,12 @@
 
 use graphics::*;
 use opengl_graphics::{GlGraphics, Texture, TextureSettings};
+use piston::input::*;
 
-use crate::widget::config::*;
-use crate::widget::widget::*;
 use crate::core::callbacks::*;
 use crate::core::widget_store::*;
+use crate::widget::config::*;
+use crate::widget::widget::*;
 
 /// Draws an image.
 pub struct ImageWidget {
@@ -53,6 +54,8 @@ impl ImageWidget {
             callbacks: DefaultWidgetCallbacks::new(),
         }
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for ImageWidget {
@@ -94,6 +97,7 @@ impl Widget for ImageWidget {
         _widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
         if !injected {
+            self.handle_event_callbacks(_event, _widget_store);
         }
 
         None

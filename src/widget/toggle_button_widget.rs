@@ -89,6 +89,8 @@ impl ToggleButtonWidget {
 
         self.invalidate();
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for ToggleButtonWidget {
@@ -137,12 +139,16 @@ impl Widget for ToggleButtonWidget {
                     if self.active {
                         self.draw_hovered();
                     }
+
+                    self.handle_event_callbacks(event, widget_store);
                 }
 
                 CallbackEvent::MouseExited { widget_id: _ } => {
                     if self.active {
                         self.draw_unhovered();
                     }
+
+                    self.handle_event_callbacks(event, widget_store);
                 }
 
                 CallbackEvent::MouseButtonDown {
@@ -203,7 +209,7 @@ impl Widget for ToggleButtonWidget {
                     _ => (),
                 },
 
-                _ => (),
+                _ => self.handle_event_callbacks(event, widget_store),
             }
         }
 

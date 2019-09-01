@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#[macro_use]
+
 /// Base component and UI Components (Widget) library.  These components are used for on-screen interactions
 /// between the user and the application.
 pub mod widget;

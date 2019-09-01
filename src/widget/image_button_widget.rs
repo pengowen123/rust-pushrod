@@ -81,6 +81,8 @@ impl ImageButtonWidget {
             .set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         self.invalidate();
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for ImageButtonWidget {
@@ -145,12 +147,16 @@ impl Widget for ImageButtonWidget {
                     if self.active {
                         self.draw_hovered();
                     }
+
+                    self.handle_event_callbacks(event, widget_store);
                 }
 
                 CallbackEvent::MouseExited { widget_id: _ } => {
                     if self.active {
                         self.draw_unhovered();
                     }
+
+                    self.handle_event_callbacks(event, widget_store);
                 }
 
                 CallbackEvent::MouseButtonDown {
@@ -171,18 +177,7 @@ impl Widget for ImageButtonWidget {
                         if mouse_button == MouseButton::Left {
                             self.draw_unhovered();
                             self.active = false;
-
-                            if self.get_callbacks().has_on_click() {
-                                match widget_store {
-                                    Some(widgets) => {
-                                        if let Some(mut cb) = self.get_callbacks().on_click.take() {
-                                            cb(self, widgets);
-                                            self.get_callbacks().on_click = Some(cb);
-                                        }
-                                    }
-                                    None => (),
-                                }
-                            }
+                            self.handle_event_callbacks(event, widget_store);
 
                             return Some(WidgetClicked { widget_id, button });
                         }
@@ -203,7 +198,7 @@ impl Widget for ImageButtonWidget {
                     _ => (),
                 },
 
-                _ => (),
+                _ => self.handle_event_callbacks(event, widget_store),
             }
         }
 

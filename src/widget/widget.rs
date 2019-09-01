@@ -14,6 +14,7 @@
 
 use graphics::*;
 use opengl_graphics::GlGraphics;
+use piston::input::*;
 use std::cell::RefMut;
 
 use crate::core::callbacks::*;
@@ -300,9 +301,16 @@ pub struct DefaultWidgetCallbacks {
     pub on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
     pub on_toggle: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
     pub on_mouse_move: Option<Box<dyn FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>)>>,
+    pub on_mouse_button:
+        Option<Box<dyn FnMut(&mut dyn Widget, Button, bool, &Vec<WidgetContainer>)>>,
+    pub on_tick: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
+    pub on_mouse_bounds: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
     on_click_populated: bool,
     on_toggle_populated: bool,
     on_mouse_move_populated: bool,
+    on_mouse_button_populated: bool,
+    on_tick_populated: bool,
+    on_mouse_bounds_populated: bool,
 }
 
 impl DefaultWidgetCallbacks {
@@ -311,9 +319,15 @@ impl DefaultWidgetCallbacks {
             on_click: None,
             on_toggle: None,
             on_mouse_move: None,
+            on_mouse_button: None,
+            on_tick: None,
+            on_mouse_bounds: None,
             on_click_populated: false,
             on_toggle_populated: false,
             on_mouse_move_populated: false,
+            on_mouse_button_populated: false,
+            on_tick_populated: false,
+            on_mouse_bounds_populated: false,
         }
     }
 
@@ -352,6 +366,42 @@ impl DefaultWidgetCallbacks {
     pub fn has_on_mouse_move(&mut self) -> bool {
         self.on_mouse_move_populated
     }
+
+    pub fn on_mouse_button<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut dyn Widget, Button, bool, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_mouse_button = Some(Box::new(callback));
+        self.on_mouse_button_populated = true;
+    }
+
+    pub fn has_on_mouse_button(&mut self) -> bool {
+        self.on_mouse_move_populated
+    }
+
+    pub fn on_tick<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_tick = Some(Box::new(callback));
+        self.on_tick_populated = true;
+    }
+
+    pub fn has_on_tick(&mut self) -> bool {
+        self.on_tick_populated
+    }
+
+    pub fn on_mouse_bounds<F>(&mut self, callback: F)
+    where
+        F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
+    {
+        self.on_mouse_bounds = Some(Box::new(callback));
+        self.on_mouse_bounds_populated = true;
+    }
+
+    pub fn has_on_mouse_bounds(&mut self) -> bool {
+        self.on_mouse_bounds_populated
+    }
 }
 
 pub fn get_widget_by_name(widgets: &Vec<WidgetContainer>, name: String) -> RefMut<Box<dyn Widget>> {
@@ -372,4 +422,66 @@ pub fn invalidate_all_widgets_except(widgets: &Vec<WidgetContainer>, skip_id: i3
             x.widget.borrow_mut().invalidate()
         }
     });
+}
+
+#[macro_export]
+macro_rules! inject_event_handler {
+    () => {
+        fn handle_event_callbacks(
+            &mut self,
+            event: CallbackEvent,
+            widget_store: Option<&Vec<WidgetContainer>>)
+        {
+            let widgets = match widget_store {
+                Some(widgets) => widgets,
+                _ => return,
+            };
+
+            match event {
+                CallbackEvent::MouseButtonUpInside { widget_id: _, button } => match button {
+                    Button::Mouse(mouse_button) => {
+                        if mouse_button == MouseButton::Left {
+                            if self.get_callbacks().has_on_click() {
+                                if let Some(mut cb) = self.get_callbacks().on_click.take() {
+                                    cb(self, widgets);
+                                    self.get_callbacks().on_click = Some(cb);
+                                }
+                            }
+                        }
+                    }
+                    _ => (),
+                },
+
+                CallbackEvent::MouseMoved { widget_id: _, point } => {
+                    if self.get_callbacks().has_on_mouse_move() {
+                        if let Some(mut cb) = self.get_callbacks().on_mouse_move.take() {
+                            cb(self, point, widgets);
+                            self.get_callbacks().on_mouse_move = Some(cb);
+                        }
+                    }
+                },
+
+                CallbackEvent::MouseEntered { widget_id: _ } => {
+                    if self.get_callbacks().has_on_mouse_bounds() {
+                        if let Some(mut cb) = self.get_callbacks().on_mouse_bounds.take() {
+                            cb(self, true, widgets);
+                            self.get_callbacks().on_mouse_bounds = Some(cb);
+                        }
+                    }
+                }
+
+                CallbackEvent::MouseExited { widget_id: _ } => {
+                    if self.get_callbacks().has_on_mouse_bounds() {
+                        if let Some(mut cb) = self.get_callbacks().on_mouse_bounds.take() {
+                            cb(self, false, widgets);
+                            self.get_callbacks().on_mouse_bounds = Some(cb);
+                        }
+                    }
+                }
+
+                _ => (),
+            }
+        }
+
+    }
 }

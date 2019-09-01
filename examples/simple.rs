@@ -679,7 +679,7 @@ impl SimpleWindow {
         button5.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button5.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button5.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button5.get_callbacks().on_click(|x, widgets| {
+        button5.get_callbacks().on_click(|_x, widgets| {
             get_widget_by_name(widgets, "BoxInLayoutWidget3".to_string()).set_config(
                 CONFIG_MAIN_COLOR,
                 Config::Color([
@@ -790,7 +790,7 @@ impl SimpleWindow {
         button2.set_color(CONFIG_TEXT_COLOR, [0.0, 0.0, 0.0, 1.0]);
         button2.set_numeric(CONFIG_BORDER_WIDTH, 2);
         button2.set_color(CONFIG_BORDER_COLOR, [0.0, 0.0, 0.0, 1.0]);
-        button2.get_callbacks().on_click(|x, widgets| {
+        button2.get_callbacks().on_click(|_x, widgets| {
             get_widget_by_name(widgets, "ProgressWidget".to_string()).set_config(
                 CONFIG_SECONDARY_COLOR,
                 Config::Color([

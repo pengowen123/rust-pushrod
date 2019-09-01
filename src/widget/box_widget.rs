@@ -15,6 +15,7 @@
 
 use graphics::*;
 use opengl_graphics::GlGraphics;
+use piston::input::*;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -68,6 +69,8 @@ impl BoxWidget {
             g,
         );
     }
+
+    inject_event_handler!();
 }
 
 impl Drawable for BoxWidget {
@@ -131,6 +134,7 @@ impl Widget for BoxWidget {
         _widget_store: Option<&Vec<WidgetContainer>>,
     ) -> Option<CallbackEvent> {
         if !injected {
+            self.handle_event_callbacks(_event, _widget_store);
         }
 
         None
