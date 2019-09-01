@@ -155,6 +155,35 @@ pub trait Widget {
         None
     }
 
+    fn handle_event_callbacks(
+        &mut self,
+        event: CallbackEvent,
+        widget_store: Option<&Vec<WidgetContainer>>)
+    {
+        let widgets = match widget_store {
+            Some(widgets) => widgets,
+            _ => return,
+        };
+
+        match event {
+            CallbackEvent::MouseButtonUpInside { widget_id, button } => match button {
+                Button::Mouse(mouse_button) => {
+                    if mouse_button == MouseButton::Left {
+                        if self.get_callbacks().has_on_click() {
+                            if let Some(mut cb) = self.get_callbacks().on_click.take() {
+                                cb(self, widgets);
+                                self.get_callbacks().on_click = Some(cb);
+                            }
+                        }
+                    }
+                }
+                _ => (),
+            },
+
+            _ => (),
+        }
+    }
+
     /// Indicates to the run loop whether or not the `Widget` handles system-generated events.
     fn handles_events(&mut self) -> bool {
         false
