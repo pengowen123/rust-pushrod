@@ -14,8 +14,8 @@
 
 use graphics::*;
 use opengl_graphics::GlGraphics;
-use std::cell::RefMut;
 use piston::input::*;
+use std::cell::RefMut;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -301,7 +301,8 @@ pub struct DefaultWidgetCallbacks {
     pub on_click: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
     pub on_toggle: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
     pub on_mouse_move: Option<Box<dyn FnMut(&mut dyn Widget, Point, &Vec<WidgetContainer>)>>,
-    pub on_mouse_button: Option<Box<dyn FnMut(&mut dyn Widget, Button, bool, &Vec<WidgetContainer>)>>,
+    pub on_mouse_button:
+        Option<Box<dyn FnMut(&mut dyn Widget, Button, bool, &Vec<WidgetContainer>)>>,
     pub on_tick: Option<Box<dyn FnMut(&mut dyn Widget, &Vec<WidgetContainer>)>>,
     pub on_mouse_bounds: Option<Box<dyn FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>)>>,
     on_click_populated: bool,
@@ -367,8 +368,8 @@ impl DefaultWidgetCallbacks {
     }
 
     pub fn on_mouse_button<F>(&mut self, callback: F)
-        where
-            F: FnMut(&mut dyn Widget, Button, bool, &Vec<WidgetContainer>) + 'static,
+    where
+        F: FnMut(&mut dyn Widget, Button, bool, &Vec<WidgetContainer>) + 'static,
     {
         self.on_mouse_button = Some(Box::new(callback));
         self.on_mouse_button_populated = true;
@@ -379,8 +380,8 @@ impl DefaultWidgetCallbacks {
     }
 
     pub fn on_tick<F>(&mut self, callback: F)
-        where
-            F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
+    where
+        F: FnMut(&mut dyn Widget, &Vec<WidgetContainer>) + 'static,
     {
         self.on_tick = Some(Box::new(callback));
         self.on_tick_populated = true;
@@ -391,8 +392,8 @@ impl DefaultWidgetCallbacks {
     }
 
     pub fn on_mouse_bounds<F>(&mut self, callback: F)
-        where
-            F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
+    where
+        F: FnMut(&mut dyn Widget, bool, &Vec<WidgetContainer>) + 'static,
     {
         self.on_mouse_bounds = Some(Box::new(callback));
         self.on_mouse_bounds_populated = true;

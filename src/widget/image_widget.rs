@@ -17,10 +17,10 @@ use graphics::*;
 use opengl_graphics::{GlGraphics, Texture, TextureSettings};
 use piston::input::*;
 
-use crate::widget::config::*;
-use crate::widget::widget::*;
 use crate::core::callbacks::*;
 use crate::core::widget_store::*;
+use crate::widget::config::*;
+use crate::widget::widget::*;
 
 /// Draws an image.
 pub struct ImageWidget {
