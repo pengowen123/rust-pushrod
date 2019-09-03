@@ -148,10 +148,10 @@ impl PushrodCallbackEvents for SimpleWindowEventHandler {
 impl SimpleWindowEventHandler {
     fn new() -> Self {
         SimpleWindowEventHandler {
-            top_padding: 1,
-            left_padding: 1,
-            right_padding: 1,
-            bottom_padding: 1,
+            top_padding: 2,
+            left_padding: 2,
+            right_padding: 2,
+            bottom_padding: 2,
             spacing: 1,
             layout_id: 0,
         }
@@ -246,10 +246,10 @@ impl SimpleWindow {
                 .add_layout_manager(Box::new(HorizontalLayoutManager::new(
                     base_widget_id,
                     LayoutManagerPadding {
-                        top: 1,
-                        left: 1,
-                        right: 1,
-                        bottom: 1,
+                        top: 2,
+                        left: 2,
+                        right: 2,
+                        bottom: 2,
                         spacing: 1,
                     },
                 )));
@@ -408,7 +408,7 @@ impl SimpleWindow {
 
         let mut text_widget1 = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
-            "1".to_string(),
+            "2".to_string(),
             18,
             TextJustify::Left,
         );
@@ -454,7 +454,7 @@ impl SimpleWindow {
 
         let mut text_widget2 = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
-            "1".to_string(),
+            "2".to_string(),
             18,
             TextJustify::Left,
         );
@@ -500,7 +500,7 @@ impl SimpleWindow {
 
         let mut text_widget3 = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
-            "1".to_string(),
+            "2".to_string(),
             18,
             TextJustify::Left,
         );
@@ -546,7 +546,7 @@ impl SimpleWindow {
 
         let mut text_widget4 = TextWidget::new(
             "assets/OpenSans-Regular.ttf".to_string(),
-            "1".to_string(),
+            "2".to_string(),
             18,
             TextJustify::Left,
         );

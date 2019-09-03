@@ -38,35 +38,36 @@ impl LayoutManager for HorizontalLayoutManager {
         coordinates: LayoutManagerCoordinates,
     ) -> LayoutManagerCoordinates {
         let num_widgets = coordinates.widget_sizes.len() as i32;
-        let width_per_widget = size.w / num_widgets;
+        let drawing_width = size.w - self.padding.left - self.padding.right;
+
+        let width_per_widget = drawing_width / num_widgets;
+        let height_per_width = size.h - self.padding.top - self.padding.bottom;
+        let current_y: i32 = origin.y + self.padding.top;
+
         let mut widget_origins: Vec<Point> = vec![];
         let mut widget_sizes: Vec<Size> = vec![];
-        let mut current_x: i32 = origin.x;
-        let current_y: i32 = origin.y;
+        let mut current_x: i32 = origin.x + self.padding.left;
+        let width_spacing_difference = drawing_width - (width_per_widget * num_widgets);
 
         for x in 0..num_widgets {
-            if x == 0 {
-                current_x = self.padding.left + origin.x;
-            } else {
-                current_x += width_per_widget + (self.padding.spacing / 2);
+            if x > 0 {
+                current_x += width_per_widget;
             }
 
             widget_origins.push(Point {
                 x: current_x,
-                y: current_y + self.padding.top,
+                y: current_y,
             });
 
             if x == num_widgets - 1 {
                 widget_sizes.push(Size {
-                    w: width_per_widget
-                        - (self.padding.left + self.padding.right)
-                        - (self.padding.spacing / 2),
-                    h: size.h - (self.padding.top + self.padding.bottom),
+                    w: width_per_widget + width_spacing_difference,
+                    h: height_per_width,
                 });
             } else {
                 widget_sizes.push(Size {
-                    w: width_per_widget - (self.padding.spacing / 2),
-                    h: size.h - (self.padding.top + self.padding.bottom),
+                    w: width_per_widget - self.padding.spacing,
+                    h: height_per_width,
                 });
             }
         }
