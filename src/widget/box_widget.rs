@@ -16,6 +16,7 @@
 use graphics::*;
 use opengl_graphics::GlGraphics;
 use piston::input::*;
+use graphics::rectangle::Border;
 
 use crate::core::callbacks::*;
 use crate::core::point::{Point, Size};
@@ -57,12 +58,12 @@ impl BoxWidget {
             c.transform.clone(),
         );
 
-        Rectangle::new_border(color, border).draw(
+        Rectangle::new_border(color, (border / 2.0)).draw(
             [
-                0.0 as f64 + border as f64,
-                0.0 as f64 + border as f64,
-                size.w as f64 - (border as f64 * 2.0),
-                size.h as f64 - (border as f64 * 2.0),
+                0.0 as f64 + (border / 2.0) as f64,
+                0.0 as f64 + (border / 2.0) as f64,
+                size.w as f64 - ((border / 2.0) as f64 * 2.0),
+                size.h as f64 - ((border / 2.0) as f64 * 2.0),
             ],
             clip,
             c.transform.clone(),

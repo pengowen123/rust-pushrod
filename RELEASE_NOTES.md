@@ -3,6 +3,8 @@
 ## 0.4.7
 
 - Changed demo so that it does not resize, as resize is very slow right now
+- Added Linux to build rules in TravisCI.
+- Fixed BoxWidget line drawing width being too wide (#194)
 
 ## 0.4.6
 

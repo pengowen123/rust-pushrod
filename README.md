@@ -40,6 +40,7 @@ If you like this library, please consider [donating to this project!](https://ww
   - [x] Mouse Button Up
   - [x] Mouse Entered
   - [x] Mouse Exited
+- [x] Fix build on TravisCI to work with Linux
 - [ ] Modify Event system so that it is a single trait
 - [ ] Get rid of Point and Size, use array value types instead
 - [ ] Fix all `Widget`s so that they draw to a texture
