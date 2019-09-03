@@ -14,7 +14,7 @@ If you like this library, please consider [donating to this project!](https://ww
 
 ## (Ever Evolving) Screenshot of Sample
 
-[![](docs/sample-0.3.7.png)](docs/sample-0.3.7.png)
+[![](docs/sample-0.4.7.png)](docs/sample-0.4.7.png)
 
 ## Horizontal Layout Sample
 
