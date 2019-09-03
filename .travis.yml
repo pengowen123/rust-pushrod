@@ -3,6 +3,7 @@ rust:
   - stable
 os:
   - osx
+  - linux
 cache: cargo
 script:
   - sh scripts/travis-build.sh

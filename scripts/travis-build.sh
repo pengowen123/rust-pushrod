@@ -7,8 +7,11 @@ if [ "$TRAVIS_OS_NAME" = "osx" ]; then
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-  echo "Special build rules for Linux here"
   sudo apt update -y
+  sudo apt install gcc -y
+  sudo apt install cmake -y
+  sudo apt install libx11-dev -y
+  sudo apt install xorg-dev libglu1-mesa-dev -y
 fi
 
 echo "Building Pushrod"

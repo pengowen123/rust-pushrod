@@ -916,7 +916,7 @@ impl SimpleWindow {
 
 fn main() {
     let window: GlfwWindow = WindowSettings::new("Pushrod Window", [800, 640])
-        .resizable(true)
+        .resizable(false)
         .build()
         .unwrap_or_else(|error| panic!("Failed to build PistonWindow: {}", error));
     let mut app_window = SimpleWindow::new(Pushrod::new(window));

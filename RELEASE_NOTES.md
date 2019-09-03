@@ -1,5 +1,9 @@
 # Pushrod Releases
 
+## 0.4.7
+
+- Changed demo so that it does not resize, as resize is very slow right now
+
 ## 0.4.6
 
 - Added on_mouse_button callback (#184, #185)
