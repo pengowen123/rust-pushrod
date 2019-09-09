@@ -6,6 +6,7 @@
 - Added Linux to build rules in TravisCI.
 - Fixed BoxWidget line drawing width being too wide (#194)
 - Fixed layout code for Horizontal Layout (#175)
+- Added PageWidget (#51)
 
 ## 0.4.6
 

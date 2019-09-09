@@ -50,5 +50,8 @@ pub mod radio_button_widget;
 /// Image button component: draws an image inside a push button widget.
 pub mod image_button_widget;
 
+/// Page controller component: stores pages of content.
+pub mod page_widget;
+
 /// `Configurable` definition, used by `Widget` objects to store configuration settings.
 pub mod config;
