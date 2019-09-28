@@ -8,6 +8,9 @@
 
 **Cross Platform UI Widget Library for Rust that uses OpenGL as its rendering engine.**
 
+The rendering engine is being currently rewritten.  
+[Click here](https://www.github.com/KenSuenobu/rust-pushrod-render/) to view the project.
+
 Draws inspiration from lots of GUI libraries.
 
 If you like this library, please consider [donating to this project!](https://www.patreon.com/KenSuenobu)
